@@ -5,25 +5,29 @@
 #'
 aa_creds <- function()
   {
-    a1 <-as.character(readline(prompt="Do you know your client_id? (y/n) "))
-    if(a1 == 'y'){
-      ci <-as.character(readline(prompt="Enter your client_id --> "))
-      Sys.setenv("TEST_ID" = ci)
+    clientid <- tolower(as.character(readline(prompt="Do you know your client id? (y/n) ")))
+    if(clientid == 'y'){
+      ci <-as.character(readline(prompt="Enter your client id --> "))
+      Sys.setenv("AA_CLIENT_ID" = ci)
     } else {
-      readline("go here and find out how to get it. (press enter to continue)")
+      readline("Go here and find out how to get it. (press return to continue)")
     }
-    a2 <-as.character(readline(prompt="Do you know your client_secret? (y/n) "))
-    if(a2 == 'y'){
-      ci <-as.character(readline(prompt="Enter your client_secret --> "))
-      Sys.setenv("TEST_SECRET" = ci)
+    clientsecret <- tolower(as.character(readline(prompt="Do you know your client secret key? (y/n) ")))
+    if(clientsecret == 'y'){
+      ci <-as.character(readline(prompt="Enter your client secret key --> "))
+      Sys.setenv("AA_CLIENT_SECRET" = ci)
     } else {
-      readline("you can find your client secret by going here [link]...now!")
+      readline("You can find your client secret by going here.  (press return to continue)")
     }
-    if(a1 == 'y' & a2 == 'y') {
-      readline("your all set! Nicely done! Press enter to continue")
+    rsid <- tolower(as.character(readline(prompt="Do you know your report suite id? (y/n) ")))
+    if(rsid == 'y'){
+      ci <-as.character(readline(prompt="Enter your report suite id --> "))
+      Sys.setenv("AA_REPORTSUITE_ID" = ci)
+    } else {
+      readline("You can find your Report Suite Id by going here [link]. (press return to continue)")
+    }
+    if(clientid == 'y' & clientsecret == 'y' & rsid == 'y') {
+      "You're all set! Nicely done!"
     }
 }
 
-aa_creds()
-Sys.getenv("TEST_SECRET")
-Sys.getenv("TEST_CLIENT")
