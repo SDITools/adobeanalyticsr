@@ -26,6 +26,13 @@ aa_creds <- function()
     } else {
       readline("You can find your Report Suite Id by going here [link]. (press return to continue)")
     }
+    companyid <- tolower(as.character(readline(prompt="Do you know your company id? (y/n) ")))
+    if(companyid == 'y'){
+      ci <-as.character(readline(prompt="Enter your copmany id --> "))
+      Sys.setenv("AA_COMPANY_ID" = ci)
+    } else {
+      readline("You can find your Company Id by going here [link]. (press return to continue)")
+    }
     if(clientid == 'y' & clientsecret == 'y' & rsid == 'y') {
       "You're all set! Nicely done!"
     }
