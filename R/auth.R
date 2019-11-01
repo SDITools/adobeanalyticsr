@@ -1,0 +1,37 @@
+#' OAuth2 Token for Adobe Analytics
+#'
+#' @noRd
+#' @export
+#'
+#' @import httr
+#'
+aa_token <- function(client_id, client_secret){
+
+  # https://ims-na1.adobelogin.com/ims/authorize?client_id={CLIENT ID}&redirect_uri={REDIRECT URI}&scope=openid,
+  # AdobeID,read_organizations,additional_info.job_function,additional_info.projectedProductContext&response_type=code
+
+  aa_endpoint <- httr::oauth_endpoint(
+    authorize = "authorize/",
+    access = "token/v1",
+    base_url = "https://ims-na1.adobelogin.com/ims/"
+  )
+
+  aa_app <- httr::oauth_app(
+    appname = "adobe_analytics_v2.0",
+    key = client_id,
+    secret = client_secret
+  )
+
+
+
+  #Oauth2 token
+  httr::oauth2.0_token(
+    endpoint = aa_endpoint,
+    app = aa_app,
+    scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
+    cache = "aa.oauth",
+    use_oob = TRUE,
+    oob_value = "https://benrwoodard.wpengine.com/tokenpage/"
+  )
+}
+
