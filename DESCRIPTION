@@ -1,10 +1,13 @@
-Package: adobeAnalyticsR
+Package: adobeanalyticsr
 Type: Package
-Version: 0.0.9000
+Version: 0.0.9100
 Title: Adobe Analytics API v2
 Description: Connect to the Adobe Analytics API v2
-Authors@R: c(person("Tim", "Wilson", email = "timwilson7@gmail.com",
-                  role = c("aut", "cre")))
+Authors@R: c(
+    person("Tim", "Wilson", email = "timwilson7@gmail.com", role = "aut"),
+    person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = "cre"),
+    person("Mark", "Edmondson", email = "comingsoon@email.com", role = "aut")
+    )
 License: MIT
 Encoding: UTF-8
 LazyData: true
