@@ -1,4 +1,4 @@
-# adobeAnalyticsR
+# adobeanalyticsr
 
 This is intended as a POC on how a AAv2 package could work, including OAuth2.
 
@@ -12,26 +12,13 @@ It requires setting the following environment arguments:
 * `AA_COMPANY_ID`
 * `AA_CLIENT_ID`
 * `AA_CLIENT_SECRET`
-* `ADOBE_API_RSID` (optional)
+* `AA_REPORTSUITE_ID`
 
 ## Getting Auth to Work
 
-This is not the long-term plan by any means. But, what seems to work to some extent:
-
-1. Run `options(httr_oob_default=TRUE)`
-2. Call the `aa_token()` function
-3. If no `aa.oauth` file exists already, then you will be prompted to log in to Adobe
-4. Once you log in, you will be redirected to a (busted) localhost page
-5. Copy the `code=` value from the URI and enter that as the authorization code in the console.
-6. You should now have an `aa.oauth` token in your working directory
-
-The OAuth2 information is found here:
-https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/create-oauth-client.md
-
-Example of one person struggling with OAuth2 for this:  https://www.reddit.com/r/rstats/comments/c3n1t0/making_an_oauth_call_using_httr/
-
-One option for creating an HTTPS localhost: https://dev.to/rhymes/really-easy-way-to-use-https-on-localhost-341m.
-
-A wrinkle with OAuth2 and Adobe IO is that Adobe IO _requires_ a **Default direct URI** and **Redirect URI pattern** that use HTTPS. So, so far, it's challenging to get the OAuth token created without making an HTTPS localhost. Running `mkcert` might be one option around that: https://github.com/FiloSottile/mkcert.
+There are three ways to add the four variables to to your environment.  
+1. The first way is the easist.  Make sure to have each one of them readily available and then call the "aa_cred()" function. It will ask you for each one and save it to the system environment.
+2. The second way is more manual but you essentially do the same thing the function does but simply add it yoruself. Make sure to use the exact environment argument name that is listed above and save it to the system environment using "Sys.setenv('ARGUMENT_NAME' = 'VALUE')".  Do this for each of the for arguments and you will be all set.
+3. When you call a function that requires the use of one of the variables, provide it in the function call. For example `aa_token(client_id, client_secret)`.
 
 
