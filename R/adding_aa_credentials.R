@@ -41,4 +41,3 @@ aa_creds <- function()
       "You're all set! Nicely done!"
     }
 }
-
