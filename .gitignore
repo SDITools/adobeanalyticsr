@@ -38,3 +38,4 @@ rsconnect/
 
 #gitignore folder for local only files
 gitignore/
+.DS_Store
