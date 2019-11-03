@@ -20,7 +20,8 @@
 #' \dontrun{
 #' report <- aa_ranked_report(date_range= c('2019-01-01','2019-01-31'),
 #'                            metrics = c("visits","pageviews"),
-#'                            dimensions = "page")
+#'                            dimensions = "page",
+#'                            top = 1000)
 #' }
 #'
 aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
