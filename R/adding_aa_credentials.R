@@ -13,6 +13,7 @@ aa_creds <- function()
     if(clientid == 'y'){
       ci <-as.character(readline(prompt="Enter your client id --> "))
       Sys.setenv("AA_CLIENT_ID" = ci)
+
     } else {
       readline("Go here and find out how to get it. (press return to continue)")
     }
@@ -20,6 +21,7 @@ aa_creds <- function()
     if(clientsecret == 'y'){
       ci <-as.character(readline(prompt="Enter your client secret key --> "))
       Sys.setenv("AA_CLIENT_SECRET" = ci)
+
     } else {
       readline("You can find your client secret by going here.  (press return to continue)")
     }
@@ -27,6 +29,7 @@ aa_creds <- function()
     if(rsid == 'y'){
       ci <-as.character(readline(prompt="Enter your report suite id --> "))
       Sys.setenv("AA_REPORTSUITE_ID" = ci)
+
     } else {
       readline("You can find your Report Suite Id by going here [link]. (press return to continue)")
     }
@@ -34,10 +37,11 @@ aa_creds <- function()
     if(companyid == 'y'){
       ci <-as.character(readline(prompt="Enter your copmany id --> "))
       Sys.setenv("AA_COMPANY_ID" = ci)
+
     } else {
       readline("You can find your Company Id by going here [link]. (press return to continue)")
     }
-    if(clientid == 'y' & clientsecret == 'y' & rsid == 'y') {
+    if(clientid == 'y|Y' & clientsecret == 'y|Y' & rsid == 'y|Y' & companyid == 'y|Y') {
       "You're all set! Nicely done!"
     }
 }
