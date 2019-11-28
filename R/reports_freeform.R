@@ -40,7 +40,7 @@ aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 
   meta <- purrr::pmap(metrics_information,addmetrics)
 
-  req_body <- structure(list(rsid = Sys.getenv("AA_RSID"),
+  req_body <- structure(list(rsid = rsid,
                              globalFilters = list(list(
                                type = "dateRange",
                                dateRange = timeframe)),
