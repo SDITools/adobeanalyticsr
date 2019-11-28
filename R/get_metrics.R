@@ -2,13 +2,13 @@
 #'
 #' @param rsid Adobe report number
 #' @param locale language - default'en_US'
-#' @param segmentable - boolean - default TRUE
+#' @param segmentable - boolean - default NULL
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
 #'
 #' @export
 aa_get_metrics <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                               locale = 'en_US',
-                              segmentable = 'false',
+                              segmentable = 'NULL',
                               expansion = 'tags, allowedForReporting, categories',
                               company_id = Sys.getenv("AA_COMPANY_ID")){
 
