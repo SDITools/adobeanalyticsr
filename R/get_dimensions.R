@@ -8,20 +8,19 @@
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
 #'
 #' @export
-aa_get_dimensions <- function(rsid = Sys.getenv("AA_RSID"),
+aa_get_dimensions <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                               locale = 'en_US',
-                              segmentable = 'true',
-                              reportable = 'true',
-                              classifiable = 'true',
-                              expansion = c('tags', 'allowedForReporting', 'categories')){
+                              segmentable = 'false',
+                              reportable = 'false',
+                              classifiable = 'false',
+                              expansion = 'tags,allowedForReporting,categories',
+                              company_id = Sys.getenv("AA_COMPANY_ID") ){
+
+  #remove spaces from the lsit of expansion tags
+  expansion <- stringr::str_replace_all(expansion, fixed(" "), "")
   #create the url to send with the query
-
-  urlstructure <- sprintf("dimensions?rsid=%s&locale=%s",
-                 rsid,locale)
-
-  #&segmentable=%s&reportable=%s&classifiable=%s
-
-
+  urlstructure <- sprintf("dimensions?rsid=%s&locale=%s&segmentable=%s&reportable=%s&classifiable=%s&expansion=%s",
+                 rsid,locale,segmentable,reportable,classifiable,expansion)
 
   res <- aa_get_elements(req_path = urlstructure)
 
