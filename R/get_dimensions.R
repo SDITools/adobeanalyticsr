@@ -18,6 +18,7 @@ aa_get_dimensions <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 
   #remove spaces from the lsit of expansion tags
   expansion <- stringr::str_replace_all(expansion, fixed(" "), "")
+
   #create the url to send with the query
   urlstructure <- sprintf("dimensions?rsid=%s&locale=%s&segmentable=%s&reportable=%s&classifiable=%s&expansion=%s",
                  rsid,locale,segmentable,reportable,classifiable,expansion)
