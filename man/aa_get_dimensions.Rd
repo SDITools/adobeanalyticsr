@@ -4,9 +4,11 @@
 \alias{aa_get_dimensions}
 \title{Get list of dimensions}
 \usage{
-aa_get_dimensions(rsid = Sys.getenv("AA_RSID"), locale = "en_US",
-  segmentable = "true", reportable = "true", classifiable = "true",
-  expansion = c("tags", "allowedForReporting", "categories"))
+aa_get_dimensions(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+  locale = "en_US", segmentable = "false", reportable = "false",
+  classifiable = "false",
+  expansion = "tags,allowedForReporting,categories",
+  company_id = Sys.getenv("AA_COMPANY_ID"))
 }
 \arguments{
 \item{rsid}{Adobe report number}

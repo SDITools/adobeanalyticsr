@@ -4,16 +4,15 @@
 \alias{aa_rankedtime_report}
 \title{Get a timeseries reports}
 \usage{
-aa_rankedtime_report(date_range, metrics, dimension, top = 0,
-  pages = 0, granularity = "day", metricFilters = NULL,
-  sort = "asc", rsid = Sys.getenv("AA_RSID"))
+aa_rankedtime_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
+  metrics, top = 0, pages = 0, granularity = "day", sort = "desc")
 }
 \arguments{
+\item{rsid}{Adobe report number}
+
 \item{date_range}{A two length vector of start and end Date objects}
 
 \item{metrics}{Metric to send}
-
-\item{rsid}{Adobe report number}
 
 \item{dimensions}{Dimension to send}
 

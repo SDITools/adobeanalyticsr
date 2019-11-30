@@ -7,5 +7,8 @@
 aa_creds()
 }
 \description{
-Setting credentials to the environment
+This function will enable you to set the 4 essential arguments the API requires for OAuth and making calls
+to specific report suites.
+This is optional. Setting global variables or utilizing the arguments in the function call are the
+two other options.
 }

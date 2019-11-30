@@ -4,21 +4,31 @@
 \alias{aa_ranked_report}
 \title{Get a ranked reports}
 \usage{
-aa_ranked_report(date_range, metrics, dimensions, top = 50,
-  metricSort = FALSE, metricFilters = NULL, dimensionSort = "asc",
-  rsid = Sys.getenv("AA_RSID"))
+aa_ranked_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
+  metrics, dimensions, top = 50, metricSort = FALSE,
+  metricFilters = NULL, dimensionSort = "asc")
 }
 \arguments{
+\item{rsid}{Adobe report suite id number. Taken from the global environment by default if not provided.}
+
 \item{date_range}{A two length vector of start and end Date objects}
 
 \item{metrics}{Metric to send}
 
 \item{dimensions}{Dimension to send}
 
-\item{rsid}{Adobe report number}
+\item{top}{How many rows. Defualt is set to 50}
 
-\item{num_rows}{How many rows}
+\item{metricSort}{Presorts the table by metrics. Values are either 'asc' or 'desc'.}
+
+\item{dimensionSort}{Presorts the table by dimension.  Not as helpful as metricSort but still has some use.  If metricSort is 'False' the dimension sort will be used.}
+
+\item{metricFilter}{Was originally going to be used for creating multi dimension json strings but not sure if this is needed. Leaving it here just in case.}
+}
+\value{
+Data Frame
 }
 \description{
-Get a ranked reports
+Organizes the arguments into a json string and then structures the data after the internal function makes
+the api call. Only runs a single dimension with as many metrics as you want.
 }
