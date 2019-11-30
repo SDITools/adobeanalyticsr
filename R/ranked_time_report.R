@@ -7,15 +7,15 @@
 #' @param rsid Adobe report number
 #'
 #' @export
-aa_rankedtime_report <- function(date_range,
-                              metrics,
-                              dimension,
-                              top = 0,
-                              pages = 0,
-                              granularity = 'day',
-                              metricFilters = NULL,
-                              sort = 'asc',
-                              rsid = Sys.getenv("AA_RSID")){
+
+aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
+                                 date_range,
+                                 metrics,
+                                 top = 0,
+                                 pages = 0,
+                                 granularity = 'day',
+                                 sort = 'desc'
+                                 ){
 
 
   # set the timeframe variable
@@ -23,7 +23,7 @@ aa_rankedtime_report <- function(date_range,
 
   meta <- map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
 
-  req_body <- structure(list(rsid = Sys.getenv("AA_RSID"),
+  req_body <- structure(list(rsid = rsid,
                              globalFilters = list(list(
                                type = "dateRange",
                                dateRange = timeframe)),
@@ -34,7 +34,7 @@ aa_rankedtime_report <- function(date_range,
                                     type = "dateRange",
                                     dateRange = timeframe)
                              )),
-                             dimension = sprintf("variables/%s",dimension),
+                             dimension = sprintf("variables/daterange%s",granularity),
                              settings = list(
                                dimensionSort = sort,
                                limit = top,
@@ -49,8 +49,11 @@ aa_rankedtime_report <- function(date_range,
   res <- fromJSON(res)
 
   # Clean up and return as data frame
-  res_df <- res$rows
-  res_df <- as.data.frame(matrix(unlist(res_df), nrow= length(res_df), byrow = T))
+  res_df <- res$rows %>%
+    unnest(data) %>%
+    group_by(itemId, value) %>%
+    mutate(col= seq_along(value))%>%
+    spread(key = col, value = data)
 
   # Add column names to the dataset based on the metrics and dimensions
   colnames(res_df) <- c('id',granularity,metrics)
