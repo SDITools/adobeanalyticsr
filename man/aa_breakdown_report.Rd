@@ -5,7 +5,7 @@
 \title{Get a ranked report with a breakdown}
 \usage{
 aa_breakdown_report(date_range, metrics, dimensions, top = 500,
-  metricSort = "desc", metricFilters = NULL, dimensionSort = NULL,
+  metricSort = "desc", dimensionSort = NULL,
   rsid = Sys.getenv("AA_RSID"))
 }
 \arguments{
@@ -15,9 +15,13 @@ aa_breakdown_report(date_range, metrics, dimensions, top = 500,
 
 \item{dimensions}{Dimension to send}
 
-\item{rsid}{Adobe report number}
+\item{top}{How many rows}
 
-\item{num_rows}{How many rows}
+\item{metricSort}{Use 'asc' or 'desc' the metrics sort the resulting report}
+
+\item{dimensionSort}{Leave as NULL (default) if metrics shuld determine the sort of the report}
+
+\item{rsid}{Adobe report number}
 }
 \description{
 Get a ranked report with a breakdown

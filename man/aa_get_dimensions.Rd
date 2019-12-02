@@ -17,11 +17,13 @@ aa_get_dimensions(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 
 \item{segmentable}{- boolean - default TRUE}
 
-\item{reportable}{= boolean - default TRUE}
+\item{reportable}{- boolean - default TRUE}
 
-\item{classifiable}{= boolean - default FALSE}
+\item{classifiable}{- boolean - default FALSE}
 
 \item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
+
+\item{company_id}{this can be either manually defined here or utilize the global definitions}
 }
 \description{
 Get list of dimensions

@@ -14,9 +14,11 @@ aa_rankedtime_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
 
 \item{metrics}{Metric to send}
 
-\item{dimensions}{Dimension to send}
+\item{top}{How many rows}
 
-\item{num_rows}{How many rows}
+\item{granularity}{use either minute, hour, day, week, month, quater, year}
+
+\item{sort}{either by desc or asc order}
 }
 \description{
 Get a timeseries reports

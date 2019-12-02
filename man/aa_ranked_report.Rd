@@ -6,7 +6,7 @@
 \usage{
 aa_ranked_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
   metrics, dimensions, top = 50, metricSort = FALSE,
-  metricFilters = NULL, dimensionSort = "asc")
+  dimensionSort = "asc")
 }
 \arguments{
 \item{rsid}{Adobe report suite id number. Taken from the global environment by default if not provided.}
@@ -22,8 +22,6 @@ aa_ranked_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
 \item{metricSort}{Presorts the table by metrics. Values are either 'asc' or 'desc'.}
 
 \item{dimensionSort}{Presorts the table by dimension.  Not as helpful as metricSort but still has some use.  If metricSort is 'False' the dimension sort will be used.}
-
-\item{metricFilter}{Was originally going to be used for creating multi dimension json strings but not sure if this is needed. Leaving it here just in case.}
 }
 \value{
 Data Frame

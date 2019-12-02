@@ -17,6 +17,8 @@ aa_get_metrics(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 \item{segmentable}{- boolean - default NULL}
 
 \item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
+
+\item{company_id}{define globally or manually}
 }
 \description{
 Get list of dimensions
