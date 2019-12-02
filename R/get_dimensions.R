@@ -3,10 +3,11 @@
 #' @param rsid Adobe report number
 #' @param locale language - default'en_US'
 #' @param segmentable - boolean - default TRUE
-#' @param reportable = boolean - default TRUE
-#' @param classifiable = boolean - default FALSE
+#' @param reportable - boolean - default TRUE
+#' @param classifiable - boolean - default FALSE
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
-#'
+#' @param company_id this can be either manually defined here or utilize the global definitions
+#' @import stringr
 #' @export
 aa_get_dimensions <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                               locale = 'en_US',

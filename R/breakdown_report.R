@@ -3,7 +3,9 @@
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to send
 #' @param dimensions Dimension to send
-#' @param num_rows How many rows
+#' @param top How many rows
+#' @param metricSort Use 'asc' or 'desc' the metrics sort the resulting report
+#' @param dimensionSort Leave as NULL (default) if metrics shuld determine the sort of the report
 #' @param rsid Adobe report number
 #'
 
@@ -15,7 +17,6 @@ aa_breakdown_report <- function(date_range,
                              dimensions,
                              top = 500,
                              metricSort = 'desc',
-                             metricFilters = NULL,
                              dimensionSort = NULL,
                              rsid = Sys.getenv("AA_RSID")) {
 

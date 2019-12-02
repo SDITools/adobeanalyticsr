@@ -2,10 +2,12 @@
 #'
 #' @noRd
 #' @export
-#'
+#' @param client_id defined by global variable or manually defined
+#' @param client_secret defined by global variable or manually defined
 #' @import httr
 #'
-aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"), client_secret = Sys.getenv("AA_CLIENT_SECRET")){
+aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),
+                     client_secret = Sys.getenv("AA_CLIENT_SECRET")){
 
   # https://ims-na1.adobelogin.com/ims/authorize?client_id={CLIENT ID}&redirect_uri={REDIRECT URI}&scope=openid,
   # AdobeID,read_organizations,additional_info.job_function,additional_info.projectedProductContext&response_type=code

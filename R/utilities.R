@@ -1,4 +1,7 @@
-#' make_timeframe function for formating date and time
+#' Used to format date and time
+#' @param start_date the first full day of data
+#' @param end_date the last full day of data
+#'
 #' @export
 #'
 

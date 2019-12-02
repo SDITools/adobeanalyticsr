@@ -1,28 +1,22 @@
-#' Get a ranked reports
+#' Get a ranked report
 #'
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
 #' the api call. Only runs a single dimension with as many metrics as you want.
 #'
+#' @param rsid Adobe report suite id number. Taken from the global environment by default if not provided.
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to send
 #' @param dimensions Dimension to send
 #' @param top How many rows. Defualt is set to 50
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
-#' @param metricFilter Was originally going to be used for creating multi dimension json strings but not sure if this is needed. Leaving it here just in case.
 #' @param dimensionSort Presorts the table by dimension.  Not as helpful as metricSort but still has some use.  If metricSort is 'False' the dimension sort will be used.
-#' @param rsid Adobe report suite id number. Taken from the global environment by default if not provided.
 #'
 #' @return Data Frame
+#'
 #' @export
+#'
 #' @import assertthat httr tidyverse
 #'
-#' @example
-#' \dontrun{
-#' report <- aa_ranked_report(date_range= c('2019-01-01','2019-01-31'),
-#'                            metrics = c("visits","pageviews"),
-#'                            dimensions = "page",
-#'                            top = 1000)
-#' }
 #'
 aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                              date_range,
@@ -30,7 +24,6 @@ aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                              dimensions,
                              top = 50,
                              metricSort = FALSE,
-                             metricFilters = NULL,
                              dimensionSort = 'asc') {
 
   # set the timeframe variable

@@ -4,6 +4,7 @@
 #' @param locale language - default'en_US'
 #' @param segmentable - boolean - default NULL
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
+#' @param company_id define globally or manually
 #'
 #' @export
 aa_get_metrics <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
