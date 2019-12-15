@@ -1,0 +1,18 @@
+---
+title: "Setup Instructions"
+author: "Ben Woodard"
+date: "12/2/2019"
+output: html_document
+---
+
+1. Setup an integration in the adobe console (https://console.adobe.io/integrations)
+  * To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.
+
+To create an OAuth client:
+1. Navigate to the following URL: https://console.adobe.io/integrations.
+2. Click the New Integration button.
+3. Select the Access an API option and then click Continue.
+4. Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue.
+5. Select New integration and then click Continue.
+6. Fill out the name, description, redirect URIs and then click Create Integration.
+
