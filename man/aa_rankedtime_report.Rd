@@ -5,7 +5,7 @@
 \title{Get a timeseries reports}
 \usage{
 aa_rankedtime_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
-  metrics, top = 0, pages = 0, granularity = "day", sort = "desc")
+  metrics, pages = 0, granularity = "day", sort = "desc")
 }
 \arguments{
 \item{rsid}{Adobe report number}
@@ -14,11 +14,11 @@ aa_rankedtime_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
 
 \item{metrics}{Metric to send}
 
-\item{top}{How many rows}
-
 \item{granularity}{use either minute, hour, day, week, month, quater, year}
 
 \item{sort}{either by desc or asc order}
+
+\item{top}{How many rows}
 }
 \description{
 Get a timeseries reports

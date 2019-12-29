@@ -12,7 +12,6 @@
 aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
                                  date_range,
                                  metrics,
-                                 top = 0,
                                  pages = 0,
                                  granularity = 'day',
                                  sort = 'desc'
@@ -21,6 +20,15 @@ aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
 
   # set the timeframe variable
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
+
+  if(granularity == "hour") {
+    limit <- as.numeric(as.Date(date_range[[2]]) - as.Date(date_range[[1]]))*24
+  } else {
+    limit <- as.numeric(as.Date(date_range[[2]]) - as.Date(date_range[[1]]))
+  }
+  if(pages > 0) {
+    limit <- limit/pages
+  }
 
   meta <- map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
 
@@ -38,7 +46,7 @@ aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
                              dimension = sprintf("variables/daterange%s",granularity),
                              settings = list(
                                dimensionSort = sort,
-                               limit = top,
+                               limit = limit,
                                page = pages
                              ),
                              statistics = list(
@@ -59,5 +67,9 @@ aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
   # Add column names to the dataset based on the metrics and dimensions
   colnames(res_df) <- c('id',granularity,metrics)
 
-  res_df
+  #res_df[2] <- as_date(res_df[2], tz = "UTC", format ="%b %d, %Y")
+
+  df <- data.frame(res_df)
+
+  df
 }

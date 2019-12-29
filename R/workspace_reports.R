@@ -13,18 +13,18 @@
 aa_workspace_report <- function(req_body) {
 
   body <- fromJSON(req_body)
-
-  metrics <-  gsub(".*/", "", body$metricContainer$metrics$id)
-
-  dimensions <- gsub(".*/", "", body$dimension)
-
+  #build the necessary naming items for the result
+    #build the metric column names
+    metrics <-  gsub(".*/", "", body$metricContainer$metrics$id)
+    #build the dimension column names
+    dimensions <- gsub(".*/", "", body$dimension)
+  #make the request
   res <- aa_get_data("reports/ranked", body = body)
-
+  #reformat from JSON
   res <- fromJSON(res)
 
-  # Clean up and return as data frame
+  # Clean up and return only data rows
   res_df <- res$rows
-
   # If more than one metric the value list needs to be spread to individual columns
   if(length(metrics) > 1 ) {
      res_df <- res_df %>%
@@ -36,6 +36,7 @@ aa_workspace_report <- function(req_body) {
 
   # Add column names to the dataset based on the metrics and dimensions
   colnames(res_df) <- c(paste0(dimensions,'id'),dimensions,metrics)
-
-  res_df
+  #return it as a datafram
+  df <- data.frame(res_df)
+  df
 }

@@ -33,7 +33,7 @@ aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),
     scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
     cache = "aa.oauth",
     use_oob = TRUE,
-    oob_value = "https://benrwoodard.wpengine.com/tokenpage/"
+    oob_value = "https://adobeanalyticsr.com/token/result.html"
   )
 }
 

@@ -2,7 +2,7 @@
 % Please edit documentation in R/reports_freeform.R
 \name{aa_ranked_report}
 \alias{aa_ranked_report}
-\title{Get a ranked reports}
+\title{Get a ranked report}
 \usage{
 aa_ranked_report(rsid = Sys.getenv("AA_REPORTSUITE_ID"), date_range,
   metrics, dimensions, top = 50, metricSort = FALSE,

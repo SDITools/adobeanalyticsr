@@ -2,10 +2,15 @@
 % Please edit documentation in R/utilities.R
 \name{make_timeframe}
 \alias{make_timeframe}
-\title{make_timeframe function for formating date and time}
+\title{Used to format date and time}
 \usage{
 make_timeframe(start_date, end_date)
 }
+\arguments{
+\item{start_date}{the first full day of data}
+
+\item{end_date}{the last full day of data}
+}
 \description{
-make_timeframe function for formating date and time
+Used to format date and time
 }

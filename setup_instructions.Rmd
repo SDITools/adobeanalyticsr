@@ -1,18 +1,35 @@
 ---
 title: "Setup Instructions"
 author: "Ben Woodard"
-date: "12/2/2019"
+date: "12/27/2019"
 output: html_document
 ---
 
-1. Setup an integration in the adobe console (https://console.adobe.io/integrations)
-  * To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.
+NOTE: Setup an integration in the adobe console (https://console.adobe.io/integrations)  
+    *To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.*
 
-To create an OAuth client:
-1. Navigate to the following URL: https://console.adobe.io/integrations.
-2. Click the New Integration button.
-3. Select the Access an API option and then click Continue.
-4. Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue.
-5. Select New integration and then click Continue.
-6. Fill out the name, description, redirect URIs and then click Create Integration.
+1. Create an OAuth client:  
+    1. Navigate to the following URL: https://console.adobe.io/integrations.
+    2. Click the New Integration button.
+    3. Select the Access an API option and then click Continue.
+    4. Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue.
+    5. Select New integration and then click Continue.
+    6. Fill out the name, description, redirect URIs and then click Create Integration.
+        a. name - choose anything you want
+        b. description - if you like yourself, add a description for your future self
+        c. redirect URIs. add "https://adobeanalyticsr\.com/token/result\.html" to the Redirect URI input field.
+2. run the function "aa_creds()" and follow the instructions in the Console. 
+    a. "client ID"
+    b. "client secret"
+    c. "report suite id"
+    d. "company id"
+3. run the function aa_auth()
+    a. you will be redirected to the adobe experience cloud login page. 
+    b. after logging in you will be redirected to the token page on adobeanalyticsr.com
+    c. copy and paste the resulting token into your console  
+    `Enter authorization code: `
+  
+You should now be able to run your first query function. The most basic query is to pull the list of metrics and/or elements  
+`aa_get_metrics()`.
+
 
