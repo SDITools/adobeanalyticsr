@@ -23,7 +23,7 @@ NOTE: Setup an integration in the adobe console (https://console.adobe.io/integr
     b. "client secret"
     c. "report suite id"
     d. "company id"
-3. run the function aa_auth()
+3. run the function aa_token()
     a. you will be redirected to the adobe experience cloud login page. 
     b. after logging in you will be redirected to the token page on adobeanalyticsr.com
     c. copy and paste the resulting token into your console  
