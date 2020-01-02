@@ -13,11 +13,18 @@
 #'
 #' @return Data Frame
 #'
+#'
+#' @import assertthat
+#' @import httr
+#' @import tidyverse
+#' @import jsonlite
+#' @import httr
+#' @import dplyr
+#' @import curl
+#' @import tidyverse
+#' @import stringr
+#'
 #' @export
-#'
-#' @import assertthat httr tidyverse
-#'
-#'
 aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                              date_range,
                              metrics,
