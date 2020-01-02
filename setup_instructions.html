@@ -12,6 +12,7 @@
 
 <meta name="author" content="Ben Woodard" />
 
+<meta name="date" content="2019-12-27" />
 
 <title>Setup Instructions</title>
 
@@ -270,6 +271,7 @@ code {
 }
 img {
   max-width:100%;
+  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -364,41 +366,19 @@ summary {
 
 <h1 class="title toc-ignore">Setup Instructions</h1>
 <h4 class="author">Ben Woodard</h4>
-<h4 class="date">12/2/2019</h4>
+<h4 class="date">12/27/2019</h4>
 
 </div>
 
 
-<p>NOTE: Setup an integration in the adobe console (<a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>)<br />
-<em>To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.</em></p>
+<p><em>NOTE: Setup an integration in the adobe console</em> <em>(<a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>)</em> <em>To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.</em></p>
 <ol style="list-style-type: decimal">
-<li>Create an OAuth client:
-<ol style="list-style-type: decimal">
-<li>Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>.</li>
-<li>Click the New Integration button.</li>
-<li>Select the Access an API option and then click Continue.</li>
-<li>Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue.</li>
-<li>Select New integration and then click Continue.</li>
-<li>Fill out the name, description, redirect URIs and then click Create Integration.
-<ol style="list-style-type: lower-alpha">
-<li>name - choose anything you want</li>
-<li>description - if you like yourself, add a description for your future self</li>
-<li>redirect URIs. add “<a href="https://adobeanalyticsr\.com/token/result\.html" class="uri">https://adobeanalyticsr\.com/token/result\.html</a>” to the Redirect URI input field.</li>
-</ol></li>
-</ol></li>
-<li>run the function “aa_creds()” and follow the instructions in the Console.
-<ol style="list-style-type: lower-alpha">
-<li>“client ID”</li>
-<li>“client secret”</li>
-<li>“report suite id”</li>
-<li>“company id”</li>
-</ol></li>
-<li>run the function aa_auth()
-<ol style="list-style-type: lower-alpha">
-<li>you will be redirected to the adobe experience cloud login page.</li>
-<li>after logging in you will be redirected to the token page on adobeanalyticsr.com</li>
-<li>copy and paste the resulting token into your console<br />
-<code>Enter authorization code:</code></li>
+<li>Create an OAuth client:<br />
+A. Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>. B. Click the New Integration button. C. Select the Access an API option and then click Continue. D. Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue. E. Select New integration and then click Continue. F. Fill out the name, description, redirect URIs and then click Create Integration. 1. name - choose anything you want 2. description - if you like yourself, add a description for your future self 3. redirect URIs. add “<a href="https://adobeanalyticsr\.com/token/result\.html" class="uri">https://adobeanalyticsr\.com/token/result\.html</a>” to the Redirect URI input field.</li>
+<li>Run the function “aa_creds()” and follow the instructions in the Console. A. “client ID” B. “client secret” C. “report suite id” D. “company id”</li>
+<li>Run the function aa_token() A. You will be redirected to the adobe experience cloud login page.
+<ol start="2" style="list-style-type: lower-alpha">
+<li>After logging in you will be redirected to the token page on adobeanalyticsr.com C. Copy and paste the resulting token into your console where you will see this prompt: <code>&gt; Enter authorization code:</code></li>
 </ol></li>
 </ol>
 <p>You should now be able to run your first query function. The most basic query is to pull the list of metrics and/or elements<br />
