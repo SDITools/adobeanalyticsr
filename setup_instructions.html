@@ -371,19 +371,36 @@ summary {
 </div>
 
 
-<p><em>NOTE: Setup an integration in the adobe console</em> <em>(<a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>)</em> <em>To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.</em></p>
+<p><em>NOTE: Setup an integration in the adobe console</em> <em>(<a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>)</em><br />
+<em>To work with Analytics 2.0 APIs on the Adobe I/O Console, you need to have System Admin rights or developer permissions for your organization. You will receive notification of these rights when granted.</em></p>
 <ol style="list-style-type: decimal">
-<li><p>Create an OAuth client:<br />
-A. Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>. B. Click the New Integration button. C. Select the Access an API option and then click Continue. D. Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue. E. Select New integration and then click Continue. F. Fill out the name, description, redirect URIs and then click Create Integration. 1. name - choose anything you want 2. description - if you like yourself, add a description for your future self 3. redirect URIs. add “<a href="https://adobeanalyticsr\.com/token/result\.html" class="uri">https://adobeanalyticsr\.com/token/result\.html</a>” to the Redirect URI input field.</p></li>
-<li><p>Run the function “aa_creds()” and follow the instructions in the Console.</p>
-A. “client ID” B. “client secret” C. “report suite id” D. “company id”</li>
-<li>Run the function aa_token() A. You will be redirected to the adobe experience cloud login page.
-<ol start="2" style="list-style-type: lower-alpha">
-<li>After logging in you will be redirected to the token page on adobeanalyticsr.com C. Copy and paste the resulting token into your console where you will see this prompt: <code>&gt; Enter authorization code:</code></li>
+<li><p>Create an OAuth client:</p>
+A. Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>.<br />
+B. Click the New Integration button.<br />
+C. Select the Access an API option and then click Continue.<br />
+D. Under the Experience Cloud section select Adobe Analytics and then select OAuth integration and then click Continue.<br />
+E. Select New integration and then click Continue.<br />
+F. Fill out the name, description, redirect URIs and then click Create Integration.
+<ol style="list-style-type: lower-alpha">
+<li>name - choose anything you want<br />
+</li>
+<li>description - if you like yourself, add a description for your future self<br />
+</li>
+<li>redirect URIs. add “<a href="https://adobeanalyticsr\.com/token/result\.html" class="uri">https://adobeanalyticsr\.com/token/result\.html</a>” to the Redirect URI input field.</li>
 </ol></li>
+<li><p>Run the function “aa_creds()” and follow the instructions in the Console.</p>
+<p>A. “client ID”<br />
+B. “client secret”<br />
+C. “report suite id”<br />
+D. “company id”</p></li>
+<li><p>Run the function aa_token()</p>
+<p>A. You will be redirected to the adobe experience cloud login page.<br />
+B. After logging in you will be redirected to the token page on adobeanalyticsr.com<br />
+C. Copy and paste the resulting token into your console where you will see this prompt:<br />
+<code>&gt; Enter authorization code:</code></p></li>
 </ol>
 <p>You should now be able to run your first query function. The most basic query is to pull the list of metrics and/or elements<br />
-<code>aa_get_metrics()</code>.</p>
+<code>metrics_list &lt;- aa_get_metrics()</code>.</p>
 
 
 
