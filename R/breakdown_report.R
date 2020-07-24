@@ -1,8 +1,8 @@
 #' Get a ranked report with a breakdown
 #'
 #' @param date_range A two length vector of start and end Date objects
-#' @param metrics Metric to send
-#' @param dimensions Dimension to send
+#' @param metrics Metric to request
+#' @param dimensions Dimension to request
 #' @param top How many rows
 #' @param metricSort Use 'asc' or 'desc' the metrics sort the resulting report
 #' @param dimensionSort Leave as NULL (default) if metrics shuld determine the sort of the report
@@ -18,7 +18,7 @@ aa_breakdown_report <- function(date_range,
                              top = 500,
                              metricSort = 'desc',
                              dimensionSort = NULL,
-                             rsid = Sys.getenv("AA_RSID")) {
+                             rsid = Sys.getenv("AA_REPORTSUITE_ID")) {
 
   # set the timeframe variable
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])

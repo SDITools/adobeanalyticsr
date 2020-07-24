@@ -18,7 +18,11 @@ output: html_document
         1. name - choose anything you want
         2. description - if you like yourself, add a description for your future self
         3. redirect URIs. add "https://adobeanalyticsr\.com/token/result\.html" to the Redirect URI input field.
+<<<<<<< HEAD
 2. Run the function "aa_creds()" and follow the instructions in the Console. 
+=======
+2. Eun the function "aa_creds()" and follow the instructions in the Console. 
+>>>>>>> b5dcb57d3be489378f91018cd3d2f83b83037a8f
     A. "client ID"
     B. "client secret"
     C. "report suite id"
