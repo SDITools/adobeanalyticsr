@@ -39,3 +39,6 @@ rsconnect/
 #gitignore folder for local only files
 gitignore/
 .DS_Store
+
+#defined environ variable ssuch as passwords
+.Renviron
