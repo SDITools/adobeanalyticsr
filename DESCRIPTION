@@ -21,4 +21,4 @@ Imports:
     curl (>= 3.3),
     tidyverse (>= 1.2.1),
     stringr (>= 1.4.0)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

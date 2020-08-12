@@ -54,13 +54,13 @@ aa_breakdown_report <- function(date_range,
  # of dimensions more than one is listed.
 
   #first call for first dimensions
-  function(date_range = date_range,
-           dim = dimensions[1],
-           metrics = metrics,
-           top = top[1],
-           metricSort = metricSort,
-           dimensionSort = dimensionSort,
-           rsid = rsid)
+  date_range <- date_range
+   dim <- dimensions[1]
+   metrics <- metrics
+   top <- top[1]
+   metricSort <- metricSort
+   dimensionSort <- dimensionSort
+   rsid <- rsid
 
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
@@ -189,3 +189,4 @@ res <- fromJSON(res)
 
 # Clean up and return as data frame
 res_df <- res$rows
+}
