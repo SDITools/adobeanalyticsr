@@ -5,13 +5,9 @@
 #'
 #' @param req_body The json string coppied from workspace
 #'
-#' @return Data Frame
-#'
 #' @export
 #'
-#'
 aa_workspace_report <- function(req_body) {
-
   body <- fromJSON(req_body)
   #build the necessary naming items for the result
     #build the metric column names
@@ -22,7 +18,6 @@ aa_workspace_report <- function(req_body) {
   res <- aa_get_data("reports/ranked", body = body)
   #reformat from JSON
   res <- fromJSON(res)
-
   # Clean up and return only data rows
   res_df <- res$rows
   # If more than one metric the value list needs to be spread to individual columns
@@ -32,12 +27,11 @@ aa_workspace_report <- function(req_body) {
                   group_by(itemId,value) %>%
                   mutate(col = seq_along(data)) %>%
                   spread(key=col, value=data)
-  }
+     }
 
   # Add column names to the dataset based on the metrics and dimensions
   colnames(res_df) <- c(paste0(dimensions,'id'),dimensions,metrics)
   #return it as a datafram
   df <- data.frame(res_df)
-  return(df)
-
+  df
 }
