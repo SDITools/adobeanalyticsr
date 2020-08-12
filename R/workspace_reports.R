@@ -38,5 +38,5 @@ aa_workspace_report <- function(req_body) {
   colnames(res_df) <- c(paste0(dimensions,'id'),dimensions,metrics)
   #return it as a datafram
   df <- data.frame(res_df)
-  df
+  return(df)
 }
