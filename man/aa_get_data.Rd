@@ -4,10 +4,13 @@
 \alias{aa_get_data}
 \title{Gets the data from Adobe Analytics API v2}
 \usage{
-aa_get_data(req_path, body = NULL,
+aa_get_data(
+  req_path,
+  body = NULL,
   company_id = Sys.getenv("AA_COMPANY_ID"),
   client_id = Sys.getenv("AA_CLIENT_ID"),
-  client_secret = Sys.getenv("AA_CLIENT_SECRET"))
+  client_secret = Sys.getenv("AA_CLIENT_SECRET")
+)
 }
 \arguments{
 \item{req_path}{The endpoint for that particular report}

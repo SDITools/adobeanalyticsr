@@ -3,10 +3,10 @@
 #' @export
 #'
 breakdowns <- function(id,type,dimensions,itemId) {
-    structure(list(
+  list(
       id = id,
       type = type,
       dimension = sprintf('variables/%s',dimensions),
       itemId = itemId
-      ))
+      )
  }

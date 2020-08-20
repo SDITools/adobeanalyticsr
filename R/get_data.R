@@ -19,7 +19,7 @@
 #' }
 #'
 #' @export
-#' @import assertthat httr
+#' @import assertthat httr purrr
 #'
 aa_get_data <- function(req_path,
                         body = NULL,

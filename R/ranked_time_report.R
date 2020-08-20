@@ -1,11 +1,12 @@
 #' Get a timeseries reports
 #'
+#' @param rsid Adobe report number
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to send
-#' @param top How many rows
-#' @param rsid Adobe report number
+#' @param pages number of report pages
 #' @param granularity use either minute, hour, day, week, month, quater, year
-#' @param sort either by desc or asc order
+#' @param sort either by 'desc' or 'asc' order
+#'
 #'
 #' @export
 

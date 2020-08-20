@@ -1,9 +1,11 @@
 #' OAuth2 Token for Adobe Analytics
 #'
 #' @noRd
-#' @export
+#'
 #' @param client_id defined by global variable or manually defined
 #' @param client_secret defined by global variable or manually defined
+#'
+#' @export
 #' @import httr
 #'
 aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),

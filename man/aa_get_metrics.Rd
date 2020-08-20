@@ -4,10 +4,13 @@
 \alias{aa_get_metrics}
 \title{Get list of dimensions}
 \usage{
-aa_get_metrics(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
-  locale = "en_US", segmentable = "NULL",
+aa_get_metrics(
+  rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+  locale = "en_US",
+  segmentable = "NULL",
   expansion = "tags, allowedForReporting, categories",
-  company_id = Sys.getenv("AA_COMPANY_ID"))
+  company_id = Sys.getenv("AA_COMPANY_ID")
+)
 }
 \arguments{
 \item{rsid}{Adobe report number}

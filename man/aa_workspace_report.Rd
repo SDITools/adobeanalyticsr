@@ -7,10 +7,7 @@
 aa_workspace_report(req_body)
 }
 \arguments{
-\item{req_body}{The json string coppied from workspace}
-}
-\value{
-Data Frame
+\item{req_body}{The json string copied from workspace}
 }
 \description{
 Organizes the arguments into a json string and then structures the data after the internal function makes

@@ -8,43 +8,71 @@
 #' @param dimensionSort Leave as NULL (default) if metrics shuld determine the sort of the report
 #' @param rsid Adobe report number
 #'
-
 #' @export
 #' @import assertthat httr tidyverse
 #'
-aa_breakdown_report <- function(date_range,
-                             metrics,
-                             dimensions,
-                             top = 500,
-                             metricSort = 'desc',
-                             dimensionSort = NULL,
-                             rsid = Sys.getenv("AA_REPORTSUITE_ID")) {
+aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+                                date_range,
+                                metrics,
+                                dimensions,
+                                top = 10,
+                                metricSort = 'desc',
+                                dimensionSort = NULL
+                             ) {
 
   # set the timeframe variable
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
+
+  if(length(dimensions) == length(top)) {
+
+  }
+
+
+ #get the metrics in a list format
   metrics_information <- list(metrics,seq_along(metrics)-1, metricSort)
-
+ #turn the metrics call to a simple json string
   meta <- purrr::pmap(metrics_information,addmetrics)
+  #pull the first dimension
+  dim <- dimensions[1]
+  #how many items should be pulled?
+  top_off <- top[1]
 
-  req_body <- structure(list(rsid = Sys.getenv("AA_RSID"),
+  #create the first call
+  req_body <- structure(list(rsid = rsid,
                              globalFilters = list(list(
                                type = "dateRange",
                                dateRange = timeframe)),
                              metricContainer = list(
                                metrics = meta
                              ),
-                             dimension = sprintf("variables/%s",dimensions[1]),
+                             dimension = sprintf("variables/%s",dim),
                              settings = list(
                                countRepeatInstances = TRUE,
-                               limit = top,
+                               limit = top[1],
                                page = 0
                                #dimensionSort = "asc"
                              ),
                              statistics = list(
                                functions = c("col-max", "col-min")
                              ) ) )
-
+  req_body <- structure(list(rsid = rsid,
+                             globalFilters = list(list(
+                               type = "dateRange",
+                               dateRange = timeframe)),
+                             metricContainer = list(
+                               metrics = meta
+                             ),
+                             dimension = sprintf("variables/%s",dim),
+                             settings = list(
+                               countRepeatInstances = TRUE,
+                               limit = top,
+                               page = 0,
+                               dimensionSort = "asc"
+                             ),
+                             statistics = list(
+                               functions = c("col-max", "col-min")
+                             ) ) )
   res <- aa_get_data("reports/ranked", body = req_body)
 
   res <- fromJSON(res)
@@ -64,10 +92,11 @@ aa_breakdown_report <- function(date_range,
 
   # Add column names to the dataset based on the metrics and dimensions
   colnames(res_df) <- c('itemId', dimensions[1],metrics)
-  itemids<- res_df$itemId[[1]]
-
-      # set the timeframe variable
-      #already set  --> timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
+#is there more than one dimension?
+if(length(dimensions) == 1) {
+  return(res_df)
+} else {
+  itemids<- res_df$itemId
 
       metrics_information <- list(metrics,seq_along(metrics)-1)
       #new list for building the metricFilter list
@@ -77,24 +106,37 @@ aa_breakdown_report <- function(date_range,
 
       dims <- purrr::pmap(metric_filters, breakdowns)
 
-      req_body <- structure(list(rsid = Sys.getenv("AA_RSID"),
-                                 globalFilters = list(list(
-                                   type = "dateRange",
-                                   dateRange = timeframe)),
-                                 metricContainer = list(
-                                   metrics = metric_with_filter,
-                                   metricFilters = dims
-                                 ),
-                                 dimension = sprintf("variables/%s",dimensions[2]),
-                                 settings = list(
-                                   countRepeatInstances = TRUE,
-                                   limit = top,
-                                   page = 0,
-                                   dimensionSort = "asc"
-                                 ),
-                                 statistics = list(
-                                   functions = c("col-max", "col-min")
-                                 ) ) )
+      req_body <- function(dims) {
+
+        list(rsid = Sys.getenv("AA_RSID"),
+             globalFilters = list(list(
+               type = "dateRange",
+               dateRange = timeframe)),
+             metricContainer = list(
+               metrics = metric_with_filter,
+               metricFilters = dims
+             ),
+             dimension = sprintf("variables/%s",dimensions[2]),
+             settings = list(
+               countRepeatInstances = TRUE,
+               limit = top,
+               page = 0,
+               dimensionSort = "asc"
+             ),
+             statistics = list(
+               functions = c("col-max", "col-min")
+             ) )
+        }
+
+      req_body_2 <- map(dims, req_body)
+
+      jsstring <- map(req_body_2, structure)
+
+      apicall <-  function(calls = jsstring) {
+        aa_get_data("reports/ranked", body = calls)
+      }
+
+      res <- map(jsstring, apicall)
 
       res2 <- aa_get_data("reports/ranked", body = req_body)
 
@@ -111,10 +153,4 @@ aa_breakdown_report <- function(date_range,
           mutate(col = seq_along(data)) %>%
           spread(key=col, value=data)
       }
-
-  # Add column names to the dataset based on the metrics and dimensions
-  #colnames(res_df2) <- c('id',dimensions[1],dimensions[2],metrics)
-    return(res_df2)
-
-}
-
+}}

@@ -4,9 +4,16 @@
 \alias{aa_timeseries_report}
 \title{Get a timeseries reports}
 \usage{
-aa_timeseries_report(date_range, metrics, top = 50, pages = 0,
-  granularity = "day", metricFilters = NULL, sort = "asc",
-  rsid = Sys.getenv("AA_RSID"))
+aa_timeseries_report(
+  date_range,
+  metrics,
+  top = 50,
+  pages = 0,
+  granularity = "day",
+  metricFilters = NULL,
+  sort = "asc",
+  rsid = Sys.getenv("AA_RSID")
+)
 }
 \arguments{
 \item{date_range}{A two length vector of start and end Date objects}
