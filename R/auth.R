@@ -26,8 +26,6 @@ aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),
     secret = client_secret
   )
 
-
-
   #Oauth2 token
   httr::oauth2.0_token(
     endpoint = aa_endpoint,

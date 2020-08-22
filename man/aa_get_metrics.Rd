@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_metrics.R
 \name{aa_get_metrics}
 \alias{aa_get_metrics}
-\title{Get list of dimensions}
+\title{Get list of metrics}
 \usage{
 aa_get_metrics(
   rsid = Sys.getenv("AA_REPORTSUITE_ID"),
@@ -24,5 +24,5 @@ aa_get_metrics(
 \item{company_id}{define globally or manually}
 }
 \description{
-Get list of dimensions
+This will generate an extensive list of all the metrics (measures) in the reportsuite.
 }

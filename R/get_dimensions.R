@@ -24,7 +24,7 @@ aa_get_dimensions <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   urlstructure <- sprintf("dimensions?rsid=%s&locale=%s&segmentable=%s&reportable=%s&classifiable=%s&expansion=%s",
                  rsid,locale,segmentable,reportable,classifiable,expansion)
 
-  res <- aa_get_elements(req_path = urlstructure)
+  res <- aa_get_elements(req_path = urlstructure, company_id = company_id)
 
   res <- fromJSON(res)
   # removing "metrics/" from the beginning of the id value
