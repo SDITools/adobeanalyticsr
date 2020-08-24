@@ -10,7 +10,8 @@
 #'
 #' @export
 
-aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
+aa_rankedtime_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
+                                 rsid = Sys.getenv('AA_REPORTSUITE_ID'),
                                  date_range,
                                  metrics,
                                  pages = 0,
@@ -54,7 +55,7 @@ aa_rankedtime_report <- function(rsid = Sys.getenv('AA_REPORTSUITE_ID'),
                                functions = c("col-max", "col-min")
                              ) ) )
 
-  res <- aa_get_data("reports/ranked", body = req_body)
+  res <- aa_call_data("reports/ranked", body = req_body,  company_id = company_id)
 
   res <- fromJSON(res)
 

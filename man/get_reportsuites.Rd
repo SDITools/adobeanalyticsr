@@ -24,10 +24,7 @@ get_reportsuites(
 
 \item{page}{Page number (base 0 - first page is "0")}
 
-\item{expansion}{options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo))
-
-https://analytics.adobe.io/api/{{company_id}}/collections/suites?
-rsids=michaelsmik-site&rsidContains=michaelsmik&limit=10&page=0&expansion=currency}
+\item{expansion}{options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo))}
 }
 \description{
 Get list of reportsuites

@@ -1,5 +1,7 @@
 #' Get list of dimensions
 #'
+#' This will generate an extensive list of all the dimensions in the reportsuite.
+#'
 #' @param rsid Adobe report number
 #' @param locale language - default'en_US'
 #' @param segmentable - boolean - default TRUE
@@ -24,7 +26,7 @@ aa_get_dimensions <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   urlstructure <- sprintf("dimensions?rsid=%s&locale=%s&segmentable=%s&reportable=%s&classifiable=%s&expansion=%s",
                  rsid,locale,segmentable,reportable,classifiable,expansion)
 
-  res <- aa_get_elements(req_path = urlstructure, company_id = company_id)
+  res <- aa_call_api(req_path = urlstructure, company_id = company_id)
 
   res <- fromJSON(res)
   # removing "metrics/" from the beginning of the id value

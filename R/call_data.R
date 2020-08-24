@@ -12,7 +12,7 @@
 #'
 #' \dontrun{
 #'
-#' aa_get_data("reports/ranked",
+#' aa_call_data("reports/ranked",
 #'             body = list(..etc..),
 #'             company_id = "blah")
 #'
@@ -21,7 +21,7 @@
 #' @export
 #' @import assertthat httr purrr
 #'
-aa_get_data <- function(req_path,
+aa_call_data <- function(req_path,
                         body = NULL,
                         company_id = Sys.getenv("AA_COMPANY_ID"),
                         client_id = Sys.getenv("AA_CLIENT_ID"),

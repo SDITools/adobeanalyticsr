@@ -30,5 +30,5 @@ aa_get_dimensions(
 \item{company_id}{this can be either manually defined here or utilize the global definitions}
 }
 \description{
-Get list of dimensions
+This will generate an extensive list of all the dimensions in the reportsuite.
 }

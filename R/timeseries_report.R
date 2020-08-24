@@ -45,7 +45,7 @@ aa_timeseries_report <- function(date_range,
                                functions = c("col-max", "col-min")
                              ) ) )
 
-  res <- aa_get_data("reports/ranked", body = req_body)
+  res <- aa_call_data("reports/ranked", body = req_body)
 
   res <- fromJSON(res)
 

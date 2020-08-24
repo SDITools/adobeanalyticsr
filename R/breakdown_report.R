@@ -73,7 +73,7 @@ aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                              statistics = list(
                                functions = c("col-max", "col-min")
                              ) ) )
-  res <- aa_get_data("reports/ranked", body = req_body)
+  res <- aa_call_data("reports/ranked", body = req_body)
 
   res <- fromJSON(res)
 

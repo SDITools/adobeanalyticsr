@@ -5,6 +5,7 @@
 \title{Get a timeseries reports}
 \usage{
 aa_rankedtime_report(
+  company_id = Sys.getenv("AA_COMPANY_ID"),
   rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   date_range,
   metrics,

@@ -13,7 +13,6 @@
 #'
 #' @return Data Frame
 #'
-#'
 #' @import assertthat
 #' @import httr
 #' @import tidyverse
@@ -31,7 +30,8 @@ aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                              dimensions,
                              top = 50,
                              metricSort = FALSE,
-                             dimensionSort = 'asc') {
+                             dimensionSort = 'asc',
+                             company_id = Sys.getenv("AA_COMPANY_ID")) {
 
   # set the timeframe variable
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
@@ -58,7 +58,7 @@ aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                                functions = c("col-max", "col-min")
                              ) ) )
 
-  res <- aa_get_data("reports/ranked", body = req_body)
+  res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id)
 
   res <- fromJSON(res)
 
@@ -76,6 +76,6 @@ aa_ranked_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 
   # Add column names to the dataset based on the metrics and dimensions
   colnames(res_df) <- c(paste0(dimensions,'id'),dimensions,metrics)
-
-  res_df
+  res <- res_df[-1]
+  res
 }

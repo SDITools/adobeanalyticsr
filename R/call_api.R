@@ -11,14 +11,14 @@
 #'
 #' \dontrun{
 #'
-#' aa_get_elements("reports/ranked",
+#' aa_call_api("reports/ranked",
 #'             company_id = "blah")
 #'
 #' }
 #'
 #' @export
 #' @import assertthat httr
-aa_get_elements <- function(req_path,
+aa_call_api <- function(req_path,
                         company_id = Sys.getenv("AA_COMPANY_ID"),
                         client_id = Sys.getenv("AA_CLIENT_ID"),
                         client_secret = Sys.getenv("AA_CLIENT_SECRET")){
