@@ -11,7 +11,8 @@ aa_ranked_report(
   dimensions,
   top = 50,
   metricSort = FALSE,
-  dimensionSort = "asc"
+  dimensionSort = "asc",
+  company_id = Sys.getenv("AA_COMPANY_ID")
 )
 }
 \arguments{

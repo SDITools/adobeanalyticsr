@@ -22,4 +22,4 @@ Imports:
     tidyverse (>= 1.2.1),
     stringr (>= 1.4.0),
     purrr (>= 0.3.3)
-RoxygenNote: 7.1.0
+RoxygenNote: 7.1.1

@@ -6,6 +6,7 @@
 #' @param pages number of report pages
 #' @param granularity use either minute, hour, day, week, month, quater, year
 #' @param sort either by 'desc' or 'asc' order
+#' @param anomalyDetection logical statement for including anomaly. Default is TRUE
 #'
 #'
 #' @export
@@ -16,7 +17,8 @@ aa_rankedtime_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
                                  metrics,
                                  pages = 0,
                                  granularity = 'day',
-                                 sort = 'desc'
+                                 sort = 'desc',
+                                 anomalyDetection = TRUE
                                  ){
 
 
@@ -49,7 +51,8 @@ aa_rankedtime_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
                              settings = list(
                                dimensionSort = sort,
                                limit = limit,
-                               page = pages
+                               page = pages,
+                               includeAnomalyDetection = anomalyDetection
                              ),
                              statistics = list(
                                functions = c("col-max", "col-min")
