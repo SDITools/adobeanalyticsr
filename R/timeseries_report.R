@@ -7,16 +7,19 @@
 #' @param metricFilters the filters to breakdown the metrics by (still in dev)
 #' @param sort the order of date either asc or desc (note: is it good that there is no sorting by metrics?)
 #' @param rsid Adobe report number
+#' @param anomalyDetection Anomaly detection logic
 #'
 #' @export
-aa_timeseries_report <- function(date_range,
+aa_timeseries_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+                                 company_id = Sys.getenv("AA_COMPANY_ID"),
+                                 date_range,
                                  metrics,
                                  top = 50,
                                  pages = 0,
                                  granularity = 'day',
                                  metricFilters = NULL,
                                  sort = 'asc',
-                                 rsid = Sys.getenv("AA_RSID")){
+                                 anomalyDetection = TRUE) {
 
 
   # set the timeframe variable
@@ -39,7 +42,8 @@ aa_timeseries_report <- function(date_range,
                              settings = list(
                                dimensionSort = sort,
                                limit = top,
-                               page = pages
+                               page = pages,
+                               includeAnomalyDetection = anomalyDetection
                              ),
                              statistics = list(
                                functions = c("col-max", "col-min")

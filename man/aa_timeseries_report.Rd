@@ -5,6 +5,8 @@
 \title{Get a timeseries reports}
 \usage{
 aa_timeseries_report(
+  rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AA_COMPANY_ID"),
   date_range,
   metrics,
   top = 50,
@@ -12,10 +14,12 @@ aa_timeseries_report(
   granularity = "day",
   metricFilters = NULL,
   sort = "asc",
-  rsid = Sys.getenv("AA_RSID")
+  anomalyDetection = TRUE
 )
 }
 \arguments{
+\item{rsid}{Adobe report number}
+
 \item{date_range}{A two length vector of start and end Date objects}
 
 \item{metrics}{Metric to send}
@@ -28,7 +32,7 @@ aa_timeseries_report(
 
 \item{sort}{the order of date either asc or desc (note: is it good that there is no sorting by metrics?)}
 
-\item{rsid}{Adobe report number}
+\item{anomalyDetection}{Anomaly detection logic}
 }
 \description{
 Get a timeseries reports
