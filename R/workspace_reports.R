@@ -5,6 +5,7 @@
 #'
 #' @param req_body The json string copied from workspace
 #'
+#' @import tidyverse
 #' @export
 #'
 aa_workspace_report <- function(req_body) {
@@ -15,7 +16,7 @@ aa_workspace_report <- function(req_body) {
     #build the dimension column names
     dimensions <- gsub(".*/", "", body$dimension)
   #make the request
-  res <- aa_get_data("reports/ranked", body = body)
+  res <- aa_call_data("reports/ranked", body = body)
   #reformat from JSON
   res <- fromJSON(res)
   # Clean up and return only data rows

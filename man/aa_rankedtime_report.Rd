@@ -11,7 +11,8 @@ aa_rankedtime_report(
   metrics,
   pages = 0,
   granularity = "day",
-  sort = "desc"
+  sort = "desc",
+  anomalyDetection = TRUE
 )
 }
 \arguments{
@@ -26,6 +27,8 @@ aa_rankedtime_report(
 \item{granularity}{use either minute, hour, day, week, month, quater, year}
 
 \item{sort}{either by 'desc' or 'asc' order}
+
+\item{anomalyDetection}{logical statement for including anomaly. Default is TRUE}
 }
 \description{
 Get a timeseries reports

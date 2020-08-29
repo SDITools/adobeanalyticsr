@@ -24,8 +24,9 @@ aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
 
-  if(length(dimensions) == length(top)) {
-
+  if(length(dimensions) != length(top) | length(dimensions) != 1) {
+    #make sure top matches length of domain
+    stop('Don\'t do it!')
   }
 
 
