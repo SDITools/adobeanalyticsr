@@ -52,10 +52,8 @@ aa_rankedtime_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
                                dimensionSort = sort,
                                limit = limit,
                                page = pages,
+                               nonesBehavior = "return-nones",
                                includeAnomalyDetection = anomalyDetection
-                             ),
-                             statistics = list(
-                               functions = c("col-max", "col-min")
                              ) ) )
 
   res <- aa_call_data("reports/ranked", body = req_body,  company_id = company_id)
