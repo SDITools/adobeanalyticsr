@@ -17,7 +17,7 @@ aa_rankedtime_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
                                  metrics,
                                  pages = 0,
                                  granularity = 'day',
-                                 sort = 'desc',
+                                 sort = 'asc',
                                  anomalyDetection = TRUE
                                  ){
 
