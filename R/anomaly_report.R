@@ -66,7 +66,8 @@ aa_anomaly_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
   if(length(metrics) > 1) {
     columnames <- colnames(res$rows[3:7])
     res_df <- res$rows %>%
-      unnest(all_of(columnames)) %>%
+      replace_na(list(0)) %>%
+      unnest(columnames) %>%
       group_by(itemId, value) %>%
       mutate(metric = metrics) %>%
       relocate(metric, .after = value) %>%
@@ -80,13 +81,9 @@ aa_anomaly_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
       mutate(date = as.Date(date, format = '%b %d, %Y'))
   }
 
-  # Add column names to the dataset based on the metrics and dimensions
-  res_df
-  colnames(res_df) <- c('id',granularity,metrics)
-
   #res_df[2] <- as_date(res_df[2], tz = "UTC", format ="%b %d, %Y")
 
-  df <- data.frame(res_df)
+  df <- res_df
 
   df
 }
