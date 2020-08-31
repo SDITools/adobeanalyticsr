@@ -81,8 +81,6 @@ aa_anomaly_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
       mutate(date = as.Date(date, format = '%b %d, %Y'))
   }
 
-  #res_df[2] <- as_date(res_df[2], tz = "UTC", format ="%b %d, %Y")
-
   df <- res_df
 
   df
