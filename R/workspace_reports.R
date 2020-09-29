@@ -8,7 +8,7 @@
 #' @import tidyverse
 #' @export
 #'
-aa_workspace_report <- function(req_body) {
+aa_workspace_report <- function(req_body = sample, company_id = Sys.getenv('AA_COMPANY_ID')) {
   body <- fromJSON(req_body)
   #build the necessary naming items for the result
     #build the metric column names
@@ -16,7 +16,7 @@ aa_workspace_report <- function(req_body) {
     #build the dimension column names
     dimensions <- gsub(".*/", "", body$dimension)
   #make the request
-  res <- aa_call_data("reports/ranked", body = body)
+  res <- aa_call_data("reports/ranked", body = body, company_id = company_id)
   #reformat from JSON
   res <- fromJSON(res)
   # Clean up and return only data rows
@@ -34,5 +34,6 @@ aa_workspace_report <- function(req_body) {
   colnames(res_df) <- c(paste0(dimensions,'id'),dimensions,metrics)
   #return it as a datafram
   df <- data.frame(res_df)
-  df
+  return(df)
+
 }
