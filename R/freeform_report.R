@@ -122,7 +122,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       #setup the tibble for building the queries
       metIds <- tibble(metrics,colid = seq(length(metrics))-1)
 
-      df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, limit)
+      df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, top)
       df <- df %>% mutate(breakdownorder = rownames(df))
       bdnumber <- as.numeric(max(df$breakdownorder))
       metnumber <- as.numeric(length(metrics))
