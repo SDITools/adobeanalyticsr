@@ -21,5 +21,6 @@ Imports:
     curl (>= 3.3),
     tidyverse (>= 1.2.1),
     stringr (>= 1.4.0),
-    purrr (>= 0.3.3)
+    purrr (>= 0.3.3),
+    purrrlyr (>= 0.0.6)
 RoxygenNote: 7.1.1
