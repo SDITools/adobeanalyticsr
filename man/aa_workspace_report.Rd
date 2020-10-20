@@ -4,7 +4,10 @@
 \alias{aa_workspace_report}
 \title{Use a prebuilt json query to pull a ranked report}
 \usage{
-aa_workspace_report(req_body)
+aa_workspace_report(
+  req_body = sample,
+  company_id = Sys.getenv("AA_COMPANY_ID")
+)
 }
 \arguments{
 \item{req_body}{The json string copied from workspace}

@@ -6,6 +6,7 @@
 \usage{
 aa_breakdown_report(
   rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AA_COMPANY_ID"),
   date_range,
   metrics,
   dimensions,
@@ -17,13 +18,15 @@ aa_breakdown_report(
 \arguments{
 \item{rsid}{Adobe report number}
 
+\item{company_id}{the company id associated with the rsid}
+
 \item{date_range}{A two length vector of start and end Date objects}
 
 \item{metrics}{Metric to request}
 
 \item{dimensions}{Dimension to request}
 
-\item{top}{How many rows}
+\item{top}{How many rows.}
 
 \item{metricSort}{Use 'asc' or 'desc' the metrics sort the resulting report}
 

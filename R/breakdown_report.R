@@ -1,17 +1,19 @@
 #' Get a ranked report with a breakdown
 #'
+#' @param rsid Adobe report number
+#' @param company_id the company id associated with the rsid
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to request
 #' @param dimensions Dimension to request
-#' @param top How many rows
+#' @param top How many rows.
 #' @param metricSort Use 'asc' or 'desc' the metrics sort the resulting report
 #' @param dimensionSort Leave as NULL (default) if metrics shuld determine the sort of the report
-#' @param rsid Adobe report number
 #'
 #' @export
 #' @import assertthat httr tidyverse
 #'
 aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+                                company_id = Sys.getenv("AA_COMPANY_ID"),
                                 date_range,
                                 metrics,
                                 dimensions,
@@ -23,12 +25,7 @@ aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   # set the timeframe variable
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
-
-  if(length(dimensions) != length(top) | length(dimensions) != 1) {
-    #make sure top matches length of domain
-    stop('Don\'t do it!')
-  }
-
+  items <- list(rsid, company_id, date_range, metrics, dimensions, top, metricSort, dimensionSort)
 
  #get the metrics in a list format
   metrics_information <- list(metrics,seq_along(metrics)-1, metricSort)
@@ -36,8 +33,6 @@ aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   meta <- purrr::pmap(metrics_information,addmetrics)
   #pull the first dimension
   dim <- dimensions[1]
-  #how many items should be pulled?
-  top_off <- top[1]
 
   #create the first call
   req_body <- structure(list(rsid = rsid,
@@ -67,9 +62,9 @@ aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                              dimension = sprintf("variables/%s",dim),
                              settings = list(
                                countRepeatInstances = TRUE,
-                               limit = top,
+                               limit = top[1],
                                page = 0,
-                               dimensionSort = "asc"
+                               dimensionSort = dimensionSort
                              ),
                              statistics = list(
                                functions = c("col-max", "col-min")
