@@ -20,16 +20,27 @@ output: html_document
       b. description - if you like yourself, add a description for your future self  
       c. redirect URIs. add "https://adobeanalyticsr\.com/token/result\.html" to the Redirect URI input field.  
 
-2. Run the function "aa_creds()" and follow the instructions in the Console. 
+2. Add credentials 
 
-    A. "client ID"  
-    B. "client secret"  
-    C. "report suite id"  
-    D. "company id"  
+    A. Option 1: Create the .Renviron file (preferred)
+      1. Add the following items to the file.
+        AA_CLIENT_ID = ''
+        AA_CLIENT_SECRET = ''
+        (optional credentials)
+        AA_COMPANY_ID = ''
+        AA_REPORTSUITE_ID = ''
+      2. Save the file
+      3. Restart your R session and reload the package
+    B. Option 2: Use the aa_creds() function (possible quick start option)
+      1. "client ID"  
+      2. "client secret"  
+      3. "report suite id"  
+      4. "company id"  
+
     
 3. Run the function aa_token()
 
-    A. You will be redirected to the adobe experience cloud login page.  
+    A. Log in using your adobe experience cloud login credentials  
     B. After logging in you will be redirected to the token page on adobeanalyticsr.com  
     C. Copy and paste the resulting token into your console where you will see this prompt:  
     `> Enter authorization code: `
