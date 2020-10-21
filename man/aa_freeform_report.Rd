@@ -8,11 +8,13 @@ aa_freeform_report(
   company_id = Sys.getenv("AA_COMPANY_ID"),
   rsid = Sys.getenv("AA_REPORTSUITE_ID"),
   date_range = c("2020-08-01", "2020-09-25"),
-  dimensions = c("page", "lasttouchchannel"),
+  dimensions = c("page", "lasttouchchannel", "mobiledevicetype"),
   metrics = c("visits", "visitors"),
   top = c(5),
   filterType = "breakdown",
-  metricSort = "desc"
+  segmentId = NA,
+  metricSort = "desc",
+  return_nones = "return-nones"
 )
 }
 \arguments{
@@ -29,6 +31,8 @@ aa_freeform_report(
 \item{filterType}{Default is 'breakdown'. This will only change if a segment is used.}
 
 \item{metricSort}{Presorts the table by metrics. Values are either 'asc' or 'desc'.}
+
+\item{return_nones}{"return-nones" is the default,}
 }
 \value{
 Data Frame
