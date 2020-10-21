@@ -9,9 +9,11 @@
 #' @param metricSort Use 'asc' or 'desc' the metrics sort the resulting report
 #' @param dimensionSort Leave as NULL (default) if metrics shuld determine the sort of the report
 #'
-#' @export
-#' @import assertthat httr tidyverse
+#' @import assertthat
+#' @import httr
+#' @import tidyverse
 #'
+#' @export
 aa_breakdown_report <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                                 company_id = Sys.getenv("AA_COMPANY_ID"),
                                 date_range,

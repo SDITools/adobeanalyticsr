@@ -10,6 +10,7 @@
 #' @param top How many rows. Defualt is set to 50
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
+#' @param return_nones "return-nones" is the default,
 #'
 #' @return Data Frame
 #'
@@ -28,11 +29,12 @@
 aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                                date_range = c("2020-08-01", "2020-09-25"),
-                               dimensions = c('page', 'lasttouchchannel'),
+                               dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
                                metrics = c("visits", "visitors"),
                                top = c(5),
                                filterType = 'breakdown',
-                               metricSort =  'desc')
+                               metricSort =  'desc',
+                               return_nones = "return-nones")
   {
   # 1 Call ------------------------------------------------------------------
   for(i in seq(dimensions)) {
@@ -168,7 +170,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                  settings = list(
                                    countRepeatInstances = TRUE,
                                    limit = top[i],
-                                   page = 0
+                                   page = 0,
+                                   nonesBehavior = return_nones
                                  ),
                                  statistics = list(
                                    functions = c("col-max", "col-min")
@@ -255,7 +258,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
-                         page = 0
+                         page = 0,
+                         nonesBehavior = return_nones
                        ),
                        statistics = list(
                          functions = c("col-max", "col-min")
@@ -405,7 +409,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
-                         page = 0
+                         page = 0,
+                         nonesBehavior = return_nones
                        ),
                        statistics = list(
                          functions = c("col-max", "col-min")

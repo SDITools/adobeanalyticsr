@@ -18,7 +18,7 @@
 #' @import stringr
 #' @export
 #'
-get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
+aa_get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                           rsids = NA,
                           segmentFilter = NA,
                           locale = 'en_US',
