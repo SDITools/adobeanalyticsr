@@ -33,6 +33,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                metrics = c("visits", "visitors"),
                                top = c(5),
                                filterType = 'breakdown',
+                               segmentId = NA,
                                metricSort =  'desc',
                                return_nones = "return-nones")
   {
@@ -69,6 +70,34 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       } else if(length(top) == 1) {
         top <- rep(top, length(dimensions))
       }
+
+  #segment filter builder function
+      seg <- function(segmentId) {
+        structure(list(type = "segment",
+                       segmentId = segmentId))
+      }
+
+      segments <- map(segmentId, seg)
+
+  #create the DateRange list item
+      dr <- list(list(
+        type = "dateRange",
+        dateRange = timeframe))
+
+  #join Segment and DateRange builder function
+      s_dr <- function() {
+        if(is.na(segmentId[[1]])) {
+          list(list(
+            type = "dateRange",
+            dateRange = timeframe
+          ))
+        } else {
+          append(segments, dr)
+        }
+      }
+
+      #Create the global filters
+      gf <- s_dr()
 
       ##function to create the top level 'metricsContainer'
       metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
@@ -160,9 +189,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 
       #generating the body of the first api request
       req_body <- structure(list(rsid = rsid,
-                                 globalFilters = list(list(
-                                   type = "dateRange",
-                                   dateRange = timeframe)),
+                                 globalFilters =
+                                   gf,
                                  metricContainer = list(
                                    metrics = mlist[[i]]
                                  ),
@@ -245,9 +273,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 
       req_bodies <- function(i, mf = api2) {
         structure(list(rsid = rsid,
-                       globalFilters = list(list(
-                         type = "dateRange",
-                         dateRange = timeframe)),
+                       globalFilters =
+                         gf,
                        metricContainer = list(
                          metrics = mlist[[i]]
                          ,
@@ -396,9 +423,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       #(ncapable)
       req_bodies <- function(i, mf = apicalls) {
         structure(list(rsid = rsid,
-                       globalFilters = list(list(
-                         type = "dateRange",
-                         dateRange = timeframe)),
+                       globalFilters =
+                         gf,
                        metricContainer = list(
                          metrics = mlist[[i]]
                          ,
