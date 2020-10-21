@@ -11,7 +11,7 @@
 #' @import stringr
 #' @export
 #'
-get_reportsuites <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
+aa_get_reportsuites <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                             rsids = '',
                             rsidContains = '',
                             limit = 10,
