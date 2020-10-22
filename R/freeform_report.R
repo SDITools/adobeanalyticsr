@@ -10,7 +10,8 @@
 #' @param top How many rows. Defualt is set to 50
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
-#' @param return_nones "return-nones" is the default,
+#' @param return_nones "return-nones" is the default
+#' @param segmentId use segments to globally filter the results. Use 1 or many.
 #'
 #' @return Data Frame
 #'
