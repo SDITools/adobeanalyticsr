@@ -10,8 +10,9 @@
 #' @param top How many rows. Defualt is set to 50
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
-#' @param include_unspecified FALSE is equal to "exclude-nones" and is set as the default
+#' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
+#' @param debug default is TRUE but set to TRUE to see the json request being sent to the Adobe API
 #'
 #' @return Data Frame
 #'
@@ -36,7 +37,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                filterType = 'breakdown',
                                segmentId = NA,
                                metricSort =  'desc',
-                               include_unspecified = FALSE)
+                               include_unspecified = TRUE,
+                               debug = FALSE)
 {
 
   #Identify the handling of unspecified
@@ -215,7 +217,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                    functions = c("col-max", "col-min")
                                  )))
 
-      res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id)
+      res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id, debug = debug)
 
       resrows<- fromJSON(res)
 
@@ -306,7 +308,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       calls <- map2(i, api2, req_bodies)
 
       call_data_n <- function(calls) {
-        aa_call_data("reports/ranked", body = calls, company_id = company_id)
+        aa_call_data("reports/ranked", body = calls, company_id = company_id, debug = debug)
       }
 
 
@@ -458,7 +460,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 
       #(ncapable)
       call_data_n <- function(calls) {
-        aa_call_data("reports/ranked", body = calls, company_id = company_id)
+        aa_call_data("reports/ranked", body = calls, company_id = company_id, debug = debug)
       }
 
       #(ncapable)
