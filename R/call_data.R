@@ -1,4 +1,4 @@
-#' Gets the data from Adobe Analytics API v2
+#' Gets the data from Adobe Analytics API v2 - Internal Function
 #'
 #' This gives a raw call to the API, but it is intended other functions call this one
 #'
