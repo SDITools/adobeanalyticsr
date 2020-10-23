@@ -10,7 +10,7 @@
 #' @param top How many rows. Defualt is set to 50
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
-#' @param return_nones "return-nones" is the default
+#' @param include_unspecified FALSE is equal to "exclude-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
 #'
 #' @return Data Frame
@@ -36,8 +36,17 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                filterType = 'breakdown',
                                segmentId = NA,
                                metricSort =  'desc',
-                               return_nones = "return-nones")
-  {
+                               include_unspecified = FALSE)
+{
+
+  #Identify the handling of unspecified
+  if(include_unspecified == FALSE){
+    unspecified <- "exclude-nones"
+  }
+  if(include_unspecified == TRUE) {
+    unspecified <- "return-nones"
+  }
+
   # 1 Call ------------------------------------------------------------------
   for(i in seq(dimensions)) {
     if(i == 1) {
@@ -200,7 +209,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                    countRepeatInstances = TRUE,
                                    limit = top[i],
                                    page = 0,
-                                   nonesBehavior = return_nones
+                                   nonesBehavior = unspecified
                                  ),
                                  statistics = list(
                                    functions = c("col-max", "col-min")
@@ -287,7 +296,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                          countRepeatInstances = TRUE,
                          limit = top[i],
                          page = 0,
-                         nonesBehavior = return_nones
+                         nonesBehavior = unspecified
                        ),
                        statistics = list(
                          functions = c("col-max", "col-min")
@@ -437,7 +446,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                          countRepeatInstances = TRUE,
                          limit = top[i],
                          page = 0,
-                         nonesBehavior = return_nones
+                         nonesBehavior = unspecified
                        ),
                        statistics = list(
                          functions = c("col-max", "col-min")
@@ -466,62 +475,61 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       #(ncapable)
       rowsdata <- function(it) {
         if(i == 3) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[3]][it],
-                                           !!prefinalnames[[1]][[2]] := dat[[4]][it],
-                                           !!prefinalnames[[2]][[1]] := dat[[1]][it],
-                                           !!prefinalnames[[2]][[2]] := dat[[2]][it])
+          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[2]][[1]] := dat[[1]][it],
+                                           !!prefinalnames[[2]][[2]] := dat[[2]][it],
+                                           !!prefinalnames[[1]][[1]] := dat[[3]][it],
+                                           !!prefinalnames[[1]][[2]] := dat[[4]][it])
           return(tf)
         }
         if(i == 4) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[5]][it],
-                                           !!prefinalnames[[1]][[2]] := dat[[6]][it],
+          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[3]][[1]] := dat[[1]][it],
+                                           !!prefinalnames[[3]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[2]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[2]][[2]] := dat[[4]][it],
-                                           !!prefinalnames[[3]][[1]] := dat[[1]][it],
-                                           !!prefinalnames[[3]][[2]] := dat[[2]][it])
+                                           !!prefinalnames[[1]][[1]] := dat[[5]][it],
+                                           !!prefinalnames[[1]][[2]] := dat[[6]][it])
           return(tf)
         }
         if(i == 5) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[7]][it],
-                                           !!prefinalnames[[1]][[2]] := dat[[8]][it],
-                                           !!prefinalnames[[2]][[1]] := dat[[5]][it],
-                                           !!prefinalnames[[2]][[2]] := dat[[6]][it],
+          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[4]][[1]] := dat[[1]][it],
+                                           !!prefinalnames[[4]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[3]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[3]][[2]] := dat[[4]][it],
-                                           !!prefinalnames[[4]][[1]] := dat[[1]][it],
-                                           !!prefinalnames[[4]][[2]] := dat[[2]][it])
+                                           !!prefinalnames[[2]][[1]] := dat[[5]][it],
+                                           !!prefinalnames[[2]][[2]] := dat[[6]][it],
+                                           !!prefinalnames[[1]][[1]] := dat[[7]][it],
+                                           !!prefinalnames[[1]][[2]] := dat[[8]][it])
           return(tf)
         }
         if(i == 6) {
-          tf <-  resn[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[9]][it],
-                                            !!prefinalnames[[1]][[2]] := dat[[10]][it],
-                                            !!prefinalnames[[2]][[1]] := dat[[7]][it],
-                                            !!prefinalnames[[2]][[2]] := dat[[8]][it],
-                                            !!prefinalnames[[3]][[1]] := dat[[6]][it],
-                                            !!prefinalnames[[3]][[2]] := dat[[5]][it],
+          tf <-  resn[[it]]$rows %>% mutate(!!prefinalnames[[5]][[1]] := dat[[1]][it],
+                                            !!prefinalnames[[5]][[2]] := dat[[2]][it],
                                             !!prefinalnames[[4]][[1]] := dat[[3]][it],
                                             !!prefinalnames[[4]][[2]] := dat[[4]][it],
-                                            !!prefinalnames[[5]][[1]] := dat[[1]][it],
-                                            !!prefinalnames[[5]][[2]] := dat[[2]][it])
+                                            !!prefinalnames[[3]][[1]] := dat[[5]][it],
+                                            !!prefinalnames[[3]][[2]] := dat[[6]][it],
+                                            !!prefinalnames[[2]][[1]] := dat[[7]][it],
+                                            !!prefinalnames[[2]][[2]] := dat[[8]][it],
+                                            !!prefinalnames[[1]][[1]] := dat[[9]][it],
+                                            !!prefinalnames[[1]][[2]] := dat[[10]][it])
           return(tf)
         }
         if(i == 7) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[11]][it],
-                                           !!prefinalnames[[1]][[2]] := dat[[12]][it],
-                                           !!prefinalnames[[2]][[1]] := dat[[9]][it],
-                                           !!prefinalnames[[2]][[2]] := dat[[10]][it],
-                                           !!prefinalnames[[3]][[1]] := dat[[7]][it],
-                                           !!prefinalnames[[3]][[2]] := dat[[8]][it],
-                                           !!prefinalnames[[4]][[1]] := dat[[6]][it],
-                                           !!prefinalnames[[4]][[1]] := dat[[5]][it],
+          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[6]][[1]] := dat[[1]][it],
+                                           !!prefinalnames[[6]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[5]][[1]] := dat[[3]][it],
-                                           !!prefinalnames[[5]][[1]] := dat[[4]][it],
-                                           !!prefinalnames[[6]][[1]] := dat[[1]][it],
-                                           !!prefinalnames[[6]][[1]] := dat[[2]][it])
+                                           !!prefinalnames[[5]][[2]] := dat[[4]][it],
+                                           !!prefinalnames[[4]][[1]] := dat[[5]][it],
+                                           !!prefinalnames[[4]][[2]] := dat[[6]][it],
+                                           !!prefinalnames[[3]][[1]] := dat[[7]][it],
+                                           !!prefinalnames[[3]][[1]] := dat[[8]][it],
+                                           !!prefinalnames[[2]][[1]] := dat[[9]][it],
+                                           !!prefinalnames[[2]][[1]] := dat[[10]][it],
+                                           !!prefinalnames[[1]][[1]] := dat[[11]][it],
+                                           !!prefinalnames[[1]][[1]] := dat[[12]][it])
           return(tf)
         }
       }
-
 
       resrows <- map_df(seq(length(resn)), rowsdata)
 
@@ -545,7 +553,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
           select(finalnames)
         dat
       }
-
-    }
+   }
   }
 }
+
+

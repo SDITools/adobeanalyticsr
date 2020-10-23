@@ -9,7 +9,8 @@ aa_call_data(
   body = NULL,
   company_id = Sys.getenv("AA_COMPANY_ID"),
   client_id = Sys.getenv("AA_CLIENT_ID"),
-  client_secret = Sys.getenv("AA_CLIENT_SECRET")
+  client_secret = Sys.getenv("AA_CLIENT_SECRET"),
+  debug = FALSE
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ aa_call_data(
 \item{client_id}{Set in environment args, or pass directly here}
 
 \item{client_secret}{Set in environment args, or pass directly here}
+
+\item{debug}{Set this to TRUE to see the information about the api calls as they happen.}
 }
 \description{
 This gives a raw call to the API, but it is intended other functions call this one
