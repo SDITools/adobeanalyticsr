@@ -14,7 +14,7 @@ aa_freeform_report(
   filterType = "breakdown",
   segmentId = NA,
   metricSort = "desc",
-  return_nones = "return-nones"
+  include_unspecified = FALSE
 )
 }
 \arguments{
@@ -30,9 +30,11 @@ aa_freeform_report(
 
 \item{filterType}{Default is 'breakdown'. This will only change if a segment is used.}
 
+\item{segmentId}{use segments to globally filter the results. Use 1 or many.}
+
 \item{metricSort}{Presorts the table by metrics. Values are either 'asc' or 'desc'.}
 
-\item{return_nones}{"return-nones" is the default,}
+\item{include_unspecified}{FALSE is equal to "exclude-nones" and is set as the default}
 }
 \value{
 Data Frame
