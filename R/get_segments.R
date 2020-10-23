@@ -39,7 +39,7 @@ aa_get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 
   vars <- tibble(rsids, segmentFilter, locale, tagNames, filterByPublishedSegments, limit, page, sortDirection,
   sortProperty, expansion, includeType)
-  #Turn the list into a string to create the qurey
+  #Turn the list into a string to create the query
   prequery <- list(vars %>% select_if(~ !any(is.na(.))))
   #remove the extra parts of the string and replace it with the query parameter breaks
   query_param <- str_remove_all(str_replace_all(str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
