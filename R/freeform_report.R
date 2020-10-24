@@ -7,7 +7,9 @@
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to send
 #' @param dimensions Dimension to send
-#' @param top How many rows. Defualt is set to 50
+#' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limi number or you can add
+#' a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works
+#' if daterangeday is the first dimension listed.
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
 #' @param include_unspecified FALSE is equal to "exclude-nones" and is set as the default
@@ -22,7 +24,6 @@
 #' @import httr
 #' @import dplyr
 #' @import curl
-#' @import tidyverse
 #' @import stringr
 #' @import purrrlyr
 #'
@@ -72,14 +73,16 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
       ##setup the right number of limits for each dimension
-      if(length(top) != length(dimensions) & length(top) != 1) {
-        stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
-      } else if(grepl('daterangeday', dimensions[1])) {
-        top <- rep(top, length(dimensions)-1)
-        top <- c(as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])), top)
-      } else if(length(top) == 1) {
-        top <- rep(top, length(dimensions))
-      }
+    if(length(top) != length(dimensions) & length(top) != 1) {
+      stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
+    } else if(grepl('daterangeday', dimensions[1]) & length(top) == 1) {
+      top <- rep(top, length(dimensions)-1)
+      top <- c(as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1), top)
+    } else if(grepl('daterangeday', dimensions[1]) & length(top) != 1 & top[[1]] == 0) {
+      top[[1]] <- as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1)
+    } else if(length(top) == 1) {
+      top <- rep(top, length(dimensions))
+    }
 
   #segment filter builder function
       seg <- function(segmentId) {
