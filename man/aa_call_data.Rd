@@ -2,7 +2,7 @@
 % Please edit documentation in R/call_data.R
 \name{aa_call_data}
 \alias{aa_call_data}
-\title{Gets the data from Adobe Analytics API v2}
+\title{Gets the data from Adobe Analytics API v2 - Internal Function}
 \usage{
 aa_call_data(
   req_path,

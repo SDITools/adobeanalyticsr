@@ -14,7 +14,8 @@ aa_freeform_report(
   filterType = "breakdown",
   segmentId = NA,
   metricSort = "desc",
-  include_unspecified = FALSE
+  include_unspecified = TRUE,
+  debug = FALSE
 )
 }
 \arguments{
@@ -36,7 +37,9 @@ if daterangeday is the first dimension listed.}
 
 \item{metricSort}{Presorts the table by metrics. Values are either 'asc' or 'desc'.}
 
-\item{include_unspecified}{FALSE is equal to "exclude-nones" and is set as the default}
+\item{include_unspecified}{TRUE is equal to "return-nones" and is set as the default}
+
+\item{debug}{default is TRUE but set to TRUE to see the json request being sent to the Adobe API}
 }
 \value{
 Data Frame
