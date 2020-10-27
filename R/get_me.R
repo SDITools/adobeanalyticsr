@@ -36,7 +36,7 @@ get_me <- function(req_path = 'discovery/me',
                      encode = "json",
                      body = FALSE,
                      config(token = token),
-                     verbose(),
+                     #verbose(),
                      httr::add_headers(
                        `x-api-key` = client_id
                      ))
@@ -45,6 +45,6 @@ get_me <- function(req_path = 'discovery/me',
 
   me <- fromJSON(res)
 
-
-  me$imsOrgs$companies %>% bind_rows()
+  message('Your data is now available!')
+  return(me$imsOrgs$companies %>% bind_rows())
 }
