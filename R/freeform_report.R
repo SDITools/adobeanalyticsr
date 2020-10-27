@@ -14,6 +14,7 @@
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
+#' @param search The structure of a search string is specific and can be compound using "and"...more to come
 #' @param debug default is TRUE but set to TRUE to see the json request being sent to the Adobe API
 #'
 #' @return Data Frame
@@ -39,7 +40,9 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                segmentId = NA,
                                metricSort =  'desc',
                                include_unspecified = TRUE,
-                               debug = FALSE)
+                               debug = FALSE,
+                               search = FALSE
+                               )
 {
 
   #Identify the handling of unspecified
@@ -113,6 +116,11 @@ for(i in seq(dimensions)) {
 
       #Create the global filters
       gf <- s_dr()
+
+      #search filter
+      if(!is.na(search)){
+        search <-  structure(list('clause' = search))
+      }
 
       ##function to create the top level 'metricsContainer'
       metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
@@ -210,6 +218,7 @@ for(i in seq(dimensions)) {
                                    metrics = mlist[[i]]
                                  ),
                                  dimension = sprintf("variables/%s", df$dimension[[i]]),
+                                 search = search,
                                  settings = list(
                                    countRepeatInstances = TRUE,
                                    limit = top[i],

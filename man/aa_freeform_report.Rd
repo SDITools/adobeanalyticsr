@@ -15,7 +15,8 @@ aa_freeform_report(
   segmentId = NA,
   metricSort = "desc",
   include_unspecified = TRUE,
-  debug = FALSE
+  debug = FALSE,
+  search = FALSE
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ if daterangeday is the first dimension listed.}
 \item{include_unspecified}{TRUE is equal to "return-nones" and is set as the default}
 
 \item{debug}{default is TRUE but set to TRUE to see the json request being sent to the Adobe API}
+
+\item{search}{The structure of a search string is specific and can be compound using "and"...more to come}
 }
 \value{
 Data Frame
