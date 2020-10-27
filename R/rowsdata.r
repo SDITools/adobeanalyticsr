@@ -1,11 +1,12 @@
 #' Used to join previous rows of data
 #'
 #' @param it joining the itemIds and corresponding data for each new row of data
+#' @param i the dimension number the function is working on now
 #'
 #' @export
 #'
 
-rowsdata <- function(it) {
+rowsdata <- function(it, i) {
   if(i == 2) {
     tf <- res[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
                                     !!prefinalnames[[1]][[2]] := dat[[2]][[it]])

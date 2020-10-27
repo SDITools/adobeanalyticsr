@@ -336,7 +336,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       #                             !!prefinalnames[[1]][[2]] := dat[[2]][[it]])
       # }
 
-      resrows <- map_df(seq(elnum), rowsdata)
+      resrows <- map2_dfr(seq(elnum), i, rowsdata)
 
       #conditional statement to determine if the function should terminate and reurn the df or continue on.
       if(length(dimensions) != i) {
@@ -477,7 +477,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       #(ncapable)
       resn <- map(seq(length(res)),  getdata)
 
-      resrows <- map_df(seq(length(resn)), rowsdata)
+      resrows <- map2_dfr(seq(length(resn)), i, rowsdata)
 
 
       if(length(dimensions) != i) {
