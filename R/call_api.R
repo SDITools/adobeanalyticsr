@@ -41,7 +41,7 @@ aa_call_api <- function(req_path,
                      encode = "json",
                      body = FALSE,
                      config(token = token),
-                     verbose(),
+                     #verbose(),
                      httr::add_headers(
                        `x-api-key` = client_id,
                        `x-proxy-global-company-id` = company_id
