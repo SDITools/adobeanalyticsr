@@ -331,7 +331,7 @@ for(i in seq(dimensions)) {
 
       elnum <- sum(unlist(map(seq(length(res)), el)))
 
-      rowsdata <- function(it) {
+      rowsdata <- function(it, i) {
         res[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
                                   !!prefinalnames[[1]][[2]] := dat[[2]][[it]])
       }
