@@ -41,7 +41,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                metricSort =  'desc',
                                include_unspecified = TRUE,
                                debug = FALSE,
-                               search = FALSE
+                               search = NA
                                )
 {
 
