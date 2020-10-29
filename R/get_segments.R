@@ -37,7 +37,7 @@ aa_get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
   if(length(segmentFilter) > 1) {segmentFilter = paste0(segmentFilter, collapse = ',') }
   if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
 
-  vars <- tibble(rsids, segmentFilter, locale, tagNames, filterByPublishedSegments, limit, page, sortDirection,
+  vars <- tibble(rsids, segmentFilter, locale, name, tagNames, filterByPublishedSegments, limit, page, sortDirection,
   sortProperty, expansion, includeType)
   #Turn the list into a string to create the query
   prequery <- list(vars %>% select_if(~ !any(is.na(.))))
