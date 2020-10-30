@@ -56,9 +56,9 @@ aa_call_data <- function(req_path,
   stop_for_status(req)
 
   if(status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
-    stop(paste0('Pease check your metrics. You used an ',resrowserrors$columns$columnErrors$errorCode,' - ',resrowserrors$columns$columnErrors$errorDescription))
-  } else if(length(content(req)$columns$columnErrors[[1]]) != 0){
-    stop(paste0('Please check dimension ', i, '. It did not pull back any data.'))
+    stop(paste0('Pease check your metrics. You used an ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
+  } else if(status_code(req) == 206){
+    stop(paste0('Please check your dimensions. It did not pull back any data.'))
   }
 
   httr::content(req, as = "text",encoding = "UTF-8")
