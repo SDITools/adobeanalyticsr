@@ -1,4 +1,4 @@
-#' Gets the data from Adobe Analytics API v2 - Internal Function
+#' Gets the debug data with the api call from Adobe Analytics API v2 - Internal Function
 #'
 #' This gives a raw call to the API, but it is intended other functions call this one
 #'
@@ -7,6 +7,7 @@
 #' @param company_id Set in environment args, or pass directly here
 #' @param client_id Set in environment args, or pass directly here
 #' @param client_secret Set in environment args, or pass directly here
+#' @param debug Set this to TRUE to see the information about the api calls as they happen.
 #'
 #' @examples
 #'
@@ -21,12 +22,12 @@
 #' @export
 #' @import assertthat httr purrr
 #'
-aa_call_data <- function(req_path,
+aa_call_data_debug <- function(req_path,
                         body = NULL,
                         company_id = Sys.getenv("AA_COMPANY_ID"),
                         client_id = Sys.getenv("AA_CLIENT_ID"),
-                        client_secret = Sys.getenv("AA_CLIENT_SECRET")
-                        ){
+                        client_secret = Sys.getenv("AA_CLIENT_SECRET"),
+                        debug = TRUE){
 
   assert_that(
     is.string(req_path),
@@ -47,6 +48,7 @@ aa_call_data <- function(req_path,
                      body = body,
                      encode = "json",
                      config(token = token),
+                     verbose(data_out = debug),
                      httr::add_headers(
                        `x-api-key` = client_id,
                        `x-proxy-global-company-id` = company_id
