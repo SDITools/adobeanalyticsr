@@ -325,16 +325,18 @@ for(i in seq(dimensions)) {
       calls <- map2(i, api2, req_bodies)
 
       call_data_n <- function(calls) {
-        if(debug == FALSE) {
           aa_call_data("reports/ranked", body = calls, company_id = company_id)
-        } else if(debug == TRUE) {
+      }
+      call_data_n_debug <- function(calls) {
           aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
-        }
       }
 
-
-      res <- map(calls, call_data_n)
-
+      if(debug == FALSE) {
+        res <- map(calls, call_data_n)
+      }
+      if(debug == TRUE) {
+        res <- map(calls, call_data_n_debug)
+      }
       getdata <- function(it) {
         fromJSON(res[[it]])
       }
