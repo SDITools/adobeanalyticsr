@@ -16,7 +16,7 @@ aa_freeform_report(
   metricSort = "desc",
   include_unspecified = TRUE,
   debug = FALSE,
-  search = FALSE
+  search = NA
 )
 }
 \arguments{
