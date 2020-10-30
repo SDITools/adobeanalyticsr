@@ -2,10 +2,10 @@
 % Please edit documentation in R/get_breakdowns.R
 \name{breakdowns}
 \alias{breakdowns}
-\title{Build the breakdown_metrics json list for the metrics breakdown report}
+\title{Build the breakdown_metrics json list for the metrics breakdown report - (sub-function)}
 \usage{
 breakdowns(id, type, dimensions, itemId)
 }
 \description{
-Build the breakdown_metrics json list for the metrics breakdown report
+Build the breakdown_metrics json list for the metrics breakdown report - (sub-function)
 }

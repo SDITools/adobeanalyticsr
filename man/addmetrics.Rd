@@ -2,10 +2,10 @@
 % Please edit documentation in R/addmetrics_function.R
 \name{addmetrics}
 \alias{addmetrics}
-\title{Build the metrics json list for report_freeform}
+\title{Build the metrics json list for report_freeform - (sub-function)}
 \usage{
 addmetrics(metric, id2, metricSort)
 }
 \description{
-Build the metrics json list for report_freeform
+Build the metrics json list for report_freeform - (sub-function)
 }

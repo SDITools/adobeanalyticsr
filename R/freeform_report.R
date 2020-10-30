@@ -232,7 +232,7 @@ for(i in seq(dimensions)) {
         res <- aa_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
       }
       if(debug == FALSE) {
-      res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id)
+        res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id)
       }
 
       resrows<- fromJSON(res)
@@ -328,7 +328,7 @@ for(i in seq(dimensions)) {
           aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
         }
         if(debug == FALSE) {
-          aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+          aa_call_data("reports/ranked", body = calls, company_id = company_id)
         }
       }
 
@@ -482,10 +482,10 @@ for(i in seq(dimensions)) {
       #(ncapable)
       call_data_n <- function(calls) {
         if(debug == TRUE) {
-        aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+          aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
         }
         if(debug == FALSE) {
-        aa_call_data("reports/ranked", body = calls, company_id = company_id)
+          aa_call_data("reports/ranked", body = calls, company_id = company_id)
         }
       }
 

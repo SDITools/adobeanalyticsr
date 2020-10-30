@@ -1,4 +1,4 @@
-#' Build the breakdown_metrics json list for the metrics breakdown report
+#' Build the breakdown_metrics json list for the metrics breakdown report - (sub-function)
 #'
 #' @export
 #'

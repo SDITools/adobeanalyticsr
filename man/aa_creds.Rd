@@ -2,7 +2,7 @@
 % Please edit documentation in R/adding_aa_credentials.R
 \name{aa_creds}
 \alias{aa_creds}
-\title{Setting credentials to the environment}
+\title{Setting credentials to the system environment}
 \usage{
 aa_creds()
 }
