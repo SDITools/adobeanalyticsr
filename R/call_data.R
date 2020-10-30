@@ -56,9 +56,9 @@ aa_call_data <- function(req_path,
   stop_for_status(req)
 
   if(status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
-    stop(paste0('Pease check your metrics. You used an ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
+    stop(paste0('The error code is ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
   } else if(status_code(req) == 206){
-    stop(paste0('Please check your dimensions. It did not pull back any data.'))
+    stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
   } else if(status_code(req) == 200 & content(req)$totalElements == 0) {
     stop("No data was returned while a valid 200 response code was returned. Consider changing 'include_unsecified' to TRUE in your function call.")
   }
