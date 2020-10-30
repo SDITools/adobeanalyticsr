@@ -330,6 +330,9 @@ for(i in seq(dimensions)) {
         } else if(debug == TRUE) {
           aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
         }
+        if(debug == TRUE) {
+          aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+        }
       }
 
 
