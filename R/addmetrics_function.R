@@ -1,4 +1,4 @@
-#' Build the metrics json list for report_freeform
+#' Build the metrics json list for report_freeform - (sub-function)
 #'
 #' @export
 #'

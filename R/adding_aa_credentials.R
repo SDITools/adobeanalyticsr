@@ -1,4 +1,4 @@
-#' Setting credentials to the environment
+#' Setting credentials to the system environment
 #'
 #'This function will enable you to set the 4 essential arguments the API requires for OAuth and making calls
 #'to specific report suites.
