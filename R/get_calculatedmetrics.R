@@ -40,7 +40,6 @@ aa_get_calculatedmetrics <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 {
   #make the list of params into a dataframe
   if(length(rsids) > 1) {rsids = paste0(rsids, collapse = ',') }
-  if(length(segmentFilter) > 1) {segmentFilter = paste0(segmentFilter, collapse = ',') }
   if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
 
   vars <- tibble(rsids, ownerId, filterByIds, toBeUsedInRsid, locale, name, tagnames, favorite, approved,
