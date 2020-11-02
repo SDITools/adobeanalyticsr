@@ -3,6 +3,7 @@
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
 #' the api call. Up to 7 dimensions at this time.
 #'
+#' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsid Adobe report suite id number. Taken from the global environment by default if not provided.
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to send
@@ -21,13 +22,14 @@
 #'
 #' @import assertthat
 #' @import httr
-#' @import tidyverse
-#' @import jsonlite
 #' @import httr
 #' @import dplyr
-#' @import curl
 #' @import stringr
+#' @import purrr
+#' @import tidyr
 #' @import purrrlyr
+#' @importFrom rlang :=
+#' @importFrom jsonlite fromJSON
 #'
 #' @export
 aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
@@ -64,7 +66,7 @@ for(i in seq(dimensions)) {
         c(paste0('itemId_',dimensions[level]), dimensions[level])
       }
 
-      prefinalnames <- map(seq(dimensions), finalnames_function) %>%
+      prefinalnames <- purrr::map(seq(dimensions), finalnames_function) %>%
         append(list(metrics))
 
 
@@ -72,7 +74,7 @@ for(i in seq(dimensions)) {
       itemidnamesfunction <- function(items) {
         paste0('itemId_', dimensions[[items]])
       }
-      itemidnames <-map(seq(dimensions), itemidnamesfunction)
+      itemidnames <-purrr::map(seq(dimensions), itemidnamesfunction)
 
       ##set the timeframe for the query
       timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
@@ -95,7 +97,7 @@ for(i in seq(dimensions)) {
                        segmentId = segmentId))
       }
 
-      segments <- map(segmentId, seg)
+      segments <- purrr::map(segmentId, seg)
 
   #create the DateRange list item
       dr <- list(list(
@@ -177,7 +179,7 @@ for(i in seq(dimensions)) {
       metIds <- tibble(metrics,colid = seq(length(metrics))-1)
 
       df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, top)
-      df <- df %>% mutate(breakdownorder = as.numeric(rownames(df)))
+      df <- df %>% dplyr::mutate(breakdownorder = as.numeric(rownames(df)))
       bdnumber <- as.numeric(max(df$breakdownorder))
       metnumber <- as.numeric(length(metrics))
 
@@ -187,12 +189,12 @@ for(i in seq(dimensions)) {
         mc <- list()
         if(i == 1) {
           mc <- list()
-          mc <- map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
+          mc <- purrr::map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
           return(mc)
         } else if(i == 2) {
           m2list <- list(metric = df$metric[[i]][[1]], colId = df$metric[[i]][[2]],
                          metricSort = metricSort, filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
-          mc <- append(mc, values = pmap(m2list, metriccontainer_2))
+          mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
           return(mc)
         } else  {
           #if = 3rd dimension or more
@@ -202,12 +204,12 @@ for(i in seq(dimensions)) {
           m3list <- list(metric = df$metric[[i]][[1]],
                          colId = df$metric[[i]][[2]],metricSort = metricSort,
                          filterId = filteridslist)
-          mc <-  append(mc, values = pmap(m3list, metriccontainer_n))
+          mc <-  append(mc, values = purrr::pmap(m3list, metriccontainer_n))
           return(mc)
         }
       }
 
-      mlist <- map(seq(bdnumber), metricContainerFunction)
+      mlist <- purrr::map(seq(bdnumber), metricContainerFunction)
 
 
       #generating the body of the first api request
@@ -236,26 +238,26 @@ for(i in seq(dimensions)) {
         res <- aa_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
       }
 
-      resrows<- fromJSON(res)
+      resrows<- jsonlite::fromJSON(res)
 
 
       #conditional statement to determine if the function should terminate and reurn the df or continue on.
       if(length(dimensions) == 1) {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows$rows %>%
-          rename(!!itemidname := itemId,
+          dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value) %>%
-          mutate(metrics = list(prefinalnames[[i+1]])) %>%
-          unnest(c(metrics, data)) %>%
-          spread(metrics, data) %>%
-          select(finalnames)
+          dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
+          tidyr::unnest(c(metrics, data)) %>%
+          tidyr::spread(metrics, data) %>%
+          dplyr::select(all_of(finalnames))
         return(dat)
       } else if(length(dimensions) != i) {
         ## second and not last data pull
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows$rows %>%
-          select(itemId, value) %>%
-          rename(!!itemidname := itemId,
+          dplyr::select(itemId, value) %>%
+          dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
       }
   }
@@ -269,7 +271,7 @@ for(i in seq(dimensions)) {
         mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
       }
       #run the function
-      mfdims <- map(seq_along(dimensions)-1, load_dims)
+      mfdims <- purrr::map(seq_along(dimensions)-1, load_dims)
 
 
       # a function that formats the list of metricFilters to run below the metricsContainer
@@ -277,7 +279,7 @@ for(i in seq(dimensions)) {
         mfdimslist <-structure(list(id = mfdims[[i]]$id, type = 'breakdown', dimension = mfdims[[i]]$dimension, itemId = ''))
       }
       #map the function to list out the metricFiltres section of the api call
-      lists_built <- map( seq_along(dimensions), metricFiltersFunction)
+      lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
 
       ### function to create the breakdown 'metricsFilters'
       metricfilter_n <- function(filterId , type, dimension, itemId = '') {
@@ -292,13 +294,13 @@ for(i in seq(dimensions)) {
       mflist <- list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
 
 
-      mf_item <- pmap(mflist, metricfilter_n)
+      mf_item <- purrr::pmap(mflist, metricfilter_n)
 
       mf_itemlist <- function(itemid) {
-        map(mf_item, update_list, itemId = itemid)
+        purrr::map(mf_item, update_list, itemId = itemid)
       }
 
-      api2 <- map(dat[[1]], mf_itemlist)
+      api2 <- purrr::map(dat[[1]], mf_itemlist)
 
       req_bodies <- function(i, mf = api2) {
         structure(list(rsid = rsid,
@@ -322,7 +324,7 @@ for(i in seq(dimensions)) {
                        )))
       }
 
-      calls <- map2(i, api2, req_bodies)
+      calls <- purrr::map2(i, api2, req_bodies)
 
       call_data_n <- function(calls) {
           aa_call_data("reports/ranked", body = calls, company_id = company_id)
@@ -332,16 +334,16 @@ for(i in seq(dimensions)) {
       }
 
       if(debug == FALSE) {
-        res <- map(calls, call_data_n)
+        res <- purrr::map(calls, call_data_n)
       }
       if(debug == TRUE) {
-        res <- map(calls, call_data_n_debug)
+        res <- purrr::map(calls, call_data_n_debug)
       }
       getdata <- function(it) {
-        fromJSON(res[[it]])
+        jsonlite::fromJSON(res[[it]])
       }
 
-      res <- map(seq(length(res)),  getdata)
+      res <- purrr::map(seq(length(res)),  getdata)
 
       t = 0
 
@@ -349,33 +351,33 @@ for(i in seq(dimensions)) {
         if_else(res[[els]]$numberOfElements != 0, t+1, 0)
       }
 
-      elnum <- sum(unlist(map(seq(length(res)), el)))
+      elnum <- sum(unlist(purrr::map(seq(length(res)), el)))
 
       rowsdata <- function(it, i) {
-        res[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
+        res[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
                                   !!prefinalnames[[1]][[2]] := dat[[2]][[it]])
       }
 
-      resrows <- map2_dfr(seq(elnum), i, rowsdata)
+      resrows <- purrr::map2_dfr(seq(elnum), i, rowsdata)
 
       #conditional statement to determine if the function should terminate and reurn the df or continue on.
       if(length(dimensions) != i) {
         ## second and not last data pull
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows %>%
-          rename(!!itemidname := itemId,
+          dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
-        dat <- dat %>% select(-data)
+        dat <- dat %>% dplyr::select(-data)
 
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows %>%
-          rename(!!itemidname := itemId,
+          dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value) %>%
-          mutate(metrics = list(prefinalnames[[i+1]])) %>%
-          unnest(c(metrics, data)) %>%
-          spread(metrics, data) %>%
-          select(finalnames)
+          dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
+          tidyr::unnest(c(metrics, data)) %>%
+          tidyr::spread(metrics, data) %>%
+          dplyr::select(all_of(finalnames))
         return(dat)
       }
     }
@@ -390,7 +392,7 @@ for(i in seq(dimensions)) {
         mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
       }
       #run the function
-      mfdims <- map(seq_along(dimensions)-1, load_dims)
+      mfdims <- purrr::map(seq_along(dimensions)-1, load_dims)
 
 
       # a function that formats the list of metricFilters too run below the metricsContainer
@@ -398,7 +400,7 @@ for(i in seq(dimensions)) {
         mfdimslist <-structure(list(id = mfdims[[i]]$id, type = 'breakdown', dimension = mfdims[[i]]$dimension))
       }
       #map the function to list out the metricFiltres section of the api call
-      lists_built <- map( seq_along(dimensions), metricFiltersFunction)
+      lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
 
       ### function to create the breakdown 'metricsFilters'
       metricfilter_n <- function(filterId , type, dimension) {
@@ -408,22 +410,23 @@ for(i in seq(dimensions)) {
           dimension = sprintf('variables/%s', dimension)
         )
       }
+
       #run the list function to genereate the formated json string like list
       mflist <- list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
 
       #pulls together all the main items minus the itemIds for the query
-      mf_item <- pmap(mflist, metricfilter_n)
+      mf_item <- purrr::pmap(mflist, metricfilter_n)
 
       #build the item ids needed for the next query
       mf_itemlist <- function(itemid) {
-        ids <- map(map_depth(itemid, 1, unlist), rep,  each = length(metrics))
+        ids <- purrr::map(purrr::map_depth(itemid, 1, unlist), rep,  each = length(metrics))
       }
 
       selectlist <- list()
       for(series in seq(i-1)){
         selectlist <-  append(selectlist, itemidnames[[series]])
       }
-      itemidlist_n <- select(dat, unlist(selectlist))
+      itemidlist_n <- dplyr::select(dat, unlist(selectlist))
 
       listum <- list()
 
@@ -433,7 +436,7 @@ for(i in seq(dimensions)) {
       itemidlist_n <- listum
 
       ##Create the itemids list in the correct number of times.
-      itemidser <- map(itemidlist_n, mf_itemlist)
+      itemidser <- purrr::map(itemidlist_n, mf_itemlist)
 
       ##join the 2 different itemids in their correct order. (ncapable)
       listing <- function(p = seq(itemidser)) {
@@ -441,7 +444,7 @@ for(i in seq(dimensions)) {
       }
 
       ##creating the list of lists for the appropriate number of metricFilter items (ncapable)
-      itemidser <- map(seq(itemidser),  listing)
+      itemidser <- purrr::map(seq(itemidser),  listing)
 
       #duplicate the list to match the list length of the next api call (ncapable)
       mf_list <- rep(list(mf_item), length(itemidser))
@@ -479,7 +482,7 @@ for(i in seq(dimensions)) {
       }
 
       #(ncapable)
-      calls <- map2(i, apicalls, req_bodies)
+      calls <- purrr::map2(i, apicalls, req_bodies)
 
       #(ncapable)
       call_data_n <- function(calls) {
@@ -491,35 +494,35 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       if(debug == FALSE) {
-        res <- map(calls, call_data_n)
+        res <- purrr::map(calls, call_data_n)
       }
       if(debug == TRUE) {
-        res <- map(calls, call_data_n_debug)
+        res <- purrr::map(calls, call_data_n_debug)
       }
 
       #(ncapable)
       getdata <- function(it) {
-        fromJSON(res[[it]])
+        jsonlite::fromJSON(res[[it]])
       }
 
       #(ncapable)
-      resn <- map(seq(length(res)),  getdata)
+      resn <- purrr::map(seq(length(res)),  getdata)
 
     rowsdata <- function(it, i) {
         if(i == 2) {
-          tf <- res[[it]]$rows %>% mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
+          tf <- res[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
                                           !!prefinalnames[[1]][[2]] := dat[[2]][[it]])
           return(tf)
         }
         if(i == 3) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[2]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[2]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[2]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[1]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[1]][[2]] := dat[[4]][it])
           return(tf)
         }
         if(i == 4) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[3]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[3]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[3]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[2]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[2]][[2]] := dat[[4]][it],
@@ -528,7 +531,7 @@ for(i in seq(dimensions)) {
           return(tf)
         }
         if(i == 5) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[4]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[4]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[4]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[3]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[3]][[2]] := dat[[4]][it],
@@ -539,7 +542,7 @@ for(i in seq(dimensions)) {
           return(tf)
         }
         if(i == 6) {
-          tf <-  resn[[it]]$rows %>% mutate(!!prefinalnames[[5]][[1]] := dat[[1]][it],
+          tf <-  resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[5]][[1]] := dat[[1]][it],
                                             !!prefinalnames[[5]][[2]] := dat[[2]][it],
                                             !!prefinalnames[[4]][[1]] := dat[[3]][it],
                                             !!prefinalnames[[4]][[2]] := dat[[4]][it],
@@ -552,7 +555,7 @@ for(i in seq(dimensions)) {
           return(tf)
         }
         if(i == 7) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[6]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[6]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[6]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[5]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[5]][[2]] := dat[[4]][it],
@@ -567,7 +570,7 @@ for(i in seq(dimensions)) {
           return(tf)
         }
         if(i == 8) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[7]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[7]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[7]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[6]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[6]][[2]] := dat[[4]][it],
@@ -584,7 +587,7 @@ for(i in seq(dimensions)) {
           return(tf)
         }
         if(i == 9) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[8]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[8]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[8]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[7]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[7]][[2]] := dat[[4]][it],
@@ -603,7 +606,7 @@ for(i in seq(dimensions)) {
           return(tf)
         }
         if(i == 10) {
-          tf <- resn[[it]]$rows %>% mutate(!!prefinalnames[[9]][[1]] := dat[[1]][it],
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[9]][[1]] := dat[[1]][it],
                                            !!prefinalnames[[9]][[2]] := dat[[2]][it],
                                            !!prefinalnames[[8]][[1]] := dat[[3]][it],
                                            !!prefinalnames[[8]][[2]] := dat[[4]][it],
@@ -625,26 +628,26 @@ for(i in seq(dimensions)) {
         }
       }
 
-      resrows <- map2_dfr(seq(length(resn)), i, rowsdata)
+      resrows <- purrr::map2_dfr(seq(length(resn)), i, rowsdata)
 
 
       if(length(dimensions) != i) {
         ## second and not last data pull
         itemidname <- paste0('itemId_', finalnames[[i]])
         dat <- resrows %>%
-          rename(!!itemidname := itemId,
+          dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
-        dat <- dat %>% select(-data)
+        dat <- dat %>% dplyr::select(-data)
 
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows %>%
-          rename(!!itemidname := itemId,
+          dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value) %>%
-          mutate(metrics = list(prefinalnames[[i+1]])) %>%
-          unnest(c(metrics, data)) %>%
-          spread(metrics, data) %>%
-          select(finalnames)
+          dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
+          tidyr::unnest(c(metrics, data)) %>%
+          tidyr::spread(metrics, data) %>%
+          dplyr::select(all_of(finalnames))
         return(dat)
       }
    }

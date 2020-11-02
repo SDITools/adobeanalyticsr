@@ -28,7 +28,7 @@ aa_get_dimensions <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 
   res <- aa_call_api(req_path = urlstructure, company_id = company_id)
 
-  res <- fromJSON(res)
+  res <- jsonlite::fromJSON(res)
   # removing "metrics/" from the beginning of the id value
   res$id <- stringr::str_sub(res$id, 11)
 

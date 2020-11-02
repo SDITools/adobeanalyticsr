@@ -16,6 +16,8 @@ aa_anomaly_report(
 )
 }
 \arguments{
+\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+
 \item{rsid}{Adobe report number}
 
 \item{date_range}{A two length vector of start and end Date objects (default set to show last 30 days)}

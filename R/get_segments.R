@@ -2,6 +2,7 @@
 #'
 #' Retrieve All Segments
 #'
+#' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsids Filter list to only include segments tied to specified RSID list (comma-delimited)
 #' @param segmentFilter Filter list to only include suites in this RSID list (comma-delimited)
 #' @param locale Locale (en_US default)
@@ -50,7 +51,7 @@ aa_get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
   #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
   res <- aa_call_api(req_path = urlstructure[1], company_id = company_id)
 
-  res <- fromJSON(res)
+  res <- jsonlite::fromJSON(res)
 
   #Just need the content of the returned json
   res <- res$content

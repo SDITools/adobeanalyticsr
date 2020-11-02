@@ -3,9 +3,9 @@
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
 #' the api call. Only runs a single dimension with as many metrics as you want.
 #'
-#' @param req_body The json string copied from workspace
+#' @param company_id Company Id.  Taken from the global environment by default if not provided.
+#' @param req_body The json string copied from Workspace
 #'
-#' @import tidyverse
 #' @export
 #'
 aa_workspace_report <- function(req_body = sample, company_id = Sys.getenv('AA_COMPANY_ID')) {
@@ -18,7 +18,7 @@ aa_workspace_report <- function(req_body = sample, company_id = Sys.getenv('AA_C
   #make the request
   res <- aa_call_data("reports/ranked", body = body, company_id = company_id)
   #reformat from JSON
-  res <- fromJSON(res)
+  res <- jsonlite::fromJSON(res)
   # Clean up and return only data rows
   res_df <- res$rows
   # If more than one metric the value list needs to be spread to individual columns

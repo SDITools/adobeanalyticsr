@@ -1,5 +1,5 @@
 #' Build the metrics json list for report_freeform
-#'
+#' @noRd
 #' @export
 #'
 #'

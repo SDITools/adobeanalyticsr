@@ -2,6 +2,8 @@
 #'
 #' This gives a raw call to the API, but it is intended other functions call this one
 #'
+#' @noRd
+#'
 #' @param req_path The endpoint for that particular report
 #' @param body An R list that will be parsed to JSON
 #' @param company_id Set in environment args, or pass directly here
@@ -9,18 +11,8 @@
 #' @param client_secret Set in environment args, or pass directly here
 #' @param debug Set this to TRUE to see the information about the api calls as they happen.
 #'
-#' @examples
-#'
-#' \dontrun{
-#'
-#' aa_call_data("reports/ranked",
-#'             body = list(..etc..),
-#'             company_id = "blah")
-#'
-#' }
-#'
-#' @export
 #' @import assertthat httr purrr
+#' @export
 #'
 aa_call_data_debug <- function(req_path,
                         body = NULL,

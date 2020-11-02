@@ -21,6 +21,8 @@ aa_get_segments(
 )
 }
 \arguments{
+\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+
 \item{rsids}{Filter list to only include segments tied to specified RSID list (comma-delimited)}
 
 \item{segmentFilter}{Filter list to only include suites in this RSID list (comma-delimited)}
