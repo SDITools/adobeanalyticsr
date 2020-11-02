@@ -20,6 +20,8 @@ aa_freeform_report(
 )
 }
 \arguments{
+\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+
 \item{rsid}{Adobe report suite id number. Taken from the global environment by default if not provided.}
 
 \item{date_range}{A two length vector of start and end Date objects}

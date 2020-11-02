@@ -1,6 +1,5 @@
 #' OAuth2 Token for Adobe Analytics
 #'
-#' @noRd
 #'
 #' @param client_id defined by global variable or manually defined
 #' @param client_secret defined by global variable or manually defined

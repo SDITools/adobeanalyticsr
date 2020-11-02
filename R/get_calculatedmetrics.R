@@ -2,6 +2,7 @@
 #'
 #' Retrieve All Calculated Metrics
 #'
+#' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsids Filter list to only include calculated metrics tied to specified RSID list (comma-delimited)
 #' @param ownerId Filter list to only include calculated metrics owned by the specified loginId
 #' @param filterByIds Filter list to only include calculated metrics in the specified list (comma-delimited list of IDs) (this is the same as calculatedMetricFilter, and is overwritten by calculatedMetricFilter
@@ -16,7 +17,7 @@
 #' @param sortDirection Sort direction (ASC or DESC)
 #' @param sortProperty Property to sort by (name, modified_date, id is currently allowed)
 #' @param expansion Comma-delimited list of additional calculated metric metadata fields to include on response. (options = reportSuiteName, ownerFullName, modified, tags, definition, compatability, categories)
-#' @param inlcudeType Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)
+#' @param includeType Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)
 #'
 #' @import stringr
 #' @export

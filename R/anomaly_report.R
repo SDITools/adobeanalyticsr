@@ -2,6 +2,7 @@
 #'
 #' Get an anomaly report for one or more metrics
 #'
+#' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsid Adobe report number
 #' @param date_range A two length vector of start and end Date objects (default set to show last 30 days)
 #' @param metrics Metric to send

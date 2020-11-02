@@ -1,4 +1,7 @@
 #' Used to format date and time
+#'
+#' @noRd
+#'
 #' @param start_date the first full day of data
 #' @param end_date the last full day of data
 #'

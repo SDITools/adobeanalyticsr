@@ -2,6 +2,8 @@
 #'
 #' This gives a raw call to the API, but it is intended other functions call this one
 #'
+#' @noRd
+#'
 #' @param req_path The endpoint for that particular report
 #' @param body An R list that will be parsed to JSON
 #' @param company_id Set in environment args, or pass directly here

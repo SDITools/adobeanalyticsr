@@ -24,6 +24,8 @@ aa_get_calculatedmetrics(
 )
 }
 \arguments{
+\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+
 \item{rsids}{Filter list to only include calculated metrics tied to specified RSID list (comma-delimited)}
 
 \item{ownerId}{Filter list to only include calculated metrics owned by the specified loginId}
@@ -52,7 +54,7 @@ aa_get_calculatedmetrics(
 
 \item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include on response. (options = reportSuiteName, ownerFullName, modified, tags, definition, compatability, categories)}
 
-\item{inlcudeType}{Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)}
+\item{includeType}{Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)}
 }
 \description{
 Retrieve All Calculated Metrics
