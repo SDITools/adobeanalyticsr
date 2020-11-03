@@ -16,7 +16,7 @@
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
 #' @param search The structure of a search string is specific and can be compound using "and"...more to come
-#' @param debug default is TRUE but set to TRUE to see the json request being sent to the Adobe API
+#' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
 #'
 #' @return Data Frame
 #'

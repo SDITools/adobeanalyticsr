@@ -6,13 +6,16 @@
 \usage{
 aa_workspace_report(
   req_body = sample,
-  company_id = Sys.getenv("AA_COMPANY_ID")
+  company_id = Sys.getenv("AA_COMPANY_ID"),
+  debug = FALSE
 )
 }
 \arguments{
 \item{req_body}{The json string copied from Workspace}
 
 \item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+
+\item{debug}{default is FALSE  but set to TRUE to see the json request being sent to the Adobe API}
 }
 \description{
 Organizes the arguments into a json string and then structures the data after the internal function makes
