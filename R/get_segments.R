@@ -1,6 +1,6 @@
 #' Get list of segments
 #'
-#' Retrieve All Segments
+#' Retrieve all segments
 #'
 #' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsids Filter list to only include segments tied to specified RSID list (comma-delimited)

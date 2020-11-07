@@ -48,5 +48,5 @@ aa_get_segments(
 \item{includeType}{Include additional segments not owned by user. The "all" option takes precedence over "shared" (shared, all, templates)}
 }
 \description{
-Retrieve All Segments
+Retrieve all segments
 }

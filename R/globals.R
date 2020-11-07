@@ -1,0 +1,1 @@
+utils::globalVariables(c("itemId", "value", "metric", "data"))

@@ -19,8 +19,6 @@
 #'             company_id = "blah")
 #'
 #' }
-#'
-#' @export
 #' @import assertthat httr purrr
 #'
 aa_call_data <- function(req_path,

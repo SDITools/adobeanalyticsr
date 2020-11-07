@@ -1,6 +1,5 @@
 #' Build the metrics json list for report_freeform - (sub-function)
 #' @noRd
-#' @export
 #'
 addmetrics <- function(metric,id2,metricSort) {
   if(id2 == 0 & !is.null(metricSort)) {

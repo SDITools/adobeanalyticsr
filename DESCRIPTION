@@ -8,7 +8,7 @@ Authors@R: c(
     person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = "cre"),
     person("Mark", "Edmondson", email = "comingsoon@email.com", role = "aut")
     )
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
@@ -24,3 +24,5 @@ Imports:
     tidyr (>= 1.0.0),
     rlang (>= 0.4.8)
 RoxygenNote: 7.1.1
+Suggests: 
+    testthat

@@ -18,14 +18,13 @@
 #'
 #' }
 #'
-#' @export
 #' @import assertthat httr
 aa_call_api <- function(req_path,
                         company_id = Sys.getenv("AA_COMPANY_ID"),
                         client_id = Sys.getenv("AA_CLIENT_ID"),
                         client_secret = Sys.getenv("AA_CLIENT_SECRET")){
 
-  assert_that(
+  assertthat::assert_that(
     is.string(req_path),
     is.string(company_id),
     is.string(client_id),
@@ -43,7 +42,6 @@ aa_call_api <- function(req_path,
                      encode = "json",
                      body = FALSE,
                      config(token = token),
-                     #verbose(),
                      httr::add_headers(
                        `x-api-key` = client_id,
                        `x-proxy-global-company-id` = company_id

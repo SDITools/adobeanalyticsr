@@ -12,7 +12,6 @@
 #' @param debug Set this to TRUE to see the information about the api calls as they happen.
 #'
 #' @import assertthat httr purrr
-#' @export
 #'
 aa_call_data_debug <- function(req_path,
                         body = NULL,
@@ -45,6 +44,7 @@ aa_call_data_debug <- function(req_path,
                        `x-api-key` = client_id,
                        `x-proxy-global-company-id` = company_id
                      ))
+
   stop_for_status(req)
 
   if(status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {

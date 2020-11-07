@@ -30,9 +30,7 @@ aa_freeform_report(
 
 \item{metrics}{Metric to send}
 
-\item{top}{How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limi number or you can add
-a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works
-if daterangeday is the first dimension listed.}
+\item{top}{How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limit number or you can add a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.}
 
 \item{filterType}{Default is 'breakdown'. This will only change if a segment is used.}
 

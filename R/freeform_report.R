@@ -8,9 +8,7 @@
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics Metric to send
 #' @param dimensions Dimension to send
-#' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limi number or you can add
-#' a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works
-#' if daterangeday is the first dimension listed.
+#' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limit number or you can add a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
@@ -282,7 +280,7 @@ for(i in seq(dimensions)) {
       lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
 
       ### function to create the breakdown 'metricsFilters'
-      metricfilter_n <- function(filterId , type, dimension, itemId = '') {
+      metricfilter_2 <- function(filterId , type, dimension, itemId = '') {
         list(
           id = filterId,
           type = type,
@@ -294,7 +292,7 @@ for(i in seq(dimensions)) {
       mflist <- list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
 
 
-      mf_item <- purrr::pmap(mflist, metricfilter_n)
+      mf_item <- purrr::pmap(mflist, metricfilter_2)
 
       mf_itemlist <- function(itemid) {
         purrr::map(mf_item, update_list, itemId = itemid)
@@ -302,7 +300,7 @@ for(i in seq(dimensions)) {
 
       api2 <- purrr::map(dat[[1]], mf_itemlist)
 
-      req_bodies <- function(i, mf = api2) {
+      req_bodies_2 <- function(i, mf = api2) {
         structure(list(rsid = rsid,
                        globalFilters =
                          gf,
@@ -324,7 +322,7 @@ for(i in seq(dimensions)) {
                        )))
       }
 
-      calls <- purrr::map2(i, api2, req_bodies)
+      calls <- purrr::map2(i, api2, req_bodies_2)
 
       call_data_n <- function(calls) {
           aa_call_data("reports/ranked", body = calls, company_id = company_id)

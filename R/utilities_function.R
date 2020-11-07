@@ -5,7 +5,6 @@
 #' @param start_date the first full day of data
 #' @param end_date the last full day of data
 #'
-#' @export
 #'
 
 make_timeframe <- function(start_date, end_date){

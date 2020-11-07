@@ -19,7 +19,7 @@ get_me <- function(req_path = 'discovery/me',
                     client_id = Sys.getenv("AA_CLIENT_ID"),
                     client_secret = Sys.getenv("AA_CLIENT_SECRET")){
 
-  assert_that(
+  assertthat::assert_that(
     is.string(req_path),
     is.string(client_id),
     is.string(client_secret)
@@ -36,15 +36,14 @@ get_me <- function(req_path = 'discovery/me',
                      encode = "json",
                      body = FALSE,
                      config(token = token),
-                     #verbose(),
                      httr::add_headers(
                        `x-api-key` = client_id
                      ))
   stop_for_status(req)
   res <- httr::content(req, as = "text",encoding = "UTF-8")
 
-  me <- fromJSON(res)
+  me <- jsonlite::fromJSON(res)
 
   message('Your data is now available!')
-  return(me$imsOrgs$companies %>% bind_rows())
+  return(me$imsOrgs$companies %>% dplyr::bind_rows())
 }

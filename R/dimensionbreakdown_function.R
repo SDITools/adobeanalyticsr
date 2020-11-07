@@ -1,6 +1,5 @@
 #' Build the breakdown_metrics json list for the metrics breakdown report - (sub-function)
 #' @noRd
-#' @export
 #'
 breakdowns <- function(id,type,dimensions,itemId) {
   list(

@@ -1,6 +1,5 @@
 #' Build the metrics json list for report_freeform
 #' @noRd
-#' @export
 #'
 #'
 addmetricsfilters <- function(metric,id2, filteridnumber = '0') {
