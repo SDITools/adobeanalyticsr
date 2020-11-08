@@ -13,7 +13,7 @@
 #' @param filterType Default is 'breakdown'. This will only change if a segment is used.
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
-#' @param search The structure of a search string is specific and can be compound using "and"...more to come
+#' @param search The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.
 #' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
 #'
 #' @return Data Frame
@@ -46,12 +46,14 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 {
 
   #Identify the handling of unspecified
-  if(include_unspecified == FALSE){
-    unspecified <- "exclude-nones"
-  }
-  if(include_unspecified == TRUE) {
-    unspecified <- "return-nones"
-  }
+if(include_unspecified == FALSE){
+  unspecified <- "exclude-nones"
+}
+if(include_unspecified == TRUE) {
+  unspecified <- "return-nones"
+}
+
+
 
   # 1 Call ------------------------------------------------------------------
 for(i in seq(dimensions)) {
@@ -118,9 +120,19 @@ for(i in seq(dimensions)) {
       gf <- s_dr()
 
       #search filter
-      if(!is.na(search)){
-        search <-  structure(list('clause' = search))
+      search[search == ''] <- NA
+      add_si <- length(dimensions) - length(search)
+      added_si <- rep(NA, add_si)
+      search <- append(search, added_items)
+      si_fun <- function(si) {
+        if(!is.na(search[[si]])){
+          search <-  structure(list('clause' = search[[si]]))
+        } else {
+          NA
+        }
       }
+      search <- purrr::map(seq(dimensions), si_fun)
+
 
       ##function to create the top level 'metricsContainer'
       metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
@@ -218,7 +230,7 @@ for(i in seq(dimensions)) {
                                    metrics = mlist[[i]]
                                  ),
                                  dimension = sprintf("variables/%s", df$dimension[[i]]),
-                                 search = search,
+                                 search = search[i],
                                  settings = list(
                                    countRepeatInstances = TRUE,
                                    limit = top[i],
@@ -311,6 +323,7 @@ for(i in seq(dimensions)) {
                            mf
                        ),
                        dimension = sprintf("variables/%s",df$dimension[[i]]),
+                       search = search[i],
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
@@ -468,6 +481,7 @@ for(i in seq(dimensions)) {
                            mf
                        ),
                        dimension = sprintf("variables/%s",df$dimension[[i]]),
+                       search = search[i],
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
