@@ -123,10 +123,10 @@ for(i in seq(dimensions)) {
       search[search == ''] <- NA
       add_si <- length(dimensions) - length(search)
       added_si <- rep(NA, add_si)
-      search <- append(search, added_items)
+      search <- append(search, added_si)
       si_fun <- function(si) {
-        if(!is.na(search[[si]])){
-          search <-  structure(list('clause' = search[[si]]))
+        if(!is.na(search[si])){
+          search <-  structure(list('clause' = search[si]))
         } else {
           NA
         }
