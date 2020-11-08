@@ -230,7 +230,7 @@ for(i in seq(dimensions)) {
                                    metrics = mlist[[i]]
                                  ),
                                  dimension = sprintf("variables/%s", df$dimension[[i]]),
-                                 search = search[i],
+                                 search = search[[i]],
                                  settings = list(
                                    countRepeatInstances = TRUE,
                                    limit = top[i],
@@ -323,7 +323,7 @@ for(i in seq(dimensions)) {
                            mf
                        ),
                        dimension = sprintf("variables/%s",df$dimension[[i]]),
-                       search = search[i],
+                       search = search[[i]],
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
@@ -481,7 +481,7 @@ for(i in seq(dimensions)) {
                            mf
                        ),
                        dimension = sprintf("variables/%s",df$dimension[[i]]),
-                       search = search[i],
+                       search = search[[i]],
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
