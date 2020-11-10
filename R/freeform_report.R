@@ -1,7 +1,7 @@
 #' Get a free form report
 #'
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
-#' the api call. Up to 7 dimensions at this time.
+#' the api call. Up to 15 dimensions at this time.
 #'
 #' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsid Adobe report suite id number. Taken from the global environment by default if not provided.
