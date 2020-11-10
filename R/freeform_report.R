@@ -6,11 +6,11 @@
 #' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsid Adobe report suite id number. Taken from the global environment by default if not provided.
 #' @param date_range A two length vector of start and end Date objects
-#' @param metrics Metric to send
-#' @param dimensions Dimension to send
-#' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limit number or you can add a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.
+#' @param metrics A character vector of metrics.
+#' @param dimensions A character vector of dimensions. There is a limit of 15 at this time.
+#' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the first in the list of numbers (top = c(0, 20)). The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
-#' @param filterType Default is 'breakdown'. This will only change if a segment is used.
+#' @param filterType Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
 #' @param search The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.
@@ -29,6 +29,16 @@
 #' @importFrom rlang :=
 #' @importFrom jsonlite fromJSON
 #'
+#' @example
+#' \donotrun {
+#' aa_freeform_report(daterange = c('2020-01-01', '2020-06-31'),
+#'                    dimensions = c('page', 'daterangeday'),
+#'                    metrics = 'visits',
+#'                    search = "(CONTAINS 'blog')",
+#'                    top = c(100, 213),
+#'                    segmentId = 're3333333333333333333')
+#' }
+#'
 #' @export
 aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                rsid = Sys.getenv("AA_REPORTSUITE_ID"),
@@ -40,8 +50,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                segmentId = NA,
                                metricSort =  'desc',
                                include_unspecified = TRUE,
-                               debug = FALSE,
-                               search = NA
+                               search = NA,
+                               debug = FALSE
                                )
 {
 
@@ -636,6 +646,141 @@ for(i in seq(dimensions)) {
                                            !!prefinalnames[[2]][[2]] := dat[[16]][it],
                                            !!prefinalnames[[1]][[1]] := dat[[17]][it],
                                            !!prefinalnames[[1]][[2]] := dat[[18]][it])
+          return(tf)
+        }
+        if(i == 11) {
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[10]][[1]] := dat[[1]][it],
+                                                  !!prefinalnames[[10]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[9]][[1]] := dat[[3]][it],
+                                                  !!prefinalnames[[9]][[2]] := dat[[4]][it],
+                                                  !!prefinalnames[[8]][[1]] := dat[[5]][it],
+                                                  !!prefinalnames[[8]][[2]] := dat[[6]][it],
+                                                  !!prefinalnames[[7]][[1]] := dat[[7]][it],
+                                                  !!prefinalnames[[7]][[2]] := dat[[8]][it],
+                                                  !!prefinalnames[[6]][[1]] := dat[[9]][it],
+                                                  !!prefinalnames[[6]][[2]] := dat[[10]][it],
+                                                  !!prefinalnames[[5]][[1]] := dat[[11]][it],
+                                                  !!prefinalnames[[5]][[2]] := dat[[12]][it],
+                                                  !!prefinalnames[[4]][[1]] := dat[[13]][it],
+                                                  !!prefinalnames[[4]][[2]] := dat[[14]][it],
+                                                  !!prefinalnames[[3]][[1]] := dat[[15]][it],
+                                                  !!prefinalnames[[3]][[2]] := dat[[16]][it],
+                                                  !!prefinalnames[[2]][[1]] := dat[[17]][it],
+                                                  !!prefinalnames[[2]][[2]] := dat[[18]][it],
+                                                  !!prefinalnames[[1]][[1]] := dat[[19]][it],
+                                                  !!prefinalnames[[1]][[2]] := dat[[20]][it])
+          return(tf)
+        }
+        if(i == 12) {
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[11]][[1]] := dat[[1]][it],
+                                                  !!prefinalnames[[11]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[10]][[1]] := dat[[3]][it],
+                                                  !!prefinalnames[[10]][[2]] := dat[[4]][it],
+                                                  !!prefinalnames[[9]][[1]] := dat[[5]][it],
+                                                  !!prefinalnames[[9]][[2]] := dat[[6]][it],
+                                                  !!prefinalnames[[8]][[1]] := dat[[7]][it],
+                                                  !!prefinalnames[[8]][[2]] := dat[[8]][it],
+                                                  !!prefinalnames[[7]][[1]] := dat[[9]][it],
+                                                  !!prefinalnames[[7]][[2]] := dat[[10]][it],
+                                                  !!prefinalnames[[6]][[1]] := dat[[11]][it],
+                                                  !!prefinalnames[[6]][[2]] := dat[[12]][it],
+                                                  !!prefinalnames[[5]][[1]] := dat[[13]][it],
+                                                  !!prefinalnames[[5]][[2]] := dat[[14]][it],
+                                                  !!prefinalnames[[4]][[1]] := dat[[15]][it],
+                                                  !!prefinalnames[[4]][[2]] := dat[[16]][it],
+                                                  !!prefinalnames[[3]][[1]] := dat[[17]][it],
+                                                  !!prefinalnames[[3]][[2]] := dat[[18]][it],
+                                                  !!prefinalnames[[2]][[1]] := dat[[19]][it],
+                                                  !!prefinalnames[[2]][[2]] := dat[[20]][it],
+                                                  !!prefinalnames[[1]][[1]] := dat[[21]][it],
+                                                  !!prefinalnames[[1]][[2]] := dat[[22]][it])
+          return(tf)
+        }
+        if(i == 13) {
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[12]][[1]] := dat[[1]][it],
+                                                  !!prefinalnames[[12]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[11]][[1]] := dat[[3]][it],
+                                                  !!prefinalnames[[11]][[2]] := dat[[4]][it],
+                                                  !!prefinalnames[[10]][[1]] := dat[[5]][it],
+                                                  !!prefinalnames[[10]][[2]] := dat[[6]][it],
+                                                  !!prefinalnames[[9]][[1]] := dat[[7]][it],
+                                                  !!prefinalnames[[9]][[2]] := dat[[8]][it],
+                                                  !!prefinalnames[[8]][[1]] := dat[[9]][it],
+                                                  !!prefinalnames[[8]][[2]] := dat[[10]][it],
+                                                  !!prefinalnames[[7]][[1]] := dat[[11]][it],
+                                                  !!prefinalnames[[7]][[2]] := dat[[12]][it],
+                                                  !!prefinalnames[[6]][[1]] := dat[[13]][it],
+                                                  !!prefinalnames[[6]][[2]] := dat[[14]][it],
+                                                  !!prefinalnames[[5]][[1]] := dat[[15]][it],
+                                                  !!prefinalnames[[5]][[2]] := dat[[16]][it],
+                                                  !!prefinalnames[[4]][[1]] := dat[[17]][it],
+                                                  !!prefinalnames[[4]][[2]] := dat[[18]][it],
+                                                  !!prefinalnames[[3]][[1]] := dat[[19]][it],
+                                                  !!prefinalnames[[3]][[2]] := dat[[20]][it],
+                                                  !!prefinalnames[[2]][[1]] := dat[[21]][it],
+                                                  !!prefinalnames[[2]][[2]] := dat[[22]][it],
+                                                  !!prefinalnames[[1]][[1]] := dat[[23]][it],
+                                                  !!prefinalnames[[1]][[2]] := dat[[24]][it])
+          return(tf)
+        }
+        if(i == 14) {
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[13]][[1]] := dat[[1]][it],
+                                                  !!prefinalnames[[13]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[12]][[1]] := dat[[3]][it],
+                                                  !!prefinalnames[[12]][[2]] := dat[[4]][it],
+                                                  !!prefinalnames[[11]][[1]] := dat[[5]][it],
+                                                  !!prefinalnames[[11]][[2]] := dat[[6]][it],
+                                                  !!prefinalnames[[10]][[1]] := dat[[7]][it],
+                                                  !!prefinalnames[[10]][[2]] := dat[[8]][it],
+                                                  !!prefinalnames[[9]][[1]] := dat[[9]][it],
+                                                  !!prefinalnames[[9]][[2]] := dat[[10]][it],
+                                                  !!prefinalnames[[8]][[1]] := dat[[11]][it],
+                                                  !!prefinalnames[[8]][[2]] := dat[[12]][it],
+                                                  !!prefinalnames[[7]][[1]] := dat[[13]][it],
+                                                  !!prefinalnames[[7]][[2]] := dat[[14]][it],
+                                                  !!prefinalnames[[6]][[1]] := dat[[15]][it],
+                                                  !!prefinalnames[[6]][[2]] := dat[[16]][it],
+                                                  !!prefinalnames[[5]][[1]] := dat[[17]][it],
+                                                  !!prefinalnames[[5]][[2]] := dat[[18]][it],
+                                                  !!prefinalnames[[4]][[1]] := dat[[19]][it],
+                                                  !!prefinalnames[[4]][[2]] := dat[[20]][it],
+                                                  !!prefinalnames[[3]][[1]] := dat[[21]][it],
+                                                  !!prefinalnames[[3]][[2]] := dat[[22]][it],
+                                                  !!prefinalnames[[2]][[1]] := dat[[23]][it],
+                                                  !!prefinalnames[[2]][[2]] := dat[[24]][it],
+                                                  !!prefinalnames[[1]][[1]] := dat[[25]][it],
+                                                  !!prefinalnames[[1]][[2]] := dat[[26]][it])
+          return(tf)
+        }
+        if(i == 15) {
+          tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[14]][[1]] := dat[[1]][it],
+                                                  !!prefinalnames[[15]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[13]][[1]] := dat[[3]][it],
+                                                  !!prefinalnames[[13]][[2]] := dat[[4]][it],
+                                                  !!prefinalnames[[12]][[1]] := dat[[5]][it],
+                                                  !!prefinalnames[[12]][[2]] := dat[[6]][it],
+                                                  !!prefinalnames[[11]][[1]] := dat[[7]][it],
+                                                  !!prefinalnames[[11]][[2]] := dat[[8]][it],
+                                                  !!prefinalnames[[10]][[1]] := dat[[9]][it],
+                                                  !!prefinalnames[[10]][[2]] := dat[[10]][it],
+                                                  !!prefinalnames[[9]][[1]] := dat[[11]][it],
+                                                  !!prefinalnames[[9]][[2]] := dat[[12]][it],
+                                                  !!prefinalnames[[8]][[1]] := dat[[13]][it],
+                                                  !!prefinalnames[[8]][[2]] := dat[[14]][it],
+                                                  !!prefinalnames[[7]][[1]] := dat[[15]][it],
+                                                  !!prefinalnames[[7]][[2]] := dat[[16]][it],
+                                                  !!prefinalnames[[6]][[1]] := dat[[17]][it],
+                                                  !!prefinalnames[[6]][[2]] := dat[[18]][it],
+                                                  !!prefinalnames[[5]][[1]] := dat[[19]][it],
+                                                  !!prefinalnames[[5]][[2]] := dat[[20]][it],
+                                                  !!prefinalnames[[4]][[1]] := dat[[21]][it],
+                                                  !!prefinalnames[[4]][[2]] := dat[[22]][it],
+                                                  !!prefinalnames[[3]][[1]] := dat[[23]][it],
+                                                  !!prefinalnames[[3]][[2]] := dat[[24]][it],
+                                                  !!prefinalnames[[2]][[1]] := dat[[25]][it],
+                                                  !!prefinalnames[[2]][[2]] := dat[[26]][it],
+                                                  !!prefinalnames[[1]][[1]] := dat[[27]][it],
+                                                  !!prefinalnames[[1]][[2]] := dat[[28]][it])
           return(tf)
         }
       }
