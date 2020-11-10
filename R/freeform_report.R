@@ -29,16 +29,6 @@
 #' @importFrom rlang :=
 #' @importFrom jsonlite fromJSON
 #'
-#' @example
-#' \donotrun {
-#' aa_freeform_report(daterange = c('2020-01-01', '2020-06-31'),
-#'                    dimensions = c('page', 'daterangeday'),
-#'                    metrics = 'visits',
-#'                    search = "(CONTAINS 'blog')",
-#'                    top = c(100, 213),
-#'                    segmentId = 're3333333333333333333')
-#' }
-#'
 #' @export
 aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                rsid = Sys.getenv("AA_REPORTSUITE_ID"),

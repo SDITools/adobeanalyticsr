@@ -3,11 +3,9 @@ Type: Package
 Version: 0.0.9525
 Title: Adobe Analytics API v2
 Description: Connect to the Adobe Analytics API v2.0. This api resembles Analytics Workspace reports by pulling the data faster through smaller api requests.
-Authors@R: c(
+Authors@R: c(person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
     person("Tim", "Wilson", email = "timwilson7@gmail.com", role = "aut"),
-    person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = "cre"),
-    person("Mark", "Edmondson", email = "comingsoon@email.com", role = "aut")
-    )
+    person("Mark", "Edmondson", email = "comingsoon@email.com", role = "ctb"))
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

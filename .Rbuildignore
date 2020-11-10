@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^aa\.oauth$
 ^LICENSE\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

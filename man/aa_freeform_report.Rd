@@ -15,8 +15,8 @@ aa_freeform_report(
   segmentId = NA,
   metricSort = "desc",
   include_unspecified = TRUE,
-  debug = FALSE,
-  search = NA
+  search = NA,
+  debug = FALSE
 )
 }
 \arguments{
@@ -26,13 +26,13 @@ aa_freeform_report(
 
 \item{date_range}{A two length vector of start and end Date objects}
 
-\item{dimensions}{Dimension to send}
+\item{dimensions}{A character vector of dimensions. There is a limit of 15 at this time.}
 
-\item{metrics}{Metric to send}
+\item{metrics}{A character vector of metrics.}
 
-\item{top}{How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one limit number or you can add a 0 as the first in the list of numbers. The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.}
+\item{top}{How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the first in the list of numbers (top = c(0, 20)). The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.}
 
-\item{filterType}{Default is 'breakdown'. This will only change if a segment is used.}
+\item{filterType}{Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.}
 
 \item{segmentId}{use segments to globally filter the results. Use 1 or many.}
 
@@ -40,9 +40,9 @@ aa_freeform_report(
 
 \item{include_unspecified}{TRUE is equal to "return-nones" and is set as the default}
 
-\item{debug}{default is FALSE but set to TRUE to see the json request being sent to the Adobe API}
+\item{search}{The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.}
 
-\item{search}{The structure of a search string is specific and can be compound using "and"...more to come}
+\item{debug}{default is FALSE but set to TRUE to see the json request being sent to the Adobe API}
 }
 \value{
 Data Frame
