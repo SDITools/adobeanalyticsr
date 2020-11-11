@@ -57,9 +57,10 @@ aa_call_data <- function(req_path,
     stop(paste0('The error code is ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
   } else if(status_code(req) == 206){
     stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
-  } else if(status_code(req) == 200 & content(req)$totalElements == 0) {
-    stop("There was a 200 response code (valid call) but no data was received. Check your attributes and try again.")
   }
+  # else if(status_code(req) == 200 & content(req)$totalElements == 0) {
+  #   stop("There was a 200 response code (valid call) but no data was received. Check your attributes and try again.")
+  # }
 
   httr::content(req, as = "text",encoding = "UTF-8")
 
