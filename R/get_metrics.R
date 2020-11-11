@@ -16,7 +16,7 @@ aa_get_metrics <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
                               company_id = Sys.getenv("AA_COMPANY_ID")){
 
   #remove spaces from the lsit of expansion tags
-  expansion <- stringr::str_replace_all(expansion, fixed(" "), "")
+  expansion <- stringr::str_replace_all(expansion,  stringr::fixed(" "), "")
   #create the url to send with the query
   urlstructure <- sprintf("metrics?rsid=%s&locale=%s&segmentable=%s&expansion=%s",
                                   rsid, locale, segmentable, expansion)
