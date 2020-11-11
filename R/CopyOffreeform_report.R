@@ -15,7 +15,7 @@
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
 #' @param search The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.
 #' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
-#'
+#' @param prettynames Boolean for wether the results should have the name field value for easier understanding.
 #' @return Data Frame
 #'
 #' @import assertthat
@@ -45,22 +45,20 @@ aa_freeform_report2 <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                prettynames = TRUE
                                )
 {
-  library(httr)
-  rsid = Sys.getenv("AA_REPORTSUITE_ID")
-  locale = 'en_US'
-  segmentable = 'NULL'
-  expansion = NA
-  company_id = Sys.getenv("AA_COMPANY_ID")
-  #adding a row of pretty names
+#Making sure metrics and dimensions are available.  Eror handling.
+  dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
+  mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
+  dimmets <- rbind(dims[c(1,3)],mets[c(1,3)])
+  finalnames <- c(dimensions, metrics)
+  #namecheck <- function(x){
+  for(x in seq(finalnames)) {
+    if(finalnames[[x]] %in% dimmets[,1] == FALSE) {stop(paste0('\'',finalnames[[x]],'\' is not an available element'))}
+   }
 if(prettynames == TRUE) {
-dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
-mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
-dimmets <- rbind(dims[c(1,3)],mets[c(1,3)])
-finalnames <- c(dimensions, metrics)
-pnames <- function(x){
-  dimmets %>% dplyr::filter(finalnames[x] == id) %>% dplyr::pull(name)
-}
-prettyfinalnames <- map_chr(seq(finalnames), pnames)
+  pnames <- function(x){
+    dimmets %>% dplyr::filter(finalnames[x] == id) %>% dplyr::pull(name)
+  }
+  prettyfinalnames <- map_chr(seq(finalnames), pnames)
 }
 
   #Identify the handling of unspecified
