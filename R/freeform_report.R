@@ -14,6 +14,7 @@
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
 #' @param segmentId use segments to globally filter the results. Use 1 or many.
 #' @param search The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.
+#' @param prettynames Boolean for whether the results should have the name field value for easier understanding.
 #' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
 #'
 #' @return Data Frame
@@ -41,9 +42,28 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                metricSort =  'desc',
                                include_unspecified = TRUE,
                                search = NA,
+                               prettynames = FALSE,
                                debug = FALSE
                                )
 {
+
+#Making sure metrics and dimensions are available.  Eror handling.
+  dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
+  mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
+  dimmets <- rbind(dims[c(1,3)],mets[c(1,3)])
+  finalnames <- c(dimensions, metrics)
+
+  for(x in seq(finalnames)) {
+    if(finalnames[[x]] %in% dimmets[,1] == FALSE) {stop(paste0('\'',finalnames[[x]],'\' is not an available element'))}
+  }
+
+  if(prettynames == TRUE) {
+    pnames <- function(x){
+      dimmets %>% dplyr::filter(finalnames[x] == id) %>% dplyr::pull(name)
+    }
+    prettyfinalnames <- map_chr(seq(finalnames), pnames)
+  }
+
 
   #Identify the handling of unspecified
 if(include_unspecified == FALSE){
@@ -261,6 +281,9 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if(prettynames == T) {
+          names(dat) <- prettyfinalnames
+        }
         return(dat)
       } else if(length(dimensions) != i) {
         ## second and not last data pull
@@ -389,6 +412,9 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if(prettynames == T) {
+          names(dat) <- prettyfinalnames
+        }
         return(dat)
       }
     }
@@ -795,6 +821,9 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if(prettynames == T) {
+          names(dat) <- prettyfinalnames
+        }
         return(dat)
       }
    }

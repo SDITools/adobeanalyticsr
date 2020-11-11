@@ -16,6 +16,7 @@ aa_freeform_report(
   metricSort = "desc",
   include_unspecified = TRUE,
   search = NA,
+  prettynames = FALSE,
   debug = FALSE
 )
 }
@@ -42,6 +43,8 @@ aa_freeform_report(
 
 \item{search}{The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.}
 
+\item{prettynames}{Boolean for whether the results should have the name field value for easier understanding.}
+
 \item{debug}{default is FALSE but set to TRUE to see the json request being sent to the Adobe API}
 }
 \value{
@@ -49,5 +52,5 @@ Data Frame
 }
 \description{
 Organizes the arguments into a json string and then structures the data after the internal function makes
-the api call. Up to 7 dimensions at this time.
+the api call. Up to 15 dimensions at this time.
 }
