@@ -34,7 +34,7 @@ aa_call_data_debug <- function(req_path,
   request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                          company_id, req_path)
 
-  req <- httr::RETRY("POST",
+  req1 <- httr::RETRY("POST",
                      url = request_url,
                      body = body,
                      encode = "json",
@@ -45,16 +45,14 @@ aa_call_data_debug <- function(req_path,
                        `x-proxy-global-company-id` = company_id
                      ))
 
-  stop_for_status(req)
+  stop_for_status(req1)
 
-  if(status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
+  if(status_code(req1) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
     stop(paste0('The error code is ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
-  } else if(status_code(req) == 206){
+  } else if(status_code(req1) == 206){
     stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
-  } else if(status_code(req) == 200 & content(req)$totalElements == 0) {
-    stop("No data was returned while a valid 200 response code was returned. Consider changing 'include_unsecified' to TRUE in your function call.")
+  } else if(status_code(req1) == 200 & content(req)$totalElements != 0) {
+    req <- httr::content(req1, as = "text",encoding = "UTF-8")
+    #stop("No data was returned while a valid 200 response code was returned. Consider changing 'include_unsecified' to TRUE in your function call.")
   }
-
-  httr::content(req, as = "text",encoding = "UTF-8")
-
 }
