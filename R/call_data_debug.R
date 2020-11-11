@@ -47,11 +47,11 @@ aa_call_data_debug <- function(req_path,
 
   stop_for_status(req1)
 
-  if(status_code(req1) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
-    stop(paste0('The error code is ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
+  if(status_code(req1) == 206  & length(content(req1)$columns$columnErrors[[1]]) != 0) {
+    stop(paste0('The error code is ',content(req1)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
   } else if(status_code(req1) == 206){
     stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
-  } else if(status_code(req1) == 200 & content(req)$totalElements != 0) {
+  } else if(status_code(req1) == 200 & content(req1)$totalElements != 0) {
     req <- httr::content(req1, as = "text",encoding = "UTF-8")
     #stop("No data was returned while a valid 200 response code was returned. Consider changing 'include_unsecified' to TRUE in your function call.")
   }
