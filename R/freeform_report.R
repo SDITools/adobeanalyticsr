@@ -50,7 +50,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 #Making sure metrics and dimensions are available.  Eror handling.
   dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
   mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
-  dimmets <- rbind(dims[c(1,3)],mets[c(1,3)])
+  cms <- aa_get_calculatedmetrics(rsids = rsid, company_id = company_id)
+  dimmets <- rbind(dims[c(1,3)],mets[c(1,3)],cms[c(2,3)])
   finalnames <- c(dimensions, metrics)
 
   for(x in seq(finalnames)) {
@@ -72,7 +73,7 @@ if(include_unspecified == FALSE){
 if(include_unspecified == TRUE) {
   unspecified <- "return-nones"
 }
-
+i = 1
   # 1 Call ------------------------------------------------------------------
 for(i in seq(dimensions)) {
     if(i == 1) {
@@ -155,52 +156,107 @@ for(i in seq(dimensions)) {
       ##function to create the top level 'metricsContainer'
       metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
         if(colId == 0) {
-          structure(list(
-            columnId = colId,
-            id = sprintf('metrics/%s',metric),
-            sort = metricSort
-          ))
+            if(grepl('cm[1-9]*_*', metric)) {
+              structure(list(
+                columnId = colId,
+                id = metric,
+                sort = metricSort
+              ))
+            } else {
+              structure(list(
+                columnId = colId,
+                id = sprintf('metrics/%s',metric),
+                sort = metricSort
+              ))
+            }
+        } else {
+          if(grepl('cm[1-9]*_*', metric)) {
+            structure(list(
+              columnId = colId,
+              id = metric,
+              sort = metricSort
+            ))
         } else {
           structure(list(
             columnId = colId,
-            id = sprintf('metrics/%s',metric)))
+            id = sprintf('metrics/%s',metric)
+            ))
         }}
+      }
 
       ### function to create the  breakdown 'metricsContainer'
       metriccontainer_2 <- function(metric, colId, metricSort = 'desc' , filterId) {
         if(colId == 0) {
-          structure(list(
-            columnId = colId,
-            id = sprintf('metrics/%s',metric),
-            sort = metricSort,
-            filters = list(
-              filterId
-            )))
+          if(grepl('cm[1-9]*_*', metric)) {
+            structure(list(
+              columnId = colId,
+              id = metric,
+              sort = metricSort,
+              filters = list(
+                filterId
+              )))
+          } else {
+            structure(list(
+              columnId = colId,
+              id = sprintf('metrics/%s',metric),
+              sort = metricSort,
+              filters = list(
+                filterId
+              )))
+          }
         } else {
-          structure(list(
-            columnId = colId,
-            id = sprintf('metrics/%s',metric),
-            filters = list(
-              filterId
-            )))
-        }}
+          if(grepl('cm[1-9]*_*', metric)) {
+            structure(list(
+              columnId = colId,
+              id = metric,
+              filters = list(
+                filterId
+              )))
+          } else {
+            structure(list(
+              columnId = colId,
+              id = sprintf('metrics/%s',metric),
+              filters = list(
+                filterId
+              )))
+          }}
+        }
 
       metriccontainer_n <- function(metric, colId, metricSort = 'desc' , filterId) {
         if(colId == 0) {
+          if(grepl('cm[1-9]*_*', metric)) {
+            structure(list(
+              columnId = colId,
+              id = metric,
+              sort = metricSort,
+              filters =
+                filterId
+            ))
+          } else {
           structure(list(
             columnId = colId,
             id = sprintf('metrics/%s',metric),
             sort = metricSort,
             filters =
               filterId
-          ))
+            ))
+          }
         } else {
-          structure(list(
-            columnId = colId,
-            id = sprintf('metrics/%s',metric),
-            filters =
-              filterId
+          if(grepl('cm[1-9]*_*', metric)) {
+            structure(list(
+              columnId = colId,
+              id = sprintf('metrics/%s',metric),
+              filters =
+                filterId
+            ))
+          } else {
+            structure(list(
+              columnId = colId,
+              id = sprintf('metrics/%s',metric),
+              filters =
+                filterId
           ))
+          }
         }}
 
       #setup the tibble for building the queries

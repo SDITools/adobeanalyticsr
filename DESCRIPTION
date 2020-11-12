@@ -1,6 +1,6 @@
 Package: adobeanalyticsr
 Type: Package
-Version: 0.0.9526
+Version: 0.0.9527
 Title: Adobe Analytics API v2
 Description: Connect to the Adobe Analytics API v2.0. This api resembles Analytics Workspace reports by pulling the data faster through smaller api requests.
 Authors@R: c(person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
