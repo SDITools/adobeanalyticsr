@@ -32,12 +32,12 @@ aa_get_calculatedmetrics <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                           tagnames = NA,
                           favorite = 0,
                           approved = TRUE,
-                          limit = 100,
+                          limit = 1000,
                           page = 0,
                           sortDirection = 'DESC',
                           sortProperty = NA,
                           expansion = NA,
-                          includeType = 'all')
+                          includeType = NA)
 {
   #make the list of params into a dataframe
   if(length(rsids) > 1) {rsids = paste0(rsids, collapse = ',') }
