@@ -245,7 +245,7 @@ for(i in seq(dimensions)) {
           if(grepl('cm[1-9]*_*', metric)) {
             structure(list(
               columnId = colId,
-              id = sprintf('metrics/%s',metric),
+              id = metric,
               filters =
                 filterId
             ))
