@@ -1,1 +1,1 @@
-utils::globalVariables(c("itemId", "value", "metric", "data"))
+utils::globalVariables(c("itemId", "value", "metric", "data", "name"))

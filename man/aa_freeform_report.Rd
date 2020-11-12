@@ -7,7 +7,7 @@
 aa_freeform_report(
   company_id = Sys.getenv("AA_COMPANY_ID"),
   rsid = Sys.getenv("AA_REPORTSUITE_ID"),
-  date_range = c("2020-08-01", "2020-09-25"),
+  date_range = c(Sys.Date() - 30, Sys.Date() - 1),
   dimensions = c("page", "lasttouchchannel", "mobiledevicetype"),
   metrics = c("visits", "visitors"),
   top = c(5),
