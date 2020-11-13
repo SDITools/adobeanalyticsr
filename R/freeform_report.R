@@ -50,8 +50,14 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 #Making sure metrics and dimensions are available.  Eror handling.
   dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
   mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
-  cms <- aa_get_calculatedmetrics(rsids = rsid, company_id = company_id)
-  dimmets <- rbind(dims[c(1,3)],mets[c(1,3)],cms[c(2,3)])
+  #pull out the calculated metrics
+    cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
+    if(length(cms_ids) > 0) {
+      cms <- aa_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
+      dimmets <- rbind(dims[c(1,3)],mets[c(1,3)],cms[c(2,3)])
+    } else {
+      dimmets <- rbind(dims[c(1,3)],mets[c(1,3)])
+    }
   finalnames <- c(dimensions, metrics)
 
   for(x in seq(finalnames)) {
@@ -245,7 +251,7 @@ for(i in seq(dimensions)) {
           if(grepl('cm[1-9]*_*', metric)) {
             structure(list(
               columnId = colId,
-              id = sprintf('metrics/%s',metric),
+              id = metric,
               filters =
                 filterId
             ))

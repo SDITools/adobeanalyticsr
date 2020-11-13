@@ -3,6 +3,7 @@
 export(aa_anomaly_report)
 export(aa_creds)
 export(aa_freeform_report)
+export(aa_get_calculatedmetric_byid)
 export(aa_get_calculatedmetrics)
 export(aa_get_dimensions)
 export(aa_get_metrics)

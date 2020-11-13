@@ -14,8 +14,8 @@ aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),
   # AdobeID,read_organizations,additional_info.job_function,additional_info.projectedProductContext&response_type=code
 
   aa_endpoint <- httr::oauth_endpoint(
-    authorize = "authorize/",
-    access = "token/v1",
+    authorize = "authorize/v2/",
+    access = "token/v3",
     base_url = "https://ims-na1.adobelogin.com/ims/"
   )
 

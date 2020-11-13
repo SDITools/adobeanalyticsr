@@ -31,8 +31,8 @@ aa_get_calculatedmetrics <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                           name = NA,
                           tagnames = NA,
                           favorite = 0,
-                          approved = TRUE,
-                          limit = 100,
+                          approved = NA,
+                          limit = 1000,
                           page = 0,
                           sortDirection = 'DESC',
                           sortProperty = NA,
@@ -41,6 +41,7 @@ aa_get_calculatedmetrics <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 {
   #make the list of params into a dataframe
   if(length(rsids) > 1) {rsids = paste0(rsids, collapse = ',') }
+  if(length(filterByIds) > 1) {filterByIds = paste0(filterByIds, collapse = ',') }
   if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
 
   vars <- tibble(rsids, ownerId, filterByIds, toBeUsedInRsid, locale, name, tagnames, favorite, approved,
