@@ -60,6 +60,7 @@ aa_call_data <- function(req_path,
     stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
   }
   c <- c+1
+  return(c)
   message(c)
   httr::content(req, as = "text",encoding = "UTF-8")
 }
