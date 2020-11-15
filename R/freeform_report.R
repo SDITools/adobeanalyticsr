@@ -312,7 +312,8 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
   #map the function to list out the metricFiltres section of the api call
   lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
 
-
+  #keep track of all api calls that are made and message the number as it appears
+  c <- 0
 # 1 Call ------------------------------------------------------------------
 for(i in seq(dimensions)) {
     if(i == 1) {
