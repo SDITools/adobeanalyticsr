@@ -338,7 +338,7 @@ for(i in seq(dimensions)) {
 
       if (debug == FALSE) {
         res <-
-          aa_call_data("reports/ranked", body = req_body, company_id = company_id)
+          aa_call_data("reports/ranked", body = req_body, company_id = company_id, c = c)
       }
       if (debug == TRUE) {
         res <-
@@ -418,15 +418,15 @@ for(i in seq(dimensions)) {
 
     calls <- purrr::map2(i, api2, req_bodies_2)
 
-    call_data_n <- function(calls) {
-      aa_call_data("reports/ranked", body = calls, company_id = company_id)
+    call_data_n <- function(calls, c) {
+      aa_call_data("reports/ranked", body = calls, company_id = company_id, c = c)
     }
     call_data_n_debug <- function(calls) {
       aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
     }
 
     if (debug == FALSE) {
-      res <- purrr::map(calls, call_data_n)
+      res <- purrr::map2(calls, c = c, call_data_n)
     }
     if (debug == TRUE) {
       res <- purrr::map(calls, call_data_n_debug)
@@ -572,8 +572,8 @@ for(i in seq(dimensions)) {
       calls <- purrr::map2(i, apicalls, req_bodies)
 
       #(ncapable)
-      call_data_n <- function(calls) {
-          aa_call_data("reports/ranked", body = calls, company_id = company_id)
+      call_data_n <- function(calls, c) {
+          aa_call_data("reports/ranked", body = calls, company_id = company_id, c)
       }
       call_data_n_debug <- function(calls) {
           aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
@@ -581,7 +581,7 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       if(debug == FALSE) {
-        res <- purrr::map(calls, call_data_n)
+        res <- purrr::map2(calls, c= c, call_data_n)
       }
       if(debug == TRUE) {
         res <- purrr::map(calls, call_data_n_debug)

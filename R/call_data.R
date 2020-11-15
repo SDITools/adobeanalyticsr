@@ -23,6 +23,7 @@
 #'
 aa_call_data <- function(req_path,
                         body = NULL,
+                        c,
                         company_id = Sys.getenv("AA_COMPANY_ID"),
                         client_id = Sys.getenv("AA_CLIENT_ID"),
                         client_secret = Sys.getenv("AA_CLIENT_SECRET")
