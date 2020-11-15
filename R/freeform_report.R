@@ -121,9 +121,9 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       product <- product + prod(topestimate1[1:i])
     }
     #sec
-    est_secs <- (product-1)*.75
+    est_secs <- (product-1)*.80
     #min
-    est_mins <- ((product-1)*.75)/60
+    est_mins <- ((product-1)*.80)/60
     message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
     message(paste0('Estimating a total of ', product-2, ' API calls'))
   }
