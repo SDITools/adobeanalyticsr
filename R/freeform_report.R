@@ -357,6 +357,7 @@ for(i in seq(dimensions)) {
         if (prettynames == T) {
           names(dat) <- prettyfinalnames
         }
+        message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
         return(dat)
       } else if (length(dimensions) != i) {
         ## second and not last data pull
@@ -364,7 +365,7 @@ for(i in seq(dimensions)) {
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(paste0(length(dat), ' API calls to go.'))
+        message(paste0(nrwo(dat), ' API calls to go.'))
       }
     }
 
@@ -471,6 +472,7 @@ for(i in seq(dimensions)) {
       if (prettynames == T) {
         names(dat) <- prettyfinalnames
       }
+      message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
       return(dat)
     }
   }
@@ -900,6 +902,7 @@ for(i in seq(dimensions)) {
         if(prettynames == T) {
           names(dat) <- prettyfinalnames
         }
+        message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
         return(dat)
       }
    }
