@@ -125,7 +125,7 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
     #min
     est_mins <- ((product-1)*.75)/60
     message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
-    message(paste0('Estimating a total of ', product, ' API calls'))
+    message(paste0('Estimating a total of ', product-2, ' API calls'))
   }
   #segment filter builder function (segments)
   seg <- function(segmentId) {
