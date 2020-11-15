@@ -364,7 +364,7 @@ for(i in seq(dimensions)) {
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(Paste0(length(dat), ' API calls to go.'))
+        message(paste0(length(dat), ' API calls to go.'))
       }
     }
 
@@ -459,7 +459,7 @@ for(i in seq(dimensions)) {
       dat <- resrows %>%
         dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
       dat <- dat %>% dplyr::select(-data)
-      message(Paste0(length(dat), ' API calls to go.'))
+      message(paste0(length(dat), ' API calls to go.'))
     } else {
       itemidname <- paste0('itemId_', dimensions[[i]])
       dat <- resrows %>%
@@ -886,7 +886,7 @@ for(i in seq(dimensions)) {
           dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
         dat <- dat %>% dplyr::select(-data)
-        message(Paste0(length(dat), ' API calls to go.'))
+        message(paste0(length(dat), ' API calls to go.'))
 
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
