@@ -365,7 +365,7 @@ for(i in seq(dimensions)) {
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(paste0(nrwo(dat), ' API calls to go.'))
+        message(paste0(nrow(dat), ' API calls to go.'))
       }
     }
 
