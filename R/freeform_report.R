@@ -312,8 +312,6 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
   #map the function to list out the metricFiltres section of the api call
   lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
 
-  #keep track of all api calls that are made and message the number as it appears
-  c <- 0
 # 1 Call ------------------------------------------------------------------
 for(i in seq(dimensions)) {
     if(i == 1) {
@@ -338,7 +336,7 @@ for(i in seq(dimensions)) {
 
       if (debug == FALSE) {
         res <-
-          aa_call_data("reports/ranked", body = req_body, company_id = company_id, c = c)
+          aa_call_data("reports/ranked", body = req_body, company_id = company_id)
       }
       if (debug == TRUE) {
         res <-
@@ -366,6 +364,7 @@ for(i in seq(dimensions)) {
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
+        message(Paste0(length(dat), ' API calls to go.'))
       }
     }
 
@@ -418,15 +417,15 @@ for(i in seq(dimensions)) {
 
     calls <- purrr::map2(i, api2, req_bodies_2)
 
-    call_data_n <- function(calls, c) {
-      aa_call_data("reports/ranked", body = calls, company_id = company_id, c = c)
+    call_data_n <- function(calls) {
+      aa_call_data("reports/ranked", body = calls, company_id = company_id)
     }
     call_data_n_debug <- function(calls) {
       aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
     }
 
     if (debug == FALSE) {
-      res <- purrr::map2(calls, c, call_data_n)
+      res <- purrr::map2(calls, call_data_n)
     }
     if (debug == TRUE) {
       res <- purrr::map(calls, call_data_n_debug)
@@ -460,7 +459,7 @@ for(i in seq(dimensions)) {
       dat <- resrows %>%
         dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
       dat <- dat %>% dplyr::select(-data)
-
+      message(Paste0(length(dat), ' API calls to go.'))
     } else {
       itemidname <- paste0('itemId_', dimensions[[i]])
       dat <- resrows %>%
@@ -478,8 +477,6 @@ for(i in seq(dimensions)) {
 
 # N Calls -----------------------------------------------------------------
   if(i >= 3 && i <= length(dimensions)) {
-
-
 
       # a function that formats the list of metricFilters too run below the metricsContainer
       metricFiltersFunction <- function(i) {
@@ -572,8 +569,8 @@ for(i in seq(dimensions)) {
       calls <- purrr::map2(i, apicalls, req_bodies)
 
       #(ncapable)
-      call_data_n <- function(calls, c) {
-          aa_call_data("reports/ranked", body = calls, company_id = company_id, c)
+      call_data_n <- function(calls) {
+          aa_call_data("reports/ranked", body = calls, company_id = company_id)
       }
       call_data_n_debug <- function(calls) {
           aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
@@ -581,7 +578,7 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       if(debug == FALSE) {
-        res <- purrr::map2(calls, c, call_data_n)
+        res <- purrr::map2(calls, call_data_n)
       }
       if(debug == TRUE) {
         res <- purrr::map(calls, call_data_n_debug)
@@ -889,6 +886,7 @@ for(i in seq(dimensions)) {
           dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
         dat <- dat %>% dplyr::select(-data)
+        message(Paste0(length(dat), ' API calls to go.'))
 
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])

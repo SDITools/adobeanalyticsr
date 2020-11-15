@@ -23,7 +23,6 @@
 #'
 aa_call_data <- function(req_path,
                         body = NULL,
-                        c,
                         company_id = Sys.getenv("AA_COMPANY_ID"),
                         client_id = Sys.getenv("AA_CLIENT_ID"),
                         client_secret = Sys.getenv("AA_CLIENT_SECRET")
@@ -59,8 +58,5 @@ aa_call_data <- function(req_path,
   } else if(status_code(req) == 206) {
     stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
   }
-  c <- c+1
-  return(c)
-  message(c)
   httr::content(req, as = "text",encoding = "UTF-8")
 }
