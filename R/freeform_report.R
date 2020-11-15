@@ -425,7 +425,7 @@ for(i in seq(dimensions)) {
     }
 
     if (debug == FALSE) {
-      res <- purrr::map2(calls, call_data_n)
+      res <- purrr::map(calls, call_data_n)
     }
     if (debug == TRUE) {
       res <- purrr::map(calls, call_data_n_debug)
@@ -578,7 +578,7 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       if(debug == FALSE) {
-        res <- purrr::map2(calls, call_data_n)
+        res <- purrr::map(calls, call_data_n)
       }
       if(debug == TRUE) {
         res <- purrr::map(calls, call_data_n_debug)
