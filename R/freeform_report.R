@@ -110,6 +110,23 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
     top <- rep(top, length(dimensions))
   }
 
+  #estimated runtime
+  if(length(top) > 1) {
+    toplength <- length(top)
+    i <- 1
+    product = 1
+    topestimate1 <-  top[-toplength]
+    topestimate1 <- append(topestimate1, 1, after = 0)
+    for(i in seq(toplength)) {
+      product <- product + prod(topestimate1[1:i])
+    }
+    #sec
+    est_secs <- (product-1)*.75
+    #min
+    est_mins <- ((product-1)*.75)/60
+    message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
+    message(paste0('Estimating a total of ', product, ' API calls'))
+  }
   #segment filter builder function (segments)
   seg <- function(segmentId) {
     structure(list(type = "segment",
