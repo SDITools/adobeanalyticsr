@@ -121,9 +121,9 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
       product <- product + prod(topestimate1[1:i])
     }
     #sec
-    est_secs <- (product-1)*.80
+    est_secs <- round((product-1)*.80, digits = 2)
     #min
-    est_mins <- ((product-1)*.80)/60
+    est_mins <- round(((product-1)*.80)/60, digits = 2)
     message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
     message(paste0('Estimating a total of ', product-2, ' API calls'))
   }
@@ -371,10 +371,15 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if("daterangeday" %in% colnames(df)) {
+          df[names(df) == 'daterangeday'] <- as.Date(df$daterangeday,
+                                                     format = '%b %d, %Y')
+        }
         if (prettynames == T) {
           names(dat) <- prettyfinalnames
         }
         message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
+
         return(dat)
       } else if (length(dimensions) != i) {
         ## second and not last data pull
@@ -486,6 +491,9 @@ for(i in seq(dimensions)) {
         tidyr::unnest(c(metrics, data)) %>%
         tidyr::spread(metrics, data) %>%
         dplyr::select(all_of(finalnames))
+      if("daterangeday" %in% colnames(df)) {
+        df[names(df) == 'daterangeday'] <- as.Date(df$daterangeday, format = '%b %d, %Y')
+      }
       if (prettynames == T) {
         names(dat) <- prettyfinalnames
       }
@@ -916,6 +924,9 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if("daterangeday" %in% colnames(df)) {
+          df[names(df) == 'daterangeday'] <- as.Date(df$daterangeday, format = '%b %d, %Y')
+        }
         if(prettynames == T) {
           names(dat) <- prettyfinalnames
         }
