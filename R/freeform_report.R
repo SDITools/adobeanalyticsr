@@ -924,8 +924,8 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
-        if("daterangeday" %in% colnames(df)) {
-          df[names(df) == 'daterangeday'] <- as.Date(df$daterangeday, format = '%b %d, %Y')
+        if("daterangeday" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
         }
         if(prettynames == T) {
           names(dat) <- prettyfinalnames
