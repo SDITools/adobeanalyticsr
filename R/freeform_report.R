@@ -373,12 +373,6 @@ for(i in seq(dimensions)) {
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
         #change time variables from character strings
-        if("daterangeminute" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
-        }
-        if("daterangehour" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
-        }
         if("daterangeday" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
         }
@@ -503,12 +497,12 @@ for(i in seq(dimensions)) {
         tidyr::spread(metrics, data) %>%
         dplyr::select(all_of(finalnames))
       #change time variables from character strings
-      if("daterangeminute" %in% colnames(dat)) {
-        dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
-      }
-      if("daterangehour" %in% colnames(dat)) {
-        dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
-      }
+      # if("daterangeminute" %in% colnames(dat)) {
+      #   dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
+      # }
+      # if("daterangehour" %in% colnames(dat)) {
+      #   dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
+      # }
       if("daterangeday" %in% colnames(dat)) {
         dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
       }
@@ -947,12 +941,12 @@ for(i in seq(dimensions)) {
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
         #change time variables from character strings
-        if("daterangeminute" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
-        }
-        if("daterangehour" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
-        }
+        # if("daterangeminute" %in% colnames(dat)) {
+        #   dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
+        # }
+        # if("daterangehour" %in% colnames(dat)) {
+        #   dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
+        # }
         if("daterangeday" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
         }
