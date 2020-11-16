@@ -14,13 +14,13 @@ aa_get_calculatedmetrics(
   name = NA,
   tagnames = NA,
   favorite = 0,
-  approved = TRUE,
+  approved = NA,
   limit = 1000,
   page = 0,
   sortDirection = "DESC",
   sortProperty = NA,
   expansion = NA,
-  includeType = NA
+  includeType = "all"
 )
 }
 \arguments{
