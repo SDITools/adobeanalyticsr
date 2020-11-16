@@ -374,10 +374,10 @@ for(i in seq(dimensions)) {
           dplyr::select(all_of(finalnames))
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeminute'] <- as.POSIXlt(df$daterangeminute, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
         }
         if("daterangehour" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangehour'] <- as.POSIXlt(df$daterangehour, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
         }
         if("daterangeday" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
@@ -948,10 +948,10 @@ for(i in seq(dimensions)) {
           dplyr::select(all_of(finalnames))
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeminute'] <- as.POSIXlt(df$daterangeminute, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
         }
         if("daterangehour" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangehour'] <- as.POSIXlt(df$daterangehour, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "ymd HMS")
         }
         if("daterangeday" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
