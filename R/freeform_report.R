@@ -371,10 +371,20 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
-        if("daterangeday" %in% colnames(df)) {
-          df[names(df) == 'daterangeday'] <- as.Date(df$daterangeday,
-                                                     format = '%b %d, %Y')
+        #change time variables from character strings
+        if("daterangeminute" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeminute'] <- as.POSIXlt(df$daterangeminute, format = '%H:%M %Y-%m-%d', tz = 'GMT')
         }
+        if("daterangehour" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangehour'] <- as.POSIXlt(df$daterangehour, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+        }
+        if("daterangeday" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+        }
+        if("daterangeweek" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+        }
+
         if (prettynames == T) {
           names(dat) <- prettyfinalnames
         }
@@ -491,9 +501,20 @@ for(i in seq(dimensions)) {
         tidyr::unnest(c(metrics, data)) %>%
         tidyr::spread(metrics, data) %>%
         dplyr::select(all_of(finalnames))
-      if("daterangeday" %in% colnames(df)) {
-        df[names(df) == 'daterangeday'] <- as.Date(df$daterangeday, format = '%b %d, %Y')
+      #change time variables from character strings
+      if("daterangeminute" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangeminute'] <- as.POSIXlt(df$daterangeminute, format = '%H:%M %Y-%m-%d', tz = 'GMT')
       }
+      if("daterangehour" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangehour'] <- as.POSIXlt(df$daterangehour, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+      }
+      if("daterangeday" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+      }
+      if("daterangeweek" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+      }
+
       if (prettynames == T) {
         names(dat) <- prettyfinalnames
       }
@@ -924,9 +945,20 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        #change time variables from character strings
+        if("daterangeminute" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeminute'] <- as.POSIXlt(df$daterangeminute, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+        }
+        if("daterangehour" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangehour'] <- as.POSIXlt(df$daterangehour, format = '%H:%M %Y-%m-%d', tz = 'GMT')
+        }
         if("daterangeday" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
         }
+        if("daterangeweek" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+        }
+
         if(prettynames == T) {
           names(dat) <- prettyfinalnames
         }
