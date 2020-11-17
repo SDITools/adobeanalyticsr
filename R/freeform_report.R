@@ -329,8 +329,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
   #map the function to list out the metricFiltres section of the api call
   lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
-  #counting calls
-  c = 0
+
 # 1 Call ------------------------------------------------------------------
 for(i in seq(dimensions)) {
     if(i == 1) {
@@ -354,10 +353,7 @@ for(i in seq(dimensions)) {
       )
 
       if (debug == FALSE) {
-        res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
-        c <- c+1
-        message(c)
-        res
+         aw_call_data("reports/ranked", body = req_body, company_id = company_id)
       }
       if (debug == TRUE) {
         res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
@@ -400,7 +396,7 @@ for(i in seq(dimensions)) {
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(paste0(nrow(dat), ' API calls to go.'))
+        message(paste0(i, ' level breakdown complete. Now starting the next ', nrow(dat), ' of the possible ', product-1 ,' data requests.'))
       }
     }
 
@@ -454,10 +450,7 @@ for(i in seq(dimensions)) {
     calls <- purrr::map2(i, api2, req_bodies_2)
 
     call_data_n <- function(calls) {
-      mapres <- aw_call_data("reports/ranked", body = calls, company_id = company_id)
-      c <- c + 1
-      message(c)
-      mapres
+      aw_call_data("reports/ranked", body = calls, company_id = company_id)
     }
     call_data_n_debug <- function(calls) {
       aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
@@ -498,7 +491,7 @@ for(i in seq(dimensions)) {
       dat <- resrows %>%
         dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
       dat <- dat %>% dplyr::select(-data)
-      message(paste0(nrow(dat), ' more API calls to go.'))
+      message(paste0(i, ' level breakdown complete. Now starting the next ', nrow(dat), ' of the possible ', product-1 ,' data requests.'))
     } else {
       itemidname <- paste0('itemId_', dimensions[[i]])
       dat <- resrows %>%
@@ -624,13 +617,10 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       call_data_n <- function(calls) {
-        mapres <- aw_call_data("reports/ranked", body = calls, company_id = company_id)
-        c <- c+1
-        message(c)
-        mapres
+        aw_call_data("reports/ranked", body = calls, company_id = company_id)
       }
       call_data_n_debug <- function(calls) {
-          aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+        aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
       }
 
       #(ncapable)
@@ -943,7 +933,7 @@ for(i in seq(dimensions)) {
           dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
         dat <- dat %>% dplyr::select(-data)
-        message(paste0(nrow(dat), ' more API calls to go.'))
+        message(paste0(i, ' level breakdown complete. Now starting the next ', nrow(dat), ' of the possible ', product-1 ,' data requests.'))
 
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
