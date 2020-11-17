@@ -357,7 +357,7 @@ for(i in seq(dimensions)) {
         res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
         c <- c+1
         message(c)
-        return(res)
+        res
       }
       if (debug == TRUE) {
         res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
@@ -457,7 +457,7 @@ for(i in seq(dimensions)) {
       mapres <- aw_call_data("reports/ranked", body = calls, company_id = company_id)
       c <- c + 1
       message(c)
-      return(mapres)
+      mapres
     }
     call_data_n_debug <- function(calls) {
       aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
@@ -627,7 +627,7 @@ for(i in seq(dimensions)) {
         mapres <- aw_call_data("reports/ranked", body = calls, company_id = company_id)
         c <- c+1
         message(c)
-        return(mapres)
+        mapres
       }
       call_data_n_debug <- function(calls) {
           aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
