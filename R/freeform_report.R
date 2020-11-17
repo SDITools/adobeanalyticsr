@@ -396,7 +396,7 @@ for(i in seq(dimensions)) {
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(paste0(i, ' level breakdown complete. Now starting the next ', nrow(dat), ' of the possible ', product-1 ,' data requests.'))
+        message(paste0('1 of ', product-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' more requests.'))
       }
     }
 
@@ -491,7 +491,7 @@ for(i in seq(dimensions)) {
       dat <- resrows %>%
         dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
       dat <- dat %>% dplyr::select(-data)
-      message(paste0(i, ' level breakdown complete. Now starting the next ', nrow(dat), ' of the possible ', product-1 ,' data requests.'))
+      message(paste0('Starting the next ', nrow(dat) ,' more requests.'))
     } else {
       itemidname <- paste0('itemId_', dimensions[[i]])
       dat <- resrows %>%
@@ -933,8 +933,7 @@ for(i in seq(dimensions)) {
           dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
         dat <- dat %>% dplyr::select(-data)
-        message(paste0(i, ' level breakdown complete. Now starting the next ', nrow(dat), ' of the possible ', product-1 ,' data requests.'))
-
+        message(paste0('Starting the next ', nrow(dat) ,' more requests.'))
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows %>%
