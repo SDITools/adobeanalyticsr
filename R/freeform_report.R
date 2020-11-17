@@ -354,14 +354,13 @@ for(i in seq(dimensions)) {
       )
 
       if (debug == FALSE) {
-        res <-
-          aw_call_data("reports/ranked", body = req_body, company_id = company_id)
+        res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
         c <- c+1
         message(c)
+        return(res)
       }
       if (debug == TRUE) {
-        res <-
-          aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
+        res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
       }
 
       resrows <- jsonlite::fromJSON(res)
@@ -455,9 +454,10 @@ for(i in seq(dimensions)) {
     calls <- purrr::map2(i, api2, req_bodies_2)
 
     call_data_n <- function(calls) {
-      aw_call_data("reports/ranked", body = calls, company_id = company_id)
+      mapres <- aw_call_data("reports/ranked", body = calls, company_id = company_id)
       c <- c + 1
       message(c)
+      return(mapres)
     }
     call_data_n_debug <- function(calls) {
       aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
@@ -624,9 +624,10 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       call_data_n <- function(calls) {
-        aw_call_data("reports/ranked", body = calls, company_id = company_id)
+        mapres <- aw_call_data("reports/ranked", body = calls, company_id = company_id)
         c <- c+1
         message(c)
+        return(mapres)
       }
       call_data_n_debug <- function(calls) {
           aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
