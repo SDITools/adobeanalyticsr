@@ -353,7 +353,7 @@ for(i in seq(dimensions)) {
       )
 
       if (debug == FALSE) {
-         aw_call_data("reports/ranked", body = req_body, company_id = company_id)
+        res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
       }
       if (debug == TRUE) {
         res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
