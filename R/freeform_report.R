@@ -126,7 +126,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     #min
     est_mins <- round(((product-1)*.80)/60, digits = 2)
     message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
-    message(paste0('Estimating a total of ', product-2, ' API calls'))
+    #message(paste0('Estimating a total of ', product-2, ' API calls'))
   }
   #segment filter builder function (segments)
   seg <- function(segmentId) {
@@ -329,7 +329,8 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
   #map the function to list out the metricFiltres section of the api call
   lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
-
+  #counting calls
+  c = 0
 # 1 Call ------------------------------------------------------------------
 for(i in seq(dimensions)) {
     if(i == 1) {
@@ -355,6 +356,8 @@ for(i in seq(dimensions)) {
       if (debug == FALSE) {
         res <-
           aw_call_data("reports/ranked", body = req_body, company_id = company_id)
+        c <- c+1
+        message(c)
       }
       if (debug == TRUE) {
         res <-
@@ -453,6 +456,8 @@ for(i in seq(dimensions)) {
 
     call_data_n <- function(calls) {
       aw_call_data("reports/ranked", body = calls, company_id = company_id)
+      c <- c + 1
+      message(c)
     }
     call_data_n_debug <- function(calls) {
       aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
@@ -619,7 +624,9 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       call_data_n <- function(calls) {
-          aw_call_data("reports/ranked", body = calls, company_id = company_id)
+        aw_call_data("reports/ranked", body = calls, company_id = company_id)
+        c <- c+1
+        message(c)
       }
       call_data_n_debug <- function(calls) {
           aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
