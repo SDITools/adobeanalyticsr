@@ -9,11 +9,11 @@
 #' @param company_id define globally or manually
 #'
 #' @export
-aa_get_metrics <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                               locale = 'en_US',
                               segmentable = 'NULL',
                               expansion = 'tags, allowedForReporting, categories',
-                              company_id = Sys.getenv("AA_COMPANY_ID")){
+                              company_id = Sys.getenv("AW_COMPANY_ID")){
 
   #remove spaces from the lsit of expansion tags
   expansion <- stringr::str_replace_all(expansion,  stringr::fixed(" "), "")
@@ -23,7 +23,7 @@ aa_get_metrics <- function(rsid = Sys.getenv("AA_REPORTSUITE_ID"),
 
 
 
-  res <- aa_call_api(req_path = urlstructure, company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure, company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
 # removing "metrics/" from the beginning of the id value

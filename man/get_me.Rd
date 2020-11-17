@@ -6,8 +6,8 @@
 \usage{
 get_me(
   req_path = "discovery/me",
-  client_id = Sys.getenv("AA_CLIENT_ID"),
-  client_secret = Sys.getenv("AA_CLIENT_SECRET")
+  client_id = Sys.getenv("AW_CLIENT_ID"),
+  client_secret = Sys.getenv("AW_CLIENT_SECRET")
 )
 }
 \arguments{

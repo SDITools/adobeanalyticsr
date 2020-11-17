@@ -29,10 +29,11 @@
 #' @import purrrlyr
 #' @importFrom rlang :=
 #' @importFrom jsonlite fromJSON
+#' @importFrom lubridate parse_date_time
 #'
 #' @export
-aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
-                               rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
+                               rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                                date_range = c(Sys.Date()-30, Sys.Date()-1),
                                dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
                                metrics = c("visits", "visitors"),
@@ -47,336 +48,363 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
                                )
 {
 
-#Making sure metrics and dimensions are available.  Eror handling.
-  dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
-  mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
+# Prep Work for the api calls ------------------------------------------------------------------
+  #Making sure metrics and dimensions are available.  Error handling.
+  dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
+  mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
   #pull out the calculated metrics
-    cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
-    if(length(cms_ids) > 0) {
-      cms <- aa_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
-      dimmets <- rbind(dims[c(1,3)],mets[c(1,3)],cms[c(2,3)])
-    } else {
-      dimmets <- rbind(dims[c(1,3)],mets[c(1,3)])
-    }
-  finalnames <- c(dimensions, metrics)
-
-  for(x in seq(finalnames)) {
-    if(finalnames[[x]] %in% dimmets[,1] == FALSE) {stop(paste0('\'',finalnames[[x]],'\' is not an available element'))}
+  cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
+  if (length(cms_ids) > 0) {
+    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
+    dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)], cms[c(2, 3)])
+  } else {
+    dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)])
   }
-
-  if(prettynames == TRUE) {
-    pnames <- function(x){
+  finalnames <- c(dimensions, metrics)
+  #include an error handler for metrics that do not appear in the list
+  for (x in seq(finalnames)) {
+    if (finalnames[[x]] %in% dimmets[, 1] == FALSE) {
+      stop(paste0('\'', finalnames[[x]], '\' is not an available element'))
+    }
+  }
+  #create the list of pretty named variables for the final output dataset
+  if (prettynames == TRUE) {
+    pnames <- function(x) {
       dimmets %>% dplyr::filter(finalnames[x] == id) %>% dplyr::pull(name)
     }
     prettyfinalnames <- map_chr(seq(finalnames), pnames)
   }
-
-
   #Identify the handling of unspecified
-if(include_unspecified == FALSE){
-  unspecified <- "exclude-nones"
-}
-if(include_unspecified == TRUE) {
-  unspecified <- "return-nones"
-}
-i = 1
-  # 1 Call ------------------------------------------------------------------
-for(i in seq(dimensions)) {
-    if(i == 1) {
-      finalnames <- c(dimensions, metrics)
+  if (include_unspecified == FALSE) {
+    unspecified <- "exclude-nones"
+  }
+  if (include_unspecified == TRUE) {
+    unspecified <- "return-nones"
+  }
+  itemId <- list(dimensions)
 
-      itemId <- list(dimensions)
+  finalnames_function <- function(level) {
+    c(paste0('itemId_',dimensions[level]), dimensions[level])
+  }
 
-      finalnames_function <- function(level) {
-        c(paste0('itemId_',dimensions[level]), dimensions[level])
-      }
+  prefinalnames <- purrr::map(seq(dimensions), finalnames_function) %>%
+    append(list(metrics))
 
-      prefinalnames <- purrr::map(seq(dimensions), finalnames_function) %>%
-        append(list(metrics))
+  #based on given names, create the list to be used for filtering and defining
+  itemidnamesfunction <- function(items) {
+    paste0('itemId_', dimensions[[items]])
+  }
+  itemidnames <-purrr::map(seq(dimensions), itemidnamesfunction)
 
+  ##set the timeframe for the query (timeframe)
+  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
-      #based on given names, create the list to be used for filtering and defining
-      itemidnamesfunction <- function(items) {
-        paste0('itemId_', dimensions[[items]])
-      }
-      itemidnames <-purrr::map(seq(dimensions), itemidnamesfunction)
+  ##setup the right number of limits for each dimension (top)
+  if(length(top) != length(dimensions) & length(top) != 1) {
+    stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
+  } else if(grepl('daterangeday', dimensions[1]) & length(top) == 1) {
+    top <- rep(top, length(dimensions)-1)
+    top <- c(as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1), top)
+  } else if(grepl('daterangeday', dimensions[1]) & length(top) != 1 & top[[1]] == 0) {
+    top[[1]] <- as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1)
+  } else if(length(top) == 1) {
+    top <- rep(top, length(dimensions))
+  }
 
-      ##set the timeframe for the query
-      timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
-
-      ##setup the right number of limits for each dimension
-    if(length(top) != length(dimensions) & length(top) != 1) {
-      stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
-    } else if(grepl('daterangeday', dimensions[1]) & length(top) == 1) {
-      top <- rep(top, length(dimensions)-1)
-      top <- c(as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1), top)
-    } else if(grepl('daterangeday', dimensions[1]) & length(top) != 1 & top[[1]] == 0) {
-      top[[1]] <- as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1)
-    } else if(length(top) == 1) {
-      top <- rep(top, length(dimensions))
+  #estimated runtime
+  if(length(top) > 1) {
+    toplength <- length(top)
+    i <- 1
+    product = 1
+    topestimate1 <-  top[-toplength]
+    topestimate1 <- append(topestimate1, 1, after = 0)
+    for(i in seq(toplength)) {
+      product <- product + prod(topestimate1[1:i])
     }
+    #sec
+    est_secs <- round((product-1)*.80, digits = 2)
+    #min
+    est_mins <- round(((product-1)*.80)/60, digits = 2)
+    message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
+    #message(paste0('Estimating a total of ', product-2, ' API calls'))
+  }
+  #segment filter builder function (segments)
+  seg <- function(segmentId) {
+    structure(list(type = "segment",
+                   segmentId = segmentId))
+  }
 
-  #segment filter builder function
-      seg <- function(segmentId) {
-        structure(list(type = "segment",
-                       segmentId = segmentId))
-      }
+  segments <- purrr::map(segmentId, seg)
 
-      segments <- purrr::map(segmentId, seg)
-
-  #create the DateRange list item
-      dr <- list(list(
-        type = "dateRange",
-        dateRange = timeframe))
+  #create the DateRange list item (dr)
+  dr <- list(list(
+    type = "dateRange",
+    dateRange = timeframe))
 
   #join Segment and DateRange builder function
-      s_dr <- function() {
-        if(is.na(segmentId[[1]])) {
-          list(list(
-            type = "dateRange",
-            dateRange = timeframe
-          ))
-        } else {
-          append(segments, dr)
-        }
+  s_dr <- function() {
+    if(is.na(segmentId[[1]])) {
+      list(list(
+        type = "dateRange",
+        dateRange = timeframe
+      ))
+    } else {
+      append(segments, dr)
+    }
+  }
+
+  #Create the global filters (gf)
+  gf <- s_dr()
+
+  #search item builder filter (search)
+  search[search == ''] <- NA
+  add_si <- length(dimensions) - length(search)
+  added_si <- rep(NA, add_si)
+  search <- append(search, added_si)
+
+  si_fun <- function(si) {
+    if(!is.na(search[si])){
+      search <-  structure(list('clause' = search[si]))
+    } else {
+      NA
+    }
+  }
+  search <- purrr::map(seq(dimensions), si_fun)
+
+
+  ##function to create the top level 'metricsContainer'
+  metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
+    if(colId == 0) {
+      if(grepl('cm[1-9]*_*', metric)) {
+        structure(list(
+          columnId = colId,
+          id = metric,
+          sort = metricSort
+        ))
+      } else {
+        structure(list(
+          columnId = colId,
+          id = sprintf('metrics/%s',metric),
+          sort = metricSort
+        ))
       }
+    } else {
+      if(grepl('cm[1-9]*_*', metric)) {
+        structure(list(
+          columnId = colId,
+          id = metric,
+          sort = metricSort
+        ))
+      } else {
+        structure(list(
+          columnId = colId,
+          id = sprintf('metrics/%s',metric)
+        ))
+      }}
+  }
 
-      #Create the global filters
-      gf <- s_dr()
-
-      #search filter
-      search[search == ''] <- NA
-      add_si <- length(dimensions) - length(search)
-      added_si <- rep(NA, add_si)
-      search <- append(search, added_si)
-      si_fun <- function(si) {
-        if(!is.na(search[si])){
-          search <-  structure(list('clause' = search[si]))
-        } else {
-          NA
-        }
+  ### function to create the  breakdown 'metricsContainer'
+  metriccontainer_2 <- function(metric, colId, metricSort = 'desc' , filterId) {
+    if(colId == 0) {
+      if(grepl('cm[1-9]*_*', metric)) {
+        structure(list(
+          columnId = colId,
+          id = metric,
+          sort = metricSort,
+          filters = list(
+            filterId
+          )))
+      } else {
+        structure(list(
+          columnId = colId,
+          id = sprintf('metrics/%s',metric),
+          sort = metricSort,
+          filters = list(
+            filterId
+          )))
       }
-      search <- purrr::map(seq(dimensions), si_fun)
+    } else {
+      if(grepl('cm[1-9]*_*', metric)) {
+        structure(list(
+          columnId = colId,
+          id = metric,
+          filters = list(
+            filterId
+          )))
+      } else {
+        structure(list(
+          columnId = colId,
+          id = sprintf('metrics/%s',metric),
+          filters = list(
+            filterId
+          )))
+      }}
+  }
 
-
-      ##function to create the top level 'metricsContainer'
-      metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
-        if(colId == 0) {
-            if(grepl('cm[1-9]*_*', metric)) {
-              structure(list(
-                columnId = colId,
-                id = metric,
-                sort = metricSort
-              ))
-            } else {
-              structure(list(
-                columnId = colId,
-                id = sprintf('metrics/%s',metric),
-                sort = metricSort
-              ))
-            }
-        } else {
-          if(grepl('cm[1-9]*_*', metric)) {
-            structure(list(
-              columnId = colId,
-              id = metric,
-              sort = metricSort
-            ))
-        } else {
-          structure(list(
-            columnId = colId,
-            id = sprintf('metrics/%s',metric)
-            ))
-        }}
+  metriccontainer_n <- function(metric, colId, metricSort = 'desc' , filterId) {
+    if(colId == 0) {
+      if(grepl('cm[1-9]*_*', metric)) {
+        structure(list(
+          columnId = colId,
+          id = metric,
+          sort = metricSort,
+          filters =
+            filterId
+        ))
+      } else {
+        structure(list(
+          columnId = colId,
+          id = sprintf('metrics/%s',metric),
+          sort = metricSort,
+          filters =
+            filterId
+        ))
       }
-
-      ### function to create the  breakdown 'metricsContainer'
-      metriccontainer_2 <- function(metric, colId, metricSort = 'desc' , filterId) {
-        if(colId == 0) {
-          if(grepl('cm[1-9]*_*', metric)) {
-            structure(list(
-              columnId = colId,
-              id = metric,
-              sort = metricSort,
-              filters = list(
-                filterId
-              )))
-          } else {
-            structure(list(
-              columnId = colId,
-              id = sprintf('metrics/%s',metric),
-              sort = metricSort,
-              filters = list(
-                filterId
-              )))
-          }
-        } else {
-          if(grepl('cm[1-9]*_*', metric)) {
-            structure(list(
-              columnId = colId,
-              id = metric,
-              filters = list(
-                filterId
-              )))
-          } else {
-            structure(list(
-              columnId = colId,
-              id = sprintf('metrics/%s',metric),
-              filters = list(
-                filterId
-              )))
-          }}
-        }
-
-      metriccontainer_n <- function(metric, colId, metricSort = 'desc' , filterId) {
-        if(colId == 0) {
-          if(grepl('cm[1-9]*_*', metric)) {
-            structure(list(
-              columnId = colId,
-              id = metric,
-              sort = metricSort,
-              filters =
-                filterId
-            ))
-          } else {
-          structure(list(
-            columnId = colId,
-            id = sprintf('metrics/%s',metric),
-            sort = metricSort,
-            filters =
-              filterId
-            ))
-          }
-        } else {
-          if(grepl('cm[1-9]*_*', metric)) {
-            structure(list(
-              columnId = colId,
-              id = metric,
-              filters =
-                filterId
-            ))
-          } else {
-            structure(list(
-              columnId = colId,
-              id = sprintf('metrics/%s',metric),
-              filters =
-                filterId
-          ))
-          }
-        }}
-
-      #setup the tibble for building the queries
-      metIds <- tibble(metrics,colid = seq(length(metrics))-1)
-
-      df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, top)
-      df <- df %>% dplyr::mutate(breakdownorder = as.numeric(rownames(df)))
-      bdnumber <- as.numeric(max(df$breakdownorder))
-      metnumber <- as.numeric(length(metrics))
-
-      #metrics list items
-      #if = 1st dimension
-      metricContainerFunction <- function(i){
-        mc <- list()
-        if(i == 1) {
-          mc <- list()
-          mc <- purrr::map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
-          return(mc)
-        } else if(i == 2) {
-          m2list <- list(metric = df$metric[[i]][[1]], colId = df$metric[[i]][[2]],
-                         metricSort = metricSort, filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
-          mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
-          return(mc)
-        } else  {
-          #if = 3rd dimension or more
-          L <- list(seq(nrow(df$metric[[i]][1])*(i-1))-1)
-          filteridslist <- split(L[[1]], rep(1:nrow(df$metric[[i]][1]), length = length(L[[1]])))
-
-          m3list <- list(metric = df$metric[[i]][[1]],
-                         colId = df$metric[[i]][[2]],metricSort = metricSort,
-                         filterId = filteridslist)
-          mc <-  append(mc, values = purrr::pmap(m3list, metriccontainer_n))
-          return(mc)
-        }
+    } else {
+      if(grepl('cm[1-9]*_*', metric)) {
+        structure(list(
+          columnId = colId,
+          id = metric,
+          filters =
+            filterId
+        ))
+      } else {
+        structure(list(
+          columnId = colId,
+          id = sprintf('metrics/%s',metric),
+          filters =
+            filterId
+        ))
       }
+    }}
 
-      mlist <- purrr::map(seq(bdnumber), metricContainerFunction)
+  #setup the tibble for building the queries
+  metIds <- tibble(metrics,colid = seq(length(metrics))-1)
 
+  df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, top)
+  df <- df %>% dplyr::mutate(breakdownorder = as.numeric(rownames(df)))
+  bdnumber <- as.numeric(max(df$breakdownorder))
+  metnumber <- as.numeric(length(metrics))
 
+  #metrics list items
+  #if = 1st dimension
+  metricContainerFunction <- function(i){
+    mc <- list()
+    if(i == 1) {
+      mc <- list()
+      mc <- purrr::map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
+      return(mc)
+    } else if(i == 2) {
+      m2list <- list(metric = df$metric[[i]][[1]], colId = df$metric[[i]][[2]],
+                     metricSort = metricSort, filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
+      mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
+      return(mc)
+    } else  {
+      #if = 3rd dimension or more
+      L <- list(seq(nrow(df$metric[[i]][1])*(i-1))-1)
+      filteridslist <- split(L[[1]], rep(1:nrow(df$metric[[i]][1]), length = length(L[[1]])))
+
+      m3list <- list(metric = df$metric[[i]][[1]],
+                     colId = df$metric[[i]][[2]],metricSort = metricSort,
+                     filterId = filteridslist)
+      mc <-  append(mc, values = purrr::pmap(m3list, metriccontainer_n))
+      return(mc)
+    }
+  }
+
+  mlist <- purrr::map(seq(bdnumber), metricContainerFunction)
+
+  #function to pre-create the MetricFilters list needed to iterate through the api calls
+  load_dims <- function(dimItems) {
+    mflist <- list(dimension = rep(dimensions[1:dimItems], each = metnumber))
+    mflist <- append(mflist, values = list('type' = 'breakdown'))
+    mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
+  }
+  #run the function
+  mfdims <- purrr::map(seq_along(dimensions)-1, load_dims)
+
+  #Formats a ist of metricFilters to run below the metricsContainer
+  metricFiltersFunction <- function(i) {
+    mfdimslist <-structure(list(id = mfdims[[i]]$id, type = 'breakdown', dimension = mfdims[[i]]$dimension, itemId = ''))
+  }
+  #map the function to list out the metricFiltres section of the api call
+  lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
+
+# 1 Call ------------------------------------------------------------------
+for(i in seq(dimensions)) {
+    if(i == 1) {
       #generating the body of the first api request
-      req_body <- structure(list(rsid = rsid,
-                                 globalFilters =
-                                   gf,
-                                 metricContainer = list(
-                                   metrics = mlist[[i]]
-                                 ),
-                                 dimension = sprintf("variables/%s", df$dimension[[i]]),
-                                 search = search[[i]],
-                                 settings = list(
-                                   countRepeatInstances = TRUE,
-                                   limit = top[i],
-                                   page = 0,
-                                   nonesBehavior = unspecified
-                                 ),
-                                 statistics = list(
-                                   functions = c("col-max", "col-min")
-                                 )))
+      req_body <- structure(
+        list(
+          rsid = rsid,
+          globalFilters =
+            gf,
+          metricContainer = list(metrics = mlist[[i]]),
+          dimension = sprintf("variables/%s", df$dimension[[i]]),
+          search = search[[i]],
+          settings = list(
+            countRepeatInstances = TRUE,
+            limit = top[i],
+            page = 0,
+            nonesBehavior = unspecified
+          ),
+          statistics = list(functions = c("col-max", "col-min"))
+        )
+      )
 
-      if(debug == FALSE) {
-        res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id)
+      if (debug == FALSE) {
+        res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
       }
-      if(debug == TRUE) {
-        res <- aa_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
+      if (debug == TRUE) {
+        res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
       }
 
-      resrows<- jsonlite::fromJSON(res)
+      resrows <- jsonlite::fromJSON(res)
 
-
-      #conditional statement to determine if the function should terminate and reurn the df or continue on.
-      if(length(dimensions) == 1) {
+      #conditional statement to determine if the function should terminate or start over with the new itemIds
+      if (length(dimensions) == 1) {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows$rows %>%
-          dplyr::rename(!!itemidname := itemId,
-                 !!finalnames[[i]] := value) %>%
-          dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
+          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
+          dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
-        if(prettynames == T) {
+        #change time variables from character strings
+        if("daterangeminute" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
+        }
+        if("daterangehour" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
+        }
+        if("daterangeday" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+        }
+        if("daterangeweek" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+        }
+
+        if (prettynames == T) {
           names(dat) <- prettyfinalnames
         }
+        message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
+
         return(dat)
-      } else if(length(dimensions) != i) {
+      } else if (length(dimensions) != i) {
         ## second and not last data pull
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
-          dplyr::rename(!!itemidname := itemId,
-                 !!finalnames[[i]] := value)
+          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
+        message(paste0('1 of ', product-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' requests.'))
       }
     }
 
 # 2 Call -----------------------------------------------------------------
-    if(i == 2) {
-
-      #function to pre-create the MetricFilters list needed to iterate through the api alls
-      load_dims <- function(dimItems) {
-        mflist <- list(dimension = rep(dimensions[1:dimItems], each = metnumber))
-        mflist <- append(mflist, values = list('type' = 'breakdown'))
-        mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
-      }
-      #run the function
-      mfdims <- purrr::map(seq_along(dimensions)-1, load_dims)
-
-
-      # a function that formats the list of metricFilters to run below the metricsContainer
-      metricFiltersFunction <- function(i) {
-        mfdimslist <-structure(list(id = mfdims[[i]]$id, type = 'breakdown', dimension = mfdims[[i]]$dimension, itemId = ''))
-      }
-      #map the function to list out the metricFiltres section of the api call
-      lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
-
-      ### function to create the breakdown 'metricsFilters'
-      metricfilter_2 <- function(filterId , type, dimension, itemId = '') {
+  if (i == 2) {
+    ### function to create the breakdown 'metricsFilters'
+    metricfilter_2 <-
+      function(filterId , type, dimension, itemId = '') {
         list(
           id = filterId,
           type = type,
@@ -384,117 +412,118 @@ for(i in seq(dimensions)) {
           itemId = itemId
         )
       }
-      #run the list function to genereate the formated json string like list
-      mflist <- list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
+    #run the list function to genereate the formated json string like list
+    mflist <-
+      list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
 
+    mf_item <- purrr::pmap(mflist, metricfilter_2)
 
-      mf_item <- purrr::pmap(mflist, metricfilter_2)
+    mf_itemlist <- function(itemid) {
+      purrr::map(mf_item, update_list, itemId = itemid)
+    }
 
-      mf_itemlist <- function(itemid) {
-        purrr::map(mf_item, update_list, itemId = itemid)
-      }
+    api2 <- purrr::map(dat[[1]], mf_itemlist)
 
-      api2 <- purrr::map(dat[[1]], mf_itemlist)
+    req_bodies_2 <- function(i, mf = api2) {
+      structure(
+        list(
+          rsid = rsid,
+          globalFilters =
+            gf,
+          metricContainer = list(metrics = mlist[[i]]
+                                 ,
+                                 metricFilters =
+                                   mf),
+          dimension = sprintf("variables/%s", df$dimension[[i]]),
+          search = search[[i]],
+          settings = list(
+            countRepeatInstances = TRUE,
+            limit = top[i],
+            page = 0,
+            nonesBehavior = unspecified
+          ),
+          statistics = list(functions = c("col-max", "col-min"))
+        )
+      )
+    }
 
-      req_bodies_2 <- function(i, mf = api2) {
-        structure(list(rsid = rsid,
-                       globalFilters =
-                         gf,
-                       metricContainer = list(
-                         metrics = mlist[[i]]
-                         ,
-                         metricFilters =
-                           mf
-                       ),
-                       dimension = sprintf("variables/%s",df$dimension[[i]]),
-                       search = search[[i]],
-                       settings = list(
-                         countRepeatInstances = TRUE,
-                         limit = top[i],
-                         page = 0,
-                         nonesBehavior = unspecified
-                       ),
-                       statistics = list(
-                         functions = c("col-max", "col-min")
-                       )))
-      }
+    calls <- purrr::map2(i, api2, req_bodies_2)
 
-      calls <- purrr::map2(i, api2, req_bodies_2)
+    call_data_n <- function(calls) {
+      aw_call_data("reports/ranked", body = calls, company_id = company_id)
+    }
+    call_data_n_debug <- function(calls) {
+      aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+    }
 
-      call_data_n <- function(calls) {
-          aa_call_data("reports/ranked", body = calls, company_id = company_id)
-      }
-      call_data_n_debug <- function(calls) {
-          aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
-      }
+    if (debug == FALSE) {
+      res <- purrr::map(calls, call_data_n)
+    }
+    if (debug == TRUE) {
+      res <- purrr::map(calls, call_data_n_debug)
+    }
+    getdata <- function(it) {
+      jsonlite::fromJSON(res[[it]])
+    }
 
-      if(debug == FALSE) {
-        res <- purrr::map(calls, call_data_n)
-      }
-      if(debug == TRUE) {
-        res <- purrr::map(calls, call_data_n_debug)
-      }
-      getdata <- function(it) {
-        jsonlite::fromJSON(res[[it]])
-      }
+    res <- purrr::map(seq(length(res)),  getdata)
 
-      res <- purrr::map(seq(length(res)),  getdata)
+    t = 0
+    el <- function(els) {
+      if_else(res[[els]]$numberOfElements != 0, t + 1, 0)
+    }
+    elnum <- sum(unlist(purrr::map(seq(length(
+      res
+    )), el)))
 
-      t = 0
-
-      el <- function(els) {
-        if_else(res[[els]]$numberOfElements != 0, t+1, 0)
-      }
-
-      elnum <- sum(unlist(purrr::map(seq(length(res)), el)))
-
-
-      rowsdata <- function(it, i) {
-        if(res[[it]]$numberOfElements != 0) {
-          res[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],
-                                  !!prefinalnames[[1]][[2]] := dat[[2]][[it]])
-        }
-      }
-
-      resrows <- purrr::map2_dfr(seq(elnum), i, rowsdata)
-
-      #conditional statement to determine if the function should terminate and reurn the df or continue on.
-      if(length(dimensions) != i) {
-        ## second and not last data pull
-        itemidname <- paste0('itemId_', dimensions[[i]])
-        dat <- resrows %>%
-          dplyr::rename(!!itemidname := itemId,
-                 !!finalnames[[i]] := value)
-        dat <- dat %>% dplyr::select(-data)
-
-      } else {
-        itemidname <- paste0('itemId_', dimensions[[i]])
-        dat <- resrows %>%
-          dplyr::rename(!!itemidname := itemId,
-                 !!finalnames[[i]] := value) %>%
-          dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
-          tidyr::unnest(c(metrics, data)) %>%
-          tidyr::spread(metrics, data) %>%
-          dplyr::select(all_of(finalnames))
-        if(prettynames == T) {
-          names(dat) <- prettyfinalnames
-        }
-        return(dat)
+    rowsdata <- function(it, i) {
+      if (res[[it]]$numberOfElements != 0) {
+        res[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],!!prefinalnames[[1]][[2]] := dat[[2]][[it]])
       }
     }
 
+    resrows <- purrr::map2_dfr(seq(elnum), i, rowsdata)
+
+    #conditional statement to determine if the function should terminate or rerun the next iteration of api calls
+    if (length(dimensions) != i) {
+      ## second and not last data pull
+      itemidname <- paste0('itemId_', dimensions[[i]])
+      dat <- resrows %>%
+        dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
+      dat <- dat %>% dplyr::select(-data)
+      message(paste0('Starting the next ', nrow(dat) ,' equests.'))
+    } else {
+      itemidname <- paste0('itemId_', dimensions[[i]])
+      dat <- resrows %>%
+        dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
+        dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
+        tidyr::unnest(c(metrics, data)) %>%
+        tidyr::spread(metrics, data) %>%
+        dplyr::select(all_of(finalnames))
+      #change time variables from character strings
+      if("daterangeminute" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
+      }
+      if("daterangehour" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
+      }
+      if("daterangeday" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+      }
+      if("daterangeweek" %in% colnames(dat)) {
+        dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+      }
+
+      if (prettynames == T) {
+        names(dat) <- prettyfinalnames
+      }
+      message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
+      return(dat)
+    }
+  }
+
 # N Calls -----------------------------------------------------------------
   if(i >= 3 && i <= length(dimensions)) {
-
-      #function to pre-create the MetricFilters list needed to iterate through the api calls
-      load_dims <- function(dimItems) {
-        mflist <- list(dimension = rep(dimensions[1:dimItems], each = metnumber))
-        mflist <- append(mflist, values = list('type' = 'breakdown'))
-        mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
-      }
-      #run the function
-      mfdims <- purrr::map(seq_along(dimensions)-1, load_dims)
-
 
       # a function that formats the list of metricFilters too run below the metricsContainer
       metricFiltersFunction <- function(i) {
@@ -588,10 +617,10 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       call_data_n <- function(calls) {
-          aa_call_data("reports/ranked", body = calls, company_id = company_id)
+        aw_call_data("reports/ranked", body = calls, company_id = company_id)
       }
       call_data_n_debug <- function(calls) {
-          aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+        aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
       }
 
       #(ncapable)
@@ -904,7 +933,7 @@ for(i in seq(dimensions)) {
           dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value)
         dat <- dat %>% dplyr::select(-data)
-
+        message(paste0('Starting the next ', nrow(dat) ,' requests.'))
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows %>%
@@ -914,9 +943,24 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        #change time variables from character strings
+        if("daterangeminute" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
+        }
+        if("daterangehour" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
+        }
+        if("daterangeday" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+        }
+        if("daterangeweek" %in% colnames(dat)) {
+          dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+        }
+
         if(prettynames == T) {
           names(dat) <- prettyfinalnames
         }
+        message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
         return(dat)
       }
    }

@@ -17,8 +17,8 @@
 #' @export
 #' @import assertthat httr
 get_me <- function(req_path = 'discovery/me',
-                    client_id = Sys.getenv("AA_CLIENT_ID"),
-                    client_secret = Sys.getenv("AA_CLIENT_SECRET")){
+                    client_id = Sys.getenv("AW_CLIENT_ID"),
+                    client_secret = Sys.getenv("AW_CLIENT_SECRET")){
 
   assertthat::assert_that(
     is.string(req_path),
@@ -27,7 +27,7 @@ get_me <- function(req_path = 'discovery/me',
   )
 
   # creates token to aa.oauth if not present
-  token <- aa_token(client_id, client_secret)
+  token <- aw_token(client_id, client_secret)
 
   request_url <- sprintf("https://analytics.adobe.io/%s",
                           req_path)

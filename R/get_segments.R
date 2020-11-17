@@ -19,7 +19,7 @@
 #' @import stringr
 #' @export
 #'
-aa_get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
+aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                           rsids = NA,
                           segmentFilter = NA,
                           locale = 'en_US',
@@ -49,7 +49,7 @@ aa_get_segments <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
   urlstructure <- paste0('segments?',query_param)
 
   #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
-  res <- aa_call_api(req_path = urlstructure[1], company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
 

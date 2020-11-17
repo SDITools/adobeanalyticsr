@@ -13,11 +13,11 @@
 #'
 #' @import assertthat httr purrr
 #'
-aa_call_data_debug <- function(req_path,
+aw_call_data_debug <- function(req_path,
                         body = NULL,
-                        company_id = Sys.getenv("AA_COMPANY_ID"),
-                        client_id = Sys.getenv("AA_CLIENT_ID"),
-                        client_secret = Sys.getenv("AA_CLIENT_SECRET"),
+                        company_id = Sys.getenv("AW_COMPANY_ID"),
+                        client_id = Sys.getenv("AW_CLIENT_ID"),
+                        client_secret = Sys.getenv("AW_CLIENT_SECRET"),
                         debug = TRUE){
 
   assert_that(
@@ -29,12 +29,12 @@ aa_call_data_debug <- function(req_path,
   )
 
   # creates token to aa.oauth if not present
-  token <- aa_token(client_id, client_secret)
+  token <- aw_token(client_id, client_secret)
 
   request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                          company_id, req_path)
 
-  req1 <- httr::RETRY("POST",
+  req <- httr::RETRY("POST",
                      url = request_url,
                      body = body,
                      encode = "json",
@@ -45,14 +45,13 @@ aa_call_data_debug <- function(req_path,
                        `x-proxy-global-company-id` = company_id
                      ))
 
-  stop_for_status(req1)
+  stop_for_status(req)
 
-  if(status_code(req1) == 206  & length(content(req1)$columns$columnErrors[[1]]) != 0) {
-    stop(paste0('The error code is ',content(req1)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
-  } else if(status_code(req1) == 206){
+  if(status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
+    stop(paste0('The error code is ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
+  } else if(status_code(req) == 206) {
     stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
-  } else if(status_code(req1) == 200 & content(req1)$totalElements != 0) {
-    req <- httr::content(req1, as = "text",encoding = "UTF-8")
-    #stop("No data was returned while a valid 200 response code was returned. Consider changing 'include_unsecified' to TRUE in your function call.")
   }
+  httr::content(req, as = "text",encoding = "UTF-8")
 }
+

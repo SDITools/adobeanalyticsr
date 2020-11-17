@@ -10,8 +10,8 @@
 #'
 #' @export
 #'
-aa_workspace_report <- function(req_body = sample,
-                                company_id = Sys.getenv('AA_COMPANY_ID'),
+aw_workspace_report <- function(req_body = sample,
+                                company_id = Sys.getenv('AW_COMPANY_ID'),
                                 debug = FALSE) {
   req_body <- jsonlite::fromJSON(req_body)
   #build the necessary naming items for the result
@@ -21,10 +21,10 @@ aa_workspace_report <- function(req_body = sample,
     dimensions <- gsub(".*/", "", req_body$dimension)
   #make the request
   if(debug == FALSE) {
-    res <- aa_call_data("reports/ranked", body = req_body, company_id = company_id)
+    res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
   }
   if(debug == TRUE) {
-    res <- aa_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
+    res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
   }
   #reformat from JSON
   res <- jsonlite::fromJSON(res)
