@@ -14,18 +14,18 @@
 #'
 #' \dontrun{
 #'
-#' aa_call_data("reports/ranked",
+#' aw_call_data("reports/ranked",
 #'             body = list(..etc..),
 #'             company_id = "blah")
 #'
 #' }
 #' @import assertthat httr purrr
 #'
-aa_call_data <- function(req_path,
+aw_call_data <- function(req_path,
                         body = NULL,
-                        company_id = Sys.getenv("AA_COMPANY_ID"),
-                        client_id = Sys.getenv("AA_CLIENT_ID"),
-                        client_secret = Sys.getenv("AA_CLIENT_SECRET")
+                        company_id = Sys.getenv("AW_COMPANY_ID"),
+                        client_id = Sys.getenv("AW_CLIENT_ID"),
+                        client_secret = Sys.getenv("AW_CLIENT_SECRET")
                         ){
 
   assert_that(
@@ -37,7 +37,7 @@ aa_call_data <- function(req_path,
   )
 
   # creates token to aa.oauth if not present
-  token <- aa_token(client_id, client_secret)
+  token <- aw_token(client_id, client_secret)
 
   request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                          company_id, req_path)

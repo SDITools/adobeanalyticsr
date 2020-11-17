@@ -32,8 +32,8 @@
 #' @importFrom lubridate parse_date_time
 #'
 #' @export
-aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
-                               rsid = Sys.getenv("AA_REPORTSUITE_ID"),
+aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
+                               rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                                date_range = c(Sys.Date()-30, Sys.Date()-1),
                                dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
                                metrics = c("visits", "visitors"),
@@ -50,12 +50,12 @@ aa_freeform_report <- function(company_id = Sys.getenv("AA_COMPANY_ID"),
 
 # Prep Work for the api calls ------------------------------------------------------------------
   #Making sure metrics and dimensions are available.  Error handling.
-  dims <- aa_get_dimensions(rsid = rsid, company_id = company_id)
-  mets <- aa_get_metrics(rsid = rsid, company_id = company_id)
+  dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
+  mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
   #pull out the calculated metrics
   cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
   if (length(cms_ids) > 0) {
-    cms <- aa_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
+    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
     dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)], cms[c(2, 3)])
   } else {
     dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)])
@@ -354,11 +354,11 @@ for(i in seq(dimensions)) {
 
       if (debug == FALSE) {
         res <-
-          aa_call_data("reports/ranked", body = req_body, company_id = company_id)
+          aw_call_data("reports/ranked", body = req_body, company_id = company_id)
       }
       if (debug == TRUE) {
         res <-
-          aa_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
+          aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
       }
 
       resrows <- jsonlite::fromJSON(res)
@@ -452,10 +452,10 @@ for(i in seq(dimensions)) {
     calls <- purrr::map2(i, api2, req_bodies_2)
 
     call_data_n <- function(calls) {
-      aa_call_data("reports/ranked", body = calls, company_id = company_id)
+      aw_call_data("reports/ranked", body = calls, company_id = company_id)
     }
     call_data_n_debug <- function(calls) {
-      aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+      aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
     }
 
     if (debug == FALSE) {
@@ -619,10 +619,10 @@ for(i in seq(dimensions)) {
 
       #(ncapable)
       call_data_n <- function(calls) {
-          aa_call_data("reports/ranked", body = calls, company_id = company_id)
+          aw_call_data("reports/ranked", body = calls, company_id = company_id)
       }
       call_data_n_debug <- function(calls) {
-          aa_call_data_debug("reports/ranked", body = calls, company_id = company_id)
+          aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
       }
 
       #(ncapable)

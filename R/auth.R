@@ -7,19 +7,16 @@
 #' @export
 #' @import httr
 #'
-aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),
-                     client_secret = Sys.getenv("AA_CLIENT_SECRET")){
+aw_token <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
+                     client_secret = Sys.getenv("AW_CLIENT_SECRET")){
 
-  # https://ims-na1.adobelogin.com/ims/authorize?client_id={CLIENT ID}&redirect_uri={REDIRECT URI}&scope=openid,
-  # AdobeID,read_organizations,additional_info.job_function,additional_info.projectedProductContext&response_type=code
-
-  aa_endpoint <- httr::oauth_endpoint(
+  aw_endpoint <- httr::oauth_endpoint(
     authorize = "authorize/v2/",
     access = "token/v3",
     base_url = "https://ims-na1.adobelogin.com/ims/"
   )
 
-  aa_app <- httr::oauth_app(
+  aw_app <- httr::oauth_app(
     appname = "adobe_analytics_v2.0",
     key = client_id,
     secret = client_secret
@@ -27,8 +24,8 @@ aa_token <- function(client_id = Sys.getenv("AA_CLIENT_ID"),
 
   #Oauth2 token
   httr::oauth2.0_token(
-    endpoint = aa_endpoint,
-    app = aa_app,
+    endpoint = aw_endpoint,
+    app = aw_app,
     scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
     cache = "aa.oauth",
     use_oob = TRUE,

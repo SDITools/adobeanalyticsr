@@ -14,8 +14,8 @@
 #'
 #' @export
 
-aa_anomaly_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
-                                 rsid = Sys.getenv('AA_REPORTSUITE_ID'),
+aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
+                                 rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                                  date_range = c(Sys.Date()-31, Sys.Date()-1),
                                  metrics,
                                  pages = 0,
@@ -59,7 +59,7 @@ aa_anomaly_report <- function(company_id = Sys.getenv('AA_COMPANY_ID'),
                                includeAnomalyDetection = anomalyDetection
                              ) ) )
 
-  res <- aa_call_data("reports/ranked", body = req_body,  company_id = company_id)
+  res <- aw_call_data("reports/ranked", body = req_body,  company_id = company_id)
 
   res <- fromJSON(res)
 

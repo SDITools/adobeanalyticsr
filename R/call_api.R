@@ -19,10 +19,10 @@
 #' }
 #'
 #' @import assertthat httr
-aa_call_api <- function(req_path,
-                        company_id = Sys.getenv("AA_COMPANY_ID"),
-                        client_id = Sys.getenv("AA_CLIENT_ID"),
-                        client_secret = Sys.getenv("AA_CLIENT_SECRET")){
+aw_call_api <- function(req_path,
+                        company_id = Sys.getenv("AW_COMPANY_ID"),
+                        client_id = Sys.getenv("AW_CLIENT_ID"),
+                        client_secret = Sys.getenv("AW_CLIENT_SECRET")){
 
   assertthat::assert_that(
     is.string(req_path),
@@ -32,7 +32,7 @@ aa_call_api <- function(req_path,
   )
 
   # creates token to aa.oauth if not present
-  token <- aa_token(client_id, client_secret)
+  token <- aw_token(client_id, client_secret)
 
   request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                          company_id, req_path)
