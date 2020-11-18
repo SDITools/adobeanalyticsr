@@ -9,6 +9,7 @@
 #' @param metrics A character vector of metrics.
 #' @param dimensions A character vector of dimensions. There is a limit of 15 at this time.
 #' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the first in the list of numbers (top = c(0, 20)). The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.
+#' @param page Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.
 #' @param include_unspecified TRUE is equal to "return-nones" and is set as the default
@@ -38,6 +39,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                                dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
                                metrics = c("visits", "visitors"),
                                top = c(5),
+                               page = 0,
                                filterType = 'breakdown',
                                segmentId = NA,
                                metricSort =  'desc',
@@ -173,7 +175,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
   ##function to create the top level 'metricsContainer'
-  metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
+  metriccontainer_1 <- function(metric, colId, metricSort) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -204,7 +206,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
   ### function to create the  breakdown 'metricsContainer'
-  metriccontainer_2 <- function(metric, colId, metricSort = 'desc' , filterId) {
+  metriccontainer_2 <- function(metric, colId, metricSort, filterId) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -241,7 +243,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       }}
   }
 
-  metriccontainer_n <- function(metric, colId, metricSort = 'desc' , filterId) {
+  metriccontainer_n <- function(metric, colId, metricSort , filterId) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -292,11 +294,16 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     mc <- list()
     if(i == 1) {
       mc <- list()
-      mc <- purrr::map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
+      m1list <- list(metric = df$metric[[i]][[1]],
+                     colId = df$metric[[i]][[2]],
+                     metricSort = metricSort)
+      mc <- purrr::pmap(m1list, metriccontainer_1)
       return(mc)
     } else if(i == 2) {
-      m2list <- list(metric = df$metric[[i]][[1]], colId = df$metric[[i]][[2]],
-                     metricSort = metricSort, filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
+      m2list <- list(metric = df$metric[[i]][[1]],
+                     colId = df$metric[[i]][[2]],
+                     metricSort = metricSort,
+                     filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
       mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
       return(mc)
     } else  {
@@ -305,7 +312,8 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       filteridslist <- split(L[[1]], rep(1:nrow(df$metric[[i]][1]), length = length(L[[1]])))
 
       m3list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],metricSort = metricSort,
+                     colId = df$metric[[i]][[2]],
+                     metricSort = metricSort,
                      filterId = filteridslist)
       mc <-  append(mc, values = purrr::pmap(m3list, metriccontainer_n))
       return(mc)
@@ -345,7 +353,7 @@ for(i in seq(dimensions)) {
           settings = list(
             countRepeatInstances = TRUE,
             limit = top[i],
-            page = 0,
+            page = page,
             nonesBehavior = unspecified
           ),
           statistics = list(functions = c("col-max", "col-min"))
@@ -370,6 +378,12 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if(metricSort == 'desc') {
+          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
+        }
+        if(metricSort == 'asc') {
+          dat <- dplyr::arrange(dat, across(starts_with(metrics)))
+        }
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
@@ -439,7 +453,7 @@ for(i in seq(dimensions)) {
           settings = list(
             countRepeatInstances = TRUE,
             limit = top[i],
-            page = 0,
+            page = page,
             nonesBehavior = unspecified
           ),
           statistics = list(functions = c("col-max", "col-min"))
@@ -500,6 +514,12 @@ for(i in seq(dimensions)) {
         tidyr::unnest(c(metrics, data)) %>%
         tidyr::spread(metrics, data) %>%
         dplyr::select(all_of(finalnames))
+        if(metricSort == 'desc') {
+          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
+        }
+      if(metricSort == 'asc') {
+         dat <- dplyr::arrange(dat, across(starts_with(metrics)))
+      }
       #change time variables from character strings
       if("daterangeminute" %in% colnames(dat)) {
         dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
@@ -604,7 +624,7 @@ for(i in seq(dimensions)) {
                        settings = list(
                          countRepeatInstances = TRUE,
                          limit = top[i],
-                         page = 0,
+                         page = page,
                          nonesBehavior = unspecified
                        ),
                        statistics = list(
@@ -891,7 +911,7 @@ for(i in seq(dimensions)) {
         if(i == 15) {
           if(resn[[it]]$numberOfElements != 0) {
             tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[14]][[1]] := dat[[1]][it],
-                                                  !!prefinalnames[[15]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[14]][[2]] := dat[[2]][it],
                                                   !!prefinalnames[[13]][[1]] := dat[[3]][it],
                                                   !!prefinalnames[[13]][[2]] := dat[[4]][it],
                                                   !!prefinalnames[[12]][[1]] := dat[[5]][it],
@@ -943,6 +963,12 @@ for(i in seq(dimensions)) {
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
+        if(metricSort == 'desc') {
+          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
+        }
+        if(metricSort == 'asc') {
+          dat <- dplyr::arrange(dat, across(starts_with(metrics)))
+        }
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
