@@ -175,7 +175,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
   ##function to create the top level 'metricsContainer'
-  metriccontainer_1 <- function(metric, colId, metricSort = metricSort) {
+  metriccontainer_1 <- function(metric, colId, metricSort) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -206,7 +206,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
   ### function to create the  breakdown 'metricsContainer'
-  metriccontainer_2 <- function(metric, colId, metricSort = metricSort , filterId) {
+  metriccontainer_2 <- function(metric, colId, metricSort, filterId) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -243,7 +243,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       }}
   }
 
-  metriccontainer_n <- function(metric, colId, metricSort = metricSort , filterId) {
+  metriccontainer_n <- function(metric, colId, metricSort , filterId) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
