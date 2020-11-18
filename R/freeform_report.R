@@ -294,7 +294,10 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     mc <- list()
     if(i == 1) {
       mc <- list()
-      mc <- purrr::map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
+      m1list <- list(metric = df$metric[[i]][[1]],
+                     colId = df$metric[[i]][[2]],
+                     metricSort = metricSort)
+      mc <- purrr::pmap(m1list, metriccontainer_1)
       return(mc)
     } else if(i == 2) {
       m2list <- list(metric = df$metric[[i]][[1]],
