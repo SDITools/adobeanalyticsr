@@ -379,10 +379,10 @@ for(i in seq(dimensions)) {
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
         if(metricSort == 'desc') {
-          dplyr::arrange(dat, across(starts_with(metrics), desc))
+          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
         }
         if(metricSort == 'asc') {
-          dplyr::arrange(dat, across(starts_with(metrics)))
+          dat <- dplyr::arrange(dat, across(starts_with(metrics)))
         }
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
@@ -515,10 +515,10 @@ for(i in seq(dimensions)) {
         tidyr::spread(metrics, data) %>%
         dplyr::select(all_of(finalnames))
         if(metricSort == 'desc') {
-          dplyr::arrange(dat, across(starts_with(metrics), desc))
+          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
         }
       if(metricSort == 'asc') {
-        dplyr::arrange(dat, across(starts_with(metrics)))
+         dat <- dplyr::arrange(dat, across(starts_with(metrics)))
       }
       #change time variables from character strings
       if("daterangeminute" %in% colnames(dat)) {
@@ -964,10 +964,10 @@ for(i in seq(dimensions)) {
           tidyr::spread(metrics, data) %>%
           dplyr::select(all_of(finalnames))
         if(metricSort == 'desc') {
-          dplyr::arrange(dat, across(starts_with(metrics), desc))
+          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
         }
         if(metricSort == 'asc') {
-          dplyr::arrange(dat, across(starts_with(metrics)))
+          dat <- dplyr::arrange(dat, across(starts_with(metrics)))
         }
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
