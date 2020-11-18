@@ -297,8 +297,10 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       mc <- purrr::map2(df$metric[[i]][[1]], df$metric[[i]][[2]], metriccontainer_1)
       return(mc)
     } else if(i == 2) {
-      m2list <- list(metric = df$metric[[i]][[1]], colId = df$metric[[i]][[2]],
-                     metricSort = metricSort, filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
+      m2list <- list(metric = df$metric[[i]][[1]],
+                     colId = df$metric[[i]][[2]],
+                     metricSort = metricSort,
+                     filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
       mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
       return(mc)
     } else  {
@@ -307,7 +309,8 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       filteridslist <- split(L[[1]], rep(1:nrow(df$metric[[i]][1]), length = length(L[[1]])))
 
       m3list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],metricSort = metricSort,
+                     colId = df$metric[[i]][[2]],
+                     metricSort = metricSort,
                      filterId = filteridslist)
       mc <-  append(mc, values = purrr::pmap(m3list, metriccontainer_n))
       return(mc)
