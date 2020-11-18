@@ -377,7 +377,8 @@ for(i in seq(dimensions)) {
           dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
-          dplyr::select(all_of(finalnames))
+          dplyr::select(all_of(finalnames)) %>%
+          dplyr::arrange(ifelse(metricSort == 'desc', desc(metrics[1]), asc(metrics[1])))
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
@@ -403,8 +404,7 @@ for(i in seq(dimensions)) {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
-          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
-          dplyr::arrange(!!metricSort(metrics[1]))
+          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
         message(paste0('1 of ', product-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' requests.'))
       }
     }
