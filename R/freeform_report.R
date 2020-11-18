@@ -175,7 +175,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
   ##function to create the top level 'metricsContainer'
-  metriccontainer_1 <- function(metric, colId, metricSort = 'desc') {
+  metriccontainer_1 <- function(metric, colId, metricSort = metricSort) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -206,7 +206,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
   ### function to create the  breakdown 'metricsContainer'
-  metriccontainer_2 <- function(metric, colId, metricSort = 'desc' , filterId) {
+  metriccontainer_2 <- function(metric, colId, metricSort = metricSort , filterId) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -243,7 +243,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       }}
   }
 
-  metriccontainer_n <- function(metric, colId, metricSort = 'desc' , filterId) {
+  metriccontainer_n <- function(metric, colId, metricSort = metricSort , filterId) {
     if(colId == 0) {
       if(grepl('cm[1-9]*_*', metric)) {
         structure(list(
@@ -397,7 +397,8 @@ for(i in seq(dimensions)) {
         itemidname <- paste0('itemId_', dimensions[[i]])
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
-          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
+          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
+          dplyr::arrange(!!metricSort(metrics[1]))
         message(paste0('1 of ', product-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' requests.'))
       }
     }
@@ -501,7 +502,8 @@ for(i in seq(dimensions)) {
         dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
         tidyr::unnest(c(metrics, data)) %>%
         tidyr::spread(metrics, data) %>%
-        dplyr::select(all_of(finalnames))
+        dplyr::select(all_of(finalnames))  %>%
+        dplyr::arrange(!!metricSort(metrics[1]))
       #change time variables from character strings
       if("daterangeminute" %in% colnames(dat)) {
         dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
@@ -893,7 +895,7 @@ for(i in seq(dimensions)) {
         if(i == 15) {
           if(resn[[it]]$numberOfElements != 0) {
             tf <- resn[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[14]][[1]] := dat[[1]][it],
-                                                  !!prefinalnames[[15]][[2]] := dat[[2]][it],
+                                                  !!prefinalnames[[14]][[2]] := dat[[2]][it],
                                                   !!prefinalnames[[13]][[1]] := dat[[3]][it],
                                                   !!prefinalnames[[13]][[2]] := dat[[4]][it],
                                                   !!prefinalnames[[12]][[1]] := dat[[5]][it],
@@ -944,7 +946,8 @@ for(i in seq(dimensions)) {
           dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
           tidyr::unnest(c(metrics, data)) %>%
           tidyr::spread(metrics, data) %>%
-          dplyr::select(all_of(finalnames))
+          dplyr::select(all_of(finalnames)) %>%
+          dplyr::arrange(!!metricSort(metrics[1]))
         #change time variables from character strings
         if("daterangeminute" %in% colnames(dat)) {
           dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
