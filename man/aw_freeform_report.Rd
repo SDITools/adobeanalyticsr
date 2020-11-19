@@ -11,6 +11,7 @@ aw_freeform_report(
   dimensions = c("page", "lasttouchchannel", "mobiledevicetype"),
   metrics = c("visits", "visitors"),
   top = c(5),
+  page = 0,
   filterType = "breakdown",
   segmentId = NA,
   metricSort = "desc",
@@ -32,6 +33,8 @@ aw_freeform_report(
 \item{metrics}{A character vector of metrics.}
 
 \item{top}{How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the first in the list of numbers (top = c(0, 20)). The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.}
+
+\item{page}{Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.}
 
 \item{filterType}{Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.}
 
