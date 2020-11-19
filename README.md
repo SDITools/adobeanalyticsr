@@ -1,7 +1,7 @@
 # adobeanalyticsr
 <img src="man/figures/logo.png" align="right" width = "250"/>
 
-# R Client for Adobe Analytics API 2.0
+## R Client for Adobe Analytics API 2.0
 
 Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in 
   mind will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features
