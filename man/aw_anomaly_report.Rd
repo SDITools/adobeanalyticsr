@@ -11,7 +11,7 @@ aw_anomaly_report(
   metrics,
   pages = 0,
   granularity = "day",
-  sort = "asc",
+  dateSort = "desc",
   segmentId = NA,
   anomalyDetection = TRUE
 )
@@ -23,15 +23,15 @@ aw_anomaly_report(
 
 \item{date_range}{A two length vector of start and end Date objects (default set to show last 30 days)}
 
-\item{metrics}{Metric to send}
+\item{metrics}{Metric to request the anomaly detection. If multiple metrics, each metric and date will have it's own row.}
 
 \item{pages}{number of report pages}
 
-\item{granularity}{use either minute, hour, day, week, month, quarter, year}
+\item{granularity}{Use either hour, day (default), week, or month}
 
-\item{sort}{either by 'desc' or 'asc' order}
+\item{dateSort}{either by 'desc' or 'asc' order}
 
-\item{segmentId}{use segments to globally filter the results. Use 1 or many.}
+\item{segmentId}{Use segments to globally filter the results. Use 1 or many.}
 
 \item{anomalyDetection}{logical statement for including anomaly. Default is TRUE}
 }

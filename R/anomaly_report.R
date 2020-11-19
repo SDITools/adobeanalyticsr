@@ -5,23 +5,22 @@
 #' @param company_id Company Id.  Taken from the global environment by default if not provided.
 #' @param rsid Adobe report number
 #' @param date_range A two length vector of start and end Date objects (default set to show last 30 days)
-#' @param metrics Metric to send
+#' @param metrics Metric to request the anomaly detection. If multiple metrics, each metric and date will have it's own row.
 #' @param pages number of report pages
-#' @param segmentId use segments to globally filter the results. Use 1 or many.
-#' @param granularity use either minute, hour, day, week, month, quarter, year
-#' @param sort either by 'desc' or 'asc' order
+#' @param segmentId Use segments to globally filter the results. Use 1 or many.
+#' @param granularity Use either hour, day (default), week, or month
+#' @param dateSort either by 'desc' or 'asc' order
 #' @param anomalyDetection logical statement for including anomaly. Default is TRUE
 #'
 #'
 #' @export
-
 aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                                  rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                                  date_range = c(Sys.Date()-31, Sys.Date()-1),
                                  metrics,
                                  pages = 0,
                                  granularity = 'day',
-                                 sort = 'asc',
+                                 dateSort = 'desc',
                                  segmentId = NA,
                                  anomalyDetection = TRUE
                                  ){
@@ -81,7 +80,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                              )),
                              dimension = sprintf("variables/daterange%s",granularity),
                              settings = list(
-                               dimensionSort = sort,
+                               dimensionSort = dateSort,
                                limit = limit,
                                page = pages,
                                nonesBehavior = "return-nones",
@@ -93,30 +92,30 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
   res <- fromJSON(res)
 
   # Clean up and return as data frame
-  if(length(metrics) > 1) {
     columnames <- colnames(res$rows[3:7])
-    res_df <- res$rows %>%
-      replace_na(list(0)) %>%
-      unnest(columnames) %>%
-      group_by(itemId, value) %>%
-      mutate(metric = metrics) %>%
-      relocate(metric, .after = value) %>%
-      rename(date = value) %>%
-      mutate(date = as.Date(date, format = '%b %d, %Y'))
-  } else {
-    columnames <- colnames(res$rows[3:7])
-    res_df <- res$rows %>%
-      replace_na(list(0)) %>%
-      unnest(columnames) %>%
-      group_by(itemId, value) %>%
-      mutate(metric = metrics) %>%
-      relocate(metric, .after = value) %>%
-      rename(date = value) %>%
-      mutate(date = as.Date(date, format = '%b %d, %Y'))
-  }
+    dat <- res$rows %>%
+      tidyr::replace_na(list(0)) %>%
+      tidyr::unnest(columnames) %>%
+      dplyr::group_by(itemId, value) %>%
+      dplyr::mutate(metric = metrics) %>%
+      dplyr::relocate(metric, .after = value) %>%
+      dplyr::rename(!!granularity := value) %>%
+      select(-itemId)
 
-  df <- res_df
 
-  df
+  # change time variables from character strings
+    if("hour" %in% colnames(dat)) {
+      dat[names(dat) == 'hour'] <- lubridate::parse_date_time(dat$hour, orders = "HM ymd")
+    }
+    if("day" %in% colnames(dat)) {
+      dat[names(dat) == 'day'] <- as.Date(dat$day, format = '%b %d, %Y')
+    }
+    if("week" %in% colnames(dat)) {
+      dat[names(dat) == 'week'] <- as.Date(dat$week, format = '%b %d, %Y')
+    }
+
+    message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
+
+    return(dat)
 }
 
