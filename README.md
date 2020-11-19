@@ -1,5 +1,5 @@
 # adobeanalyticsr
-<img src="man/figures/logo.png" align="right" width = "250"/>
+<img src="man/figures/logo.png" align="right" width = "200"/>
 
 ## R Client for Adobe Analytics API 2.0
 

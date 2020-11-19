@@ -1,4 +1,4 @@
-#' Get all the company ids you are authorized to pull data from using the API
+#' Get Company Ids
 #'
 #' This function will quickly pull the list of company ids that you have access to.
 #'
@@ -7,11 +7,8 @@
 #' @param client_secret Set in environment args, or pass directly here
 #'
 #' @examples
-#'
 #' \dontrun{
-#'
 #' get_me()
-#'
 #' }
 #'
 #' @export

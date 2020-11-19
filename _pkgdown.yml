@@ -1,0 +1,22 @@
+reference:
+- title: "Setup"
+  desc: "Functions for pulling basic company and reportsuite information."
+- contents:
+  - get_me
+  - aw_get_reportsuites
+
+- title: "Data Elements"
+  desc: "Functions for collecting lists of available data elements"
+- contents:
+  - aw_get_metrics
+  - aw_get_dimensions
+  - aw_get_segments
+  - aw_get_calculatedmetrics
+  - aw_get_calculatedmetrics_byid
+
+- title: "Data Pulling"
+  desc: "Functions for pulling the data using the API"
+- contents:
+  - aw_freeform_report
+  - aw_workspace_report
+  - aw_adomaly_report

@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_me.R
 \name{get_me}
 \alias{get_me}
-\title{Get all the company ids you are authorized to pull data from using the API}
+\title{Get Company Ids}
 \usage{
 get_me(
   req_path = "discovery/me",
@@ -21,11 +21,8 @@ get_me(
 This function will quickly pull the list of company ids that you have access to.
 }
 \examples{
-
 \dontrun{
-
 get_me()
-
 }
 
 }

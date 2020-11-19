@@ -12,6 +12,7 @@ aw_anomaly_report(
   pages = 0,
   granularity = "day",
   sort = "asc",
+  segmentId = NA,
   anomalyDetection = TRUE
 )
 }
@@ -29,6 +30,8 @@ aw_anomaly_report(
 \item{granularity}{use either minute, hour, day, week, month, quarter, year}
 
 \item{sort}{either by 'desc' or 'asc' order}
+
+\item{segmentId}{use segments to globally filter the results. Use 1 or many.}
 
 \item{anomalyDetection}{logical statement for including anomaly. Default is TRUE}
 }

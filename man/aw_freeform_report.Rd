@@ -2,7 +2,7 @@
 % Please edit documentation in R/freeform_report.R
 \name{aw_freeform_report}
 \alias{aw_freeform_report}
-\title{Get a free form report}
+\title{Get a freeform report}
 \usage{
 aw_freeform_report(
   company_id = Sys.getenv("AW_COMPANY_ID"),

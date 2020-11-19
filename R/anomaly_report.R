@@ -7,6 +7,7 @@
 #' @param date_range A two length vector of start and end Date objects (default set to show last 30 days)
 #' @param metrics Metric to send
 #' @param pages number of report pages
+#' @param segmentId use segments to globally filter the results. Use 1 or many.
 #' @param granularity use either minute, hour, day, week, month, quarter, year
 #' @param sort either by 'desc' or 'asc' order
 #' @param anomalyDetection logical statement for including anomaly. Default is TRUE
@@ -21,6 +22,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                                  pages = 0,
                                  granularity = 'day',
                                  sort = 'asc',
+                                 segmentId = NA,
                                  anomalyDetection = TRUE
                                  ){
 
@@ -37,12 +39,39 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
     limit <- limit/pages
   }
 
+  #segment filter builder function (segments)
+  seg <- function(segmentId) {
+    structure(list(type = "segment",
+                   segmentId = segmentId))
+  }
+
+  segments <- purrr::map(segmentId, seg)
+
+  #create the DateRange list item (dr)
+  dr <- list(list(
+    type = "dateRange",
+    dateRange = timeframe))
+
+  #join Segment and DateRange builder function
+  s_dr <- function() {
+    if(is.na(segmentId[[1]])) {
+      list(list(
+        type = "dateRange",
+        dateRange = timeframe
+      ))
+    } else {
+      append(segments, dr)
+    }
+  }
+
+  #Create the global filters (gf)
+  gf <- s_dr()
+
   meta <- map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
 
   req_body <- structure(list(rsid = rsid,
-                             globalFilters = list(list(
-                               type = "dateRange",
-                               dateRange = timeframe)),
+                             globalFilters =
+                               gf,
                              metricContainer = list(
                                metrics = meta,
                                metricFilters = list(
