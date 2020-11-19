@@ -104,7 +104,11 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
       rename(date = value) %>%
       mutate(date = as.Date(date, format = '%b %d, %Y'))
   } else {
+    columnames <- colnames(res$rows[3:7])
     res_df <- res$rows %>%
+      replace_na(list(0)) %>%
+      unnest(columnames) %>%
+      group_by(itemId, value) %>%
       mutate(metric = metrics) %>%
       relocate(metric, .after = value) %>%
       rename(date = value) %>%
