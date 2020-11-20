@@ -137,7 +137,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
           ggplot2::geom_line() +
           ggplot2::geom_point(data = dat %>% dplyr::filter(metric == metricname & dataAnomalyDetected == T), ggplot2::aes(day, data)) +
           ggplot2::geom_ribbon(aes(ymin=dataLowerBound, ymax=dataUpperBound), alpha=0.4) +
-          ggplot2::labs(title = eventnm,
+          ggplot2::labs(title = metricname,
                         subtitle = paste0('There are ',nrow(dat %>% filter(metric == metricname & dataAnomalyDetected == T)), ' anomalies.'),
                         caption =paste0('There are ',nrow(dat %>% filter(metric == metricname & dataAnomalyDetected == T)), ' anomalies.')) +
           ggplot2::theme_bw() +
