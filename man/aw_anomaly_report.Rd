@@ -11,6 +11,7 @@ aw_anomaly_report(
   metrics,
   granularity = "day",
   segmentId = NA,
+  quickView = FALSE,
   anomalyDetection = TRUE,
   countRepeatInstances = TRUE,
   debug = FALSE
@@ -28,6 +29,8 @@ aw_anomaly_report(
 \item{granularity}{Use either hour, day (default), week, or month}
 
 \item{segmentId}{Use segments to globally filter the results. Use 1 or many.}
+
+\item{quickView}{Return a list of 3 lists per metric. 1. All Data 2. Data filtered to include only anomalous rows 3. Interactive ggplot line graph}
 
 \item{anomalyDetection}{logical statement for including anomaly. Default is TRUE}
 
