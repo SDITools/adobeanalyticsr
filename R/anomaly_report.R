@@ -147,7 +147,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
 
         list(data = dat, anoms = table, viz = plotly::ggplotly(graph))
         }
-        qv <- purrr::map(metrics, qickview)
+        qv <- purrr::map(metrics, quickview)
 
         return(qv)
       }
