@@ -103,6 +103,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
       dplyr::mutate(metric = metrics) %>%
       dplyr::relocate(metric, .after = value) %>%
       dplyr::rename(!!granularity := value) %>%
+      dplyr::ungroup() %>%
       select(-itemId)
 
 
