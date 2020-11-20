@@ -129,7 +129,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
   }
     if(quickView == T) {
       quickview <- function(metricname) {
-        table <- dat %>% dplyr::filter(metric == metricname | dataAnomalyDetected == T)
+        table <- dat %>% dplyr::filter(metric == metricname & dataAnomalyDetected == T)
 
         graph <- dat %>%
           dplyr::filter(metric == metricname) %>%
@@ -138,8 +138,8 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
           ggplot2::geom_point(data = dat %>% dplyr::filter(dataAnomalyDetected == T), ggplot2::aes(day, data)) +
           ggplot2::geom_ribbon(aes(ymin=dataLowerBound, ymax=dataUpperBound), alpha=0.4) +
           ggplot2::labs(title = eventnm,
-                        subtitle = paste0('There are ',nrow(dat %>% filter(dataAnomalyDetected == T)), ' anomalies.'),
-                        caption =paste0('There are ',nrow(dat %>% filter(dataAnomalyDetected == T)), ' anomalies.')) +
+                        subtitle = paste0('There are ',nrow(dat %>% filter(metric == metricname & dataAnomalyDetected == T)), ' anomalies.'),
+                        caption =paste0('There are ',nrow(dat %>% filter(metric == metricname & dataAnomalyDetected == T)), ' anomalies.')) +
           ggplot2::theme_bw() +
           ggplot2::theme(axis.title.x = element_blank(), axis.title.y = element_blank(), legend.position = 'none') +
           ggplot2::scale_y_continuous(labels = scales::comma) +
