@@ -9,11 +9,11 @@ aw_anomaly_report(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   date_range = c(Sys.Date() - 31, Sys.Date() - 1),
   metrics,
-  pages = 0,
   granularity = "day",
-  dateSort = "desc",
   segmentId = NA,
-  anomalyDetection = TRUE
+  anomalyDetection = TRUE,
+  countRepeatInstances = TRUE,
+  debug = FALSE
 )
 }
 \arguments{
@@ -25,15 +25,15 @@ aw_anomaly_report(
 
 \item{metrics}{Metric to request the anomaly detection. If multiple metrics, each metric and date will have it's own row.}
 
-\item{pages}{number of report pages}
-
 \item{granularity}{Use either hour, day (default), week, or month}
-
-\item{dateSort}{either by 'desc' or 'asc' order}
 
 \item{segmentId}{Use segments to globally filter the results. Use 1 or many.}
 
 \item{anomalyDetection}{logical statement for including anomaly. Default is TRUE}
+
+\item{countRepeatInstances}{Should the data include repeat instances}
+
+\item{debug}{default is FALSE but set to TRUE to see the json request being sent to the Adobe API}
 }
 \description{
 Get an anomaly report for one or more metrics

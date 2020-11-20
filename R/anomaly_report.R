@@ -6,23 +6,22 @@
 #' @param rsid Adobe report number
 #' @param date_range A two length vector of start and end Date objects (default set to show last 30 days)
 #' @param metrics Metric to request the anomaly detection. If multiple metrics, each metric and date will have it's own row.
-#' @param pages number of report pages
 #' @param segmentId Use segments to globally filter the results. Use 1 or many.
 #' @param granularity Use either hour, day (default), week, or month
-#' @param dateSort either by 'desc' or 'asc' order
+#' @param countRepeatInstances Should the data include repeat instances
 #' @param anomalyDetection logical statement for including anomaly. Default is TRUE
-#'
+#' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
 #'
 #' @export
 aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                                  rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                                  date_range = c(Sys.Date()-31, Sys.Date()-1),
                                  metrics,
-                                 pages = 0,
                                  granularity = 'day',
-                                 dateSort = 'desc',
                                  segmentId = NA,
-                                 anomalyDetection = TRUE
+                                 anomalyDetection = TRUE,
+                                 countRepeatInstances = TRUE,
+                                 debug = FALSE
                                  ){
 
 
@@ -33,9 +32,6 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
     limit <- as.numeric(as.Date(date_range[[2]]) - as.Date(date_range[[1]]))*24
   } else {
     limit <- as.numeric(as.Date(date_range[[2]]) - as.Date(date_range[[1]]))
-  }
-  if(pages > 0) {
-    limit <- limit/pages
   }
 
   #segment filter builder function (segments)
@@ -80,14 +76,21 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                              )),
                              dimension = sprintf("variables/daterange%s",granularity),
                              settings = list(
-                               dimensionSort = dateSort,
+                               countRepeatInstances = countRepeatInstances,
                                limit = limit,
-                               page = pages,
+                               page = 0,
+                               dimensionSort = 'asc',
                                nonesBehavior = "return-nones",
                                includeAnomalyDetection = anomalyDetection
                              ) ) )
 
-  res <- aw_call_data("reports/ranked", body = req_body,  company_id = company_id)
+  if (debug == FALSE) {
+    res <- aw_call_data("reports/ranked", body = req_body,  company_id = company_id)
+  }
+  if (debug == TRUE) {
+    res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
+  }
+
 
   res <- fromJSON(res)
 
