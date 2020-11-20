@@ -129,6 +129,9 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
   }
     if(quickView == T) {
       quickview <- function(metricname) {
+
+        data <- dat %>% dplyr::filter(metric == metricname)
+
         table <- dat %>% dplyr::filter(metric == metricname & dataAnomalyDetected == T)
 
         graph <- dat %>%
@@ -145,7 +148,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
           ggplot2::scale_y_continuous(labels = scales::comma) +
           ggplot2::expand_limits(y=0)
 
-        list(data = dat, anoms = table, viz = plotly::ggplotly(graph))
+        list(data = data, anoms = table, viz = plotly::ggplotly(graph))
         }
         qv <- purrr::map(metrics, quickview)
 
