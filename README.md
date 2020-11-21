@@ -1,5 +1,5 @@
 # adobeanalyticsr
-lifecycle{experimental}
+\Sexpr[results=rd, stage=render]{lifecycle::badge("experimental")}
 <img src="man/figures/logo.png" align="right" width = "200"/>
 
 ## R Client for Adobe Analytics API 2.0
