@@ -1,6 +1,6 @@
 # adobeanalyticsr
 <!-- badges: start -->
-#' \lifecycle{experimental}
+`use_lifecycle_badge(experimental)`
 <!-- badges: end -->
 
 <img src="man/figures/logo.png" align="right" width = "200"/>
