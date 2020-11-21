@@ -1,6 +1,8 @@
 # adobeanalyticsr
 <!-- badges: start -->
 `use_lifecycle_badge(experimental)`
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![R build status](https://github.com/benrwoodard/adobeanalyticsr/workflows/R-CMD-check/badge.svg)](https://github.com/benrwoodard/adobeanalyticsr/actions)
 <!-- badges: end -->
 
 <img src="man/figures/logo.png" align="right" width = "200"/>
