@@ -43,5 +43,8 @@ get_me <- function(req_path = 'discovery/me',
   me <- jsonlite::fromJSON(res)
 
   message('Your data is now available!')
-  return(me$imsOrgs$companies %>% dplyr::bind_rows())
+
+  return(me$imsOrgs$companies %>%
+           dplyr::bind_rows() %>%
+           dplyr::select(1:2))
 }
