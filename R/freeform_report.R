@@ -1,5 +1,7 @@
 #' Get a freeform report
+#'
 #' \lifecycle{experimental}
+#'
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
 #' the api call. Up to 15 dimensions at this time.
 #'
