@@ -1,5 +1,5 @@
 #' Get a freeform report
-#'
+#' \lifecycle{experimental}
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
 #' the api call. Up to 15 dimensions at this time.
 #'
@@ -101,7 +101,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   ##set the timeframe for the query (timeframe)
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
-  ##setup the right number of limits for each dimension (top)
+##setup the right number of limits for each dimension (top)
   if(length(top) != length(dimensions) & length(top) != 1) {
     stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
   } else if(grepl('daterangeday', dimensions[1]) & length(top) == 1) {

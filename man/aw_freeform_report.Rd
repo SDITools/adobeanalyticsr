@@ -2,7 +2,10 @@
 % Please edit documentation in R/freeform_report.R
 \name{aw_freeform_report}
 \alias{aw_freeform_report}
-\title{Get a freeform report}
+\title{Get a freeform report
+\lifecycle{experimental}
+Organizes the arguments into a json string and then structures the data after the internal function makes
+the api call. Up to 15 dimensions at this time.}
 \usage{
 aw_freeform_report(
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -54,6 +57,8 @@ aw_freeform_report(
 Data Frame
 }
 \description{
+Get a freeform report
+\lifecycle{experimental}
 Organizes the arguments into a json string and then structures the data after the internal function makes
 the api call. Up to 15 dimensions at this time.
 }
