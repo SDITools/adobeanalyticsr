@@ -2,6 +2,7 @@ reference:
 - title: "Setup"
   desc: "Functions for pulling basic company and reportsuite information."
 - contents:
+  - aw_token
   - get_me
   - aw_get_reportsuites
 
