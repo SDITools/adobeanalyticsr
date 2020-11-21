@@ -32,10 +32,6 @@ Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The pac
 **Creating an Adobe Developer OAuth Project in under 60 seconds**
 <img src="man/figures/createoauthproject.gif" align="center" />
 
-<video width="600" height="220" controls>
-  <source src="man/figures/createoauthproject.mp4" type="video/mp4">
-</video>
-
   
 #### Set up the .Renviron file
 
