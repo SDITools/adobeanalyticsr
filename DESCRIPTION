@@ -1,8 +1,10 @@
 Package: adobeanalyticsr
 Type: Package
-Version: 0.0.9550
-Title: Adobe Analytics API v2
-Description: Connect to the Adobe Analytics API v2.0. This api powers Analysis Workspace reports by pulling the data faster through smaller api requests.
+Version: 0.0.0.9556
+Title: R Client for Adobe Analytics API 2.0
+Description: Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in 
+  mind will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features
+  are being actively being developed adn we value your feedback and contribution to the process.
 Authors@R: c(person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
     person("Tim", "Wilson", email = "timwilson7@gmail.com", role = "aut"),
     person("Mark", "Edmondson", role = "ctb"))
@@ -21,7 +23,12 @@ Imports:
     httr (>= 1.3.1),
     tidyr (>= 1.0.0),
     rlang (>= 0.4.8),
-    lubridate (>= 1.7.9)
+    lubridate (>= 1.7.9),
+    ggplot2 (>= 3.3.2),
+    plotly (>= 4.9.2),
+    scales (>= 1.1.1),
+    lifecycle
 RoxygenNote: 7.1.1
 Suggests: 
     testthat
+RdMacros: lifecycle

@@ -36,6 +36,8 @@ aw_freeform_report(
 
 \item{page}{Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.}
 
+\item{page}{Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.}
+
 \item{filterType}{Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.}
 
 \item{segmentId}{use segments to globally filter the results. Use 1 or many.}
@@ -54,6 +56,9 @@ aw_freeform_report(
 Data Frame
 }
 \description{
+\lifecycle{experimental}
+}
+\details{
 Organizes the arguments into a json string and then structures the data after the internal function makes
 the api call. Up to 15 dimensions at this time.
 }
