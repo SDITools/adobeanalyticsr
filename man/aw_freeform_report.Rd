@@ -28,7 +28,7 @@ aw_freeform_report(
 
 \item{date_range}{A two length vector of start and end Date objects}
 
-\item{dimensions}{A character vector of dimensions. There is a limit of 15 at this time.}
+\item{dimensions}{A character vector of dimensions. There is a limit of 20 dimension breakdowns at this time.}
 
 \item{metrics}{A character vector of metrics.}
 
