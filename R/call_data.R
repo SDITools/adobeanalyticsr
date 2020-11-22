@@ -46,7 +46,7 @@ aw_call_data <- function(req_path,
                      url = request_url,
                      body = body,
                      encode = "json",
-                     config(token = token),
+                     httr::config(token = token),
                      httr::add_headers(
                        `x-api-key` = client_id,
                        `x-proxy-global-company-id` = company_id

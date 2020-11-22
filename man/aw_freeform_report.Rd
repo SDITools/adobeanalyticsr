@@ -32,7 +32,9 @@ aw_freeform_report(
 
 \item{metrics}{A character vector of metrics.}
 
-\item{top}{How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the first in the list of numbers (top = c(0, 20)). The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.}
+\item{top}{The top number of dimensions you want to pull. Default is set to 5. If using 'daterange...' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the top item in the list of numbers (top = c(0, 20)). The function will then calculate how many hours, minutes, days, weeks, months, years, quarters, and years should be requested. Any dimensions in the "daterange..." can be liste das '0' and the function will calculated the number of items needed.}
+
+\item{page}{Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.}
 
 \item{page}{Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.}
 

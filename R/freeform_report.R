@@ -1,7 +1,5 @@
 #' Get a freeform report
 #'
-#' \lifecycle{experimental}
-#'
 #' Organizes the arguments into a json string and then structures the data after the internal function makes
 #' the api call. Up to 15 dimensions at this time.
 #'
@@ -10,7 +8,7 @@
 #' @param date_range A two length vector of start and end Date objects
 #' @param metrics A character vector of metrics.
 #' @param dimensions A character vector of dimensions. There is a limit of 15 at this time.
-#' @param top How many rows. Default is set to 5. If using 'daterangeday' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the first in the list of numbers (top = c(0, 20)). The function will then calculate how many days are included for you. This only works if daterangeday is the first dimension listed.
+#' @param top The top number of dimensions you want to pull. Default is set to 5. If using 'daterange...' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the top item in the list of numbers (top = c(0, 20)). The function will then calculate how many hours, minutes, days, weeks, months, years, quarters, and years should be requested. Any dimensions in the "daterange..." can be liste das '0' and the function will calculated the number of items needed.
 #' @param page Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.
 #' @param metricSort Presorts the table by metrics. Values are either 'asc' or 'desc'.
 #' @param filterType Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.
@@ -104,16 +102,8 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
 ##setup the right number of limits for each dimension (top)
-  if(length(top) != length(dimensions) & length(top) != 1) {
-    stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
-  } else if(grepl('daterangeday', dimensions[1]) & length(top) == 1) {
-    top <- rep(top, length(dimensions)-1)
-    top <- c(as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1), top)
-  } else if(grepl('daterangeday', dimensions[1]) & length(top) != 1 & top[[1]] == 0) {
-    top[[1]] <- as.numeric(as.Date(date_range[2]) - as.Date(date_range[[1]])+1)
-  } else if(length(top) == 1) {
-    top <- rep(top, length(dimensions))
-  }
+top <- top_daterange_number(top, dimensions, date_range)
+
 
   #estimated runtime
   if(length(top) > 1) {
