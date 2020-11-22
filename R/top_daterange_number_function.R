@@ -36,5 +36,5 @@ top_daterange_number <- function(top, dimensions, date_range) {
   chck[,2][chck[,2] == 0 & chck[,1] == 'daterangeyear'] <- yrs
 
   top = c(chck[,2])
-  top
+  as.numeric(top)
 }
