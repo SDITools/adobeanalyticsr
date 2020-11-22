@@ -32,4 +32,3 @@ aw_token <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
     oob_value = "https://adobeanalyticsr.com/token/result.html"
   )
 }
-
