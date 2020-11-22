@@ -102,7 +102,7 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
 
 ##setup the right number of limits for each dimension (top)
-  top <- top_daterange_number(top, dimensions, date_range)
+top <- top_daterange_number(top, dimensions, date_range)
 
 
   #estimated runtime
