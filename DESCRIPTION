@@ -29,6 +29,7 @@ Imports:
     scales (>= 1.1.1),
     lifecycle
 RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat
 RdMacros: lifecycle

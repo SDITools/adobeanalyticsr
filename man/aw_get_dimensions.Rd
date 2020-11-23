@@ -19,11 +19,17 @@ aw_get_dimensions(
 
 \item{locale}{language - default'en_US'}
 
-\item{segmentable}{- boolean - default TRUE}
+\item{segmentable}{\itemize{
+\item boolean - default TRUE
+}}
 
-\item{reportable}{- boolean - default TRUE}
+\item{reportable}{\itemize{
+\item boolean - default TRUE
+}}
 
-\item{classifiable}{- boolean - default FALSE}
+\item{classifiable}{\itemize{
+\item boolean - default FALSE
+}}
 
 \item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
 
