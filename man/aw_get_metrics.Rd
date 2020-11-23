@@ -17,7 +17,9 @@ aw_get_metrics(
 
 \item{locale}{language - default'en_US'}
 
-\item{segmentable}{- boolean - default NULL}
+\item{segmentable}{\itemize{
+\item boolean - default NULL
+}}
 
 \item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
 

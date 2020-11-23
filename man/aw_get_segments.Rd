@@ -33,15 +33,15 @@ aw_get_segments(
 
 \item{tagNames}{Filter list to only include segments that contains one of the tags}
 
-\item{filterByPublishedSegments}{Filter list to only include segments where the published field is set to one of the allowable values (all *default*, true, false)}
+\item{filterByPublishedSegments}{Filter list to only include segments where the published field is set to one of the allowable values (all \emph{default}, true, false)}
 
-\item{limit}{Number of results per page (10 - *default*)}
+\item{limit}{Number of results per page (10 - \emph{default})}
 
 \item{page}{Page number (base 0 - first page is "0")}
 
-\item{sortDirection}{Sort direction (ASC *default* or DESC)}
+\item{sortDirection}{Sort direction (ASC \emph{default} or DESC)}
 
-\item{sortProperty}{Property to sort by (name, modified_date, id *default* is currently allowed)}
+\item{sortProperty}{Property to sort by (name, modified_date, id \emph{default} is currently allowed)}
 
 \item{expansion}{Comma-delimited list of additional segment metadata fields to include on response. (Options--reportSuiteName, ownerFullName, modified,tags, compatibility, definition, publishingStatus, definitionLastModified, categories)}
 

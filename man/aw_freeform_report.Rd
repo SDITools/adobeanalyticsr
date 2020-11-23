@@ -22,27 +22,27 @@ aw_freeform_report(
 )
 }
 \arguments{
-\item{company_id}{Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
-\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will be used.}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will be used.}
 
-\item{date_range}{A vector containing the start and end date for the report as **Date** objects.}
+\item{date_range}{A vector containing the start and end date for the report as \strong{Date} objects.}
 
 \item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension breakdowns. Each dimension value that gets broken down by another dimension requires an additional API call, so the more dimensions that are included, the longer the function will take to return results. This is how the Adobe Analytics API works.}
 
 \item{metrics}{A character vector of metrics.}
 
-\item{top}{The number of values to be pulled for each dimension. The default is 5 and the "top" is based on the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can either be a vector that includes the number of values to include at each level (each breakdown) or, if a single value is used, then that will be the maximum number of values to return at each level. See the **Details** for information on the unique handling of `daterange...` values.}
+\item{top}{The number of values to be pulled for each dimension. The default is 5 and the "top" is based on the first \code{metric} value (along with \code{metricSort}). If there are multiple dimensions, then this argument can either be a vector that includes the number of values to include at each level (each breakdown) or, if a single value is used, then that will be the maximum number of values to return at each level. See the \strong{Details} for information on the unique handling of \code{daterange...} values.}
 
-\item{page}{Used in combination with `top` to return the next page of results. Uses 0-based numbering (e.g.,`top = 50000` and `page = 1` will return the top 50,000 items _starting at 50,001_).}
+\item{page}{Used in combination with \code{top} to return the next page of results. Uses 0-based numbering (e.g.,\code{top = 50000} and \code{page = 1} will return the top 50,000 items \emph{starting at 50,001}).}
 
-\item{filterType}{This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to `breakdown`, and that is the only supported value.}
+\item{filterType}{This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to \code{breakdown}, and that is the only supported value.}
 
 \item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the report.}
 
-\item{metricSort}{Pre-sorts the table by metrics. Values are either `asc` (ascending) or `desc` (descending).}
+\item{metricSort}{Pre-sorts the table by metrics. Values are either \code{asc} (ascending) or \code{desc} (descending).}
 
-\item{include_unspecified}{Whether or not to include **Unspecified** values in the results. This is the equivalent of the **Include Unspecified (None)** checkbox in freeform tables in Analysis Workspace. This defaults to `TRUE`, which includes **Unspecified** values in the results.}
+\item{include_unspecified}{Whether or not to include \strong{Unspecified} values in the results. This is the equivalent of the \strong{Include Unspecified (None)} checkbox in freeform tables in Analysis Workspace. This defaults to \code{TRUE}, which includes \strong{Unspecified} values in the results.}
 
 \item{search}{The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.}
 
@@ -54,18 +54,16 @@ aw_freeform_report(
 Data Frame
 }
 \description{
-Get a report analogous to a **Freeform Table** visualization in Analysis Workspace. The function uses
+Get a report analogous to a \strong{Freeform Table} visualization in Analysis Workspace. The function uses
 the arguments to construct and execute a JSON-based query to the Adobe Analytics API and then returns
 the results as a data frame.
 }
 \details{
 Date handling has several special characteristics that are worth getting familiar with:
-
-* The API names for day, week, month, etc. are prepended with `daterange`, so a daily data uses `daterangedate`, weekly data uses `daterangeweek`, monthly data uses `daterangemonth`, etc.
-
-* When setting the argument for `top`, if the first (or only) `dimension` value is a `daterange...` object, then, if this argument is not explicitly specified _or_ if it uses only a single value (e.g., `top = 10`), the function will still return all of the values that fall in that date range. For instance, if the `date_range` was set for a 30-day period and the first `dimension` value was `daterangedate`, _and_ no value is specified for `top`, rather than simply returning the first 5 dates in the range, all 30 days will be returned. In the same scenario, if `top = 10` was set, then all 30 days would still be returned, and the `10` would simply be applied to the additional dimensions.
-
-* If you want to return all of the date/time values but then have specific control over the number of values returned for each of the drilldown dimensions, then set `0` as the first value in the `top` argument and then specify different numbers for each breakdown (e.g., `top = c(0, 3, 10)` would return all of the date/time values for the specified `date_range`, the top 3 values for the second specified `dimension`, and then the top 10 values for each of the next dimension's results).
-
-* If you are using a `daterange...` value _not_ as the first dimension, then simply using `0` at the same level in the `top` argument specification will return all of the values for that date/time value.
+\itemize{
+\item The API names for day, week, month, etc. are prepended with \code{daterange}, so a daily data uses \code{daterangedate}, weekly data uses \code{daterangeweek}, monthly data uses \code{daterangemonth}, etc.
+\item When setting the argument for \code{top}, if the first (or only) \code{dimension} value is a \code{daterange...} object, then, if this argument is not explicitly specified \emph{or} if it uses only a single value (e.g., \code{top = 10}), the function will still return all of the values that fall in that date range. For instance, if the \code{date_range} was set for a 30-day period and the first \code{dimension} value was \code{daterangedate}, \emph{and} no value is specified for \code{top}, rather than simply returning the first 5 dates in the range, all 30 days will be returned. In the same scenario, if \code{top = 10} was set, then all 30 days would still be returned, and the \code{10} would simply be applied to the additional dimensions.
+\item If you want to return all of the date/time values but then have specific control over the number of values returned for each of the drilldown dimensions, then set \code{0} as the first value in the \code{top} argument and then specify different numbers for each breakdown (e.g., \code{top = c(0, 3, 10)} would return all of the date/time values for the specified \code{date_range}, the top 3 values for the second specified \code{dimension}, and then the top 10 values for each of the next dimension's results).
+\item If you are using a \code{daterange...} value \emph{not} as the first dimension, then simply using \code{0} at the same level in the \code{top} argument specification will return all of the values for that date/time value.
+}
 }
