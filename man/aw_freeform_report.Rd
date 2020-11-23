@@ -22,27 +22,27 @@ aw_freeform_report(
 )
 }
 \arguments{
-\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+\item{company_id}{Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.}
 
-\item{rsid}{Adobe report suite id number. Taken from the global environment by default if not provided.}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will be used.}
 
-\item{date_range}{A two length vector of start and end Date objects}
+\item{date_range}{A vector containing the start and end date for the report as **Date** objects.}
 
-\item{dimensions}{A character vector of dimensions. There is a limit of 20 dimension breakdowns at this time.}
+\item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension breakdowns. Each dimension value that gets broken down by another dimension requires an additional API call, so the more dimensions that are included, the longer the function will take to return results. This is how the Adobe Analytics API works.}
 
 \item{metrics}{A character vector of metrics.}
 
-\item{top}{The top number of dimensions you want to pull. Default is set to 5. If using 'daterange...' as the first variable you can either use only one number item (top = 5) or you can add a 0 as the top item in the list of numbers (top = c(0, 20)). The function will then calculate how many hours, minutes, days, weeks, months, years, quarters, and years should be requested. Any dimensions in the "daterange..." can be liste das '0' and the function will calculated the number of items needed.}
+\item{top}{The number of values to be pulled for each dimension. The default is 5 and the "top" is based on the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can either be a vector that includes the number of values to include at each level (each breakdown) or, if a single value is used, then that will be the maximum number of values to return at each level. See the **Details** for information on the unique handling of `daterange...` values.}
 
-\item{page}{Used in combination with 'top' to return the next page of results. Uses 0 based numbering. i.e. Top 50000 + page 1 will return the top 50,000 items starting at 50,001.}
+\item{page}{Used in combination with `top` to return the next page of results. Uses 0-based numbering (e.g.,`top = 50000` and `page = 1` will return the top 50,000 items _starting at 50,001_).}
 
-\item{filterType}{Currently, Only 'breakdown' is supported but future versions should include 'segment' breakdown capability.}
+\item{filterType}{This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to `breakdown`, and that is the only supported value.}
 
-\item{segmentId}{use segments to globally filter the results. Use 1 or many.}
+\item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the report.}
 
-\item{metricSort}{Presorts the table by metrics. Values are either 'asc' or 'desc'.}
+\item{metricSort}{Pre-sorts the table by metrics. Values are either `asc` (ascending) or `desc` (descending).}
 
-\item{include_unspecified}{TRUE is equal to "return-nones" and is set as the default}
+\item{include_unspecified}{Whether or not to include **Unspecified** values in the results. This is the equivalent of the **Include Unspecified (None)** checkbox in freeform tables in Analysis Workspace. This defaults to `TRUE`, which includes **Unspecified** values in the results.}
 
 \item{search}{The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.}
 
@@ -54,6 +54,18 @@ aw_freeform_report(
 Data Frame
 }
 \description{
-Organizes the arguments into a json string and then structures the data after the internal function makes
-the api call. Up to 15 dimensions at this time.
+Get a report analogous to a **Freeform Table** visualization in Analysis Workspace. The function uses
+the arguments to construct and execute a JSON-based query to the Adobe Analytics API and then returns
+the results as a data frame.
+}
+\details{
+Date handling has several special characteristics that are worth getting familiar with:
+
+* The API names for day, week, month, etc. are prepended with `daterange`, so a daily data uses `daterangedate`, weekly data uses `daterangeweek`, monthly data uses `daterangemonth`, etc.
+
+* When setting the argument for `top`, if the first (or only) `dimension` value is a `daterange...` object, then, if this argument is not explicitly specified _or_ if it uses only a single value (e.g., `top = 10`), the function will still return all of the values that fall in that date range. For instance, if the `date_range` was set for a 30-day period and the first `dimension` value was `daterangedate`, _and_ no value is specified for `top`, rather than simply returning the first 5 dates in the range, all 30 days will be returned. In the same scenario, if `top = 10` was set, then all 30 days would still be returned, and the `10` would simply be applied to the additional dimensions.
+
+* If you want to return all of the date/time values but then have specific control over the number of values returned for each of the drilldown dimensions, then set `0` as the first value in the `top` argument and then specify different numbers for each breakdown (e.g., `top = c(0, 3, 10)` would return all of the date/time values for the specified `date_range`, the top 3 values for the second specified `dimension`, and then the top 10 values for each of the next dimension's results).
+
+* If you are using a `daterange...` value _not_ as the first dimension, then simply using `0` at the same level in the `top` argument specification will return all of the values for that date/time value.
 }
