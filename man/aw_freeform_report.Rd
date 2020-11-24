@@ -69,6 +69,7 @@ This function is based on the \strong{Freeform Table} visualization in Analysis 
 the same API call type that is used to generate those visualizations.
 
 \strong{Dimension Ordering}
+
 Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
 frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
 breakdowns of the data--the more queries are required. As a result, the \emph{order} of the dimensions \emph{can}
@@ -82,17 +83,19 @@ Consider a scenario where you are pulling metrics for the last 30 days (\code{da
 (\code{mobiledevicetype}), which has 7 unique values. Setting \code{dimensions = c("daterangeday", "mobiledevicetype")}
 would make one query to get the values of the 30 days included. The query would then run a separate query
 for \emph{each of those 30 days} to get the \code{mobiledevicetype} results for each day. So, this would be \strong{31 API calls}.
-If, instead, the function was called with \code{dimensions = c("mobiledevicetype", "daterangeday")}, then
-the first query would return the 7 \code{mobiledevicetype} values, and then each of those values would have
-an additional query to return the results for each of the 30 days. This would be only \strong{7 API calls}.
+
+If, instead, the function was called with the \code{dimension} values reversed (\code{dimensions = c("mobiledevicetype", "daterangeday")}), then
+the first query would return the 7 \code{mobiledevicetype} values, and then would run an additional query for each of
+those \emph{7 mobile device type values} to return the results for the 30 days within each device type. This would be only \strong{7 API calls}.
 
 Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
 ways to improve query performance.
 
 \strong{Date Handling}
+
 Date handling has several special characteristics that are worth getting familiar with:
 \itemize{
-\item The API names for day, week, month, etc. are prepended with \code{daterange}, so a daily data uses
+\item The API names for day, week, month, etc. are prepended with \code{daterange}, so daily data uses
 \code{daterangeday}, weekly data uses \code{daterangeweek}, monthly data uses \code{daterangemonth}, etc.
 \item When setting the argument for \code{top}, if the first (or only) \code{dimension} value is a \code{daterange...} object,
 then, if this argument is not explicitly specified \emph{or} if it uses only a single value (e.g., \code{top = 10}),
@@ -111,6 +114,7 @@ same level in the \code{top} argument specification will return all of the value
 }
 
 \strong{Search/Filtering}
+
 There are powerful filtering abilities within the function. However, to support that power requires a
 syntax that can feel a bit cumbersome for simple queries. \strong{\emph{Note:}} search filters are case-insensitive.
 This is Adobe Analytics API functionality and can not be specified otherwise in queries.
@@ -124,6 +128,6 @@ The default for any search string is to use \code{CONTAINS}. Consider a query wh
 \item \code{search = "CONTAINS 'mobile'"} will return results where \code{mobiledevicetype} contains "mobile", so would return all rows for \strong{Mobile Phone}.
 \item This could be shortened to \code{search = "'mobile'"} and would behave exactly the same, since \code{CONTAINS} is the default operator
 \item \code{search = c("CONTAINS 'mobile'", "CONTAINS 'search'")} will return results where \code{mobiledevicetype} contains "mobile" and, within those results, results where \code{lasttouchchannel} contains "search".
-\item \code{search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")} will return results where \code{mobiledevicetype} contains "mobile" _or" "tablet" and, within those results, will only include results where \code{lasttouchchannel} exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
+\item \code{search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")} will return results where \code{mobiledevicetype} contains "mobile" \emph{or} "tablet" and, within those results, will only include results where \code{lasttouchchannel} exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 }
 }

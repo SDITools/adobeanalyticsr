@@ -10,6 +10,7 @@
 #' the same API call type that is used to generate those visualizations.
 #'
 #' **Dimension Ordering**
+#'
 #' Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
 #' frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
 #' breakdowns of the data--the more queries are required. As a result, the _order_ of the dimensions _can_
@@ -23,16 +24,18 @@
 #' (`mobiledevicetype`), which has 7 unique values. Setting `dimensions = c("daterangeday", "mobiledevicetype")`
 #' would make one query to get the values of the 30 days included. The query would then run a separate query
 #' for _each of those 30 days_ to get the `mobiledevicetype` results for each day. So, this would be **31 API calls**.
-#' If, instead, the function was called with `dimensions = c("mobiledevicetype", "daterangeday")`, then
-#' the first query would return the 7 `mobiledevicetype` values, and then each of those values would have
-#' an additional query to return the results for each of the 30 days. This would be only **7 API calls**.
+#'
+#' If, instead, the function was called with the `dimension` values reversed (`dimensions = c("mobiledevicetype", "daterangeday")`), then
+#' the first query would return the 7 `mobiledevicetype` values, and then would run an additional query for each of
+#' those _7 mobile device type values_ to return the results for the 30 days within each device type. This would be only **7 API calls**.
 #'
 #' Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
 #' ways to improve query performance.
 #'
 #' **Date Handling**
+#'
 #' Date handling has several special characteristics that are worth getting familiar with:
-#' * The API names for day, week, month, etc. are prepended with `daterange`, so a daily data uses
+#' * The API names for day, week, month, etc. are prepended with `daterange`, so daily data uses
 #' `daterangeday`, weekly data uses `daterangeweek`, monthly data uses `daterangemonth`, etc.
 #' * When setting the argument for `top`, if the first (or only) `dimension` value is a `daterange...` object,
 #' then, if this argument is not explicitly specified _or_ if it uses only a single value (e.g., `top = 10`),
@@ -50,6 +53,7 @@
 #' same level in the `top` argument specification will return all of the values for that date/time value.
 #'
 #' **Search/Filtering**
+#'
 #' There are powerful filtering abilities within the function. However, to support that power requires a
 #' syntax that can feel a bit cumbersome for simple queries. **_Note:_** search filters are case-insensitive.
 #' This is Adobe Analytics API functionality and can not be specified otherwise in queries.
@@ -63,7 +67,7 @@
 #' * `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
 #' * This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
 #' * `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
-#' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or" "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
+#' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
