@@ -22,13 +22,19 @@ aw_freeform_report(
 )
 }
 \arguments{
-\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
-\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will be used.}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+be used.}
 
 \item{date_range}{A vector containing the start and end date for the report as \strong{Date} objects.}
 
-\item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension breakdowns. Each dimension value that gets broken down by another dimension requires an additional API call, so the more dimensions that are included, the longer the function will take to return results. This is how the Adobe Analytics API works.}
+\item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension
+breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
+call, so the more dimensions that are included, the longer the function will take to return results.
+This is how the Adobe Analytics API works.}
 
 \item{metrics}{A character vector of metrics.}
 
@@ -38,20 +44,20 @@ aw_freeform_report(
 
 \item{filterType}{This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to \code{breakdown}, and that is the only supported value.}
 
-\item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the report.}
+\item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the overall report. If multiple \code{segmentId} values are included, the segments will be effectived ANDed together, just as if multiple segments were added to the header of an Analysis Workspace panel.}
 
 \item{metricSort}{Pre-sorts the table by metrics. Values are either \code{asc} (ascending) or \code{desc} (descending).}
 
 \item{include_unspecified}{Whether or not to include \strong{Unspecified} values in the results. This is the equivalent of the \strong{Include Unspecified (None)} checkbox in freeform tables in Analysis Workspace. This defaults to \code{TRUE}, which includes \strong{Unspecified} values in the results.}
 
-\item{search}{The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.}
+\item{search}{Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to the \strong{Details} for more information on constructing values for this argument.}
 
-\item{prettynames}{Boolean for whether the results should have the name field value for easier understanding.}
+\item{prettynames}{A Boolean that determines whether the column names in the results use the API field name (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type", "Page Views"). This applies to both dimensions and metrics. The default value is \code{FALSE}, which returns the API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number (e.g., "evar2", "prop3", "event15").}
 
-\item{debug}{default is FALSE but set to TRUE to see the json request being sent to the Adobe API}
+\item{debug}{whether or not to push the full JSON request(s) being sent to the API to the console. The default is \code{FALSE}}
 }
 \value{
-Data Frame
+A data frame with dimensions and metrics.
 }
 \description{
 Get a report analogous to a \strong{Freeform Table} visualization in Analysis Workspace. The function uses
@@ -59,11 +65,65 @@ the arguments to construct and execute a JSON-based query to the Adobe Analytics
 the results as a data frame.
 }
 \details{
+This function is based on the \strong{Freeform Table} visualization in Analysis Workspace. It is accessing
+the same API call type that is used to generate those visualizations.
+
+\strong{Dimension Ordering}
+Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
+frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
+breakdowns of the data--the more queries are required. As a result, the \emph{order} of the dimensions \emph{can}
+have a dramatic impact on the total query time, even if the resulting data is essentially identical.
+
+One way to understand this is to consider how much dragging and dropping would be required to return the
+data in Analysis Workspace \emph{if you were not able to <Shift>-<click> to highlight multiple values before
+dragging a new dimension to break down existing values}.
+
+Consider a scenario where you are pulling metrics for the last 30 days (\code{daterangeday}) for \strong{Mobile Device Type}
+(\code{mobiledevicetype}), which has 7 unique values. Setting \code{dimensions = c("daterangeday", "mobiledevicetype")}
+would make one query to get the values of the 30 days included. The query would then run a separate query
+for \emph{each of those 30 days} to get the \code{mobiledevicetype} results for each day. So, this would be \strong{31 API calls}.
+If, instead, the function was called with \code{dimensions = c("mobiledevicetype", "daterangeday")}, then
+the first query would return the 7 \code{mobiledevicetype} values, and then each of those values would have
+an additional query to return the results for each of the 30 days. This would be only \strong{7 API calls}.
+
+Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
+ways to improve query performance.
+
+\strong{Date Handling}
 Date handling has several special characteristics that are worth getting familiar with:
 \itemize{
-\item The API names for day, week, month, etc. are prepended with \code{daterange}, so a daily data uses \code{daterangedate}, weekly data uses \code{daterangeweek}, monthly data uses \code{daterangemonth}, etc.
-\item When setting the argument for \code{top}, if the first (or only) \code{dimension} value is a \code{daterange...} object, then, if this argument is not explicitly specified \emph{or} if it uses only a single value (e.g., \code{top = 10}), the function will still return all of the values that fall in that date range. For instance, if the \code{date_range} was set for a 30-day period and the first \code{dimension} value was \code{daterangedate}, \emph{and} no value is specified for \code{top}, rather than simply returning the first 5 dates in the range, all 30 days will be returned. In the same scenario, if \code{top = 10} was set, then all 30 days would still be returned, and the \code{10} would simply be applied to the additional dimensions.
-\item If you want to return all of the date/time values but then have specific control over the number of values returned for each of the drilldown dimensions, then set \code{0} as the first value in the \code{top} argument and then specify different numbers for each breakdown (e.g., \code{top = c(0, 3, 10)} would return all of the date/time values for the specified \code{date_range}, the top 3 values for the second specified \code{dimension}, and then the top 10 values for each of the next dimension's results).
-\item If you are using a \code{daterange...} value \emph{not} as the first dimension, then simply using \code{0} at the same level in the \code{top} argument specification will return all of the values for that date/time value.
+\item The API names for day, week, month, etc. are prepended with \code{daterange}, so a daily data uses
+\code{daterangeday}, weekly data uses \code{daterangeweek}, monthly data uses \code{daterangemonth}, etc.
+\item When setting the argument for \code{top}, if the first (or only) \code{dimension} value is a \code{daterange...} object,
+then, if this argument is not explicitly specified \emph{or} if it uses only a single value (e.g., \code{top = 10}),
+the function will still return all of the values that fall in that date range. For instance, if the
+\code{date_range} was set for a 30-day period and the first \code{dimension} value was \code{daterangeday}, \emph{and} no value
+is specified for \code{top}, rather than simply returning the first 5 dates in the range, all 30 days will be
+returned. In the same scenario, if \code{top = 10} was set, then all 30 days would still be returned, and the
+\code{10} would simply be applied to the additional dimensions.
+\item If you want to return all of the date/time values but then have specific control over the number of
+values returned for each of the drilldown dimensions, then set \code{0} as the first value in the \code{top}
+argument and then specify different numbers for each breakdown (e.g., \code{top = c(0, 3, 10)} would return
+all of the date/time values for the specified \code{date_range}, the top 3 values for the second specified
+\code{dimension}, and then the top 10 values for each of the next dimension's results).
+\item If you are using a \code{daterange...} value \emph{not} as the first dimension, then simply using \code{0} at the
+same level in the \code{top} argument specification will return all of the values for that date/time value.
+}
+
+\strong{Search/Filtering}
+There are powerful filtering abilities within the function. However, to support that power requires a
+syntax that can feel a bit cumbersome for simple queries. \strong{\emph{Note:}} search filters are case-insensitive.
+This is Adobe Analytics API functionality and can not be specified otherwise in queries.
+
+The \code{search} argument takes a vector of search strings, with each value in the vector corresponding to
+the \code{dimension} value that is at the same position. These search strings support a range of operators,
+including \code{AND}, \code{OR}, \code{NOT}, \code{MATCH}, \code{CONTAINS}, \code{BEGINS-WITH}, and \code{ENDS-WITH}.
+
+The default for any search string is to use \code{CONTAINS}. Consider a query where \code{dimensions = c("mobiledevicetype", "lasttouchchannel")}:
+\itemize{
+\item \code{search = "CONTAINS 'mobile'"} will return results where \code{mobiledevicetype} contains "mobile", so would return all rows for \strong{Mobile Phone}.
+\item This could be shortened to \code{search = "'mobile'"} and would behave exactly the same, since \code{CONTAINS} is the default operator
+\item \code{search = c("CONTAINS 'mobile'", "CONTAINS 'search'")} will return results where \code{mobiledevicetype} contains "mobile" and, within those results, results where \code{lasttouchchannel} contains "search".
+\item \code{search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")} will return results where \code{mobiledevicetype} contains "mobile" _or" "tablet" and, within those results, will only include results where \code{lasttouchchannel} exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 }
 }

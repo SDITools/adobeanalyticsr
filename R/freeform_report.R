@@ -5,32 +5,88 @@
 #' the results as a data frame.
 #'
 #' @details
+#'
+#' This function is based on the **Freeform Table** visualization in Analysis Workspace. It is accessing
+#' the same API call type that is used to generate those visualizations.
+#'
+#' **Dimension Ordering**
+#' Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
+#' frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
+#' breakdowns of the data--the more queries are required. As a result, the _order_ of the dimensions _can_
+#' have a dramatic impact on the total query time, even if the resulting data is essentially identical.
+#'
+#' One way to understand this is to consider how much dragging and dropping would be required to return the
+#' data in Analysis Workspace _if you were not able to <Shift>-<click> to highlight multiple values before
+#' dragging a new dimension to break down existing values_.
+#'
+#' Consider a scenario where you are pulling metrics for the last 30 days (`daterangeday`) for **Mobile Device Type**
+#' (`mobiledevicetype`), which has 7 unique values. Setting `dimensions = c("daterangeday", "mobiledevicetype")`
+#' would make one query to get the values of the 30 days included. The query would then run a separate query
+#' for _each of those 30 days_ to get the `mobiledevicetype` results for each day. So, this would be **31 API calls**.
+#' If, instead, the function was called with `dimensions = c("mobiledevicetype", "daterangeday")`, then
+#' the first query would return the 7 `mobiledevicetype` values, and then each of those values would have
+#' an additional query to return the results for each of the 30 days. This would be only **7 API calls**.
+#'
+#' Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
+#' ways to improve query performance.
+#'
+#' **Date Handling**
 #' Date handling has several special characteristics that are worth getting familiar with:
+#' * The API names for day, week, month, etc. are prepended with `daterange`, so a daily data uses
+#' `daterangeday`, weekly data uses `daterangeweek`, monthly data uses `daterangemonth`, etc.
+#' * When setting the argument for `top`, if the first (or only) `dimension` value is a `daterange...` object,
+#' then, if this argument is not explicitly specified _or_ if it uses only a single value (e.g., `top = 10`),
+#' the function will still return all of the values that fall in that date range. For instance, if the
+#' `date_range` was set for a 30-day period and the first `dimension` value was `daterangeday`, _and_ no value
+#' is specified for `top`, rather than simply returning the first 5 dates in the range, all 30 days will be
+#' returned. In the same scenario, if `top = 10` was set, then all 30 days would still be returned, and the
+#' `10` would simply be applied to the additional dimensions.
+#' * If you want to return all of the date/time values but then have specific control over the number of
+#' values returned for each of the drilldown dimensions, then set `0` as the first value in the `top`
+#' argument and then specify different numbers for each breakdown (e.g., `top = c(0, 3, 10)` would return
+#' all of the date/time values for the specified `date_range`, the top 3 values for the second specified
+#' `dimension`, and then the top 10 values for each of the next dimension's results).
+#' * If you are using a `daterange...` value _not_ as the first dimension, then simply using `0` at the
+#' same level in the `top` argument specification will return all of the values for that date/time value.
 #'
-#' * The API names for day, week, month, etc. are prepended with `daterange`, so a daily data uses `daterangedate`, weekly data uses `daterangeweek`, monthly data uses `daterangemonth`, etc.
+#' **Search/Filtering**
+#' There are powerful filtering abilities within the function. However, to support that power requires a
+#' syntax that can feel a bit cumbersome for simple queries. **_Note:_** search filters are case-insensitive.
+#' This is Adobe Analytics API functionality and can not be specified otherwise in queries.
 #'
-#' * When setting the argument for `top`, if the first (or only) `dimension` value is a `daterange...` object, then, if this argument is not explicitly specified _or_ if it uses only a single value (e.g., `top = 10`), the function will still return all of the values that fall in that date range. For instance, if the `date_range` was set for a 30-day period and the first `dimension` value was `daterangedate`, _and_ no value is specified for `top`, rather than simply returning the first 5 dates in the range, all 30 days will be returned. In the same scenario, if `top = 10` was set, then all 30 days would still be returned, and the `10` would simply be applied to the additional dimensions.
+#' The `search` argument takes a vector of search strings, with each value in the vector corresponding to
+#' the `dimension` value that is at the same position. These search strings support a range of operators,
+#' including `AND`, `OR`, `NOT`, `MATCH`, `CONTAINS`, `BEGINS-WITH`, and `ENDS-WITH`.
 #'
-#' * If you want to return all of the date/time values but then have specific control over the number of values returned for each of the drilldown dimensions, then set `0` as the first value in the `top` argument and then specify different numbers for each breakdown (e.g., `top = c(0, 3, 10)` would return all of the date/time values for the specified `date_range`, the top 3 values for the second specified `dimension`, and then the top 10 values for each of the next dimension's results).
+#' The default for any search string is to use `CONTAINS`. Consider a query where `dimensions = c("mobiledevicetype", "lasttouchchannel")`:
 #'
-#' * If you are using a `daterange...` value _not_ as the first dimension, then simply using `0` at the same level in the `top` argument specification will return all of the values for that date/time value.
+#' * `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
+#' * This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
+#' * `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
+#' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or" "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
-#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will be used.
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
+#' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
+#' be used.
 #' @param date_range A vector containing the start and end date for the report as **Date** objects.
 #' @param metrics A character vector of metrics.
-#' @param dimensions A character vector of dimensions. There is currently a limit of 20 dimension breakdowns. Each dimension value that gets broken down by another dimension requires an additional API call, so the more dimensions that are included, the longer the function will take to return results. This is how the Adobe Analytics API works.
+#' @param dimensions A character vector of dimensions. There is currently a limit of 20 dimension
+#' breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
+#' call, so the more dimensions that are included, the longer the function will take to return results.
+#' This is how the Adobe Analytics API works.
 #' @param top The number of values to be pulled for each dimension. The default is 5 and the "top" is based on the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can either be a vector that includes the number of values to include at each level (each breakdown) or, if a single value is used, then that will be the maximum number of values to return at each level. See the **Details** for information on the unique handling of `daterange...` values.
 #' @param page Used in combination with `top` to return the next page of results. Uses 0-based numbering (e.g.,`top = 50000` and `page = 1` will return the top 50,000 items _starting at 50,001_).
 #' @param metricSort Pre-sorts the table by metrics. Values are either `asc` (ascending) or `desc` (descending).
 #' @param filterType This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to `breakdown`, and that is the only supported value.
 #' @param include_unspecified Whether or not to include **Unspecified** values in the results. This is the equivalent of the **Include Unspecified (None)** checkbox in freeform tables in Analysis Workspace. This defaults to `TRUE`, which includes **Unspecified** values in the results.
-#' @param segmentId A single segment ID or a vector of multiple segment IDs to apply to the report.
-#' @param search The structure of a search string is specific and can be compound using "AND". Each dimension can be filtered using a unique item in a character vector item.
-#' @param prettynames Boolean for whether the results should have the name field value for easier understanding.
-#' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
+#' @param segmentId A single segment ID or a vector of multiple segment IDs to apply to the overall report. If multiple `segmentId` values are included, the segments will be effectived ANDed together, just as if multiple segments were added to the header of an Analysis Workspace panel.
+#' @param search Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to the **Details** for more information on constructing values for this argument.
+#' @param prettynames A Boolean that determines whether the column names in the results use the API field name (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type", "Page Views"). This applies to both dimensions and metrics. The default value is `FALSE`, which returns the API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number (e.g., "evar2", "prop3", "event15").
+#' @param debug whether or not to push the full JSON request(s) being sent to the API to the console. The default is `FALSE`
 #'
-#' @return Data Frame
+#' @return A data frame with dimensions and metrics.
 #'
 #' @import assertthat
 #' @import httr
@@ -115,7 +171,6 @@ aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 ##setup the right number of limits for each dimension (top)
 top <- top_daterange_number(top, dimensions, date_range)
-
 
   #estimated runtime
   if(length(top) > 1) {
