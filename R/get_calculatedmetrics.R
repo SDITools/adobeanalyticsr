@@ -2,12 +2,17 @@
 #'
 #' Retrieve All Calculated Metrics
 #'
-#' @param company_id Company Id.  Taken from the global environment by default if not provided.
-#' @param rsids Filter list to only include calculated metrics tied to specified RSID list (comma-delimited)
-#' @param ownerId Filter list to only include calculated metrics owned by the specified loginId
-#' @param filterByIds Filter list to only include calculated metrics in the specified list (comma-delimited list of IDs) (this is the same as calculatedMetricFilter, and is overwritten by calculatedMetricFilter
+#' @seealso \code{\link{aw_get_calculatedmetric_byid}}, \code{\link{aw_get_metrics}}
+
+#'
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' @param rsids Filter the list to only include calculated metrics tied to a specified RSID or list of RSIDs (comma-delimited string).
+#' @param ownerId Filter the list to only include calculated metrics owned by the specified loginId.
+#' @param filterByIds Filter the list to only include calculated metrics in the specified list (comma-delimited list of IDs) (this is the same as calculatedMetricFilter, and is overwritten by calculatedMetricFilter
 #' @param toBeUsedInRsid The report suite where the calculated metric intended to be used. This report suite will be used to determine things like compatibility and permissions. If it is not specified then the permissions will be calculated based on the union of all metrics authorized in all groups the user belongs to. If the compatibility expansion is specified and toBeUsedInRsid is not then the compatibility returned is based off the compatibility from the last time the calculated metric was saved.
-#' @param locale Locale (en_US default)
+#' @param locale The locale to use when returning the results. Non-localized values will be returned for
+#' title, name, description, etc. if a localized value is not available.
 #' @param name Filter list to only include calculated metrics that contains the Name
 #' @param tagnames Filter list to only include calculated metrics that contains one of the tags
 #' @param favorite Filter list to only include calculated metrics that are favorites (boolean)

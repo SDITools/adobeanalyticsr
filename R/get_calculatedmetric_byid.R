@@ -2,7 +2,10 @@
 #'
 #' Retrieve one calculated metric
 #'
-#' @param company_id Company Id.  Taken from the global environment by default if not provided.
+#' @seealso \code{\link{aw_get_calculatedmetrics}}, \code{\link{aw_get_metrics}}
+#'
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' @param id The calculated metric ID to retrieve - required
 #' @param locale Locale. Default = en_US
 #' @param expansion Comma-delimited list of additional calculated metric metadata fields to include on response. (reportSuiteName, ownerFullName, modified, tags, definition, categories)

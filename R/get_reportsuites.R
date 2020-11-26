@@ -1,6 +1,7 @@
 #' Get list of report suites
 #'
-#' @param company_id this can be either manually defined here or utilize the global definitions
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' @param rsids Filter list to only include suites in this RSID list (comma-delimited) Required
 #' @param rsidContains Filter list to only include suites whose rsid contains rsidContains
 #' @param limit Number of results per page
