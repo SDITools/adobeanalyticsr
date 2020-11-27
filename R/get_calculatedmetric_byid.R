@@ -7,8 +7,10 @@
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' @param id The calculated metric ID to retrieve - required
-#' @param locale Locale. Default = en_US
-#' @param expansion Comma-delimited list of additional calculated metric metadata fields to include on response. (reportSuiteName, ownerFullName, modified, tags, definition, categories)
+#' @param locale The locale that system-named metrics should be returned in. Non-localized values will
+#' be returned for title, name, description, etc. if a localized value is not available.
+#' @param expansion Comma-delimited list of additional calculated metric metadata fields to include on
+#' response. (reportSuiteName, ownerFullName, modified, tags, definition, categories)
 #'
 #' @import stringr
 #' @export
