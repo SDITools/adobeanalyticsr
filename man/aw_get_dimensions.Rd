@@ -15,7 +15,9 @@ aw_get_dimensions(
 )
 }
 \arguments{
-\item{rsid}{Adobe report number}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+be used.}
 
 \item{locale}{language - default'en_US'}
 
@@ -33,7 +35,8 @@ aw_get_dimensions(
 
 \item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
 
-\item{company_id}{this can be either manually defined here or utilize the global definitions}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 }
 \description{
 This will generate an extensive list of all the dimensions in the reportsuite.

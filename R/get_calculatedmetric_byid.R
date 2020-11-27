@@ -1,16 +1,48 @@
-#' Get a single calculated metric.
+#' Get a single calculated metric
 #'
-#' Retrieve one calculated metric
+#' Retrieve a single calculated metric and meta data about it.
+#'
+#' @details
+#' This function is useful for getting details about a specific calculated metric based on the metric's ID.
+#'
+#' The `expansion` argument accepts the following values, which will then include additional columns
+#' in the results:
+#'
+#' * **ownerFullName: adds `owner.name` and `owner.login` columns to the results (`owner.id` is
+#' already included by default).
+#'
+#' * **modified**: adds a `modified` column to the output with the date (ISO 8601 format) each
+#' calculated metric was last modified.
+#'
+#' * **definition**: adds _multiple_ columns (the number will vary based on the number and complexity
+#' of calculated metrics returns) that provide the actual formula for each of the calculated metrics.
+#' This is returned from the API as a JSON object and converted into columns by the function, which
+#' means it is pretty messy, so, really, it's not recommended that you use this value.
+#'
+#' * **compatability**: should add a column with the products that the metric is compatibile with, but this
+#' behavior has not actually been shown to be true, so this may actually do nothing if included.
+#'
+#' * **reportSuiteName**: adds a `reportSuiteName` and a `siteTitle` column with the friendy report
+#' suite name for the RSID.
+#'
+#' * **tags**: adds a column with an embedded data frame with all of the existing tags that are
+#' associated with the calculated metric. This can be a bit messy to work with, but the information
+#' is, at least, there.
+#'
+#' Multiple values for `expansion` can be included in the argument as a comma-separated value. For instance,
+#' `expansion = "tags,modified"` will add both a `tags` column and a `modified` column to the output.
 #'
 #' @seealso \code{\link{aw_get_calculatedmetrics}}, \code{\link{aw_get_metrics}}
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' @param id The calculated metric ID to retrieve - required
+#' @param id The calculated metric ID to retrieve. This is a required field.
 #' @param locale The locale that system-named metrics should be returned in. Non-localized values will
 #' be returned for title, name, description, etc. if a localized value is not available.
-#' @param expansion Comma-delimited list of additional calculated metric metadata fields to include on
-#' response. (reportSuiteName, ownerFullName, modified, tags, definition, categories)
+#' @param expansion Comma-delimited list of additional calculated metric metadata fields to include in
+#' the results. Valid values include: **reportSuiteName**, **ownerFullName**, **modified**, **tags**,
+#' **definition**, **compatability**, **categories**. See **Details** for more information about the
+#' quirks and oddities of this argument.
 #'
 #' @import stringr
 #' @export

@@ -1,4 +1,6 @@
-#' Retrieve a list of available calculated metrics. The reults will always include these default items:
+#' Get a list of calculated metrics.
+#'
+#' Retrieve a list of available calculated metrics. The results will always include these default items:
 #' `id`, `name`, `description`, `rsid`, `owner`, `polarity`, `precision`, `type`. Other attributes can
 #' be optionally requested through the `expansion` field.
 #'
@@ -49,22 +51,19 @@
 #' then the compatibility returned is based off of the compatibility from the last time the calculated metric was saved.
 #' @param locale The locale that system-named metrics should be returned in. Non-localized values will
 #' be returned for title, name, description, etc. if a localized value is not available.
-#' @param name Filter the list to only include calculated metrics that contains the specified **name**.
+#' @param name Filter the list to only include calculated metrics that contain the specified **name**.
 #' This is case-insensitive and is a simple, single string match.
 #' @param tagnames Filter the list to only include calculated metrics that contain one of the tags
 #' @param favorite Set to `TRUE` to only include calculated metrics that are favorites in the results. A
 #' value of `FALSE` will return all calculated metrics, including those that are favorites.
 #' @param approved Set to `TRUE` to only include calculated metrics that are approved in the results. A
 #' value of `FALSE` will return all calculated metrics, including those that are approved and those that are not.
-#' @param limit The number of results to return per page. Why on earth you would ever want to put a limit
-#' on this is beyond the imagination of the author of this documentation. Presumably, this would only actually
-#' be used if you were building a user interface and needed to control the number of values shown per screen.
-#' This argument works in conjunction with the `page` argument.
+#' @param limit The number of results to return per page. The default is 1,000.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
 #' zero-based. For instance, if `limit = 10` and `page = 1`, the results returned would be 11 through 20.
 #' @param sortDirection The sort direction for teh results: `ASC` (default) for ascending or `DESC` for
 #' descending. (This is case insensitive, so `asc` and `desc` work as well.)
-#' @param sortProperty The property to sort the results by. Currently allowed values are `id` (default), `name`,
+#' @param sortProperty The property to sort the results by. Currently available values are `id` (default), `name`,
 #' and `modified_date`. Note that setting `expansion = modified` returns results with a column added called
 #' `modified`, which is the last date the calculated metric was modified. When using this value for `sortProperty`,
 #' though, the name of the argument is `modified_date`, because why would we expect locked-in consistency

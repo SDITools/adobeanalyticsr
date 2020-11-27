@@ -1,13 +1,20 @@
 #' Get list of report suites
 #'
+#' Retrieve a list of report suites and meta data about each one.
+#'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' @param rsids Filter list to only include suites in this RSID list (comma-delimited) Required
-#' @param rsidContains Filter list to only include suites whose rsid contains rsidContains
-#' @param limit Number of results per page
-#' @param page Page number (base 0 - first page is "0")
+#' @param rsids Filter the results to include one or more specific report suites. The RSIDs to include
+#' need to be in a comma-separated list with no spaces.
+#' @param rsidContains Filter the results list to only include suites that contain the specified string
+#' within the RSID. This is case-insensitive and is a simple, single string match.
+#' @param limit The number of results to return per page. This argument works in conjunction with the
+#' `page` argument. The default is 10.
+#' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
+#' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
 #' @param expansion options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo))
 #'
+#' @return A data frame of report suites and their meta data.
 #'
 #' @import stringr
 #' @export
