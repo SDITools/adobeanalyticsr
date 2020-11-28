@@ -2,19 +2,36 @@
 #'
 #' Retrieve all segments
 #'
-#' @param company_id Company Id.  Taken from the global environment by default if not provided.
-#' @param rsids Filter list to only include segments tied to specified RSID list (comma-delimited)
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' @param rsids Filter the list to only include segments tied to a specified RSID or
+#' list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.
 #' @param segmentFilter Filter list to only include suites in this RSID list (comma-delimited)
-#' @param locale Locale (en_US default)
-#' @param name Filter list to only include segments that contains the Name
-#' @param tagNames Filter list to only include segments that contains one of the tags
-#' @param filterByPublishedSegments Filter list to only include segments where the published field is set to one of the allowable values (all *default*, true, false)
-#' @param limit Number of results per page (10 - *default*)
-#' @param page Page number (base 0 - first page is "0")
-#' @param sortDirection Sort direction (ASC *default* or DESC)
-#' @param sortProperty Property to sort by (name, modified_date, id *default* is currently allowed)
-#' @param expansion Comma-delimited list of additional segment metadata fields to include on response. (Options--reportSuiteName, ownerFullName, modified,tags, compatibility, definition, publishingStatus, definitionLastModified, categories)
-#' @param includeType Include additional segments not owned by user. The "all" option takes precedence over "shared" (shared, all, templates)
+#' @param locale The locale that segment details should be returned in. The default is `en_US`.
+#' @param name Filter the list to only include segments that contain the specified **name**.
+#' This is case-insensitive and is a simple, single string match.
+#' @param tagNames Filter the list to only include segments that contain one of the tags.
+#' @param filterByPublishedSegments Filter the list to only include segments where the published field is set to one of the allowable values:
+#' `all` (the default), `TRUE`, or `FALSE``.
+#' @param limit The number of results to return per page. This argument works in conjunction with the
+#' `page` argument. The default is 10.
+#' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
+#' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
+#' @param sortDirection The sort direction for teh results: `ASC` (default) for ascending or `DESC` for
+#' descending. (This is case insensitive, so `asc` and `desc` work as well.)
+#' #' @param sortProperty The property to sort the results by. Currently available values are `id` (default), `name`,
+#' and `modified_date`. Note that setting `expansion = modified` returns results with a column added called
+#' `modified`, which is the last date the calculated metric was modified. When using this value for `sortProperty`,
+#' though, the name of the argument is `modified_date`, because why would we expect locked-in consistency
+#' from Adobe?
+#' @param expansion Comma-delimited list of additional segment metadata fields to include in
+#' the results. Valid values include: `reportSuiteName`, `ownerFullName`, `modified`, `tags`, `compatibility`,
+#' `definition`, `publishingStatus`, `definitionLastModified`, and `categories`. To include multiple values,
+#' combine them into a single comma-separated string with _no spaces_.
+#' @param includeType Include additional segments not owned by the user. Available values are `all` (default),
+#' `shared`, and `templates`. The `all` option takes precedence over "shared"
+#'
+#' @return A data frame of segments and their meta data.
 #'
 #' @import stringr
 #' @export

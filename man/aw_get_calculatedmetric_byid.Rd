@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_calculatedmetric_byid.R
 \name{aw_get_calculatedmetric_byid}
 \alias{aw_get_calculatedmetric_byid}
-\title{Get a single calculated metric.}
+\title{Get a single calculated metric}
 \usage{
 aw_get_calculatedmetric_byid(
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -12,14 +12,48 @@ aw_get_calculatedmetric_byid(
 )
 }
 \arguments{
-\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
-\item{id}{The calculated metric ID to retrieve - required}
+\item{id}{The calculated metric ID to retrieve. This is a required field.}
 
-\item{locale}{Locale. Default = en_US}
+\item{locale}{The locale that system-named metrics should be returned in. Non-localized values will
+be returned for title, name, description, etc. if a localized value is not available.}
 
-\item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include on response. (reportSuiteName, ownerFullName, modified, tags, definition, categories)}
+\item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include in
+the results. Valid values include: \strong{reportSuiteName}, \strong{ownerFullName}, \strong{modified}, \strong{tags},
+\strong{definition}, \strong{compatability}, \strong{categories}. See \strong{Details} for more information about the
+quirks and oddities of this argument.}
 }
 \description{
-Retrieve one calculated metric
+Retrieve a single calculated metric and meta data about it.
+}
+\details{
+This function is useful for getting details about a specific calculated metric based on the metric's ID.
+
+The \code{expansion} argument accepts the following values, which will then include additional columns
+in the results:
+\itemize{
+\item **ownerFullName: adds \code{owner.name} and \code{owner.login} columns to the results (\code{owner.id} is
+already included by default).
+\item \strong{modified}: adds a \code{modified} column to the output with the date (ISO 8601 format) each
+calculated metric was last modified.
+\item \strong{definition}: adds \emph{multiple} columns (the number will vary based on the number and complexity
+of calculated metrics returns) that provide the actual formula for each of the calculated metrics.
+This is returned from the API as a JSON object and converted into columns by the function, which
+means it is pretty messy, so, really, it's not recommended that you use this value.
+\item \strong{compatability}: should add a column with the products that the metric is compatibile with, but this
+behavior has not actually been shown to be true, so this may actually do nothing if included.
+\item \strong{reportSuiteName}: adds a \code{reportSuiteName} and a \code{siteTitle} column with the friendy report
+suite name for the RSID.
+\item \strong{tags}: adds a column with an embedded data frame with all of the existing tags that are
+associated with the calculated metric. This can be a bit messy to work with, but the information
+is, at least, there.
+}
+
+Multiple values for \code{expansion} can be included in the argument as a comma-separated value. For instance,
+\code{expansion = "tags,modified"} will add both a \code{tags} column and a \code{modified} column to the output.
+}
+\seealso{
+\code{\link{aw_get_calculatedmetrics}}, \code{\link{aw_get_metrics}}
 }

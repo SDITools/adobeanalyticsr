@@ -21,31 +21,48 @@ aw_get_segments(
 )
 }
 \arguments{
-\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
-\item{rsids}{Filter list to only include segments tied to specified RSID list (comma-delimited)}
+\item{rsids}{Filter the list to only include segments tied to a specified RSID or
+list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.}
 
 \item{segmentFilter}{Filter list to only include suites in this RSID list (comma-delimited)}
 
-\item{locale}{Locale (en_US default)}
+\item{locale}{The locale that segment details should be returned in. The default is \code{en_US}.}
 
-\item{name}{Filter list to only include segments that contains the Name}
+\item{name}{Filter the list to only include segments that contain the specified \strong{name}.
+This is case-insensitive and is a simple, single string match.}
 
-\item{tagNames}{Filter list to only include segments that contains one of the tags}
+\item{tagNames}{Filter the list to only include segments that contain one of the tags.}
 
-\item{filterByPublishedSegments}{Filter list to only include segments where the published field is set to one of the allowable values (all \emph{default}, true, false)}
+\item{filterByPublishedSegments}{Filter the list to only include segments where the published field is set to one of the allowable values:
+\code{all} (the default), \code{TRUE}, or `FALSE``.}
 
-\item{limit}{Number of results per page (10 - \emph{default})}
+\item{limit}{The number of results to return per page. This argument works in conjunction with the
+\code{page} argument. The default is 10.}
 
-\item{page}{Page number (base 0 - first page is "0")}
+\item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
+zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
 
-\item{sortDirection}{Sort direction (ASC \emph{default} or DESC)}
+\item{sortDirection}{The sort direction for teh results: \code{ASC} (default) for ascending or \code{DESC} for
+descending. (This is case insensitive, so \code{asc} and \code{desc} work as well.)
+#' @param sortProperty The property to sort the results by. Currently available values are \code{id} (default), \code{name},
+and \code{modified_date}. Note that setting \code{expansion = modified} returns results with a column added called
+\code{modified}, which is the last date the calculated metric was modified. When using this value for \code{sortProperty},
+though, the name of the argument is \code{modified_date}, because why would we expect locked-in consistency
+from Adobe?}
 
-\item{sortProperty}{Property to sort by (name, modified_date, id \emph{default} is currently allowed)}
+\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
+the results. Valid values include: \code{reportSuiteName}, \code{ownerFullName}, \code{modified}, \code{tags}, \code{compatibility},
+\code{definition}, \code{publishingStatus}, \code{definitionLastModified}, and \code{categories}. To include multiple values,
+combine them into a single comma-separated string with \emph{no spaces}.}
 
-\item{expansion}{Comma-delimited list of additional segment metadata fields to include on response. (Options--reportSuiteName, ownerFullName, modified,tags, compatibility, definition, publishingStatus, definitionLastModified, categories)}
-
-\item{includeType}{Include additional segments not owned by user. The "all" option takes precedence over "shared" (shared, all, templates)}
+\item{includeType}{Include additional segments not owned by the user. Available values are \code{all} (default),
+\code{shared}, and \code{templates}. The \code{all} option takes precedence over "shared"}
+}
+\value{
+A data frame of segments and their meta data.
 }
 \description{
 Retrieve all segments

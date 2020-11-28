@@ -13,18 +13,45 @@ aw_get_metrics(
 )
 }
 \arguments{
-\item{rsid}{Adobe report number}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+be used.}
 
-\item{locale}{language - default'en_US'}
+\item{locale}{The locale that system-named metrics should be returned in. Non-localized values will
+be returned for title, name, description, etc. if a localized value is not available.}
 
 \item{segmentable}{\itemize{
-\item boolean - default NULL
+\item Boolean that determines whether or not to include metrics that can be used in
+segments. \code{NULL} (the default) and \code{FALSE} return \emph{all} metrics (\emph{not} just the non-segmentable ones).
+Examples of metrics that cannot be used in segments are \code{bounces}, \verb{bounce rate}, \code{entries}, and \code{visitors}.
 }}
 
-\item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
+\item{expansion}{Controls which of three specific columns to include in the results: \code{tags}, \code{allowedForReporting},
+and \code{categories}. The default is to include all three columns. Limit to one or any two by passing a comma-delimited
+string (e.g., \code{expansion = "tags, categories"} will include the \code{tags} column and the \code{categories} column but
+not the \code{allowedForReporting} column). This argument has gotten way more explanation than warranted, as this
+capability seems relatively pointless (but is available in the Adobe Analytics API, so has been included).}
 
-\item{company_id}{define globally or manually}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+}
+\value{
+A data frame of metrics (excluding calculated metrics) and their meta data.
 }
 \description{
-This will generate an extensive list of all the metrics (measures) in the reportsuite.
+Get a data frame with all of the standard (non-calculated) metrics (measures) in the report suite.
+}
+\details{
+This function is commonly used to get the correct ID for a specific metric or metrics that will be used in
+other function calls. The results returned are:
+\itemize{
+\item All of the "out of the box" metrics like visits, page views, visitors, orders, revenue, bounce rate, etc.
+\item All of the enabled events that are configured in the report suite.
+\item An instances metric for each enabled eVar.
+}
+
+This function does \emph{not} return calculated metrics.
+}
+\seealso{
+\code{\link{aw_get_calculatedmetrics}}, \code{\link{aw_get_calculatedmetric_byid}}
 }

@@ -15,25 +15,38 @@ aw_get_dimensions(
 )
 }
 \arguments{
-\item{rsid}{Adobe report number}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+be used.}
 
-\item{locale}{language - default'en_US'}
+\item{locale}{The locale that dimension details should be returned in. The default is \code{en_US}.}
 
 \item{segmentable}{\itemize{
-\item boolean - default TRUE
+\item Boolean that determines whether or not to include dimensions that can be used in
+segments. \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).
+Examples of dimensions that cannot be used in segments are \code{clickmapaction}, \code{codeversion}, \code{newvisit},
+and \code{pageurl}.
 }}
 
 \item{reportable}{\itemize{
-\item boolean - default TRUE
+\item Boolean that determines whether or not to include dimensions that can be used in
+reports \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).
 }}
 
 \item{classifiable}{\itemize{
-\item boolean - default FALSE
+\item Boolean that determines whether or not to include dimensions that can be used in
+classifications \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).
 }}
 
-\item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
+\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
+the results. Valid values include: \code{tags}, \code{allowedForReporting}, and \code{categories}. To include multiple values,
+combine them into a single comma-separated string with \emph{no spaces}.}
 
-\item{company_id}{this can be either manually defined here or utilize the global definitions}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+}
+\value{
+A data frame of dimensions and their meta data.
 }
 \description{
 This will generate an extensive list of all the dimensions in the reportsuite.
