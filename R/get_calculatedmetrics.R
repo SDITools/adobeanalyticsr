@@ -30,7 +30,7 @@ aw_get_calculatedmetrics <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                           locale = "en_US",
                           name = NA,
                           tagnames = NA,
-                          favorite = 0,
+                          favorite = NA,
                           approved = NA,
                           limit = 1000,
                           page = 0,
@@ -44,12 +44,12 @@ aw_get_calculatedmetrics <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   if(length(filterByIds) > 1) {filterByIds = paste0(filterByIds, collapse = ',') }
   if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
 
-  vars <- tibble(rsids, ownerId, filterByIds, toBeUsedInRsid, locale, name, tagnames, favorite, approved,
+  vars <- tibble::tibble(rsids, ownerId, filterByIds, toBeUsedInRsid, locale, name, tagnames, favorite, approved,
   limit, page, sortDirection, sortProperty, expansion, includeType)
   #Turn the list into a string to create the query
   prequery <- list(vars %>% select_if(~ !any(is.na(.))))
   #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- str_remove_all(str_replace_all(str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
+  query_param <- stringr::str_remove_all(str_replace_all(str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
 
   #create the url to send with the query
   urlstructure <- paste0('calculatedmetrics?',query_param)
@@ -57,7 +57,7 @@ aw_get_calculatedmetrics <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
   res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
 
-  res <- fromJSON(res)
+  res <- jsonlite::fromJSON(res)
 
   #Just need the content of the returned json
   res <- res$content
