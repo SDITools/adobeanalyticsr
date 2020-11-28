@@ -28,7 +28,7 @@ aw_get_calculatedmetrics(
 elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
 \item{rsids}{Filter the list to only include calculated metrics tied to a specified RSID or
-list of RSIDs (comma-delimited string).}
+list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.}
 
 \item{ownerId}{Filter the list to only include calculated metrics owned by the specified loginId.}
 
@@ -47,7 +47,7 @@ be returned for title, name, description, etc. if a localized value is not avail
 \item{name}{Filter the list to only include calculated metrics that contain the specified \strong{name}.
 This is case-insensitive and is a simple, single string match.}
 
-\item{tagnames}{Filter the list to only include calculated metrics that contain one of the tags}
+\item{tagnames}{Filter the list to only include calculated metrics that contain one of the tags.}
 
 \item{favorite}{Set to \code{TRUE} to only include calculated metrics that are favorites in the results. A
 value of \code{FALSE} will return all calculated metrics, including those that are favorites.}
@@ -70,15 +70,15 @@ though, the name of the argument is \code{modified_date}, because why would we e
 from Adobe?}
 
 \item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include in
-the results. Valid values include: \strong{reportSuiteName}, \strong{ownerFullName}, \strong{modified}, \strong{tags},
-\strong{definition}, \strong{compatability}, \strong{categories}. See \strong{Details} for more information about the
+the results. Valid values include: \code{reportSuiteName}, \code{ownerFullName}, \code{modified}, \code{tags},
+\code{definition}, \code{compatability}, \code{categories}. See \strong{Details} for more information about the
 quirks and oddities of this argument.}
 
 \item{includeType}{Include additional calculated metrics not owned by user. Available values are \code{all} (default),
 \code{shared}, and \code{templates}. The \code{all} option takes precedence over "shared"}
 }
 \value{
-A data frame of calculated metrics and their meta data.
+A data frame of calculated metrics and their metadata.
 }
 \description{
 Retrieve a list of available calculated metrics. The results will always include these default items:

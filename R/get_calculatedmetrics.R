@@ -40,7 +40,7 @@
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' @param rsids Filter the list to only include calculated metrics tied to a specified RSID or
-#' list of RSIDs (comma-delimited string).
+#' list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.
 #' @param ownerId Filter the list to only include calculated metrics owned by the specified loginId.
 #' @param filterByIds Filter the list to only include calculated metrics in the specified list (comma-delimited
 #' list of IDs). Tthis is the same as `calculatedMetricFilter` and is overwritten by `calculatedMetricFilter`.
@@ -53,7 +53,7 @@
 #' be returned for title, name, description, etc. if a localized value is not available.
 #' @param name Filter the list to only include calculated metrics that contain the specified **name**.
 #' This is case-insensitive and is a simple, single string match.
-#' @param tagnames Filter the list to only include calculated metrics that contain one of the tags
+#' @param tagnames Filter the list to only include calculated metrics that contain one of the tags.
 #' @param favorite Set to `TRUE` to only include calculated metrics that are favorites in the results. A
 #' value of `FALSE` will return all calculated metrics, including those that are favorites.
 #' @param approved Set to `TRUE` to only include calculated metrics that are approved in the results. A
@@ -69,13 +69,13 @@
 #' though, the name of the argument is `modified_date`, because why would we expect locked-in consistency
 #' from Adobe?
 #' @param expansion Comma-delimited list of additional calculated metric metadata fields to include in
-#' the results. Valid values include: **reportSuiteName**, **ownerFullName**, **modified**, **tags**,
-#' **definition**, **compatability**, **categories**. See **Details** for more information about the
+#' the results. Valid values include: `reportSuiteName`, `ownerFullName`, `modified`, `tags`,
+#' `definition`, `compatability`, `categories`. See **Details** for more information about the
 #' quirks and oddities of this argument.
 #' @param includeType Include additional calculated metrics not owned by user. Available values are `all` (default),
 #' `shared`, and `templates`. The `all` option takes precedence over "shared"
 #'
-#' @return A data frame of calculated metrics and their meta data.
+#' @return A data frame of calculated metrics and their metadata.
 #'
 #' @import stringr
 #' @export
