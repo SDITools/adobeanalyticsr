@@ -37,7 +37,7 @@ This is case-insensitive and is a simple, single string match.}
 \item{tagNames}{Filter the list to only include segments that contain one of the tags.}
 
 \item{filterByPublishedSegments}{Filter the list to only include segments where the published field is set to one of the allowable values:
-\code{all} (the default), \code{TRUE}, or `FALSE``.}
+\code{all} (the default), \code{TRUE}, or \code{FALSE}.}
 
 \item{limit}{The number of results to return per page. This argument works in conjunction with the
 \code{page} argument. The default is 10.}
@@ -45,7 +45,7 @@ This is case-insensitive and is a simple, single string match.}
 \item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
 zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
 
-\item{sortDirection}{The sort direction for teh results: \code{ASC} (default) for ascending or \code{DESC} for
+\item{sortDirection}{The sort direction for the results: \code{ASC} (default) for ascending or \code{DESC} for
 descending. (This is case insensitive, so \code{asc} and \code{desc} work as well.)
 #' @param sortProperty The property to sort the results by. Currently available values are \code{id} (default), \code{name},
 and \code{modified_date}. Note that setting \code{expansion = modified} returns results with a column added called

@@ -12,12 +12,12 @@
 #' This is case-insensitive and is a simple, single string match.
 #' @param tagNames Filter the list to only include segments that contain one of the tags.
 #' @param filterByPublishedSegments Filter the list to only include segments where the published field is set to one of the allowable values:
-#' `all` (the default), `TRUE`, or `FALSE``.
+#' `all` (the default), `TRUE`, or `FALSE`.
 #' @param limit The number of results to return per page. This argument works in conjunction with the
 #' `page` argument. The default is 10.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
 #' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
-#' @param sortDirection The sort direction for teh results: `ASC` (default) for ascending or `DESC` for
+#' @param sortDirection The sort direction for the results: `ASC` (default) for ascending or `DESC` for
 #' descending. (This is case insensitive, so `asc` and `desc` work as well.)
 #' #' @param sortProperty The property to sort the results by. Currently available values are `id` (default), `name`,
 #' and `modified_date`. Note that setting `expansion = modified` returns results with a column added called

@@ -12,7 +12,9 @@
 #' `page` argument. The default is 10.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
 #' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
-#' @param expansion options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo))
+#' @param expansion Comma-delimited list of additional segment metadata fields to include in
+#' the results. Valid values include: `name`, `parentRsid`, `currency`, `calendarType`, `timezoneZoneinfo`.
+#' To include multiple values, combine them into a single comma-separated string with _no spaces_.
 #'
 #' @return A data frame of report suites and their meta data.
 #'

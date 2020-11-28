@@ -29,7 +29,9 @@ within the RSID. This is case-insensitive and is a simple, single string match.}
 \item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
 zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
 
-\item{expansion}{options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo))}
+\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
+the results. Valid values include: \code{name}, \code{parentRsid}, \code{currency}, \code{calendarType}, \code{timezoneZoneinfo}.
+To include multiple values, combine them into a single comma-separated string with \emph{no spaces}.}
 }
 \value{
 A data frame of report suites and their meta data.

@@ -8,7 +8,7 @@ aw_get_metrics(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   locale = "en_US",
   segmentable = "NULL",
-  expansion = "tags, allowedForReporting, categories",
+  expansion = c("tags", "allowedForReporting", "categories"),
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
 }
@@ -20,11 +20,9 @@ be used.}
 \item{locale}{The locale that system-named metrics should be returned in. Non-localized values will
 be returned for title, name, description, etc. if a localized value is not available.}
 
-\item{segmentable}{\itemize{
-\item Boolean that determines whether or not to include metrics that can be used in
+\item{segmentable}{Boolean that determines whether or not to include metrics that can be used in
 segments. \code{NULL} (the default) and \code{FALSE} return \emph{all} metrics (\emph{not} just the non-segmentable ones).
-Examples of metrics that cannot be used in segments are \code{bounces}, \verb{bounce rate}, \code{entries}, and \code{visitors}.
-}}
+Examples of metrics that cannot be used in segments are \code{bounces}, \verb{bounce rate}, \code{entries}, and \code{visitors}.}
 
 \item{expansion}{Controls which of three specific columns to include in the results: \code{tags}, \code{allowedForReporting},
 and \code{categories}. The default is to include all three columns. Limit to one or any two by passing a comma-delimited

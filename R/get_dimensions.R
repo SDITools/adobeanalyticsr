@@ -6,13 +6,13 @@
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
 #' be used.
 #' @param locale The locale that dimension details should be returned in. The default is `en_US`.
-#' @param segmentable - Boolean that determines whether or not to include dimensions that can be used in
+#' @param segmentable Boolean that determines whether or not to include dimensions that can be used in
 #' segments. `FALSE` (the default) returns _all_ dimensions (_not_ just the non-segmentable ones).
 #' Examples of dimensions that cannot be used in segments are `clickmapaction`, `codeversion`, `newvisit`,
 #' and `pageurl`.
-#' @param reportable - Boolean that determines whether or not to include dimensions that can be used in
+#' @param reportable Boolean that determines whether or not to include dimensions that can be used in
 #' reports `FALSE` (the default) returns _all_ dimensions (_not_ just the non-segmentable ones).
-#' @param classifiable - Boolean that determines whether or not to include dimensions that can be used in
+#' @param classifiable Boolean that determines whether or not to include dimensions that can be used in
 #' classifications `FALSE` (the default) returns _all_ dimensions (_not_ just the non-segmentable ones).
 #' @param expansion Comma-delimited list of additional segment metadata fields to include in
 #' the results. Valid values include: `tags`, `allowedForReporting`, and `categories`. To include multiple values,
@@ -26,9 +26,9 @@
 #' @export
 aw_get_dimensions <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                               locale = 'en_US',
-                              segmentable = 'false',
-                              reportable = 'false',
-                              classifiable = 'false',
+                              segmentable = FALSE,
+                              reportable = FALSE,
+                              classifiable = FALSE,
                               expansion = 'tags,allowedForReporting,categories',
                               company_id = Sys.getenv("AW_COMPANY_ID") ){
 
