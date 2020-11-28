@@ -7,9 +7,9 @@
 aw_get_dimensions(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   locale = "en_US",
-  segmentable = "false",
-  reportable = "false",
-  classifiable = "false",
+  segmentable = FALSE,
+  reportable = FALSE,
+  classifiable = FALSE,
   expansion = "tags,allowedForReporting,categories",
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
@@ -21,22 +21,16 @@ be used.}
 
 \item{locale}{The locale that dimension details should be returned in. The default is \code{en_US}.}
 
-\item{segmentable}{\itemize{
-\item Boolean that determines whether or not to include dimensions that can be used in
+\item{segmentable}{Boolean that determines whether or not to include dimensions that can be used in
 segments. \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).
 Examples of dimensions that cannot be used in segments are \code{clickmapaction}, \code{codeversion}, \code{newvisit},
-and \code{pageurl}.
-}}
+and \code{pageurl}.}
 
-\item{reportable}{\itemize{
-\item Boolean that determines whether or not to include dimensions that can be used in
-reports \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).
-}}
+\item{reportable}{Boolean that determines whether or not to include dimensions that can be used in
+reports \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).}
 
-\item{classifiable}{\itemize{
-\item Boolean that determines whether or not to include dimensions that can be used in
-classifications \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).
-}}
+\item{classifiable}{Boolean that determines whether or not to include dimensions that can be used in
+classifications \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).}
 
 \item{expansion}{Comma-delimited list of additional segment metadata fields to include in
 the results. Valid values include: \code{tags}, \code{allowedForReporting}, and \code{categories}. To include multiple values,

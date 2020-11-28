@@ -21,7 +21,7 @@
 #' be used.
 #' @param locale The locale that system-named metrics should be returned in. Non-localized values will
 #' be returned for title, name, description, etc. if a localized value is not available.
-#' @param segmentable - Boolean that determines whether or not to include metrics that can be used in
+#' @param segmentable Boolean that determines whether or not to include metrics that can be used in
 #' segments. `NULL` (the default) and `FALSE` return _all_ metrics (_not_ just the non-segmentable ones).
 #' Examples of metrics that cannot be used in segments are `bounces`, `bounce rate`, `entries`, and `visitors`.
 #' @param expansion Controls which of three specific columns to include in the results: `tags`, `allowedForReporting`,

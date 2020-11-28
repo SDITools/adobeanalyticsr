@@ -21,8 +21,8 @@ elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPA
 be returned for title, name, description, etc. if a localized value is not available.}
 
 \item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include in
-the results. Valid values include: \strong{reportSuiteName}, \strong{ownerFullName}, \strong{modified}, \strong{tags},
-\strong{definition}, \strong{compatability}, \strong{categories}. See \strong{Details} for more information about the
+the results. Valid values include: \code{reportSuiteName}, \code{ownerFullName}, \code{modified}, \code{tags},
+\code{definition}, \code{compatability}, \code{categories}. See \strong{Details} for more information about the
 quirks and oddities of this argument.}
 }
 \description{

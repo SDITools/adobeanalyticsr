@@ -40,8 +40,8 @@
 #' @param locale The locale that system-named metrics should be returned in. Non-localized values will
 #' be returned for title, name, description, etc. if a localized value is not available.
 #' @param expansion Comma-delimited list of additional calculated metric metadata fields to include in
-#' the results. Valid values include: **reportSuiteName**, **ownerFullName**, **modified**, **tags**,
-#' **definition**, **compatability**, **categories**. See **Details** for more information about the
+#' the results. Valid values include: `reportSuiteName`, `ownerFullName`, `modified`, `tags`,
+#' `definition`, `compatability`, `categories`. See **Details** for more information about the
 #' quirks and oddities of this argument.
 #'
 #' @import stringr
