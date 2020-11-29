@@ -25,10 +25,10 @@
 #' segments. `NULL` (the default) and `FALSE` return _all_ metrics (_not_ just the non-segmentable ones).
 #' Examples of metrics that cannot be used in segments are `bounces`, `bounce rate`, `entries`, and `visitors`.
 #' @param expansion Controls which of three specific columns to include in the results: `tags`, `allowedForReporting`,
-#' and `categories`. The default is to include all three columns. Limit to one or any two by passing a comma-delimited
-#' string (e.g., `expansion = "tags, categories"` will include the `tags` column and the `categories` column but
-#' not the `allowedForReporting` column). This argument has gotten way more explanation than warranted, as this
-#' capability seems relatively pointless (but is available in the Adobe Analytics API, so has been included).
+#' and `categories`. The default is to include all three columns. Limit to one or any two by passing a
+#' single value (e.g., `expansion = "tags"`) or a vector (e.g., `expansion = c("tags", "categories")`. This
+#' argument has gotten way more explanation than warranted, as this capability seems relatively pointless
+#' (but is available in the Adobe Analytics API, so it has been included).
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #'
