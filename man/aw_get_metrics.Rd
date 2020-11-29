@@ -25,10 +25,10 @@ segments. \code{NULL} (the default) and \code{FALSE} return \emph{all} metrics (
 Examples of metrics that cannot be used in segments are \code{bounces}, \verb{bounce rate}, \code{entries}, and \code{visitors}.}
 
 \item{expansion}{Controls which of three specific columns to include in the results: \code{tags}, \code{allowedForReporting},
-and \code{categories}. The default is to include all three columns. Limit to one or any two by passing a comma-delimited
-string (e.g., \code{expansion = "tags, categories"} will include the \code{tags} column and the \code{categories} column but
-not the \code{allowedForReporting} column). This argument has gotten way more explanation than warranted, as this
-capability seems relatively pointless (but is available in the Adobe Analytics API, so has been included).}
+and \code{categories}. The default is to include all three columns. Limit to one or any two by passing a
+single value (e.g., \code{expansion = "tags"}) or a vector (e.g., \code{expansion = c("tags", "categories")}. This
+argument has gotten way more explanation than warranted, as this capability seems relatively pointless
+(but is available in the Adobe Analytics API, so it has been included).}
 
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
 elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}

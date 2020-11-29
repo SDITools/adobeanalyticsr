@@ -27,7 +27,7 @@ elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPA
 \item{rsids}{Filter the list to only include segments tied to a specified RSID or
 list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.}
 
-\item{segmentFilter}{Filter list to only include suites in this RSID list (comma-delimited)}
+\item{segmentFilter}{Filter list to only include suites in this list of segment IDs (comma-delimited)}
 
 \item{locale}{The locale that segment details should be returned in. The default is \code{en_US}.}
 
