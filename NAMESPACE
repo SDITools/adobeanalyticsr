@@ -2,7 +2,7 @@
 
 export(aw_anomaly_report)
 export(aw_creds)
-export(aw_freeform_report)
+export(aw_freeform_table)
 export(aw_get_calculatedmetrics)
 export(aw_get_dimensions)
 export(aw_get_metrics)

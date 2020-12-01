@@ -12,7 +12,7 @@ aw_get_calculatedmetrics(
   toBeUsedInRsid = NA,
   locale = "en_US",
   name = NA,
-  tagNams = NA,
+  tagNames = NA,
   favorite = NA,
   approved = NA,
   limit = 1000,
@@ -39,7 +39,7 @@ aw_get_calculatedmetrics(
 
 \item{name}{Filter list to only include calculated metrics that contains the Name}
 
-\item{tagNams}{Filter list to only include calculated metrics that contains one of the tags}
+\item{tagNames}{Filter list to only include calculated metrics that contains one of the tags}
 
 \item{favorite}{Filter list to only include calculated metrics that are favorites (boolean)}
 

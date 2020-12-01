@@ -6,3 +6,4 @@
 ^docs$
 ^pkgdown$
 ^\.httr-oauth$
+^analytics\.adobe\.io$
