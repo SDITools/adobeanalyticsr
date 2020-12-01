@@ -27,7 +27,9 @@ Imports:
     ggplot2 (>= 3.3.2),
     plotly (>= 4.9.2),
     scales (>= 1.1.1),
-    lifecycle
+    lifecycle,
+    glue,
+    tibble
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Suggests: 

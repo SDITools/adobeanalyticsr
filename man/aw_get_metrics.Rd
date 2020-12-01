@@ -8,8 +8,9 @@ aw_get_metrics(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   locale = "en_US",
   segmentable = "NULL",
-  expansion = "tags, allowedForReporting, categories",
-  company_id = Sys.getenv("AW_COMPANY_ID")
+  expansion = NA,
+  company_id = Sys.getenv("AW_COMPANY_ID"),
+  debug = FALSE
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ aw_get_metrics(
 \item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
 
 \item{company_id}{define globally or manually}
+
+\item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
 \description{
 This will generate an extensive list of all the metrics (measures) in the reportsuite.

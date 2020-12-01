@@ -7,31 +7,34 @@
 aw_get_dimensions(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   locale = "en_US",
-  segmentable = "false",
-  reportable = "false",
-  classifiable = "false",
-  expansion = "tags,allowedForReporting,categories",
+  segmentable = FALSE,
+  reportable = FALSE,
+  classifiable = FALSE,
+  expansion = NA,
+  debug = FALSE,
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
 }
 \arguments{
-\item{rsid}{Adobe report number}
+\item{rsid}{Adobe report number - required}
 
 \item{locale}{language - default'en_US'}
 
 \item{segmentable}{\itemize{
-\item boolean - default TRUE
+\item boolean - default FALSE
 }}
 
 \item{reportable}{\itemize{
-\item boolean - default TRUE
+\item boolean - default FALSE
 }}
 
 \item{classifiable}{\itemize{
 \item boolean - default FALSE
 }}
 
-\item{expansion}{options  c('tags', 'allowedForReporting', 'categories'))}
+\item{expansion}{options  c('tags', 'allowedForReporting', 'categories')}
+
+\item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 
 \item{company_id}{this can be either manually defined here or utilize the global definitions}
 }

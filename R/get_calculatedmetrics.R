@@ -18,9 +18,10 @@
 #' @param sortProperty Property to sort by (name, modified_date, id is currently allowed)
 #' @param expansion Comma-delimited list of additional calculated metric metadata fields to include on response. (options = reportSuiteName, ownerFullName, modified, tags, definition, compatability, categories)
 #' @param includeType Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)
-#' @param debug
+#' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #'
 #' @import stringr
+#' @importFrom utils URLencode
 #' @export
 #'
 aw_get_calculatedmetrics <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -42,18 +43,18 @@ aw_get_calculatedmetrics <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                           debug = FALSE)
 {
   #edit the character vectors to the string they need to be
-  if(length(rsids) > 1) {rsids = URLencode(paste0(rsids, collapse = ',')) }
+  if(length(rsids) > 1) {rsids = utils::URLencode(paste0(rsids, collapse = ',')) }
   if(length(filterByIds) > 1) {filterByIds = paste0(filterByIds, collapse = ',') }
-  if(!is.na(tagnames)) {tagnames = URLencode(paste0(tagnames, collapse = ',')) }
+  if(!is.na(tagNames)) {tagNames = utils::URLencode(paste0(tagNames, collapse = ',')) }
   if(length(expansion) > 1) {expansion = paste(expansion, collapse = ',', sep = '') }
 
   #includeType is case senstative
   includeType <- tolower(includeType)
 
-  vars <- tibble::tibble(rsids, ownerId, filterByIds, toBeUsedInRsid, locale, name, tagnames, favorite, approved,
+  vars <- tibble::tibble(rsids, ownerId, filterByIds, toBeUsedInRsid, locale, name, tagNames, favorite, approved,
                          limit, page, sortDirection, sortProperty, expansion, includeType)
   #Turn the list into a string to create the query
-  prequery <- vars %>% select_if(~ !any(is.na(.)))
+  prequery <- vars %>% dplyr::select_if(~ !any(is.na(.)))
   #remove the extra parts of the string and replace it with the query parameter breaks
   query_param <-  paste(names(prequery), prequery, sep = '=', collapse = '&')
 

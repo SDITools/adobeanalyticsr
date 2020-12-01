@@ -20,15 +20,16 @@
 #'
 #' @import assertthat httr
 aw_call_api <- function(req_path,
+                        debug = FALSE,
                         company_id = Sys.getenv("AW_COMPANY_ID"),
                         client_id = Sys.getenv("AW_CLIENT_ID"),
                         client_secret = Sys.getenv("AW_CLIENT_SECRET")){
 
   assertthat::assert_that(
-    is.string(req_path),
-    is.string(company_id),
-    is.string(client_id),
-    is.string(client_secret)
+    assertthat::is.string(req_path),
+    assertthat::is.string(company_id),
+    assertthat::is.string(client_id),
+    assertthat::is.string(client_secret)
   )
 
   # creates token to aa.oauth if not present
@@ -37,15 +38,30 @@ aw_call_api <- function(req_path,
   request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                          company_id, req_path)
 
+  if(debug == F) {
   req <- httr::RETRY("GET",
                      url = request_url,
                      encode = "json",
                      body = FALSE,
-                     config(token = token),
+                     httr::config(token = token),
                      httr::add_headers(
                        `x-api-key` = client_id,
                        `x-proxy-global-company-id` = company_id
                      ))
-  stop_for_status(req)
+  }
+  if(debug == T) {
+    req <- httr::RETRY("GET",
+                       url = request_url,
+                       encode = "json",
+                       body = FALSE,
+                       httr::config(token = token),
+                       httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE),
+                       httr::add_headers(
+                         `x-api-key` = client_id,
+                         `x-proxy-global-company-id` = company_id
+                       ))
+  }
+  httr::stop_for_status(req)
+
   httr::content(req, as = "text",encoding = "UTF-8")
 }
