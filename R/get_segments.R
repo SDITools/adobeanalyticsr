@@ -56,6 +56,8 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   if(length(rsids) > 1) {rsids = paste0(rsids, collapse = ',') }
   if(length(segmentFilter) > 1) {segmentFilter = paste0(segmentFilter, collapse = ',') }
   if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
+  if(!is.na(tagNames)) {tagNames = utils::URLencode(paste0(tagNames, collapse = ',')) }
+  if(!is.na(name)) {name = utils::URLencode(paste0(name, collapse = ',')) }
 
   vars <- tibble::tibble(rsids, segmentFilter, locale, name, tagNames, filterByPublishedSegments, limit, page, sortDirection,
   sortProperty, expansion, includeType)
