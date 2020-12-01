@@ -8,16 +8,18 @@
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
 #' @param company_id define globally or manually
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
+#' @param use_oob Always set to TRUE. Needed for tests
 #'
 #' @importFrom tibble tibble
 #' @importFrom glue glue
 #' @export
 aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-                              locale = 'en_US',
-                              segmentable = 'NULL',
-                              expansion = NA,
-                              company_id = Sys.getenv("AW_COMPANY_ID"),
-                              debug = FALSE){
+                           locale = 'en_US',
+                           segmentable = 'NULL',
+                           expansion = NA,
+                           company_id = Sys.getenv("AW_COMPANY_ID"),
+                           debug = FALSE,
+                           use_oob = TRUE){
 
   #remove spaces from the list of expansion tags
   if(is.na(paste(expansion,collapse=","))) {
@@ -37,7 +39,10 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   urlstructure <- glue::glue('metrics?rsid={rsid}&{query_param}')
 
   #request the metrics list from the API
-  res <- aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure,
+                     debug = debug,
+                     use_oob = use_oob,
+                     company_id = company_id)
 
   #change the result to a list
   res <- jsonlite::fromJSON(res)
