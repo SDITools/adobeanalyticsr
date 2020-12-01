@@ -15,20 +15,30 @@ aw_get_reportsuites(
 )
 }
 \arguments{
-\item{company_id}{this can be either manually defined here or utilize the global definitions}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
-\item{rsids}{Filter list to only include suites in this RSID list (comma-delimited) Required}
+\item{rsids}{Filter the results to include one or more specific report suites. The RSIDs to include
+need to be in a comma-separated list with no spaces.}
 
-\item{rsidContains}{Filter list to only include suites whose rsid contains (only one string at a time)}
+\item{rsidContains}{Filter the results list to only include suites that contain the specified string
+within the RSID. This is case-insensitive and is a simple, single string match.}
 
-\item{limit}{Number of results per page}
+\item{limit}{The number of results to return per page. This argument works in conjunction with the
+\code{page} argument. The default is 10.}
 
-\item{page}{Page number (base 0 - first page is "0")}
+\item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
+zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
 
-\item{expansion}{options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo)}
+\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
+the results. Valid values include: \code{name}, \code{parentRsid}, \code{currency}, \code{calendarType}, \code{timezoneZoneinfo}.
+To include multiple values, combine them into a single comma-separated string with \emph{no spaces}.}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
+\value{
+A data frame of report suites and their meta data.
+}
 \description{
-Get list of report suites
+Retrieve a list of report suites and meta data about each one.
 }

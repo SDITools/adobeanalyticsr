@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_calculatedmetrics.R
 \name{aw_get_calculatedmetrics}
 \alias{aw_get_calculatedmetrics}
-\title{Get list of calculated metrics}
+\title{Get a list of calculated metrics.}
 \usage{
 aw_get_calculatedmetrics(
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -25,40 +25,96 @@ aw_get_calculatedmetrics(
 )
 }
 \arguments{
-\item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
 
-\item{rsids}{Filter list to only include calculated metrics tied to specified RSID list (comma-delimited)}
+\item{rsids}{Filter the list to only include calculated metrics tied to a specified RSID or
+list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.}
 
-\item{ownerId}{Filter list to only include calculated metrics owned by the specified loginId}
+\item{ownerId}{Filter the list to only include calculated metrics owned by the specified loginId.}
 
-\item{filterByIds}{Filter list to only include calculated metrics in the specified list (comma-delimited list of IDs) (this is the same as calculatedMetricFilter, and is overwritten by calculatedMetricFilter}
+\item{filterByIds}{Filter the list to only include calculated metrics in the specified list (comma-delimited
+list of IDs). Tthis is the same as \code{calculatedMetricFilter} and is overwritten by \code{calculatedMetricFilter}.}
 
-\item{toBeUsedInRsid}{The report suite where the calculated metric intended to be used. This report suite will be used to determine things like compatibility and permissions. If it is not specified then the permissions will be calculated based on the union of all metrics authorized in all groups the user belongs to. If the compatibility expansion is specified and toBeUsedInRsid is not then the compatibility returned is based off the compatibility from the last time the calculated metric was saved.}
+\item{toBeUsedInRsid}{The report suite where the calculated metric is intended to be used. This
+report suite is used to determine things like compatibility and permissions. If it is not specified,
+then the permissions will be calculated based on the union of all metrics authorized in all groups
+the user belongs to. If \strong{compatibility} is specified for \code{expansion}, and \code{toBeUsedInRsid} is not,
+then the compatibility returned is based off of the compatibility from the last time the calculated metric was saved.}
 
-\item{locale}{Locale (en_US default)}
+\item{locale}{The locale that system-named metrics should be returned in. Non-localized values will
+be returned for title, name, description, etc. if a localized value is not available.}
 
-\item{name}{Filter list to only include calculated metrics that contains the Name}
+\item{name}{Filter the list to only include calculated metrics that contain the specified \strong{name}.
+This is case-insensitive and is a simple, single string match.}
 
-\item{tagNames}{Filter list to only include calculated metrics that contains one of the tags}
+\item{favorite}{Set to \code{TRUE} to only include calculated metrics that are favorites in the results. A
+value of \code{FALSE} will return all calculated metrics, including those that are favorites.}
 
-\item{favorite}{Filter list to only include calculated metrics that are favorites (boolean)}
+\item{approved}{Set to \code{TRUE} to only include calculated metrics that are approved in the results. A
+value of \code{FALSE} will return all calculated metrics, including those that are approved and those that are not.}
 
-\item{approved}{Filter list to only include calculated metrics that are approved (boolean)}
+\item{limit}{The number of results to return per page. The default is 1,000.}
 
-\item{limit}{Number of results per page}
+\item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
+zero-based. For instance, if \code{limit = 10} and \code{page = 1}, the results returned would be 11 through 20.}
 
-\item{page}{Page number (base 0 - first page is "0")}
+\item{sortDirection}{The sort direction for teh results: \code{ASC} (default) for ascending or \code{DESC} for
+descending. (This is case insensitive, so \code{asc} and \code{desc} work as well.)}
 
-\item{sortDirection}{Sort direction (ASC or DESC)}
+\item{sortProperty}{The property to sort the results by. Currently available values are \code{id} (default), \code{name},
+and \code{modified_date}. Note that setting \code{expansion = modified} returns results with a column added called
+\code{modified}, which is the last date the calculated metric was modified. When using this value for \code{sortProperty},
+though, the name of the argument is \code{modified_date}, because why would we expect locked-in consistency
+from Adobe?}
 
-\item{sortProperty}{Property to sort by (name, modified_date, id is currently allowed)}
+\item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include in
+the results. Valid values include: \code{reportSuiteName}, \code{ownerFullName}, \code{modified}, \code{tags},
+\code{definition}, \code{compatability}, \code{categories}. See \strong{Details} for more information about the
+quirks and oddities of this argument.}
 
-\item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include on response. (options = reportSuiteName, ownerFullName, modified, tags, definition, compatability, categories)}
-
-\item{includeType}{Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)}
+\item{includeType}{Include additional calculated metrics not owned by user. Available values are \code{all} (default),
+\code{shared}, and \code{templates}. The \code{all} option takes precedence over "shared"}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
+
+\item{tagnames}{Filter the list to only include calculated metrics that contain one of the tags.}
+}
+\value{
+A data frame of calculated metrics and their metadata.
 }
 \description{
-Retrieve All Calculated Metrics
+Retrieve a list of available calculated metrics. The results will always include these default items:
+\code{id}, \code{name}, \code{description}, \code{rsid}, \code{owner}, \code{polarity}, \code{precision}, \code{type}. Other attributes can
+be optionally requested through the \code{expansion} field.
+}
+\details{
+This function is useful/needed to identify the specific ID of a calculated metric for use in other
+functions like \code{aw_freeform_report}.
+
+The \code{expansion} argument accepts the following values, which will then include additional columns
+in the results:
+\itemize{
+\item **ownerFullName: adds \code{owner.name} and \code{owner.login} columns to the results (\code{owner.id} is
+already included by default).
+\item \strong{modified}: adds a \code{modified} column to the output with the date (ISO 8601 format) each
+calculated metric was last modified.
+\item \strong{definition}: adds \emph{multiple} columns (the number will vary based on the number and complexity
+of calculated metrics returns) that provide the actual formula for each of the calculated metrics.
+This is returned from the API as a JSON object and converted into columns by the function, which
+means it is pretty messy, so, really, it's not recommended that you use this value.
+\item \strong{compatability}: should add a column with the products that the metric is compatibile with, but this
+behavior has not actually been shown to be true, so this may actually do nothing if included.
+\item \strong{reportSuiteName}: adds a \code{reportSuiteName} and a \code{siteTitle} column with the friendy report
+suite name for the RSID.
+\item \strong{tags}: adds a column with an embedded data frame with all of the existing tags that are
+associated with the calculated metric. This can be a bit messy to work with, but the information
+is, at least, there.
+}
+
+Multiple values for \code{expansion} can be included in the argument as a comma-separated value. For instance,
+\code{expansion = "tags,modified"} will add both a \code{tags} column and a \code{modified} column to the output.
+}
+\seealso{
+\code{\link{aw_get_metrics}}
 }

@@ -6,7 +6,8 @@
 \usage{
 aw_token(
   client_id = Sys.getenv("AW_CLIENT_ID"),
-  client_secret = Sys.getenv("AW_CLIENT_SECRET")
+  client_secret = Sys.getenv("AW_CLIENT_SECRET"),
+  use_oob = TRUE
 )
 }
 \arguments{
