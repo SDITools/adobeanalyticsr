@@ -15,6 +15,7 @@
 #' @param sortProperty Property to sort by (name, modified_date, id *default* is currently allowed)
 #' @param expansion Comma-delimited list of additional segment metadata fields to include on response. (Options--reportSuiteName, ownerFullName, modified,tags, compatibility, definition, publishingStatus, definitionLastModified, categories)
 #' @param includeType Include additional segments not owned by user. The "all" option takes precedence over "shared" (shared, all, templates)
+#' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #'
 #' @import stringr
 #' @export
@@ -31,25 +32,26 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                           sortDirection = 'ASC',
                           sortProperty = 'id',
                           expansion = NA,
-                          includeType = 'all')
+                          includeType = 'all',
+                          debug = FALSE)
 {
   #make the list of params into a dataframe
   if(length(rsids) > 1) {rsids = paste0(rsids, collapse = ',') }
   if(length(segmentFilter) > 1) {segmentFilter = paste0(segmentFilter, collapse = ',') }
   if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
 
-  vars <- tibble(rsids, segmentFilter, locale, name, tagNames, filterByPublishedSegments, limit, page, sortDirection,
+  vars <- tibble::tibble(rsids, segmentFilter, locale, name, tagNames, filterByPublishedSegments, limit, page, sortDirection,
   sortProperty, expansion, includeType)
   #Turn the list into a string to create the query
-  prequery <- list(vars %>% select_if(~ !any(is.na(.))))
+  prequery <- list(vars %>% dplyr::select_if(~ !any(is.na(.))))
   #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- str_remove_all(str_replace_all(str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
+  query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
 
   #create the url to send with the query
   urlstructure <- paste0('segments?',query_param)
 
   #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
-  res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure[1], debug = debug, company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
 

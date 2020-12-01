@@ -17,7 +17,8 @@ aw_get_segments(
   sortDirection = "ASC",
   sortProperty = "id",
   expansion = NA,
-  includeType = "all"
+  includeType = "all",
+  debug = FALSE
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ aw_get_segments(
 \item{expansion}{Comma-delimited list of additional segment metadata fields to include on response. (Options--reportSuiteName, ownerFullName, modified,tags, compatibility, definition, publishingStatus, definitionLastModified, categories)}
 
 \item{includeType}{Include additional segments not owned by user. The "all" option takes precedence over "shared" (shared, all, templates)}
+
+\item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
 \description{
 Retrieve all segments

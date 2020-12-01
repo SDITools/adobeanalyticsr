@@ -10,7 +10,8 @@ aw_get_reportsuites(
   rsidContains = "",
   limit = 10,
   page = 0,
-  expansion = "name"
+  expansion = NA,
+  debug = FALSE
 )
 }
 \arguments{
@@ -18,13 +19,15 @@ aw_get_reportsuites(
 
 \item{rsids}{Filter list to only include suites in this RSID list (comma-delimited) Required}
 
-\item{rsidContains}{Filter list to only include suites whose rsid contains rsidContains}
+\item{rsidContains}{Filter list to only include suites whose rsid contains (only one string at a time)}
 
 \item{limit}{Number of results per page}
 
 \item{page}{Page number (base 0 - first page is "0")}
 
-\item{expansion}{options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo))}
+\item{expansion}{options  c(name, parentRsid, currency, calendarType, timezoneZoneinfo)}
+
+\item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
 \description{
 Get list of report suites

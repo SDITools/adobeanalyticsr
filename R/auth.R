@@ -8,7 +8,8 @@
 #' @import httr
 #'
 aw_token <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
-                     client_secret = Sys.getenv("AW_CLIENT_SECRET")){
+                     client_secret = Sys.getenv("AW_CLIENT_SECRET"),
+                     use_oob = TRUE){
 
   aw_endpoint <- httr::oauth_endpoint(
     authorize = "authorize/v2/",
@@ -28,7 +29,7 @@ aw_token <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
     app = aw_app,
     scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
     cache = "aa.oauth",
-    use_oob = TRUE,
+    use_oob = use_oob,
     oob_value = "https://adobeanalyticsr.com/token/result.html"
   )
 }

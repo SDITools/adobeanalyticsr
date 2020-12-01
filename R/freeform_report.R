@@ -1,4 +1,4 @@
-#' Get a freeform report
+#' Get a freeform table
 #'
 #' Get a report analogous to a **Freeform Table** visualization in Analysis Workspace. The function uses
 #' the arguments to construct and execute a JSON-based query to the Adobe Analytics API and then returns
@@ -105,7 +105,7 @@
 #' @importFrom lubridate parse_date_time
 #'
 #' @export
-aw_freeform_report <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
+aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                                rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                                date_range = c(Sys.Date()-30, Sys.Date()-1),
                                dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),

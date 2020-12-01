@@ -12,15 +12,16 @@ aw_get_calculatedmetrics(
   toBeUsedInRsid = NA,
   locale = "en_US",
   name = NA,
-  tagnames = NA,
-  favorite = 0,
+  tagNames = NA,
+  favorite = NA,
   approved = NA,
   limit = 1000,
   page = 0,
   sortDirection = "DESC",
   sortProperty = NA,
   expansion = NA,
-  includeType = "all"
+  includeType = "all",
+  debug = FALSE
 )
 }
 \arguments{
@@ -38,7 +39,7 @@ aw_get_calculatedmetrics(
 
 \item{name}{Filter list to only include calculated metrics that contains the Name}
 
-\item{tagnames}{Filter list to only include calculated metrics that contains one of the tags}
+\item{tagNames}{Filter list to only include calculated metrics that contains one of the tags}
 
 \item{favorite}{Filter list to only include calculated metrics that are favorites (boolean)}
 
@@ -55,6 +56,8 @@ aw_get_calculatedmetrics(
 \item{expansion}{Comma-delimited list of additional calculated metric metadata fields to include on response. (options = reportSuiteName, ownerFullName, modified, tags, definition, compatability, categories)}
 
 \item{includeType}{Include additional calculated metrics not owned by user. The "all" option takes precedence over "shared" (options = all, shared, templates)}
+
+\item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
 \description{
 Retrieve All Calculated Metrics

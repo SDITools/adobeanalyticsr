@@ -1,0 +1,1761 @@
+[
+    {
+        "id": "metrics/averagepagedepth",
+        "title": "Average Page Depth",
+        "name": "Average Page Depth",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/averagetimespentonpage",
+        "title": "Average Time Spent on Page (seconds)",
+        "name": "Average Time Spent on Page (seconds)",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/averagetimespentonsite",
+        "title": "Average Time Spent on Site (seconds)",
+        "name": "Average Time Spent on Site (seconds)",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/averagevisitdepth",
+        "title": "Average Visit Depth",
+        "name": "Average Visit Depth",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/bouncerate",
+        "title": "Bounce Rate",
+        "name": "Bounce Rate",
+        "type": "percent",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 2,
+        "calculated": true,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "negative",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/bounces",
+        "title": "Bounces",
+        "name": "Bounces",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "negative",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/campaigninstances",
+        "title": "Campaign Click-throughs",
+        "name": "Campaign Click-throughs",
+        "type": "int",
+        "category": "Traffic Sources",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/cartadditions",
+        "title": "Cart Additions",
+        "name": "Cart Additions",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/cartremovals",
+        "title": "Cart Removals",
+        "name": "Cart Removals",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "negative",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/carts",
+        "title": "Carts",
+        "name": "Carts",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/cartviews",
+        "title": "Cart Views",
+        "name": "Cart Views",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/checkouts",
+        "title": "Checkouts",
+        "name": "Checkouts",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/customlinkinstances",
+        "title": "Custom Link Instances",
+        "name": "Custom Link Instances",
+        "type": "int",
+        "category": "Navigation",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/downloadlinkinstances",
+        "title": "Download Link Instances",
+        "name": "Download Link Instances",
+        "type": "int",
+        "category": "Navigation",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/entries",
+        "title": "Entries",
+        "name": "Entries",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar10instances",
+        "title": "Form Name (v10) Instances",
+        "name": "Form Name (v10) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Short Name of Form",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar11instances",
+        "title": "Form Type (v11) Instances",
+        "name": "Form Type (v11) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Form Type (e.g. registration, subscription, donation)",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar12instances",
+        "title": "Form Error (v12) Instances",
+        "name": "Form Error (v12) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "The form error code or message returned to the user",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar13instances",
+        "title": "Form Field Error (v13) Instances",
+        "name": "Form Field Error (v13) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "The form field error code or message returned to the user",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar14instances",
+        "title": "Form Field Position (v14) Instances",
+        "name": "Form Field Position (v14) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Numeric position of the form field within a form (e.g. 1, 2, 3)",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar15instances",
+        "title": "Contact Purpose (v15) Instances",
+        "name": "Contact Purpose (v15) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "User selection from dropdown on Contact Us form",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar16instances",
+        "title": "Item Name (v16) Instances",
+        "name": "Item Name (v16) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "The name of the listing item clicked.",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar17instances",
+        "title": "Item ID (v17) Instances",
+        "name": "Item ID (v17) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "The ID of the listing item clicked.",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar18instances",
+        "title": "Content Type (v18) Instances",
+        "name": "Content Type (v18) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Description of the content that is loaded",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar19instances",
+        "title": "Decibel ID (v19) Instances",
+        "name": "Decibel ID (v19) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar1instances",
+        "title": "Page Path (v1) Instances",
+        "name": "Page Path (v1) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Path portion of URL",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar20instances",
+        "title": "KickFire Company Name (v20) Instances",
+        "name": "KickFire Company Name (v20) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar21instances",
+        "title": "KickFire Location (v21) Instances",
+        "name": "KickFire Location (v21) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar22instances",
+        "title": "KickFire Employee:Revenue (v22) Instances",
+        "name": "KickFire Employee:Revenue (v22) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar23instances",
+        "title": "KickFire Codes (v23) Instances",
+        "name": "KickFire Codes (v23) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar2instances",
+        "title": "Search Phrase (v2) Instances",
+        "name": "Search Phrase (v2) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Search Parameter - What the user typed into search",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar3instances",
+        "title": "Item Position in Results List (v3) Instances",
+        "name": "Item Position in Results List (v3) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Numeric position of an item in a list of items (e.g. 1, 2, 3)",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar4instances",
+        "title": "Results List Type (v4) Instances",
+        "name": "Results List Type (v4) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "The type of results being listed",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar5instances",
+        "title": "Content Author (v5) Instances",
+        "name": "Content Author (v5) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Article or blog post author",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar6instances",
+        "title": "Content ID (v6) Instances",
+        "name": "Content ID (v6) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Article or blog post ID",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar7instances",
+        "title": "Content Title (v7) Instances",
+        "name": "Content Title (v7) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Content (Article, Blog Post) Title",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar8instances",
+        "title": "Content Date (v8) Instances",
+        "name": "Content Date (v8) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Article or Blog Post Date",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/evar9instances",
+        "title": "Form ID (v9) Instances",
+        "name": "Form ID (v9) Instances",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "description": "Unique ID for the form (if known)",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event1",
+        "title": "Listing Views (e1)",
+        "name": "Listing Views (e1)",
+        "type": "int",
+        "extraTitleInfo": "event1",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Count of listing views",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event10",
+        "title": "Contact Request Started (e10)",
+        "name": "Contact Request Started (e10)",
+        "type": "int",
+        "extraTitleInfo": "event10",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "A Contact Request flow was started",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event11",
+        "title": "Contact Request Completed (e11)",
+        "name": "Contact Request Completed (e11)",
+        "type": "int",
+        "extraTitleInfo": "event11",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "A Contact Request flow was completed",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event12",
+        "title": "Listing Item Clicks (e12)",
+        "name": "Listing Item Clicks (e12)",
+        "type": "int",
+        "extraTitleInfo": "event12",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Count of listing item clicks",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event2",
+        "title": "Item Position in Results List (e2)",
+        "name": "Item Position in Results List (e2)",
+        "type": "decimal",
+        "extraTitleInfo": "event2",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Position of the item within a list of items.",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event3",
+        "title": "Internal Search Result Count (e3)",
+        "name": "Internal Search Result Count (e3)",
+        "type": "int",
+        "extraTitleInfo": "event3",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "The number of results returned for an Internal Search",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event4",
+        "title": "Internal Search Results Shown (e4)",
+        "name": "Internal Search Results Shown (e4)",
+        "type": "int",
+        "extraTitleInfo": "event4",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "The number of results shown for an Internal Search",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event5",
+        "title": "Content Loaded (e5)",
+        "name": "Content Loaded (e5)",
+        "type": "int",
+        "extraTitleInfo": "event5",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Counts Content Load Events",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event6",
+        "title": "Form Views (e6)",
+        "name": "Form Views (e6)",
+        "type": "int",
+        "extraTitleInfo": "event6",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Count every time a form is viewed.",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event7",
+        "title": "Form Starts (e7)",
+        "name": "Form Starts (e7)",
+        "type": "int",
+        "extraTitleInfo": "event7",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Count every time a form is started.",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event8",
+        "title": "Form Submission Success (e8)",
+        "name": "Form Submission Success (e8)",
+        "type": "int",
+        "extraTitleInfo": "event8",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Count every time a form is completed (successful submission).",
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/event9",
+        "title": "Form Submission Failure (e9)",
+        "name": "Form Submission Failure (e9)",
+        "type": "int",
+        "extraTitleInfo": "event9",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "description": "Count every time a form is not successfully submitted. This also accompanies error tracking.",
+        "polarity": "negative",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/exitlinkinstances",
+        "title": "Exit Link Instances",
+        "name": "Exit Link Instances",
+        "type": "int",
+        "category": "Navigation",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/exits",
+        "title": "Exits",
+        "name": "Exits",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "negative",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/firsttouchchannel.1",
+        "title": "First Touch Cost",
+        "name": "First Touch Cost",
+        "type": "currency",
+        "category": "Conversion",
+        "support": [
+
+        ],
+        "allocation": false,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/firsttouchchannel.2",
+        "title": "Last Touch Cost",
+        "name": "Last Touch Cost",
+        "type": "currency",
+        "category": "Conversion",
+        "support": [
+
+        ],
+        "allocation": false,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/firsttouchchannel.3",
+        "title": "First Touch Budget",
+        "name": "First Touch Budget",
+        "type": "currency",
+        "category": "Conversion",
+        "support": [
+
+        ],
+        "allocation": false,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/firsttouchchannel.4",
+        "title": "Last Touch Budget",
+        "name": "Last Touch Budget",
+        "type": "currency",
+        "category": "Conversion",
+        "support": [
+
+        ],
+        "allocation": false,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/itemtimespent",
+        "title": "Total Seconds Spent",
+        "name": "Total Seconds Spent",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/marketingchannellasttouchinstances",
+        "title": "Marketing Channel Instances",
+        "name": "Marketing Channel Instances",
+        "type": "int",
+        "category": "Traffic Sources",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/mobileviews",
+        "title": "Mobile Views",
+        "name": "Mobile Views",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/newengagements",
+        "title": "New Engagements",
+        "name": "New Engagements",
+        "type": "int",
+        "category": "Traffic Sources",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/occurrences",
+        "title": "Occurrences",
+        "name": "Occurrences",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/orders",
+        "title": "Orders",
+        "name": "Orders",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/orderspervisit",
+        "title": "Orders per Visit",
+        "name": "Orders per Visit",
+        "type": "decimal",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 4,
+        "calculated": true,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/pageevents",
+        "title": "Page Events",
+        "name": "Page Events",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/pagesnotfound",
+        "title": "Pages Not Found",
+        "name": "Pages Not Found",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/pageviews",
+        "title": "Page Views",
+        "name": "Page Views",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/pageviewspervisit",
+        "title": "Average Page Views per Visit",
+        "name": "Average Page Views per Visit",
+        "type": "decimal",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 2,
+        "calculated": true,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/productinstances",
+        "title": "Product Views",
+        "name": "Product Views",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/referrerinstances",
+        "title": "Referrer Instances",
+        "name": "Referrer Instances",
+        "type": "int",
+        "category": "Traffic Sources",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/reloads",
+        "title": "Reloads",
+        "name": "Reloads",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/revenue",
+        "title": "Revenue",
+        "name": "Revenue",
+        "type": "currency",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/searches",
+        "title": "Searches",
+        "name": "Searches",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/singlepagevisits",
+        "title": "Single Page Visits",
+        "name": "Single Page Visits",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/singlevaluevisits",
+        "title": "Single Access",
+        "name": "Single Access",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/targetconversion",
+        "title": "Activity Conversions",
+        "name": "Activity Conversions",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/targetimpression",
+        "title": "Activity Impressions",
+        "name": "Activity Impressions",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/timespentvisit",
+        "title": "Time Spent per Visit (seconds)",
+        "name": "Time Spent per Visit (seconds)",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": true,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/timespentvisitor",
+        "title": "Time Spent per Visitor (seconds)",
+        "name": "Time Spent per Visitor (seconds)",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": true,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/units",
+        "title": "Units",
+        "name": "Units",
+        "type": "int",
+        "category": "Conversion",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": true,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": true,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitors",
+        "title": "Unique Visitors",
+        "name": "Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon",
+            "dataWarehouse"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorsdaily",
+        "title": "Daily Unique Visitors",
+        "name": "Daily Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorshourly",
+        "title": "Hourly Unique Visitors",
+        "name": "Hourly Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorsmcvisid",
+        "title": "Visitors with Experience Cloud ID",
+        "name": "Visitors with Experience Cloud ID",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "helpLink": "https://marketing.adobe.com/resources/help/en_US/reference/metric_visitors_mcid.html",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorsmonthly",
+        "title": "Monthly Unique Visitors",
+        "name": "Monthly Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorsquarterly",
+        "title": "Quarterly Unique Visitors",
+        "name": "Quarterly Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorsweekly",
+        "title": "Weekly Unique Visitors",
+        "name": "Weekly Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visitorsyearly",
+        "title": "Yearly Unique Visitors",
+        "name": "Yearly Unique Visitors",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": false,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    },
+    {
+        "id": "metrics/visits",
+        "title": "Visits",
+        "name": "Visits",
+        "type": "int",
+        "category": "Traffic",
+        "support": [
+            "oberon"
+        ],
+        "allocation": false,
+        "precision": 0,
+        "calculated": false,
+        "segmentable": true,
+        "supportsDataGovernance": false,
+        "polarity": "positive",
+        "tags": [
+
+        ]
+    }
+]
