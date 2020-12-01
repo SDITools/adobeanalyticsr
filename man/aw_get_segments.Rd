@@ -47,8 +47,9 @@ This is case-insensitive and is a simple, single string match.}
 zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
 
 \item{sortDirection}{The sort direction for the results: \code{ASC} (default) for ascending or \code{DESC} for
-descending. (This is case insensitive, so \code{asc} and \code{desc} work as well.)
-#' @param sortProperty The property to sort the results by. Currently available values are \code{id} (default), \code{name},
+descending. (This is case insensitive, so \code{asc} and \code{desc} work as well.)}
+
+\item{sortProperty}{The property to sort the results by. Currently available values are \code{id} (default), \code{name},
 and \code{modified_date}. Note that setting \code{expansion = modified} returns results with a column added called
 \code{modified}, which is the last date the calculated metric was modified. When using this value for \code{sortProperty},
 though, the name of the argument is \code{modified_date}, because why would we expect locked-in consistency

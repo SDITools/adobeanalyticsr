@@ -53,7 +53,7 @@
 #' be returned for title, name, description, etc. if a localized value is not available.
 #' @param name Filter the list to only include calculated metrics that contain the specified **name**.
 #' This is case-insensitive and is a simple, single string match.
-#' @param tagnames Filter the list to only include calculated metrics that contain one of the tags.
+#' @param tagNames Filter the list to only include calculated metrics that contain one of the tags.
 #' @param favorite Set to `TRUE` to only include calculated metrics that are favorites in the results. A
 #' value of `FALSE` will return all calculated metrics, including those that are favorites.
 #' @param approved Set to `TRUE` to only include calculated metrics that are approved in the results. A

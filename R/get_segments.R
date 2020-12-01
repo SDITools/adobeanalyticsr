@@ -19,7 +19,7 @@
 #' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
 #' @param sortDirection The sort direction for the results: `ASC` (default) for ascending or `DESC` for
 #' descending. (This is case insensitive, so `asc` and `desc` work as well.)
-#' #' @param sortProperty The property to sort the results by. Currently available values are `id` (default), `name`,
+#' @param sortProperty The property to sort the results by. Currently available values are `id` (default), `name`,
 #' and `modified_date`. Note that setting `expansion = modified` returns results with a column added called
 #' `modified`, which is the last date the calculated metric was modified. When using this value for `sortProperty`,
 #' though, the name of the argument is `modified_date`, because why would we expect locked-in consistency

@@ -48,6 +48,8 @@ be returned for title, name, description, etc. if a localized value is not avail
 \item{name}{Filter the list to only include calculated metrics that contain the specified \strong{name}.
 This is case-insensitive and is a simple, single string match.}
 
+\item{tagNames}{Filter the list to only include calculated metrics that contain one of the tags.}
+
 \item{favorite}{Set to \code{TRUE} to only include calculated metrics that are favorites in the results. A
 value of \code{FALSE} will return all calculated metrics, including those that are favorites.}
 
@@ -77,8 +79,6 @@ quirks and oddities of this argument.}
 \code{shared}, and \code{templates}. The \code{all} option takes precedence over "shared"}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
-
-\item{tagnames}{Filter the list to only include calculated metrics that contain one of the tags.}
 }
 \value{
 A data frame of calculated metrics and their metadata.

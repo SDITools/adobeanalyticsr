@@ -14,6 +14,8 @@ aw_token(
 \item{client_id}{defined by global variable or manually defined}
 
 \item{client_secret}{defined by global variable or manually defined}
+
+\item{use_oob}{for the purpose of testing. Default is set to TRUE}
 }
 \description{
 OAuth2 Token for Adobe Analytics

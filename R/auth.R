@@ -3,6 +3,7 @@
 #'
 #' @param client_id defined by global variable or manually defined
 #' @param client_secret defined by global variable or manually defined
+#' @param use_oob for the purpose of testing. Default is set to TRUE
 #'
 #' @export
 #' @import httr
