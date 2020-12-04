@@ -13,6 +13,7 @@
 #'
 #' @import assertthat httr purrr
 #'
+####Sunsetting this function for a better function if statement for easier maintenance###
 aw_call_data_debug <- function(req_path,
                         body = NULL,
                         company_id = Sys.getenv("AW_COMPANY_ID"),
