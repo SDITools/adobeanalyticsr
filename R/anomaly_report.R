@@ -89,13 +89,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                                includeAnomalyDetection = anomalyDetection
                              ) ) )
 
-  if (debug == FALSE) {
-    res <- aw_call_data("reports/ranked", body = req_body,  company_id = company_id)
-  }
-  if (debug == TRUE) {
-    res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
-  }
-
+  res <- aw_call_data("reports/ranked", body = req_body,  debug = debug, company_id = company_id)
 
   res <- fromJSON(res)
 
@@ -103,7 +97,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
     columnames <- colnames(res$rows[3:7])
     dat <- res$rows %>%
       tidyr::replace_na(list(0)) %>%
-      tidyr::unnest(columnames) %>%
+      tidyr::unnest(all_of(columnames)) %>%
       dplyr::group_by(itemId, value) %>%
       dplyr::mutate(metric = metrics) %>%
       dplyr::relocate(metric, .after = value) %>%
@@ -136,9 +130,10 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
 
         graph <- dat %>%
           dplyr::filter(metric == metricname) %>%
-          ggplot2::ggplot(aes(day, data)) +
-          ggplot2::geom_line() +
-          ggplot2::geom_point(data = dat %>% dplyr::filter(metric == metricname & dataAnomalyDetected == T), ggplot2::aes(day, data)) +
+          ggplot2::ggplot(aes_string(x = granularity)) +
+          ggplot2::geom_line(aes_string( y = 'data')) +
+          ggplot2::geom_point(data = dat %>% dplyr::filter(metric == metricname & dataAnomalyDetected == T),
+                              ggplot2::aes_string(y ='data')) +
           ggplot2::geom_ribbon(aes(ymin=dataLowerBound, ymax=dataUpperBound), alpha=0.2) +
           ggplot2::labs(title = metricname,
                         subtitle = paste0('There are ',nrow(dat %>% filter(metric == metricname & dataAnomalyDetected == T)), ' anomalies.'),
@@ -148,7 +143,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
           ggplot2::scale_y_continuous(labels = scales::comma) +
           ggplot2::expand_limits(y=0)
 
-        list(data = data, anoms = table, viz = plotly::ggplotly(graph))
+        list(data = data, anoms = table, viz = plotly::ggplotly(graph, tooltip = c(granularity, 'data')))
         }
         qv <- purrr::map(metrics, quickview)
 
