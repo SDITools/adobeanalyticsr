@@ -9,7 +9,7 @@ aw_anomaly_report(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   date_range = c(Sys.Date() - 31, Sys.Date() - 1),
   metrics,
-  granularity = "day",
+  granularity = "month",
   segmentId = NA,
   quickView = FALSE,
   anomalyDetection = TRUE,
