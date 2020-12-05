@@ -62,33 +62,57 @@
 #' the `dimension` value that is at the same position. These search strings support a range of operators,
 #' including `AND`, `OR`, `NOT`, `MATCH`, `CONTAINS`, `BEGINS-WITH`, and `ENDS-WITH`.
 #'
-#' The default for any search string is to use `CONTAINS`. Consider a query where `dimensions = c("mobiledevicetype", "lasttouchchannel")`:
+#' The default for any search string is to use `CONTAINS`. Consider a query where
+#' `dimensions = c("mobiledevicetype", "lasttouchchannel")`:
 #'
 #' * `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
 #' * This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
 #' * `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
 #' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
+#' @seealso \code{\link{aw_get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
+#' \code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
+#'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' Use \code{\link{get_me}} to get a list of available `company_id` values.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
-#' be used.
+#' be used. Use \code{\link{aw_get_reportsuites}} to get a list of available `rsid` values.
 #' @param date_range A vector containing the start and end date for the report as **Date** objects.
-#' @param metrics A character vector of metrics.
+#' @param metrics A character vector of metrics. Use \code{\link{aw_get_metrics}} and \code{\link{aw_get_calculatedmetrics}}
+#' to get a list of available `metrics` IDs.
 #' @param dimensions A character vector of dimensions. There is currently a limit of 20 dimension
 #' breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 #' call, so the more dimensions that are included, the longer the function will take to return results.
-#' This is how the Adobe Analytics API works.
-#' @param top The number of values to be pulled for each dimension. The default is 5 and the "top" is based on the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can either be a vector that includes the number of values to include at each level (each breakdown) or, if a single value is used, then that will be the maximum number of values to return at each level. See the **Details** for information on the unique handling of `daterange...` values.
-#' @param page Used in combination with `top` to return the next page of results. Uses 0-based numbering (e.g.,`top = 50000` and `page = 1` will return the top 50,000 items _starting at 50,001_).
+#' This is how the Adobe Analytics API works. Use \code{\link{aw_get_dimensions}} to get a list of available
+#' `dimensions` IDs.
+#' @param top The number of values to be pulled for each dimension. The default is 5 and the "top" is based on
+#' the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can
+#' either be a vector that includes the number of values to include at each level (each breakdown) or, if a single
+#' value is used, then that will be the maximum number of values to return at each level. See the **Details** for
+#' information on the unique handling of `daterange...` values.
+#' @param page Used in combination with `top` to return the next page of results. Uses 0-based numbering (e.g.,
+#' `top = 50000` and `page = 1` will return the top 50,000 items _starting at 50,001_).
 #' @param metricSort Pre-sorts the table by metrics. Values are either `asc` (ascending) or `desc` (descending).
-#' @param filterType This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to `breakdown`, and that is the only supported value.
-#' @param include_unspecified Whether or not to include **Unspecified** values in the results. This is the equivalent of the **Include Unspecified (None)** checkbox in freeform tables in Analysis Workspace. This defaults to `TRUE`, which includes **Unspecified** values in the results.
-#' @param segmentId A single segment ID or a vector of multiple segment IDs to apply to the overall report. If multiple `segmentId` values are included, the segments will be effectived ANDed together, just as if multiple segments were added to the header of an Analysis Workspace panel.
-#' @param search Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to the **Details** for more information on constructing values for this argument.
-#' @param prettynames A Boolean that determines whether the column names in the results use the API field name (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type", "Page Views"). This applies to both dimensions and metrics. The default value is `FALSE`, which returns the API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number (e.g., "evar2", "prop3", "event15").
-#' @param debug whether or not to push the full JSON request(s) being sent to the API to the console. The default is `FALSE`
+#' @param filterType This is a placeholder argument for use as additional functionality is added to the package.
+#' Currently, it defaults to `breakdown`, and that is the only supported value.
+#' @param include_unspecified Whether or not to include **Unspecified** values in the results. This is the equivalent
+#' of the **Include Unspecified (None)** checkbox in freeform tables in Analysis Workspace. This defaults to `TRUE`,
+#' which includes **Unspecified** values in the results.
+#' @param segmentId A single segment ID or a vector of multiple segment IDs to apply to the overall report.
+#' If multiple `segmentId` values are included, the segments will be effectived ANDed together, just as if
+#' multiple segments were added to the header of an Analysis Workspace panel. Use \code{\link{aw_get_segments}}
+#' to get a list of available `segmentId` values.
+#' @param search Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
+#' the **Details** for more information on constructing values for this argument.
+#' @param prettynames A Boolean that determines whether the column names in the results use the API field name
+#' (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
+#' "Page Views"). This applies to both dimensions and metrics. The default value is `FALSE`, which returns the
+#' API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
+#' (e.g., "evar2", "prop3", "event15").
+#' @param debug Set to `TRUE` to publish the full JSON request(s) being sent to the API to the console when the
+#' function is called. The default is `FALSE`.
 #'
 #' @return A data frame with dimensions and metrics.
 #'

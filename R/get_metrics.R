@@ -26,19 +26,18 @@
 #'
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
-#' be used.
+#' be used. Use \code{\link{aw_get_reportsuites}} to get a list of available `rsid` values.
 #' @param locale The locale that system-named metrics should be returned in. Non-localized values will
 #' be returned for title, name, description, etc. if a localized value is not available.
 #' @param segmentable Boolean that determines whether or not to include metrics that can be used in
 #' segments. `NULL` (the default) and `FALSE` return _all_ metrics (_not_ just the non-segmentable ones).
 #' Examples of metrics that cannot be used in segments are `bounces`, `bounce rate`, `entries`, and `visitors`.
-#' @param expansion Controls which of three specific columns to include in the results: `tags`, `allowedForReporting`,
-#' and `categories`. The default is to include all three columns. Limit to one or any two by passing a
-#' single value (e.g., `expansion = "tags"`) or a vector (e.g., `expansion = c("tags", "categories")`. This
-#' argument has gotten way more explanation than warranted, as this capability seems relatively pointless
-#' (but is available in the Adobe Analytics API, so it has been included).
+#' @param expansion Additional metrics metadata to include in the results: `tags`, `allowedForReporting`,
+#' and `categories`. This argument takes a single value (e.g., `expansion = "tags"`) or a vector  of
+#' values (e.g., `expansion = c("tags", "categories")`).
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' Use \code{\link{get_me}} to get a list of available `company_id` values.
 #'
 #' @return A data frame of metrics (excluding calculated metrics) and their meta data.
 #'

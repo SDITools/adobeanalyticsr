@@ -4,8 +4,10 @@
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' Use \code{\link{get_me}} to get a list of available `company_id` values.
 #' @param rsids Filter the list to only include segments tied to a specified RSID or
-#' list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.
+#' list of RSIDs. Specify multiple RSIDs as a vector (i.e., "`rsids = c("rsid_1", rsid_2",...rsid_n")`").
+#' Use \code{\link{aw_get_reportsuites}} to get a list of available `rsid` values.
 #' @param segmentFilter Filter list to only include suites in this list of segment IDs (comma-delimited)
 #' @param locale The locale that segment details should be returned in. The default is `en_US`.
 #' @param name Filter the list to only include segments that contain the specified **name**.
@@ -24,12 +26,12 @@
 #' `modified`, which is the last date the calculated metric was modified. When using this value for `sortProperty`,
 #' though, the name of the argument is `modified_date`, because why would we expect locked-in consistency
 #' from Adobe?
-#' @param expansion Comma-delimited list of additional segment metadata fields to include in
-#' the results. Valid values include: `reportSuiteName`, `ownerFullName`, `modified`, `tags`, `compatibility`,
-#' `definition`, `publishingStatus`, `definitionLastModified`, and `categories`. To include multiple values,
-#' combine them into a single comma-separated string with _no spaces_.
+#' @param expansion Additional segment metadata fields to include in the results: `reportSuiteName`,
+#' `ownerFullName`, `modified`, `tags`, `compatibility`, `definition`, `publishingStatus`, `definitionLastModified`,
+#' and `categories`. This argument takes a single value (e.g., `expansion = "modified"`)
+#' or a vector of values (e.g., `expansion = c("modified", "ownerFullName")`).
 #' @param includeType Include additional segments not owned by the user. Available values are `all` (default),
-#' `shared`, and `templates`. The `all` option takes precedence over "shared"
+#' `shared`, and `templates`. The `all` option takes precedence over "shared".
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #'
 #' @return A data frame of segments and their meta data.

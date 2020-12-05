@@ -16,10 +16,11 @@ aw_get_reportsuites(
 }
 \arguments{
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 
-\item{rsids}{Filter the results to include one or more specific report suites. The RSIDs to include
-need to be in a comma-separated list with no spaces.}
+\item{rsids}{Filter the results to include one or more specific report suites. Specify multiple RSIDs as
+a vector (i.e., "\verb{rsids = c("rsid_1", rsid_2",...rsid_n")}").}
 
 \item{rsidContains}{Filter the results list to only include suites that contain the specified string
 within the RSID. This is case-insensitive and is a simple, single string match.}
@@ -30,9 +31,9 @@ within the RSID. This is case-insensitive and is a simple, single string match.}
 \item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
 zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
 
-\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
-the results. Valid values include: \code{name}, \code{parentRsid}, \code{currency}, \code{calendarType}, \code{timezoneZoneinfo}.
-To include multiple values, combine them into a single comma-separated string with \emph{no spaces}.}
+\item{expansion}{Additional segment metadata fields to include in the results: \code{name}, \code{parentRsid},
+\code{currency}, \code{calendarType}, \code{timezoneZoneinfo}. This argument takes a single value (e.g., \code{expansion = "name"})
+or a vector of values (e.g., \code{expansion = c("name", "currency")}).}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
