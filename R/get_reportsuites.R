@@ -4,17 +4,18 @@
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' @param rsids Filter the results to include one or more specific report suites. The RSIDs to include
-#' need to be in a comma-separated list with no spaces.
+#' Use \code{\link{get_me}} to get a list of available `company_id` values.
+#' @param rsids Filter the results to include one or more specific report suites. Specify multiple RSIDs as
+#' a vector (i.e., "`rsids = c("rsid_1", rsid_2",...rsid_n")`").
 #' @param rsidContains Filter the results list to only include suites that contain the specified string
 #' within the RSID. This is case-insensitive and is a simple, single string match.
 #' @param limit The number of results to return per page. This argument works in conjunction with the
 #' `page` argument. The default is 10.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
 #' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
-#' @param expansion Comma-delimited list of additional segment metadata fields to include in
-#' the results. Valid values include: `name`, `parentRsid`, `currency`, `calendarType`, `timezoneZoneinfo`.
-#' To include multiple values, combine them into a single comma-separated string with _no spaces_.
+#' @param expansion Additional segment metadata fields to include in the results: `name`, `parentRsid`,
+#' `currency`, `calendarType`, `timezoneZoneinfo`. This argument takes a single value (e.g., `expansion = "name"`)
+#' or a vector of values (e.g., `expansion = c("name", "currency")`).
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #'
 #' @return A data frame of report suites and their meta data.

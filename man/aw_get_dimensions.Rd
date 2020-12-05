@@ -18,7 +18,7 @@ aw_get_dimensions(
 \arguments{
 \item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
 in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
-be used.}
+be used. Use \code{\link{aw_get_reportsuites}} to get a list of available \code{rsid} values.}
 
 \item{locale}{The locale that dimension details should be returned in. The default is \code{en_US}.}
 
@@ -33,14 +33,15 @@ reports \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} jus
 \item{classifiable}{Boolean that determines whether or not to include dimensions that can be used in
 classifications \code{FALSE} (the default) returns \emph{all} dimensions (\emph{not} just the non-segmentable ones).}
 
-\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
-the results. Valid values include: \code{tags}, \code{allowedForReporting}, and \code{categories}. To include multiple values,
-combine them into a single comma-separated string with \emph{no spaces}.}
+\item{expansion}{Additional dimension metadata to include in the results: \code{tags}, \code{allowedForReporting},
+and \code{categories}. This argument takes a single value (e.g., \code{expansion = "tags"}) or a vector  of
+values (e.g., \code{expansion = c("tags", "categories")}).}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 }
 \value{
 A data frame of dimensions and their meta data.

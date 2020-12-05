@@ -23,10 +23,12 @@ aw_get_segments(
 }
 \arguments{
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 
 \item{rsids}{Filter the list to only include segments tied to a specified RSID or
-list of RSIDs. If including multiple RSIDs, they need to be a single, commas-separated string with no spaces.}
+list of RSIDs. Specify multiple RSIDs as a vector (i.e., "\verb{rsids = c("rsid_1", rsid_2",...rsid_n")}").
+Use \code{\link{aw_get_reportsuites}} to get a list of available \code{rsid} values.}
 
 \item{segmentFilter}{Filter list to only include suites in this list of segment IDs (comma-delimited)}
 
@@ -55,13 +57,13 @@ and \code{modified_date}. Note that setting \code{expansion = modified} returns 
 though, the name of the argument is \code{modified_date}, because why would we expect locked-in consistency
 from Adobe?}
 
-\item{expansion}{Comma-delimited list of additional segment metadata fields to include in
-the results. Valid values include: \code{reportSuiteName}, \code{ownerFullName}, \code{modified}, \code{tags}, \code{compatibility},
-\code{definition}, \code{publishingStatus}, \code{definitionLastModified}, and \code{categories}. To include multiple values,
-combine them into a single comma-separated string with \emph{no spaces}.}
+\item{expansion}{Additional segment metadata fields to include in the results: \code{reportSuiteName},
+\code{ownerFullName}, \code{modified}, \code{tags}, \code{compatibility}, \code{definition}, \code{publishingStatus}, \code{definitionLastModified},
+and \code{categories}. This argument takes a single value (e.g., \code{expansion = "modified"})
+or a vector of values (e.g., \code{expansion = c("modified", "ownerFullName")}).}
 
 \item{includeType}{Include additional segments not owned by the user. Available values are \code{all} (default),
-\code{shared}, and \code{templates}. The \code{all} option takes precedence over "shared"}
+\code{shared}, and \code{templates}. The \code{all} option takes precedence over "shared".}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }

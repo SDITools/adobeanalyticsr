@@ -4,7 +4,7 @@
 #'
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
-#' be used.
+#' be used. Use \code{\link{aw_get_reportsuites}} to get a list of available `rsid` values.
 #' @param locale The locale that dimension details should be returned in. The default is `en_US`.
 #' @param segmentable Boolean that determines whether or not to include dimensions that can be used in
 #' segments. `FALSE` (the default) returns _all_ dimensions (_not_ just the non-segmentable ones).
@@ -14,12 +14,13 @@
 #' reports `FALSE` (the default) returns _all_ dimensions (_not_ just the non-segmentable ones).
 #' @param classifiable Boolean that determines whether or not to include dimensions that can be used in
 #' classifications `FALSE` (the default) returns _all_ dimensions (_not_ just the non-segmentable ones).
-#' @param expansion Comma-delimited list of additional segment metadata fields to include in
-#' the results. Valid values include: `tags`, `allowedForReporting`, and `categories`. To include multiple values,
-#' combine them into a single comma-separated string with _no spaces_.
+#' @param expansion Additional dimension metadata to include in the results: `tags`, `allowedForReporting`,
+#' and `categories`. This argument takes a single value (e.g., `expansion = "tags"`) or a vector  of
+#' values (e.g., `expansion = c("tags", "categories")`).
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' Use \code{\link{get_me}} to get a list of available `company_id` values.
 #'
 #' @return A data frame of dimensions and their meta data.
 #'

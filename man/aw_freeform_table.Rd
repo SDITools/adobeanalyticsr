@@ -23,38 +23,58 @@ aw_freeform_table(
 }
 \arguments{
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 
 \item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
 in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
-be used.}
+be used. Use \code{\link{aw_get_reportsuites}} to get a list of available \code{rsid} values.}
 
 \item{date_range}{A vector containing the start and end date for the report as \strong{Date} objects.}
 
 \item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension
 breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 call, so the more dimensions that are included, the longer the function will take to return results.
-This is how the Adobe Analytics API works.}
+This is how the Adobe Analytics API works. Use \code{\link{aw_get_dimensions}} to get a list of available
+\code{dimensions} IDs.}
 
-\item{metrics}{A character vector of metrics.}
+\item{metrics}{A character vector of metrics. Use \code{\link{aw_get_metrics}} and \code{\link{aw_get_calculatedmetrics}}
+to get a list of available \code{metrics} IDs.}
 
-\item{top}{The number of values to be pulled for each dimension. The default is 5 and the "top" is based on the first \code{metric} value (along with \code{metricSort}). If there are multiple dimensions, then this argument can either be a vector that includes the number of values to include at each level (each breakdown) or, if a single value is used, then that will be the maximum number of values to return at each level. See the \strong{Details} for information on the unique handling of \code{daterange...} values.}
+\item{top}{The number of values to be pulled for each dimension. The default is 5 and the "top" is based on
+the first \code{metric} value (along with \code{metricSort}). If there are multiple dimensions, then this argument can
+either be a vector that includes the number of values to include at each level (each breakdown) or, if a single
+value is used, then that will be the maximum number of values to return at each level. See the \strong{Details} for
+information on the unique handling of \code{daterange...} values.}
 
-\item{page}{Used in combination with \code{top} to return the next page of results. Uses 0-based numbering (e.g.,\code{top = 50000} and \code{page = 1} will return the top 50,000 items \emph{starting at 50,001}).}
+\item{page}{Used in combination with \code{top} to return the next page of results. Uses 0-based numbering (e.g.,
+\code{top = 50000} and \code{page = 1} will return the top 50,000 items \emph{starting at 50,001}).}
 
-\item{filterType}{This is a placeholder argument for use as additional functionality is added to the package. Currently, it defaults to \code{breakdown}, and that is the only supported value.}
+\item{filterType}{This is a placeholder argument for use as additional functionality is added to the package.
+Currently, it defaults to \code{breakdown}, and that is the only supported value.}
 
-\item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the overall report. If multiple \code{segmentId} values are included, the segments will be effectived ANDed together, just as if multiple segments were added to the header of an Analysis Workspace panel.}
+\item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the overall report.
+If multiple \code{segmentId} values are included, the segments will be effectived ANDed together, just as if
+multiple segments were added to the header of an Analysis Workspace panel. Use \code{\link{aw_get_segments}}
+to get a list of available \code{segmentId} values.}
 
 \item{metricSort}{Pre-sorts the table by metrics. Values are either \code{asc} (ascending) or \code{desc} (descending).}
 
-\item{include_unspecified}{Whether or not to include \strong{Unspecified} values in the results. This is the equivalent of the \strong{Include Unspecified (None)} checkbox in freeform tables in Analysis Workspace. This defaults to \code{TRUE}, which includes \strong{Unspecified} values in the results.}
+\item{include_unspecified}{Whether or not to include \strong{Unspecified} values in the results. This is the equivalent
+of the \strong{Include Unspecified (None)} checkbox in freeform tables in Analysis Workspace. This defaults to \code{TRUE},
+which includes \strong{Unspecified} values in the results.}
 
-\item{search}{Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to the \strong{Details} for more information on constructing values for this argument.}
+\item{search}{Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
+the \strong{Details} for more information on constructing values for this argument.}
 
-\item{prettynames}{A Boolean that determines whether the column names in the results use the API field name (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type", "Page Views"). This applies to both dimensions and metrics. The default value is \code{FALSE}, which returns the API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number (e.g., "evar2", "prop3", "event15").}
+\item{prettynames}{A Boolean that determines whether the column names in the results use the API field name
+(e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
+"Page Views"). This applies to both dimensions and metrics. The default value is \code{FALSE}, which returns the
+API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
+(e.g., "evar2", "prop3", "event15").}
 
-\item{debug}{whether or not to push the full JSON request(s) being sent to the API to the console. The default is \code{FALSE}}
+\item{debug}{Set to \code{TRUE} to publish the full JSON request(s) being sent to the API to the console when the
+function is called. The default is \code{FALSE}.}
 }
 \value{
 A data frame with dimensions and metrics.
@@ -123,11 +143,16 @@ The \code{search} argument takes a vector of search strings, with each value in 
 the \code{dimension} value that is at the same position. These search strings support a range of operators,
 including \code{AND}, \code{OR}, \code{NOT}, \code{MATCH}, \code{CONTAINS}, \code{BEGINS-WITH}, and \code{ENDS-WITH}.
 
-The default for any search string is to use \code{CONTAINS}. Consider a query where \code{dimensions = c("mobiledevicetype", "lasttouchchannel")}:
+The default for any search string is to use \code{CONTAINS}. Consider a query where
+\code{dimensions = c("mobiledevicetype", "lasttouchchannel")}:
 \itemize{
 \item \code{search = "CONTAINS 'mobile'"} will return results where \code{mobiledevicetype} contains "mobile", so would return all rows for \strong{Mobile Phone}.
 \item This could be shortened to \code{search = "'mobile'"} and would behave exactly the same, since \code{CONTAINS} is the default operator
 \item \code{search = c("CONTAINS 'mobile'", "CONTAINS 'search'")} will return results where \code{mobiledevicetype} contains "mobile" and, within those results, results where \code{lasttouchchannel} contains "search".
 \item \code{search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")} will return results where \code{mobiledevicetype} contains "mobile" \emph{or} "tablet" and, within those results, will only include results where \code{lasttouchchannel} exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 }
+}
+\seealso{
+\code{\link{aw_get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
+\code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
 }

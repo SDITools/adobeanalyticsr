@@ -17,7 +17,7 @@ aw_get_metrics(
 \arguments{
 \item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
 in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
-be used.}
+be used. Use \code{\link{aw_get_reportsuites}} to get a list of available \code{rsid} values.}
 
 \item{locale}{The locale that system-named metrics should be returned in. Non-localized values will
 be returned for title, name, description, etc. if a localized value is not available.}
@@ -26,14 +26,13 @@ be returned for title, name, description, etc. if a localized value is not avail
 segments. \code{NULL} (the default) and \code{FALSE} return \emph{all} metrics (\emph{not} just the non-segmentable ones).
 Examples of metrics that cannot be used in segments are \code{bounces}, \verb{bounce rate}, \code{entries}, and \code{visitors}.}
 
-\item{expansion}{Controls which of three specific columns to include in the results: \code{tags}, \code{allowedForReporting},
-and \code{categories}. The default is to include all three columns. Limit to one or any two by passing a
-single value (e.g., \code{expansion = "tags"}) or a vector (e.g., \code{expansion = c("tags", "categories")}. This
-argument has gotten way more explanation than warranted, as this capability seems relatively pointless
-(but is available in the Adobe Analytics API, so it has been included).}
+\item{expansion}{Additional metrics metadata to include in the results: \code{tags}, \code{allowedForReporting},
+and \code{categories}. This argument takes a single value (e.g., \code{expansion = "tags"}) or a vector  of
+values (e.g., \code{expansion = c("tags", "categories")}).}
 
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.}
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 
