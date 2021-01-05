@@ -2,9 +2,7 @@ Package: adobeanalyticsr
 Type: Package
 Version: 0.0.0.9559
 Title: R Client for Adobe Analytics API 2.0
-Description: Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in 
-  mind will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features
-  are being actively being developed adn we value your feedback and contribution to the process.
+Description: Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in  mind, and it will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are being actively being developed, and we value your feedback and contribution to the process.
 Authors@R: c(person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
     person("Tim", "Wilson", email = "timwilson7@gmail.com", role = "aut"),
     person("Mark", "Edmondson", role = "ctb"))
@@ -32,6 +30,6 @@ Imports:
     tibble
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
-Suggests: 
+Suggests:
     testthat
 RdMacros: lifecycle
