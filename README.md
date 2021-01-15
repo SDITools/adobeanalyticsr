@@ -7,7 +7,21 @@
 
 ## R Client for Adobe Analytics API 2.0
 
-Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in  mind, and it will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are being actively being developed, and we value your feedback and contribution to the process.
+Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in 
+  mind will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features
+  are being actively being developed and we value your feedback and contribution to the process.
+  
+### Install the package
+
+```
+# Install devtools from CRAN
+install.packages("devtools")
+
+#install awoberonr from github
+devtools::install_github('benrwoodard/adobeanalyticsr') 
+#load the pacakge
+library(adobeanalyticsr) 
+```
 
 ### Current setup process overview
 

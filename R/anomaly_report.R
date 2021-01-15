@@ -12,7 +12,7 @@
 #' @param countRepeatInstances Should the data include repeat instances
 #' @param anomalyDetection logical statement for including anomaly. Default is TRUE
 #' @param debug default is FALSE but set to TRUE to see the json request being sent to the Adobe API
-#' @importFrom plotly ggplotly
+#'
 #' @importFrom scales comma
 #' @import ggplot2
 #' @export
@@ -143,7 +143,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
           ggplot2::scale_y_continuous(labels = scales::comma) +
           ggplot2::expand_limits(y=0)
 
-        list(data = data, anoms = table, viz = plotly::ggplotly(graph, tooltip = c(granularity, 'data')))
+        list(data = data, anoms = table, viz = graph)
         }
         qv <- purrr::map(metrics, quickview)
 

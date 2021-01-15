@@ -29,7 +29,6 @@ Imports:
     rlang (>= 0.4.8),
     lubridate (>= 1.7.9),
     ggplot2 (>= 3.3.2),
-    plotly (>= 4.9.2),
     scales (>= 1.1.1),
     lifecycle,
     glue,

@@ -153,6 +153,6 @@ The default for any search string is to use \code{CONTAINS}. Consider a query wh
 }
 }
 \seealso{
-\code{\link{aw_get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
+\code{\link{get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
 \code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
 }
