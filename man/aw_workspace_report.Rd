@@ -5,9 +5,10 @@
 \title{Use a prebuilt json query to pull a ranked report}
 \usage{
 aw_workspace_report(
-  req_body = sample,
+  req_body = "",
   company_id = Sys.getenv("AW_COMPANY_ID"),
-  debug = FALSE
+  client_id = Sys.getenv("AW_CLIENT_ID"),
+  client_secret = Sys.getenv("AW_CLIENT_SECRET")
 )
 }
 \arguments{
@@ -15,7 +16,9 @@ aw_workspace_report(
 
 \item{company_id}{Company Id.  Taken from the global environment by default if not provided.}
 
-\item{debug}{default is FALSE  but set to TRUE to see the json request being sent to the Adobe API}
+\item{client_id}{Set in environment args, or pass directly here}
+
+\item{client_secret}{Set in environment args, or pass directly here}
 }
 \description{
 Organizes the arguments into a json string and then structures the data after the internal function makes

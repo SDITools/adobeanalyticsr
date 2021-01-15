@@ -1,6 +1,6 @@
 Package: adobeanalyticsr
 Type: Package
-Version: 0.0.0.9559
+Version: 0.0.0.9560
 Title: R Client for Adobe Analytics API 2.0
 Description: Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in 
   mind will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features
@@ -25,7 +25,6 @@ Imports:
     rlang (>= 0.4.8),
     lubridate (>= 1.7.9),
     ggplot2 (>= 3.3.2),
-    plotly (>= 4.9.2),
     scales (>= 1.1.1),
     lifecycle,
     glue,

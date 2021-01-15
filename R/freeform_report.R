@@ -70,7 +70,7 @@
 #' * `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
 #' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
-#' @seealso \code{\link{aw_get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
+#' @seealso \code{\link{get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
 #' \code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
