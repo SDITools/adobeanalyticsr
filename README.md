@@ -9,8 +9,20 @@
 
 Connect to the Adobe Analytics API v2.0 which powers Analysis Workspace. The package was developed with the analyst in 
   mind will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features
-  are being actively being developed adn we value your feedback and contribution to the process.
+  are being actively being developed and we value your feedback and contribution to the process.
   
+### Install the package
+
+```
+# Install devtools from CRAN
+install.packages("devtools")
+
+#install awoberonr from github
+devtools::install_github('benrwoodard/adobeanalyticsr') 
+#load the pacakge
+library(adobeanalyticsr) 
+``` 
+
 ### Current setup process overview
 
   1. Create the Adobe Console API Project 
@@ -48,6 +60,6 @@ This file is essential to keeping your information secure. It also speeds up ana
       * `AW_COMPANY_ID` - Using the function 'get_me()' you can see all the companies you have access to.
       * `AW_REPORTSUITE_ID` - Using the function "aw_get_reportsuites(company_id = '')" you can see all the report suite ids you can use within the chosen company.
 
-After defining these 4 variables in the .Renviron file, restart your session.  After reloading
-the adobeanalyticsr library, you should be able to run your first query using 'aw_get_metrics()'
+After defining these 4 variables in the .Renviron file, restart your session.  Because you have restarted your r session you will need to reload
+the adobeanalyticsr library, at this point you should be able to run your first query using 'aw_get_metrics()'
 
