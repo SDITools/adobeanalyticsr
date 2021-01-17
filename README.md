@@ -62,13 +62,9 @@ This file is essential to keeping your information secure. It also speeds up ana
       * `AW_CLIENT_ID` - OAuth client id found in the Adobe Developer Console
       * `AW_CLIENT_SECRET` - OAuth client secret key found in the Adobe Developer Console
 
-  3. (Optional) Add an `AW_COMPANY_ID` and a `AW_REPORTSUITE_ID` if and when you know them:*
-
-      * `AW_COMPANY_ID` - use the function `get_me()` to see all the companies you have access to. You will have to complete the next step (getting your authorization token) before this function will work, so, if you don't already know your `company_id`, you can come back and add it after you have completed the last two steps in the setup process below.
-      * `AW_REPORTSUITE_ID` - Using the function `aw_get_reportsuites(company_id = '')` you can see all the report suite ids you can use within the chosen company.
-
-After defining these 4 variables in the .Renviron file, restart your session.  After reloading
-the `adobeanalyticsr` library, you should be able to run your first query using `aw_get_metrics()`.
+  3. (Optional) Add `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` variables once you know them (how to find available values for these two variables is described in step 4 below).
+      
+After adding these 2-4 variables to the `.Renviron` file and saving it, restart your R session (**Session > Restart R** in RStudio) and reload `adobeanalyticsr` (`library(adobeanalyticsr)`). 
 
 \* The format of variables in the `.Renviron` file is straightforward. If you add all four of the variables above, they would simply each be their own line in the file: 
 
@@ -81,7 +77,7 @@ AW_REPORTSUITE_ID = "[RSID]"
 
 #### 3. Get your authorization token
 
-This is actually a lonnnnng alphanumeric string that is the token that will enable you to access your data:
+The token is actually a lonnnnng alphanumeric string that is the what ultimately enables you to access your data:
 
 1. In the console, enter `aw_token()` and press _<Enter>_.
 2. A browser window should appear that prompts you to log in to your Adobe Marketing Cloud account.
@@ -95,13 +91,16 @@ This token will expire every 24 hours, so you will have to periodically repeat t
 
 \* Again, this is simply a helper site I've set up in order to make it easier to generate a token. The site does not store any information.
 
-#### 4. Confirm the process worked and get your company_id
+#### 4. Confirm the process worked and get available company_id and reports
 
 The last step is to get your `company_id` (or, if you have access to multiple accounts, get the `company_id` you want to work with). This is also an excellent way to confirm that everything is set up correctly:
 
 1. In the console, type `get_me()` and press _<Enter>_.
-2. You should then see a list of all of the companies you have access to. The **globalCompanyId** value is what you will use to specify the company that you want to access.
+2. You should then see a list of all of the companies you have access to. The **globalCompanyId** value is what you will use to specify the company that you want to access. If you are working solely (or primarily) with one company, then consider adding the `company_id` as `AW_COMPANY_ID` in your `.Renviron` file as described in step 2 above. Otherwise, you can specify it within each function call that requires it.
+3. If you will be working solely (or primarily) with a single report suite, then consider adding the report suite ID (RSID) as `AW_REPORTSUITE_ID` in your file as described in step 2 above. You can retrieve all of the report suite IDs for a given `company_id` using the function `aw_get_reportsuites(company_id = '[the company ID for account of interest]')`.
 
-If you are working solely (or primarily) with one company, then consider adding the `company_id` as `AW_COMPANY_ID` in your `.Renviron` file as described in step 2 above. Otherwise, you can specify it within each function call that requires it.
+If you added any values to your `.Renviron` file (and then saved it!), then restart your R session (**Session > Restart R** in RStudio) and reload `adobeanalyticsr` (`library(adobeanalyticsr)`). 
 
-That's it! You now should be set to start pulling data. 
+#### 5. Pull some data!
+
+You now should be set to start pulling data, typically starting with `aw_get_metrics()` and `aw_get_dimensions()` to get a list of available dimension and metric IDs, and then `aw_freeform_table()` to pull some data!
