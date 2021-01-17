@@ -13,12 +13,11 @@ reference:
       - aw_get_dimensions
       - aw_get_segments
       - aw_get_calculatedmetrics
-      - aw_get_calculatedmetric_byid
 
   - title: "Data Pulling"
     desc: "Functions for pulling the data using the API"
   - contents:
-      - aw_freeform_report
+      - aw_freeform_table
       - aw_workspace_report
       - aw_anomaly_report
 
