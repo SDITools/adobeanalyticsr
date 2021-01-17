@@ -15,7 +15,7 @@ Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The pa
 # Install devtools from CRAN
 install.packages("devtools")
 
-# Install awoberonr from github
+# Install adobeanayticsr from github
 devtools::install_github('benrwoodard/adobeanalyticsr') 
 
 # Load the pacakge
@@ -29,7 +29,7 @@ There are four setup steps required to start accessing your Adobe Analytics data
   1. Create an Adobe Console API Project
   2. Create and add the OAuth arguments to your `.Renviron` file.
   3. Get your authorization token by using the function `aw_token()`.
-  4. Get your company_id by using the function `get_me()`.
+  4. Get your `company_id` by using the function `get_me()`.
 
 #### 1. Create an Adobe Console API Project
 
@@ -44,35 +44,33 @@ Regardless of how many different Adobe Analytics accounts you will be accessing,
   7. Add Default redirect URI <code>https://adobeanalyticsr.com/token/result.html</code>*
   8. Add Redirect URI pattern <code>https://adobeanalyticsr\.com/token/result\.html</code>*
   
-This is simply a helper site we've set up in order to make it easier to generate a token. The site does not storey any information and, if you dig into the details, it actually doesn't get _sent_ any information that could be used to actually access any site's data (this is part of the confusing part above: this is just setting up a pipe to pull the data...but it's not actually connecting that pipe to any account's Adobe Analytics data).
+\* This is simply a helper site I've set up in order to make it easier to generate a token. The site does not store any information.
 
 _If you are knowledgeable of the ins and outs of this auth process and feel you have a better way to explain and/or set this up, please [submit an issue](https://github.com/benrwoodard/adobeanalyticsr/issues) or create a pull request with your recommendation!_
 
 **Creating an Adobe Console API Project in under 60 seconds**
 <img src="man/figures/createoauthproject.gif" align="center" />
 
-
 #### 2. Set up the .Renviron file
 
 This file is essential to keeping your information secure. It also speeds up analysis by limiting the number of arguments you need to add to every function call.
 
   1. If you do not have an `.Renviron` file (if you have never heard of this file you almost certainly don't have one!), then create a new file and save it with the name `.Renviron`. You can do this from within the RStudio environment and save the file either in your `Home` directory (which is recommended; click on the **Home** button in the file navigator in RStudio and save it to that location) _or_ within your project's working directory.
+  
   2. Get the following variables from the OAuth project and add them to the file* (see _Creating an Adobe Console API Project_ above):
 
       * `AW_CLIENT_ID` - OAuth client id found in the Adobe Developer Console
       * `AW_CLIENT_SECRET` - OAuth client secret key found in the Adobe Developer Console
-      
 
+  3. (Optional) Add an `AW_COMPANY_ID` and a `AW_REPORTSUITE_ID` if and when you know them:*
 
-  3. Add Company_id and Reportsuite_id (optional)*
-
-      * `AW_COMPANY_ID` - Using the function `get_me()` you can see all the companies you have access to.
+      * `AW_COMPANY_ID` - use the function `get_me()` to see all the companies you have access to. You will have to complete the next step (getting your authorization token) before this function will work, so, if you don't already know your `company_id`, you can come back and add it after you have completed the last two steps in the setup process below.
       * `AW_REPORTSUITE_ID` - Using the function `aw_get_reportsuites(company_id = '')` you can see all the report suite ids you can use within the chosen company.
 
 After defining these 4 variables in the .Renviron file, restart your session.  After reloading
 the `adobeanalyticsr` library, you should be able to run your first query using `aw_get_metrics()`.
 
-\*The format of variables in the `.Renviron` file is straightforward. If you add all four of the variables above, they would simply each be their own line in the file: 
+\* The format of variables in the `.Renviron` file is straightforward. If you add all four of the variables above, they would simply each be their own line in the file: 
 
 ```
 AW_CLIENT_ID = "[OAuth client ID]"
@@ -81,7 +79,29 @@ AW_COMPANY_ID = "[Company ID]"
 AW_REPORTSUITE_ID = "[RSID]"
 ```
 
-#### 3. Get Your Authorization Token
+#### 3. Get your authorization token
 
-R
+This is actually a lonnnnng alphanumeric string that is the token that will enable you to access your data:
 
+1. In the console, enter `aw_token()` and press _<Enter>_.
+2. A browser window should appear that prompts you to log in to your Adobe Marketing Cloud account.
+3. Log in.
+4. You will then be redirected to `adobeanalyticsr.com`* and a screen that displays your token.*
+5. Copy the token (only).
+6. Return to the R console. You should see a prompt to **Enter authorization code:**
+7. Paste the token you copied and press _<Enter>_.
+
+This token will expire every 24 hours, so you will have to periodically repeat this step.
+
+\* Again, this is simply a helper site I've set up in order to make it easier to generate a token. The site does not store any information.
+
+#### 4. Confirm the process worked and get your company_id
+
+The last step is to get your `company_id` (or, if you have access to multiple accounts, get the `company_id` you want to work with). This is also an excellent way to confirm that everything is set up correctly:
+
+1. In the console, type `get_me()` and press _<Enter>_.
+2. You should then see a list of all of the companies you have access to. The **globalCompanyId** value is what you will use to specify the company that you want to access.
+
+If you are working solely (or primarily) with one company, then consider adding the `company_id` as `AW_COMPANY_ID` in your `.Renviron` file as described in step 2 above. Otherwise, you can specify it within each function call that requires it.
+
+That's it! You now should be set to start pulling data. 
