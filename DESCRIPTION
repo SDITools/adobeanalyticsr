@@ -9,10 +9,10 @@ Description: Connect to the Adobe Analytics API v2.0 which
              repeatable, timely analysis.
 Authors@R: c(
     person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
-    person("Tim", "Wilson", email = "timwilson7@gmail.com", role = "aut"),
+    person("Tim", "Wilson", email = "timwilson7@gmail.com", role = c("aut", "ctb")),
     person("Mark", "Edmondson", role = "ctb")
     )
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Depends:
@@ -32,7 +32,8 @@ Imports:
     scales (>= 1.1.1),
     lifecycle,
     glue,
-    tibble
+    tibble,
+    knitr
 RoxygenNote: 7.1.1
 Roxygen: list(markdown = TRUE)
 Suggests:
