@@ -41,8 +41,8 @@ Regardless of how many different Adobe Analytics accounts you will be accessing,
   4. Select the Experience Cloud product icon and then choose **Adobe Analytics** and click **Next**.
   5. Select the  OAuth option and then click **Next**.
   6. Select **Web** as the platform where you want the integration.
-  7. Add Default redirect URI <code>https://adobeanalyticsr.com/token/result.html</code>*
-  8. Add Redirect URI pattern <code>https://adobeanalyticsr\.com/token/result\.html</code>*
+  7. Add Default redirect URI <code>https://adobeanalyticsr.com/token_result.html</code>*
+  8. Add Redirect URI pattern <code>https://adobeanalyticsr\.com/token_result\.html</code>*
   
 \* This is simply a helper site I've set up in order to make it easier to generate a token. The site does not store any information.
 
