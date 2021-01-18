@@ -27,3 +27,7 @@ development:
 authors:
   Ben Woodard:
     href: http://github.com/benrwoodard
+
+template:
+  params:
+    ganalytics: G-06XDF7JD6E
