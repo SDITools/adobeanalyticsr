@@ -31,6 +31,6 @@ aw_token <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
     scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
     cache = "aa.oauth",
     use_oob = use_oob,
-    oob_value = "https://adobeanalyticsr.com/token/result.html"
+    oob_value = "https://adobeanalyticsr.com/token_result.html"
   )
 }
