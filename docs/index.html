@@ -56,7 +56,7 @@
       <ul class="nav navbar-nav">
 <li>
   <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
+    <span class="fas fa fas fa-home fa-lg"></span>
      
   </a>
 </li>
@@ -70,7 +70,7 @@
 <ul class="nav navbar-nav navbar-right">
 <li>
   <a href="https://github.com/benrwoodard/adobeanalyticsr/">
-    <span class="fab fa-github fa-lg"></span>
+    <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -96,6 +96,18 @@
 <h2 class="hasAnchor">
 <a href="#r-client-for-adobe-analytics-api-20" class="anchor"></a>R Client for Adobe Analytics API 2.0</h2>
 <p>Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as <a href="https://github.com/benrwoodard/adobeanalyticsr/issues">issues in this Github repository</a>.</p>
+<div id="a-note-about-20-vs-14" class="section level3">
+<h3 class="hasAnchor">
+<a href="#a-note-about-20-vs-14" class="anchor"></a>A Note about 2.0 vs. 1.4</h3>
+<p>The Adobe Analytics v1.4 API, while on its way out, still has some functionality that is not (yet?) available in the v2.0 API. As such, the <a href="https://randyzwitch.com/rsitecatalyst/">RSiteCatalyst</a> package created by <a href="https://twitter.com/randyzwitch/">Randy Zwitch</a> remains a useful package. While this is not a comprehensive list, some of the features that are available through RSiteCatalyst that are not available through the v2.0 API (and, by extension, are not available through this package) are:</p>
+<ul>
+<li>Data Warehouse queries</li>
+<li>Marketing Channel configuration and processing rules</li>
+<li>Data Feed details</li>
+</ul>
+<p>The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does <em>not</em> require that an Adobe Console API project be created, which <em>is</em> something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does <em>not</em> need web services access set up on an account-by-account basis to pull data using the package.</p>
+<p>As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining <code>RSiteCatalyst</code>. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that <code>adobeanalyticsr</code> can live up to the high standard he set with his work.</p>
+</div>
 <div id="install-the-package" class="section level3">
 <h3 class="hasAnchor">
 <a href="#install-the-package" class="anchor"></a>Install the package</h3>
