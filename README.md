@@ -8,6 +8,18 @@
 ## R Client for Adobe Analytics API 2.0
 
 Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as [issues in this Github repository](https://github.com/benrwoodard/adobeanalyticsr/issues).
+
+### A Note about 2.0 vs. 1.4
+
+The Adobe Analytics v1.4 API, while on its way out, still has some functionality that is not (yet?) available in the v2.0 API. As such, the [RSiteCatalyst](https://randyzwitch.com/rsitecatalyst/) package created by [Randy Zwitch](https://twitter.com/randyzwitch/) remains a useful package. While this is not a comprehensive list, some of the features that are available through RSiteCatalyst that are not available through the v2.0 API (and, by extension, are not available through this package) are:
+
+* Data Warehouse queries
+* Marketing Channel configuration and processing rules
+* Data Feed details
+
+The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does _not_ require that an Adobe Console API project be created, which _is_ something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does _not_ need web services access set up on an account-by-account basis to pull data using the package.
+
+As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining `RSiteCatalyst`. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that `adobeanalyticsr` can live up to the high standard he set with his work.
   
 ### Install the package
 
