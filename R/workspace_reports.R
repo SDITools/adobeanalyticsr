@@ -88,7 +88,7 @@ aw_workspace_report <- function(req_body = '',
     dplyr::select(-itemId)
 
   # Add column names to the data set based on the metrics and dimensions
-  colnames(res_df) <- c(dimensions,finalnames)
+  colnames(res_df) <- c(dimensions,finalmnames)
 
   #return it as a data frame
   df <- data.frame(res_df)
