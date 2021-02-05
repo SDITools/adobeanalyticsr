@@ -23,3 +23,9 @@ A data frame of users and their meta data.
 \description{
 Retrieves a list of all users for the company designated by the auth token.
 }
+\examples{
+\dontrun{
+get_users(limit = 10, page = 0)
+}
+
+}

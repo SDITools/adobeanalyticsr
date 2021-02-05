@@ -11,13 +11,17 @@
 #' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
 #'
 #' @return A data frame of users and their meta data.
+#' @examples
+#' \dontrun{
+#' get_users(limit = 10, page = 0)
+#' }
 #'
 #' @import stringr
 #' @export
 #'
 get_users <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
-                            limit = 10,
-                            page = 0)
+                      limit = 10,
+                      page = 0)
 {
 
   vars <- tibble::tibble(limit, page)
