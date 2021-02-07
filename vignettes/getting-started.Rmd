@@ -1,0 +1,114 @@
+---
+title: "Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette goes through the basics of getting started with `adobeanalyticsr`.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Basic Setup
+
+The basic setup is documented on the home page of [adobeanalyticsr.com](https://adobeanalyticsr.com), which reviews the details for:
+
+* Creating an Adobe Console API project through https://console.adobe.io/integrations (this is availabe with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)
+* Adding `AW_CLIENT_ID` and `AW_CLIENT_SECRET` environment variables (the recommended mechanism for this is through the `.Renviron` file). If these environment variables are not available, then the `client_id` and `client_secret` arguments in `aw_token()` need to be populated with the client ID and secret.
+* Adding `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables (again, this is recommended to be done via a `.Renviron` file). 
+
+## Understanding AW_COMPANY_ID and AW_REPORTSUITE_ID
+
+Many `adobeanalyticsr` functions require a company ID (the Adobe account being accessed) and a report suite ID (the specific report suite to pull data or information from) to run. As such, these are arguments (`company_id` and `rsid`) within those functions that default to the values for the `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables.
+
+This approach has some important ramifications:
+
+* If you primarily access a single company and/or a single report suite, then creating `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables means you will 
+_not_ have to set them on every function call, which can make for shorter and cleaner code.
+* If you periodically (or often) need to use a different `company_id` or `rsid` from what is specified as an environment variable, all you need to do is call them explicitly within the function calls. The values you specify for either of these (or both of them) directly in a function call will take precedence over any environment variables that are set up (this is core R behavior: function arguments often have default values built into them, but any value specified in the code will be used in place of those defaults; this is not anything unique to `adobeanalyticsr`).  
+* If you do _not_ have `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables created _and_ you do not specify values for them in the `adobeanalyticsr` function calls, then the functions will fail.
+
+In this vignette, both `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables have been set up (but not shown).
+
+## Load the Package and Authenticate
+
+Once the package is loaded, authenticate with `aw_token()`. If you have not authenticated ever, or if you have not authenticated within the last 24 hours, then a browser should open requiring you to log in to your Adobe account, and it will then redirect you to a web page that displays a lengthy token that you can copy and paste back into an **Enter your authorization code:** prompt in the R console.
+
+```{r setup, message = FALSE, results = 'hide'}
+library(dplyr)            # Light cleanup of output
+library(knitr)            # Cleaner data tables
+library(adobeanalyticsr)
+aw_token()
+```
+
+The token will look something like this (with completely different letters and numbers and characters):
+
+```
+eyJ4NXUiOiJpbXNfbmExLWtleS0xLmNlciIsImFsZyI6IlJTMjU2In0.eyJpZCI6IjE2MTI3MTEyMjM5MzNfNGE2ZmVlM2-tYzdkOS00M2QyLWI5ODUtYzAzMDk2NDA2MGFjX3VlMSIsImNsaWVudF9pZCI6IjA2MTU0ZDgzMjl-OTQxZjViMGUzM2EwZGM2M2U3NmQxIiwidXNlcl9pZCI6IkY2MUJBOTU0NUE3QjMyM0QwQTQ5NUQ2Q0BBZG9iZUlEI-wic3RhdGUiOiIiLCJKeXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwiYXMiOiJpbXMtbmExIiwiZmciO-JWRlFSUkhCTVhMTzU2SDRDRTZSTFJZZUE0TT09PT09PSIsInNpZCI6IjE2MTI3MTEyMjM5MzNfMWE2ZDc4ZTUtNT-zZi00OWFkLWFmZTktYTk0MTJkZmYwMzA0X3VlMSIsIm90byI3InRydWUiLCJleHBpcmVzX2luIjoiMT-wMDAwMCIsImNyZWF0ZWRfYXQiOiIxNjEyNzExMjIzOTMzIiwic2NvcGUiOiJvcGVuaWQsQWRvYmVJRCxyZWFkX-9yZ2FuaXphdGlvbnMsYWRkaXRpb25hbF9pbmZvLnByb2plY3RlZFByb2R1Y3RDb250ZXh0LGFkZGl0aW9uY-xfaW5mby5qb2JfZnVuY3Rpb24ifQ.EvoihD7IPXkew_yFQuzjZGfiU_Q8-vlUkmytwfB_Y46DKePINPn7URq8bit0dXoO-tUdMUKVNOHEBbqww6ydDGBPHSCbOH1GgNsILoN96tjHTtA-jDxN8jrAnQ0PuCssA-GePnqryxCxOH9WyZIl2fog00ib8iZ3ZFAJLDrvthWwWHUw-ivu-K-F3UAtU7A4ma_7pe07D1rW5MhTcZOSr0pri68bjFA86cJqH5DHyMdp4F2d7QgZcYPMdrvVfXTwWXv9s5r6huvDcqv6nny-WOKZbKmoP6zwMzn5xa343wrQ5oXFbRxYem-tC154_dc7ekrC8YUX0pY5up9a-OUy0w
+```
+
+Confirm that the authorization worked by running `get_me()`, which will return two things if the authorization was successful:
+
+1. A message: `Your data is now available!`
+2. A data frame showing the company ID (`globalCompanyId`) and company name (`companyName`) for all of the companies (accounts) to which you have access based on the login you used when you called `aw_token()`.
+
+## Get Available Dimensions, Metrics, and Segments
+
+Because the Adobe Analytics API works with the variable and segment _IDs_ rather than the plain English names of dimensions, metrics, and segments, it is often useful, at least in the initial development of a project, to create data frames that contain all of the available values for these three types of variables.
+
+### Get Available Dimensions
+
+```{r get_dims}
+dims_df <- aw_get_dimensions()
+head(dims_df, 10) %>% select(id, name, type, category) %>% kable()
+```
+
+This data frame includes:
+
+* Standard, out-of-the-box dimensions
+* Custom dimensions (eVars and s.props)
+* _Classifications_ of dimensions: these are identifiable because their `id` values are `[classified variable].[num]` and they have a non-`NA` value for `parent` (the `parent` column--not shown above--has the name of the classified variable)
+
+The data frame can then be searched and filtered for specific dimensions for use in subsequent data calls.
+
+### Get Available Metrics
+
+```{r get_metrics}
+metrics_df <- aw_get_metrics()
+head(metrics_df, 10) %>% select(id, name, type, category) %>% kable()
+```
+
+This data frame includes:
+
+* Standard, out-of-the-box metrics
+* Custom metrics (events)
+
+`aw_get_metrics()` does _not_ return _calculated metrics_, so those require a separate function call.
+
+```{r get_calc_metrics}
+calc_metrics_df <- aw_get_calculatedmetrics()
+head(calc_metrics_df, 10) %>% select(id, name, type) %>% kable()
+```
+
+Calculated metric IDs start with `cm` and are assigned by Adobe when the calculated metric is created.
+
+These two metrics data frames can be searched and filtered for specific metrics for use in subsequent data calls.
+
+### Get Available Segments
+
+The default limit for the number of segments returned by the `aw_get_segments()` function is 10, so, depending on the number of segments you have, the limit value can be increased to return a complete list of segments.
+
+```{r get_segments}
+segments_df <- aw_get_segments(limit = 1000)
+names(segments_df)
+```
+
+Similar to the dimensions and metrics, `aw_get_segments()` returns a data frame of available segments that can be searched and filtered to identify the specific `id` values to use in subsequent data calls.
+
