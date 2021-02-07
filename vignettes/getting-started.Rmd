@@ -112,3 +112,62 @@ names(segments_df)
 
 Similar to the dimensions and metrics, `aw_get_segments()` returns a data frame of available segments that can be searched and filtered to identify the specific `id` values to use in subsequent data calls.
 
+## Freeform Table Data Pull
+
+Just as in Analysis Workspace, the freeform table is the workhorse of `adobeanalyticsr`, and, as such, is the focus of the rest of this vignette.
+
+### Single Dimension, Single Metric
+
+The following is a breakdown of visits by device category for the last 30 full days for the report suite that is specified in the `AW_REPORTSUITE_ID` environment variable.
+
+```{r basic_freeform}
+# Specify a start date and end date. These can be specified as Date
+# objects or as string objects in YYYY-MM-DD format.
+start_date <- Sys.Date() - 30
+end_date <- Sys.Date() - 1
+
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = "visits")
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+Note that the `top` argument for `aw_freeform_table()` defaults to `5`, so only the top 5 values will be shown unless that argument is passed a higher value.
+
+### Single Dimension, Multiple Metrics
+
+Getting multiple metrics is simply a matter of passing a vector to the `metrics` argument rather than a single string:
+
+```{r multi_metrics}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = c("visits", "pageviews", "visitors"))
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+The example above used standard metrics, but custom metrics (e.g., "event10") and calculated metrics (e.g., "cm300003965_557fc578e4b0094efa4f5204") can also be included in the vector of metrics as needed.
+
+The default for the function is to return the API field names, but the "pretty names" can be returned instead by setting the `prettynames` argument to `TRUE`:
+
+```{r pretty_names}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = c("visits", "pageviews", "visitors"),
+                        prettynames = TRUE)
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+While the pretty names are, indeed, "prettier," they can add downstream complexity to the code. And, since custom metrics and calculated metrics can have their names changed at any point, if subsequent code references columns using these pretty names, the code is subject to break in the future if the metric(s) it references gets renamed. So, it is generally considered a best practice to work with the API field names (`prettynames = FALSE`) and then only convert to more readable names at the point of the data being presented to the end user.
+
+### Trending Metrics Over Time
+
+
+### Multiple Dimensions, Multiple Metrics
+
+
