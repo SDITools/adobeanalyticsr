@@ -8,6 +8,7 @@
 #'
 
 make_timeframe <- function(start_date, end_date){
+  #catch the date component when (character, date) are submitted as the date_range value
   if(!grepl('-', end_date)) {
     end_date<- as.Date(as.numeric(end_date),origin = "1970-01-01")
   }
