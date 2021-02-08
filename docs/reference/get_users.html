@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Anomaly Report — aw_anomaly_report • adobeanalyticsr</title>
+<title>Get list of users — get_users • adobeanalyticsr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,8 +46,8 @@
 
 
 
-<meta property="og:title" content="Anomaly Report — aw_anomaly_report" />
-<meta property="og:description" content="Get an anomaly report for one or more metrics" />
+<meta property="og:title" content="Get list of users — get_users" />
+<meta property="og:description" content="Retrieves a list of all users for the company designated by the auth token." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -129,74 +129,48 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Anomaly Report</h1>
-    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/anomaly_report.R'><code>R/anomaly_report.R</code></a></small>
-    <div class="hidden name"><code>aw_anomaly_report.Rd</code></div>
+    <h1>Get list of users</h1>
+    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/get_users.R'><code>R/get_users.R</code></a></small>
+    <div class="hidden name"><code>get_users.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Get an anomaly report for one or more metrics</p>
+    <p>Retrieves a list of all users for the company designated by the auth token.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>aw_anomaly_report</span><span class='op'>(</span>
-  company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>,
-  rsid <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_REPORTSUITE_ID"</span><span class='op'>)</span>,
-  date_range <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>31</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span>,
-  <span class='va'>metrics</span>,
-  granularity <span class='op'>=</span> <span class='st'>"day"</span>,
-  segmentId <span class='op'>=</span> <span class='cn'>NA</span>,
-  quickView <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  anomalyDetection <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  countRepeatInstances <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  debug <span class='op'>=</span> <span class='cn'>FALSE</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_users</span><span class='op'>(</span>company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>, limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>company_id</th>
-      <td><p>Company Id.  Taken from the global environment by default if not provided.</p></td>
+      <td><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
+elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
+Use <code><a href='get_me.html'>get_me</a></code> to get a list of available <code>company_id</code> values.</p></td>
     </tr>
     <tr>
-      <th>rsid</th>
-      <td><p>Adobe report number</p></td>
+      <th>limit</th>
+      <td><p>The number of results to return per page. This argument works in conjunction with the
+<code>page</code> argument. The default is 10.</p></td>
     </tr>
     <tr>
-      <th>date_range</th>
-      <td><p>A two length vector of start and end Date objects (default set to show last 30 days)</p></td>
-    </tr>
-    <tr>
-      <th>metrics</th>
-      <td><p>Metric to request the anomaly detection. If multiple metrics, each metric and date will have it's own row.</p></td>
-    </tr>
-    <tr>
-      <th>granularity</th>
-      <td><p>Use either hour, day (default), week, or month</p></td>
-    </tr>
-    <tr>
-      <th>segmentId</th>
-      <td><p>Use segments to globally filter the results. Use 1 or many.</p></td>
-    </tr>
-    <tr>
-      <th>quickView</th>
-      <td><p>Return a list of 3 lists per metric. 1. All Data 2. Data filtered to include only anomalous rows 3. Interactive ggplot line graph</p></td>
-    </tr>
-    <tr>
-      <th>anomalyDetection</th>
-      <td><p>logical statement for including anomaly. Default is TRUE</p></td>
-    </tr>
-    <tr>
-      <th>countRepeatInstances</th>
-      <td><p>Should the data include repeat instances</p></td>
-    </tr>
-    <tr>
-      <th>debug</th>
-      <td><p>default is FALSE but set to TRUE to see the json request being sent to the Adobe API</p></td>
+      <th>page</th>
+      <td><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
+zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></td>
     </tr>
     </table>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
+    <p>A data frame of users and their meta data.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='fu'>get_users</span><span class='op'>(</span>limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
+<span class='op'>}</span>
+
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
