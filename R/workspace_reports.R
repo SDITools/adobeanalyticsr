@@ -55,6 +55,8 @@ aw_workspace_report <- function(req_body = '',
       dplyr::summarise(mfinalname = paste0(mfinalname, collapse = "-")) %>%
       dplyr::pull(mfinalname)
 
+  } else {
+    finalmnames <- metrics
   }
 
   request_url <- sprintf("https://analytics.adobe.io/api/%s/reports/ranked",
