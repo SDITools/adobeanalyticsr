@@ -1,6 +1,6 @@
 #' Get a list of user usage
 #'
-#' This function returns the usage and access logs for a given date range within a 3 month period. This API authenticates with an IMS user token..
+#' This function returns the usage and access logs for a given date range within a 3 month period.
 #'
 #' @param startDate Start date for the maximum of a 3 month period.
 #' @param endDate End date for the maximum of a 3 month period.

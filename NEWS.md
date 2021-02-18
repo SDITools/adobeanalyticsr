@@ -1,5 +1,7 @@
 # adobeanalyticsr 0.1.2
 
+* New get_usage() function that returns the usage and access logs for a given date range within a 3 month period.
+
 # adobeanalyticsr 0.1.1
 
 * New get_users() function that retrieves a list of all users for the company designated by the auth token.

@@ -46,7 +46,7 @@ Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 A data frame of users and their meta data.
 }
 \description{
-This function returns the usage and access logs for a given date range within a 3 month period. This API authenticates with an IMS user token..
+This function returns the usage and access logs for a given date range within a 3 month period.
 }
 \examples{
 \dontrun{
