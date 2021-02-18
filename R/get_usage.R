@@ -45,10 +45,13 @@ get_usage <- function(startDate = Sys.Date()-91,
   #remove the extra parts of the string and replace it with the query parameter breaks
   query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
 
-  #create the url to send with the query
-  urlstructure <- paste0('users?',query_param)
+  #set the dates
+  date_range <- make_startDate_endDate(startDate, endDate)
 
-  #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
+  #create the url to send with the query
+  urlstructure <- glue::glue('auditlogs/usage?startDate={date_range[[1]]}&endDate={date_range[[2]]}&{query_param}')
+
+  #do the api call
   res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
