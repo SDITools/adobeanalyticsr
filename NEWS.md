@@ -1,3 +1,5 @@
+# adobeanalyticsr 0.1.2
+
 # adobeanalyticsr 0.1.1
 
 * New get_users() function that retrieves a list of all users for the company designated by the auth token.
