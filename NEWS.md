@@ -1,3 +1,5 @@
+# adobeanalyticsr 0.1.3
+
 # adobeanalyticsr 0.1.2
 
 * New get_usage() function that returns the usage and access logs for a given date range within a 3 month period.
