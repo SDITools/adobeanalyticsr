@@ -5,7 +5,7 @@ reference:
       - aw_token
       - get_me
       - get_users
-      - get_usage
+      - get_usage_logs
       - aw_get_reportsuites
 
   - title: "Data Elements"

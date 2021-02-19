@@ -20,13 +20,13 @@
 #' @return A data frame of users and their meta data.
 #' @examples
 #' \dontrun{
-#' get_usage(startDate = Sys.Date()-91, endDate = Sys.Date()-1, limit = 100, page = 0)
+#' get_usage_logs(startDate = Sys.Date()-91, endDate = Sys.Date()-1, limit = 100, page = 0)
 #' }
 #'
 #' @import stringr
 #' @export
 #'
-get_usage <- function(startDate = Sys.Date()-91,
+get_usage_logs <- function(startDate = Sys.Date()-91,
                       endDate = Sys.Date()-1,
                       login = NA,
                       ip = NA ,
