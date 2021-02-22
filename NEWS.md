@@ -1,5 +1,10 @@
+# adobeanalyticsr 0.1.4
+
+* Fixed issue with non-numeric metrics returned. Specifically 'Infinite' is being returned for some calculated metrics
+
 # adobeanalyticsr 0.1.3
 
+* Changed function get_usage() --> get_usage_log() to better represent the endpoint
 * Added Getting Started Vignette
 
 # adobeanalyticsr 0.1.2

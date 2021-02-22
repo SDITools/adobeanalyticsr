@@ -494,6 +494,7 @@ for(i in seq(dimensions)) {
       } else if (length(dimensions) != i) {
         ## second and not last data pull
         itemidname <- paste0('itemId_', dimensions[[i]])
+
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
@@ -595,6 +596,9 @@ for(i in seq(dimensions)) {
       message(paste0('Starting the next ', nrow(dat) ,' requests.'))
     } else {
       itemidname <- paste0('itemId_', dimensions[[i]])
+      ## Change all data to numeric (made originally to catch 'infinite' numbers)
+      resrows$data <- purrr::map(resrows$data, as.numeric)
+      ## Compile the data into a data frame
       dat <- resrows %>%
         dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
         dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
@@ -760,6 +764,9 @@ for(i in seq(dimensions)) {
         message(paste0('Starting the next ', nrow(dat) ,' requests.'))
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
+        ## Change all data to numeric (made originally to catch 'infinite' numbers)
+        resrows$data <- purrr::map(resrows$data, as.numeric)
+        ## Compile the data into a data frame
         dat <- resrows %>%
           dplyr::rename(!!itemidname := itemId,
                  !!finalnames[[i]] := value) %>%
