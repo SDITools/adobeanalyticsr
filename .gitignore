@@ -43,3 +43,5 @@ gitignore/
 #defined environ variable ssuch as passwords
 .Renviron
 inst/doc
+doc
+Meta

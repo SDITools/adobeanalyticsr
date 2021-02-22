@@ -7,3 +7,5 @@
 ^pkgdown$
 ^\.httr-oauth$
 ^analytics\.adobe\.io$
+^doc$
+^Meta$
