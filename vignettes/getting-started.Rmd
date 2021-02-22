@@ -1,0 +1,366 @@
+---
+title: "Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{getting-started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This vignette goes through the basics of getting started with `adobeanalyticsr`.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Basic Setup
+
+The basic setup is documented on the home page of [adobeanalyticsr.com](https://adobeanalyticsr.com), which reviews the details for:
+
+* Creating an Adobe Console API project through https://console.adobe.io/integrations (this is availabe with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)
+* Adding `AW_CLIENT_ID` and `AW_CLIENT_SECRET` environment variables (the recommended mechanism for this is through the `.Renviron` file). If these environment variables are not available, then the `client_id` and `client_secret` arguments in `aw_token()` need to be populated with the client ID and secret.
+* Adding `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables (again, this is recommended to be done via a `.Renviron` file). 
+
+## Understanding AW_COMPANY_ID and AW_REPORTSUITE_ID
+
+Many `adobeanalyticsr` functions require a company ID (the Adobe account being accessed) and a report suite ID (the specific report suite to pull data or information from) to run. As such, these are arguments (`company_id` and `rsid`) within those functions that default to the values for the `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables.
+
+This approach has some important ramifications:
+
+* If you primarily access a single company and/or a single report suite, then creating `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables means you will 
+_not_ have to set them on every function call, which can make for shorter and cleaner code.
+* If you periodically (or often) need to use a different `company_id` or `rsid` from what is specified as an environment variable, all you need to do is call them explicitly within the function calls. The values you specify for either of these (or both of them) directly in a function call will take precedence over any environment variables that are set up (this is core R behavior: function arguments often have default values built into them, but any value specified in the code will be used in place of those defaults; this is not anything unique to `adobeanalyticsr`).  
+* If you do _not_ have `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables created _and_ you do not specify values for them in the `adobeanalyticsr` function calls, then the functions will fail.
+
+In this vignette, both `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables have been set up (but not shown).
+
+## Load the Package and Authenticate
+
+Once the package is loaded, authenticate with `aw_token()`. If you have not authenticated ever, or if you have not authenticated within the last 24 hours, then a browser should open requiring you to log in to your Adobe account, and it will then redirect you to a web page that displays a lengthy token that you can copy and paste back into an **Enter your authorization code:** prompt in the R console.
+
+```{r setup, message = FALSE, results = 'hide'}
+library(dplyr)            # Light cleanup of output
+library(knitr)            # Cleaner data tables
+library(adobeanalyticsr)
+aw_token()
+```
+
+The token will look something like this (with different letters and numbers and characters):
+
+```
+eyJ4NXUiOiJpbXNfbmExLWtleS0xLmNlciIsImFsZyI6IlJTMjU2In0.eyJpZCI6IjE2MTI3MTEyMjM5MzNfNGE2ZmVlM2-tYzdkOS00M2QyLWI5ODUtYzAzMDk2NDA2MGFjX3VlMSIsImNsaWVudF9pZCI6IjA2MTU0ZDgzMjl-OTQxZjViMGUzM2EwZGM2M2U3NmQxIiwidXNlcl9pZCI6IkY2MUJBOTU0NUE3QjMyM0QwQTQ5NUQ2Q0BBZG9iZUlEI-wic3RhdGUiOiIiLCJKeXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwiYXMiOiJpbXMtbmExIiwiZmciO-JWRlFSUkhCTVhMTzU2SDRDRTZSTFJZZUE0TT09PT09PSIsInNpZCI6IjE2MTI3MTEyMjM5MzNfMWE2ZDc4ZTUtNT-zZi00OWFkLWFmZTktYTk0MTJkZmYwMzA0X3VlMSIsIm90byI3InRydWUiLCJleHBpcmVzX2luIjoiMT-wMDAwMCIsImNyZWF0ZWRfYXQiOiIxNjEyNzExMjIzOTMzIiwic2NvcGUiOiJvcGVuaWQsQWRvYmVJRCxyZWFkX-9yZ2FuaXphdGlvbnMsYWRkaXRpb25hbF9pbmZvLnByb2plY3RlZFByb2R1Y3RDb250ZXh0LGFkZGl0aW9uY-xfaW5mby5qb2JfZnVuY3Rpb24ifQ.EvoihD7IPXkew_yFQuzjZGfiU_Q8-vlUkmytwfB_Y46DKePINPn7URq8bit0dXoO-tUdMUKVNOHEBbqww6ydDGBPHSCbOH1GgNsILoN96tjHTtA-jDxN8jrAnQ0PuCssA-GePnqryxCxOH9WyZIl2fog00ib8iZ3ZFAJLDrvthWwWHUw-ivu-K-F3UAtU7A4ma_7pe07D1rW5MhTcZOSr0pri68bjFA86cJqH5DHyMdp4F2d7QgZcYPMdrvVfXTwWXv9s5r6huvDcqv6nny-WOKZbKmoP6zwMzn5xa343wrQ5oXFbRxYem-tC154_dc7ekrC8YUX0pY5up9a-OUy0w
+```
+
+Confirm that the authorization worked by running `get_me()`, which will return two things if the authorization was successful:
+
+1. A message: `Your data is now available!`
+2. A data frame showing the company ID (`globalCompanyId`) and company name (`companyName`) for all of the companies (accounts) to which you have access based on the login you used when you called `aw_token()`.
+
+## Get Available Dimensions, Metrics, and Segments
+
+Because the Adobe Analytics API works with the variable and segment _IDs_ rather than the plain English names of dimensions, metrics, and segments, it is often useful, at least in the initial development of a project, to create data frames that contain all of the available values for these three types of variables.
+
+### Get Available Dimensions
+
+```{r get_dims}
+dims_df <- aw_get_dimensions()
+head(dims_df, 10) %>% select(id, name, type, category) %>% kable()
+```
+
+This data frame includes:
+
+* Standard, out-of-the-box dimensions
+* Custom dimensions (eVars and s.props)
+* _Classifications_ of dimensions: these are identifiable because their `id` values are `[classified variable].[num]` and they have a non-`NA` value for `parent` (the `parent` column--not shown above--has the name of the classified variable)
+
+The data frame can then be searched and filtered for specific dimensions for use in subsequent data calls.
+
+### Get Available Metrics
+
+```{r get_metrics}
+metrics_df <- aw_get_metrics()
+head(metrics_df, 10) %>% select(id, name, type, category) %>% kable()
+```
+
+This data frame includes:
+
+* Standard, out-of-the-box metrics
+* Custom metrics (events)
+
+`aw_get_metrics()` does _not_ return _calculated metrics_, so those require a separate function call.
+
+```{r get_calc_metrics}
+calc_metrics_df <- aw_get_calculatedmetrics()
+head(calc_metrics_df, 10) %>% select(id, name, type) %>% kable()
+```
+
+Calculated metric IDs start with `cm` and are assigned by Adobe when the calculated metric is created.
+
+These two metrics data frames can be searched and filtered for specific metrics for use in subsequent data calls.
+
+### Get Available Segments
+
+The default limit for the number of segments returned by the `aw_get_segments()` function is 10, so, depending on the number of segments you have, the limit value can be increased to return a complete list of segments.
+
+```{r get_segments}
+segments_df <- aw_get_segments(limit = 1000)
+names(segments_df)
+```
+
+Similar to the dimensions and metrics, `aw_get_segments()` returns a data frame of available segments that can be searched and filtered to identify the specific `id` values to use in subsequent data calls.
+
+## Freeform Table Data Pull
+
+Just as in Analysis Workspace, the freeform table is the workhorse of `adobeanalyticsr`, and, as such, is the focus of the rest of this vignette.
+
+### Single Dimension, Single Metric
+
+The following is a breakdown of visits by device category for the last 30 full days for the report suite that is specified in the `AW_REPORTSUITE_ID` environment variable.
+
+```{r basic_freeform}
+# Specify a start date and end date. These can be specified as Date
+# objects or as string objects in YYYY-MM-DD format.
+start_date <- Sys.Date() - 30
+end_date <- Sys.Date() - 1
+
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = "visits")
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+Note that the `top` argument for `aw_freeform_table()` defaults to `5`, so only the top 5 values will be shown unless that argument is passed a higher value.
+
+### Single Dimension, Multiple Metrics
+
+Getting multiple metrics is simply a matter of passing a vector to the `metrics` argument rather than a single string:
+
+```{r multi_metrics}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = c("visits", "pageviews", "visitors"))
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+The example above used standard metrics, but custom metrics (e.g., "event10") and calculated metrics (e.g., "cm300003965_557fc578e4b0094efa4f5204") can also be included in the vector of metrics as needed.
+
+The default for the function is to return the API field names, but the "pretty names" can be returned instead by setting the `prettynames` argument to `TRUE`:
+
+```{r pretty_names}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = c("visits", "pageviews", "visitors"),
+                        prettynames = TRUE)
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+While the pretty names are, indeed, "prettier," they can add downstream complexity to the code. And, since custom metrics and calculated metrics can have their names changed at any point, if subsequent code references columns using these pretty names, the code is subject to break in the future if the metric(s) it references gets renamed. So, it is generally considered a best practice to work with the API field names (`prettynames = FALSE`) and then only convert to more readable names at the point of the data being presented to the end user.
+
+### Trending Metrics Over Time
+
+What is time? This could be a deeply philosophical question, but, instead, we'll treat it as a pragmatic one: time is a dimension. It's just a dimension that gets some special treatment in this package.
+
+The first thing to note is that the `id` values for time values are all prepended with `daterange`.
+
+```{r date_range_ids}
+dims_df %>% filter(grepl("^daterange.*", id)) %>% 
+  select(id, name) %>% 
+  kable()
+```
+
+To get trended data for one or more metrics, simply use the appropriate date dimension as a dimension. The first "special" thing that happens here is that you don't need to worry about setting the `top` argument to include all of the values. The package will assume that you want to include all of the date values in the range and will do this automatically.
+
+What will _not_ (yet) be done automatically is for the package to return the results ordered by the date value (it will sort them by the first metric or whatever is specified in the `metricSort` argument), so we'll need to do that sorting with the results:
+
+```{r simple_trend}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "daterangeday",
+                        metrics = "visits") %>% 
+  arrange(daterangeday)
+
+# Output the results as a formatted table
+df %>% kable()
+```
+
+To include a non-date dimension and specify a `top` value for that dimension while also returning all of the date values, use `0` in the position of the date dimension when specifying the `top` argument.
+
+The following code breaks down each day by **Mobile Device Type**, but only includes the top 2 values for each breakdown:
+
+```{r trend_breakdown_1}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = c("daterangeday", "mobiledevicetype"),
+                        metrics = "visits",
+                        top = c(0, 2)) %>% 
+  arrange(daterangeday)
+
+# Output the first few rows as a formatted table
+head(df, 10) %>% kable()
+```
+
+If the `daterange...` dimension is not the first dimension (and, for speed reasons, it may make sense to not have it there, as is discussed in the next section), the `0` can simply be re-located:
+
+```{r trend_breakdown_2}
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = c("mobiledevicetype", "daterangeday"),
+                        metrics = "visits",
+                        top = c(2, 0)) %>% 
+  arrange(mobiledevicetype, daterangeday)
+
+# Output the first few rows as a formatted table
+head(df) %>% kable()
+```
+
+### Multiple Dimensions, Multiple Metrics
+
+Working with multiple dimensions is much easier once you understand two fundamental aspects of the 2.0 API, which may seem contradictory at first:
+
+* _Each API call is limited to a single dimension._
+* _The API can be used to pull data with an unlimited number of dimensions._
+
+The trick to reconciling these two statements is that any "single dimension" call can be _filtered_ by an unlimited number of _other_ dimensions.
+
+#### Consider Multiple Dimensions in Analysis Workspace
+
+A thought experiment to explain how this works is to imagine that you are in Analysis Workspace (or, actually go into Analysis Workspace and try this directly to make it a real experiment rather than an experiment of the mind):
+
+1. Create a blank freeform table.
+2. Using _only_ your mouse (no keyboard keys allowed!) create a freeform table report that has two dimensions.
+
+Each drag-and-drop with your mouse triggers a new API call. To build a freeform table that has **Marketing Channel** broken down by **Mobile Device Type** might look something like the following:
+
+1. [Click and drag] **Marketing Channel** onto the freeform table. [API Call #1]
+2. [Click and drag] **Mobile Device Type** onto the first marketing channel in the list: **Direct** (for instance). [API Call #2]
+3. [Click and drag] **Mobile Device Type** onto the second marketing channel in the list: **Paid Search**. [API Call #3]
+4. [Click and drag] **Mobile Device Type** onto the third marketing channel the list: **Natural Search**. [API Call #4]
+5. [Click and drag] **Mobile Device Type** onto the third marketing channel the list: **Display**. [API Call #5]
+
+At this point, you're cursing the constraint of not being able to use the `<Shift>` key! But, each of those steps is actually an API call that Analysis Worskpace is making to the 2.0 API:
+
+1. API Call #1 is a simple, single-dimension call that returns a table listing all of the **Marketing Channel** values.
+2. API Call #2 is _also_ a single-dimension API call, but the single dimension being queried is now **Mobile Device** type. But, that query has a constraint on it, in that it is filtered to only include results where **Marketing Channel = Direct** (the first marketing channel in the list; that's the value we dragged and dropped **Mobile Device Type** on).
+3. API Call #3 is similar to #2, except the results are filtered for **Marketing Channel = Page Search**).
+4. And so on...
+
+These API calls all happen relatively quickly (_wildly_ faster than API calls using the older v1.4 API), but they still all have to happen, and they happen one after another (serially rather than in parallel). 
+
+To push this experiment one step farther, think about what you would have to do if you wanted to drill down to a _third_ dimension: **Entry Page**. You would have to repeatedly drag the **Entry Page** dimension onto each of:
+
+* **Direct** > **Mobile Phone**
+* **Direct** > **Other**
+* **Direct** > **Tablet**
+* **Paid Search** > **Mobile Phone**
+* **Paid Search** > **Other**
+* **Paid Search** > **Tablet**
+* **Natural Search** > **Mobile Phone**
+* **Natural Search** > **Other**
+* **Natural Search** > **Tablet**
+* Etc.
+
+For the first call above, the API call for the single dimension **Entry Page** filtered to only include results where **Marketing Channel = Direct** AND **Mobile Device Type = Mobile Phone**.
+
+To build a freeform table in Analysis Workspace that has three dimensions fully broken down would require dozens of drag-and-drop actions! It's possible that that tedium is one of the reasons that you're looking to `adobeanalyticsr` in the first place. As well you should! `aw_freeform_table()` handles these multiple API calls for you!
+
+#### Multiple Dimensions with aw_freeform_table()
+
+On the one hand, all of the exposition above may seem like overkill, because all you have to do with `aw_freeform_table()` to pull multiple dimensions is to...pass a vector of dimensions to the `dimensions` argument!
+
+Where things get a little trickier is when it comes to specifying how many rows to include for each dimension level, and, more importantly, for constructing the function calls so that they run as quickly as possible. To illustrate, we'll explore a scenario where we want to get **Visits** broken down by **Mobile Device Type** and **Browser**.
+
+First, let's query each of the dimensions independently to see how many unique dimension values we're dealing with. This isn't something that is required, but we're going to do a little math to illustrate the differences that dimension order can make.
+
+```{r multi_dims_uniques}
+device_types <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "mobiledevicetype",
+                        metrics = "visits",
+                        # The default of 5 is probably going to get all of them,
+                        # but set a higher cutoff just in case.
+                        top = 10)
+
+browsers <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = "browser",
+                        metrics = "visits",
+                        # We want to get all of the browsers, so set top as a high 
+                        # value rather than the default of "5"
+                        top = 1000)
+```
+
+When making our actual call to get both dimensions at once, we have two options for the `dimensions` argument value:
+
+* `dimensions = c("mobiledevicetype", "browser")`
+* `dimensions = c("browser", "mobiledevicetype")`
+
+Assuming we set `top` appropropriately to include all possible values, we should get the same data, ultimately. But, the number of API calls required behind the scenes and, therefore, the time it will take for the function to run, will vary quite a bit between these two!
+
+For **`dimensions = c("mobiledevicetype", "browser")`**, the API calls will be:
+
+1. One call to get the full list of `mobiledevicetype` values.
+2. One query for _each_ of the `r nrow(device_types)` `mobiledevicetype` values to get each value broken down by `browser`.
+
+This will result in a total of **`r 1 + nrow(device_types)` API calls.**
+
+Let's try it out, including logging how long the function takes to run.
+
+```{r multi_dims_faster}
+start_time <- Sys.time()
+
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = c("mobiledevicetype", "browser"),
+                        metrics = "visits",
+                        top = c(10, 1000))
+
+end_time <- Sys.time()
+
+# Show the summary for the resulting df for comparison to the next approach.
+summary(df)
+
+# Output how long it took to run the query
+end_time - start_time
+```
+
+
+Now, instead, let's consider what happens if we swap the order of our dimensions and, instead, use **`dimensions = c("browser", "mobiledevicetype")`**. Now, the API calls will be:
+
+1. One call to get the full list of `browser` values.
+2. One query for _each_ of the `r nrow(browsers)` `browser` values to get each value broken down by `mobiledevicetype`.
+
+This will result in a total of **`r 1 + nrow(browsers)` API calls!!!**
+
+Let's try it out:
+
+```{r multi_dims_slower}
+start_time <- Sys.time()
+
+df <- aw_freeform_table(date_range = c(start_date, end_date),
+                        dimensions = c("browser", "mobiledevicetype"),
+                        metrics = "visits",
+                        top = c(1000, 10))
+
+end_time <- Sys.time()
+
+# Show the summary for the resulting df for comparison to the next approach.
+summary(df)
+
+# Output how long it took to run the query
+end_time - start_time
+```
+
+This is a *BIG* difference in run-time even though, aside from the column order being slightly different, the resulting data is identical.
+
+If you followed the Analysis Workspace experiment in the previous section, then another way to think about this is that (without the `<Shift>` key), breaking down **Mobile Device Type** by **Browser** would require a _lot_ less clicking and dropping than breaking down **Browser** by **Mobile Device Type**. In the latter, you would have to drag **Mobile Device Type** onto _each_ of the numerous **Browser** values one at a time!
+
+The good (great?) news is that you can string as many dimensions together as you would like and then let R just take it from there and get a resulting data frame with multiple dimensions! The order of your dimensions just can have a dramatic effect on how long you have to wait for the results to be returned.
+
+
+
+
+
+
