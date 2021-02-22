@@ -597,7 +597,7 @@ for(i in seq(dimensions)) {
     } else {
       itemidname <- paste0('itemId_', dimensions[[i]])
       ## Change all data to numeric (made originally to catch 'infinite' numbers)
-      resrows$data2 <- purrr::map(resrows$data, as.numeric)
+      resrows$data <- purrr::map(resrows$data, as.numeric)
       ## Compile the data into a data frame
       dat <- resrows %>%
         dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
@@ -765,7 +765,7 @@ for(i in seq(dimensions)) {
       } else {
         itemidname <- paste0('itemId_', dimensions[[i]])
         ## Change all data to numeric (made originally to catch 'infinite' numbers)
-        resrows$data2 <- purrr::map(resrows$data, as.numeric)
+        resrows$data <- purrr::map(resrows$data, as.numeric)
         ## Compile the data into a data frame
         dat <- resrows %>%
           dplyr::rename(!!itemidname := itemId,
