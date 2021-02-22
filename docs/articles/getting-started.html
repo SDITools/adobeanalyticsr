@@ -44,7 +44,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.3</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.4</span>
       </span>
     </div>
 
@@ -412,7 +412,7 @@
 <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
                         dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
                         metrics <span class="op">=</span> <span class="st">"visits"</span><span class="op">)</span>
-<span class="co">#&gt; A total of 4 rows have been pulled.</span>
+<span class="co">#&gt; A total of 3 rows have been pulled.</span>
 
 <span class="co"># Output the results as a formatted table</span>
 <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -424,19 +424,15 @@
 <tbody>
 <tr class="odd">
 <td align="left">Other</td>
-<td align="right">5676</td>
+<td align="right">5546</td>
 </tr>
 <tr class="even">
 <td align="left">Mobile Phone</td>
-<td align="right">1562</td>
+<td align="right">1509</td>
 </tr>
 <tr class="odd">
 <td align="left">Tablet</td>
-<td align="right">29</td>
-</tr>
-<tr class="even">
-<td align="left">Television</td>
-<td align="right">1</td>
+<td align="right">28</td>
 </tr>
 </tbody>
 </table>
@@ -450,7 +446,7 @@
 <code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
                         dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
                         metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"pageviews"</span>, <span class="st">"visitors"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; A total of 4 rows have been pulled.</span>
+<span class="co">#&gt; A total of 3 rows have been pulled.</span>
 
 <span class="co"># Output the results as a formatted table</span>
 <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -464,27 +460,21 @@
 <tbody>
 <tr class="odd">
 <td align="left">Other</td>
-<td align="right">5676</td>
-<td align="right">10318</td>
-<td align="right">3901</td>
+<td align="right">5546</td>
+<td align="right">10055</td>
+<td align="right">3829</td>
 </tr>
 <tr class="even">
 <td align="left">Mobile Phone</td>
-<td align="right">1562</td>
-<td align="right">2496</td>
-<td align="right">1250</td>
+<td align="right">1509</td>
+<td align="right">2414</td>
+<td align="right">1216</td>
 </tr>
 <tr class="odd">
 <td align="left">Tablet</td>
-<td align="right">29</td>
-<td align="right">96</td>
-<td align="right">24</td>
-</tr>
-<tr class="even">
-<td align="left">Television</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="right">28</td>
+<td align="right">95</td>
+<td align="right">23</td>
 </tr>
 </tbody>
 </table>
@@ -495,7 +485,7 @@
                         dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
                         metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"pageviews"</span>, <span class="st">"visitors"</span><span class="op">)</span>,
                         prettynames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; A total of 4 rows have been pulled.</span>
+<span class="co">#&gt; A total of 3 rows have been pulled.</span>
 
 <span class="co"># Output the results as a formatted table</span>
 <span class="va">df</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -509,27 +499,21 @@
 <tbody>
 <tr class="odd">
 <td align="left">Other</td>
-<td align="right">5676</td>
-<td align="right">10318</td>
-<td align="right">3901</td>
+<td align="right">5546</td>
+<td align="right">10055</td>
+<td align="right">3829</td>
 </tr>
 <tr class="even">
 <td align="left">Mobile Phone</td>
-<td align="right">1562</td>
-<td align="right">2496</td>
-<td align="right">1250</td>
+<td align="right">1509</td>
+<td align="right">2414</td>
+<td align="right">1216</td>
 </tr>
 <tr class="odd">
 <td align="left">Tablet</td>
-<td align="right">29</td>
-<td align="right">96</td>
-<td align="right">24</td>
-</tr>
-<tr class="even">
-<td align="left">Television</td>
-<td align="right">1</td>
-<td align="right">1</td>
-<td align="right">1</td>
+<td align="right">28</td>
+<td align="right">95</td>
+<td align="right">23</td>
 </tr>
 </tbody>
 </table>
@@ -598,124 +582,124 @@
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">2021-01-22</td>
-<td align="right">269</td>
-</tr>
-<tr class="even">
 <td align="left">2021-01-23</td>
 <td align="right">66</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-01-24</td>
 <td align="right">67</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-01-25</td>
 <td align="right">268</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-01-26</td>
 <td align="right">359</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-01-27</td>
 <td align="right">331</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-01-28</td>
 <td align="right">291</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-01-29</td>
 <td align="right">257</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-01-30</td>
 <td align="right">81</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-01-31</td>
 <td align="right">99</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-01</td>
 <td align="right">286</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-02</td>
 <td align="right">336</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-03</td>
 <td align="right">396</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-04</td>
 <td align="right">334</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-05</td>
 <td align="right">329</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-06</td>
 <td align="right">85</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-07</td>
 <td align="right">119</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-08</td>
 <td align="right">372</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-09</td>
 <td align="right">557</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-10</td>
 <td align="right">352</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-11</td>
 <td align="right">337</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-12</td>
 <td align="right">244</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-13</td>
 <td align="right">85</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-14</td>
 <td align="right">106</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-15</td>
 <td align="right">193</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-16</td>
 <td align="right">260</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-17</td>
 <td align="right">214</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-18</td>
 <td align="right">307</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">2021-02-19</td>
 <td align="right">207</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">2021-02-20</td>
 <td align="right">65</td>
+</tr>
+<tr class="even">
+<td align="left">2021-02-21</td>
+<td align="right">84</td>
 </tr>
 </tbody>
 </table>
@@ -729,7 +713,6 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">daterangeday</span><span class="op">)</span>
 <span class="co">#&gt; Estimated runtime: 24.8sec./0.41min.</span>
 <span class="co">#&gt; 1 of 31 possible data requests complete. Starting the next 30 requests.</span>
-<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
 <span class="co">#&gt; A total of 60 rows have been pulled.</span>
 
 <span class="co"># Output the first few rows as a formatted table</span>
@@ -741,16 +724,6 @@
 <th align="right">visits</th>
 </tr></thead>
 <tbody>
-<tr class="odd">
-<td align="left">2021-01-22</td>
-<td align="left">Other</td>
-<td align="right">193</td>
-</tr>
-<tr class="even">
-<td align="left">2021-01-22</td>
-<td align="left">Mobile Phone</td>
-<td align="right">74</td>
-</tr>
 <tr class="odd">
 <td align="left">2021-01-23</td>
 <td align="left">Other</td>
@@ -791,6 +764,16 @@
 <td align="left">Mobile Phone</td>
 <td align="right">79</td>
 </tr>
+<tr class="odd">
+<td align="left">2021-01-27</td>
+<td align="left">Other</td>
+<td align="right">266</td>
+</tr>
+<tr class="even">
+<td align="left">2021-01-27</td>
+<td align="left">Mobile Phone</td>
+<td align="right">62</td>
+</tr>
 </tbody>
 </table>
 <p>If the <code>daterange...</code> dimension is not the first dimension (and, for speed reasons, it may make sense to not have it there, as is discussed in the next section), the <code>0</code> can simply be re-located:</p>
@@ -815,33 +798,33 @@
 <tbody>
 <tr class="odd">
 <td align="left">Mobile Phone</td>
-<td align="left">2021-01-22</td>
-<td align="right">74</td>
-</tr>
-<tr class="even">
-<td align="left">Mobile Phone</td>
 <td align="left">2021-01-23</td>
 <td align="right">28</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Mobile Phone</td>
 <td align="left">2021-01-24</td>
 <td align="right">25</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Mobile Phone</td>
 <td align="left">2021-01-25</td>
 <td align="right">31</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td align="left">Mobile Phone</td>
 <td align="left">2021-01-26</td>
 <td align="right">79</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td align="left">Mobile Phone</td>
 <td align="left">2021-01-27</td>
 <td align="right">62</td>
+</tr>
+<tr class="even">
+<td align="left">Mobile Phone</td>
+<td align="left">2021-01-28</td>
+<td align="right">60</td>
 </tr>
 </tbody>
 </table>
@@ -926,7 +909,7 @@
                         <span class="co"># The default of 5 is probably going to get all of them,</span>
                         <span class="co"># but set a higher cutoff just in case.</span>
                         top <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; A total of 4 rows have been pulled.</span>
+<span class="co">#&gt; A total of 3 rows have been pulled.</span>
 
 <span class="va">browsers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
                         dimensions <span class="op">=</span> <span class="st">"browser"</span>,
@@ -934,7 +917,7 @@
                         <span class="co"># We want to get all of the browsers, so set top as a high </span>
                         <span class="co"># value rather than the default of "5"</span>
                         top <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-<span class="co">#&gt; A total of 116 rows have been pulled.</span></code></pre></div>
+<span class="co">#&gt; A total of 113 rows have been pulled.</span></code></pre></div>
 <p>When making our actual call to get both dimensions at once, we have two options for the <code>dimensions</code> argument value:</p>
 <ul>
 <li><code>dimensions = c("mobiledevicetype", "browser")</code></li>
@@ -944,9 +927,9 @@
 <p>For <strong><code>dimensions = c("mobiledevicetype", "browser")</code></strong>, the API calls will be:</p>
 <ol style="list-style-type: decimal">
 <li>One call to get the full list of <code>mobiledevicetype</code> values.</li>
-<li>One query for <em>each</em> of the 4 <code>mobiledevicetype</code> values to get each value broken down by <code>browser</code>.</li>
+<li>One query for <em>each</em> of the 3 <code>mobiledevicetype</code> values to get each value broken down by <code>browser</code>.</li>
 </ol>
-<p>This will result in a total of <strong>5 API calls.</strong></p>
+<p>This will result in a total of <strong>4 API calls.</strong></p>
 <p>Let’s try it out, including logging how long the function takes to run.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
@@ -956,30 +939,30 @@
                         metrics <span class="op">=</span> <span class="st">"visits"</span>,
                         top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Estimated runtime: 8.8sec./0.15min.</span>
-<span class="co">#&gt; 1 of 11 possible data requests complete. Starting the next 4 requests.</span>
-<span class="co">#&gt; A total of 128 rows have been pulled.</span>
+<span class="co">#&gt; 1 of 11 possible data requests complete. Starting the next 3 requests.</span>
+<span class="co">#&gt; A total of 125 rows have been pulled.</span>
 
 <span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Show the summary for the resulting df for comparison to the next approach.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
 <span class="co">#&gt;  mobiledevicetype     browser              visits       </span>
-<span class="co">#&gt;  Length:128         Length:128         Min.   :   1.00  </span>
+<span class="co">#&gt;  Length:125         Length:125         Min.   :   1.00  </span>
 <span class="co">#&gt;  Class :character   Class :character   1st Qu.:   1.00  </span>
 <span class="co">#&gt;  Mode  :character   Mode  :character   Median :   3.00  </span>
-<span class="co">#&gt;                                        Mean   :  56.78  </span>
-<span class="co">#&gt;                                        3rd Qu.:  10.25  </span>
-<span class="co">#&gt;                                        Max.   :3468.00</span>
+<span class="co">#&gt;                                        Mean   :  56.66  </span>
+<span class="co">#&gt;                                        3rd Qu.:  11.00  </span>
+<span class="co">#&gt;                                        Max.   :3488.00</span>
 
 <span class="co"># Output how long it took to run the query</span>
 <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span>
-<span class="co">#&gt; Time difference of 7.391404 secs</span></code></pre></div>
+<span class="co">#&gt; Time difference of 3.092375 secs</span></code></pre></div>
 <p>Now, instead, let’s consider what happens if we swap the order of our dimensions and, instead, use <strong><code>dimensions = c("browser", "mobiledevicetype")</code></strong>. Now, the API calls will be:</p>
 <ol style="list-style-type: decimal">
 <li>One call to get the full list of <code>browser</code> values.</li>
-<li>One query for <em>each</em> of the 116 <code>browser</code> values to get each value broken down by <code>mobiledevicetype</code>.</li>
+<li>One query for <em>each</em> of the 113 <code>browser</code> values to get each value broken down by <code>mobiledevicetype</code>.</li>
 </ol>
-<p>This will result in a total of <strong>117 API calls!!!</strong></p>
+<p>This will result in a total of <strong>114 API calls!!!</strong></p>
 <p>Let’s try it out:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
@@ -989,24 +972,26 @@
                         metrics <span class="op">=</span> <span class="st">"visits"</span>,
                         top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Estimated runtime: 800.8sec./13.35min.</span>
-<span class="co">#&gt; 1 of 1001 possible data requests complete. Starting the next 116 requests.</span>
-<span class="co">#&gt; A total of 128 rows have been pulled.</span>
+<span class="co">#&gt; 1 of 1001 possible data requests complete. Starting the next 113 requests.</span>
+<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
+<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
+<span class="co">#&gt; A total of 125 rows have been pulled.</span>
 
 <span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
 
 <span class="co"># Show the summary for the resulting df for comparison to the next approach.</span>
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
 <span class="co">#&gt;    browser          mobiledevicetype       visits       </span>
-<span class="co">#&gt;  Length:128         Length:128         Min.   :   1.00  </span>
+<span class="co">#&gt;  Length:125         Length:125         Min.   :   1.00  </span>
 <span class="co">#&gt;  Class :character   Class :character   1st Qu.:   1.00  </span>
 <span class="co">#&gt;  Mode  :character   Mode  :character   Median :   3.00  </span>
-<span class="co">#&gt;                                        Mean   :  56.78  </span>
-<span class="co">#&gt;                                        3rd Qu.:  10.25  </span>
-<span class="co">#&gt;                                        Max.   :3468.00</span>
+<span class="co">#&gt;                                        Mean   :  56.66  </span>
+<span class="co">#&gt;                                        3rd Qu.:  11.00  </span>
+<span class="co">#&gt;                                        Max.   :3488.00</span>
 
 <span class="co"># Output how long it took to run the query</span>
 <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span>
-<span class="co">#&gt; Time difference of 1.669007 mins</span></code></pre></div>
+<span class="co">#&gt; Time difference of 1.70695 mins</span></code></pre></div>
 <p>This is a <em>BIG</em> difference in run-time even though, aside from the column order being slightly different, the resulting data is identical.</p>
 <p>If you followed the Analysis Workspace experiment in the previous section, then another way to think about this is that (without the <code>&lt;Shift&gt;</code> key), breaking down <strong>Mobile Device Type</strong> by <strong>Browser</strong> would require a <em>lot</em> less clicking and dropping than breaking down <strong>Browser</strong> by <strong>Mobile Device Type</strong>. In the latter, you would have to drag <strong>Mobile Device Type</strong> onto <em>each</em> of the numerous <strong>Browser</strong> values one at a time!</p>
 <p>The good (great?) news is that you can string as many dimensions together as you would like and then let R just take it from there and get a resulting data frame with multiple dimensions! The order of your dimensions just can have a dramatic effect on how long you have to wait for the results to be returned.</p>
