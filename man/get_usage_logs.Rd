@@ -28,9 +28,11 @@ get_usage_logs(
 
 \item{rsid}{The report suite ID you want to filter logs by.}
 
-\item{eventType}{The numeric id for the event type you want to filter logs by.}
+\item{eventType}{The numeric id for the event type you want to filter logs by. Leaving this blank returns
+all events. See the \href{https://github.com/AdobeDocs/analytics-2.0-apis/blob/master/usage-logs.md}{Usage Logs API Guide}
+for a complete list of event types.}
 
-\item{event}{The event description you want to filter logs by. No wildcards permitted.}
+\item{event}{The event description you want to filter logs by. No wildcards are permitted.}
 
 \item{limit}{The number of results to return per page. This argument works in conjunction with the
 \code{page} argument. The default is 10.}
@@ -43,10 +45,12 @@ elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPA
 Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 }
 \value{
-A data frame of users and their meta data.
+A data frame of logged events and the event meta data.
 }
 \description{
 This function returns the usage and access logs for a given date range within a 3 month period.
+The user must have Admin Console / Logs permissions (must be able to view the \strong{Usage & Access Log}
+data in the web interface) in order to use this function.
 }
 \examples{
 \dontrun{

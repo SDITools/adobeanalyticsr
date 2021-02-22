@@ -47,7 +47,9 @@
 
 
 <meta property="og:title" content="Get a list of user usage — get_usage_logs" />
-<meta property="og:description" content="This function returns the usage and access logs for a given date range within a 3 month period." />
+<meta property="og:description" content="This function returns the usage and access logs for a given date range within a 3 month period.
+The user must have Admin Console / Logs permissions (must be able to view the Usage &amp;amp; Access Log
+data in the web interface) in order to use this function." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -147,7 +149,9 @@
     </div>
 
     <div class="ref-description">
-    <p>This function returns the usage and access logs for a given date range within a 3 month period.</p>
+    <p>This function returns the usage and access logs for a given date range within a 3 month period.
+The user must have Admin Console / Logs permissions (must be able to view the <strong>Usage &amp; Access Log</strong>
+data in the web interface) in order to use this function.</p>
     </div>
 
     <pre class="usage"><span class='fu'>get_usage_logs</span><span class='op'>(</span>
@@ -188,11 +192,13 @@
     </tr>
     <tr>
       <th>eventType</th>
-      <td><p>The numeric id for the event type you want to filter logs by.</p></td>
+      <td><p>The numeric id for the event type you want to filter logs by. Leaving this blank returns
+all events. See the <a href='https://github.com/AdobeDocs/analytics-2.0-apis/blob/master/usage-logs.md'>Usage Logs API Guide</a>
+for a complete list of event types.</p></td>
     </tr>
     <tr>
       <th>event</th>
-      <td><p>The event description you want to filter logs by. No wildcards permitted.</p></td>
+      <td><p>The event description you want to filter logs by. No wildcards are permitted.</p></td>
     </tr>
     <tr>
       <th>limit</th>
@@ -214,7 +220,7 @@ Use <code><a href='get_me.html'>get_me</a></code> to get a list of available <co
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of users and their meta data.</p>
+    <p>A data frame of logged events and the event meta data.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
