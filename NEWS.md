@@ -1,5 +1,7 @@
 # adobeanalyticsr 0.1.5
 
+* Adjusted a few minor things in prep for CRAN submission
+
 # adobeanalyticsr 0.1.4
 
 * Fixed issue with non-numeric metrics returned. Specifically 'Infinite' is being returned for some calculated metrics
