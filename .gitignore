@@ -45,3 +45,6 @@ gitignore/
 inst/doc
 doc
 Meta
+
+#CRAN comments
+cran-comments.md

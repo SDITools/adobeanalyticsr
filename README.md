@@ -1,6 +1,6 @@
 # adobeanalyticsr
 <!-- badges: start -->
-[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
 <img src="man/figures/logo.png" align="right" width = "200"/>
@@ -11,7 +11,7 @@ Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The pa
 
 ### A Note about 2.0 vs. 1.4
 
-The Adobe Analytics v1.4 API, while on its way out, still has some functionality that is not (yet?) available in the v2.0 API. As such, the [RSiteCatalyst](https://randyzwitch.com/rsitecatalyst/) package created by [Randy Zwitch](https://twitter.com/randyzwitch/) remains a useful package. While this is not a comprehensive list, some of the features that are available through RSiteCatalyst that are not available through the v2.0 API (and, by extension, are not available through this package) are:
+The Adobe Analytics v1.4 API, while on its way out, still has some functionality that is not (yet?) available in the v2.0 API. As such, the [RSiteCatalyst](https://randyzwitch.com/rsitecatalyst/) package created by Randy Zwitch remains a useful package. While this is not a comprehensive list, some of the features that are available through RSiteCatalyst that are not available through the v2.0 API (and, by extension, are not available through this package) are:
 
 * Data Warehouse queries
 * Marketing Channel configuration and processing rules
