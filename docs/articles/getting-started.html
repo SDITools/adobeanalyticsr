@@ -156,6 +156,15 @@
 <a href="#get-available-dimensions" class="anchor"></a>Get Available Dimensions</h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dims_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_dimensions.html">aw_get_dimensions</a></span><span class="op">(</span><span class="op">)</span>
+<span class="co">#&gt; Auto-refreshing stale OAuth token.</span>
+<span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span>
+<span class="co">#&gt; Request failed [401]. Retrying in 1 seconds...</span>
+<span class="co">#&gt; Auto-refreshing stale OAuth token.</span>
+<span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span>
+<span class="co">#&gt; Request failed [401]. Retrying in 1 seconds...</span>
+<span class="co">#&gt; Auto-refreshing stale OAuth token.</span>
+<span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span>
+<span class="co">#&gt; Error in aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id): Unauthorized (HTTP 401).</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">dims_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span>, <span class="va">category</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
@@ -390,8 +399,7 @@
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">segments_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_segments.html">aw_get_segments</a></span><span class="op">(</span>limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">segments_df</span><span class="op">)</span>
-<span class="co">#&gt; [1] "name"        "description" "id"          "owner"       "migratedIds"</span>
-<span class="co">#&gt; [6] "rsid"</span></code></pre></div>
+<span class="co">#&gt; [1] "name"        "description" "id"          "owner"       "migratedIds" "rsid"</span></code></pre></div>
 <p>Similar to the dimensions and metrics, <code><a href="../reference/aw_get_segments.html">aw_get_segments()</a></code> returns a data frame of available segments that can be searched and filtered to identify the specific <code>id</code> values to use in subsequent data calls.</p>
 </div>
 </div>
@@ -713,6 +721,7 @@
   <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html">arrange</a></span><span class="op">(</span><span class="va">daterangeday</span><span class="op">)</span>
 <span class="co">#&gt; Estimated runtime: 24.8sec./0.41min.</span>
 <span class="co">#&gt; 1 of 31 possible data requests complete. Starting the next 30 requests.</span>
+<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
 <span class="co">#&gt; A total of 60 rows have been pulled.</span>
 
 <span class="co"># Output the first few rows as a formatted table</span>
@@ -939,7 +948,6 @@
                         metrics <span class="op">=</span> <span class="st">"visits"</span>,
                         top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Estimated runtime: 8.8sec./0.15min.</span>
-<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
 <span class="co">#&gt; 1 of 11 possible data requests complete. Starting the next 3 requests.</span>
 <span class="co">#&gt; A total of 125 rows have been pulled.</span>
 
@@ -957,7 +965,7 @@
 
 <span class="co"># Output how long it took to run the query</span>
 <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span>
-<span class="co">#&gt; Time difference of 9.117124 secs</span></code></pre></div>
+<span class="co">#&gt; Time difference of 4.994079 secs</span></code></pre></div>
 <p>Now, instead, let’s consider what happens if we swap the order of our dimensions and, instead, use <strong><code>dimensions = c("browser", "mobiledevicetype")</code></strong>. Now, the API calls will be:</p>
 <ol style="list-style-type: decimal">
 <li>One call to get the full list of <code>browser</code> values.</li>
@@ -974,7 +982,6 @@
                         top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
 <span class="co">#&gt; Estimated runtime: 800.8sec./13.35min.</span>
 <span class="co">#&gt; 1 of 1001 possible data requests complete. Starting the next 113 requests.</span>
-<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
 <span class="co">#&gt; A total of 125 rows have been pulled.</span>
 
 <span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
@@ -991,7 +998,7 @@
 
 <span class="co"># Output how long it took to run the query</span>
 <span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span>
-<span class="co">#&gt; Time difference of 1.631079 mins</span></code></pre></div>
+<span class="co">#&gt; Time difference of 1.615242 mins</span></code></pre></div>
 <p>This is a <em>BIG</em> difference in run-time even though, aside from the column order being slightly different, the resulting data is identical.</p>
 <p>If you followed the Analysis Workspace experiment in the previous section, then another way to think about this is that (without the <code>&lt;Shift&gt;</code> key), breaking down <strong>Mobile Device Type</strong> by <strong>Browser</strong> would require a <em>lot</em> less clicking and dropping than breaking down <strong>Browser</strong> by <strong>Mobile Device Type</strong>. In the latter, you would have to drag <strong>Mobile Device Type</strong> onto <em>each</em> of the numerous <strong>Browser</strong> values one at a time!</p>
 <p>The good (great?) news is that you can string as many dimensions together as you would like and then let R just take it from there and get a resulting data frame with multiple dimensions! The order of your dimensions just can have a dramatic effect on how long you have to wait for the results to be returned.</p>

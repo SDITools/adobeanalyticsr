@@ -9,7 +9,12 @@ vignette: >
 
 This vignette goes through the basics of getting started with `adobeanalyticsr`.
 
-
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
 ## Basic Setup
 
@@ -36,8 +41,7 @@ In this vignette, both `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment varia
 
 Once the package is loaded, authenticate with `aw_token()`. If you have not authenticated ever, or if you have not authenticated within the last 24 hours, then a browser should open requiring you to log in to your Adobe account, and it will then redirect you to a web page that displays a lengthy token that you can copy and paste back into an **Enter your authorization code:** prompt in the R console.
 
-
-```r
+```{r setup, message = FALSE, results = 'hide'}
 library(dplyr)            # Light cleanup of output
 library(knitr)            # Cleaner data tables
 library(adobeanalyticsr)
@@ -61,35 +65,10 @@ Because the Adobe Analytics API works with the variable and segment _IDs_ rather
 
 ### Get Available Dimensions
 
-
-```r
+```{r get_dims}
 dims_df <- aw_get_dimensions()
-#> Auto-refreshing stale OAuth token.
-#> Warning: Unable to refresh token: unauthorized_client
-#> Request failed [401]. Retrying in 1 seconds...
-#> Auto-refreshing stale OAuth token.
-#> Warning: Unable to refresh token: unauthorized_client
-#> Request failed [401]. Retrying in 1 seconds...
-#> Auto-refreshing stale OAuth token.
-#> Warning: Unable to refresh token: unauthorized_client
-#> Error in aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id): Unauthorized (HTTP 401).
 head(dims_df, 10) %>% select(id, name, type, category) %>% kable()
 ```
-
-
-
-|id                    |name                          |type         |category        |
-|:---------------------|:-----------------------------|:------------|:---------------|
-|averagepagetime       |Time Spent on Page - Bucketed |ordered-enum |Metrics         |
-|browser               |Browser                       |string       |Audience        |
-|browserheight         |Browser Height - Granular     |int          |Audience        |
-|browserheightbucketed |Browser Height - Bucketed     |ordered-enum |Audience        |
-|browsertype           |Browser Type                  |enum         |Audience        |
-|browserwidth          |Browser Width - Granular      |int          |Audience        |
-|browserwidthbucketed  |Browser Width - Bucketed      |ordered-enum |Audience        |
-|campaign              |Tracking Code                 |string       |Traffic Sources |
-|campaign.1            |Campaign Source               |string       |Traffic Sources |
-|campaign.2            |Campaign Medium               |string       |Traffic Sources |
 
 This data frame includes:
 
@@ -101,26 +80,10 @@ The data frame can then be searched and filtered for specific dimensions for use
 
 ### Get Available Metrics
 
-
-```r
+```{r get_metrics}
 metrics_df <- aw_get_metrics()
 head(metrics_df, 10) %>% select(id, name, type, category) %>% kable()
 ```
-
-
-
-|id                     |name                                 |type    |category        |
-|:----------------------|:------------------------------------|:-------|:---------------|
-|averagepagedepth       |Average Page Depth                   |int     |Traffic         |
-|averagetimespentonpage |Average Time Spent on Page (seconds) |int     |Traffic         |
-|averagetimespentonsite |Average Time Spent on Site (seconds) |int     |Traffic         |
-|averagevisitdepth      |Average Visit Depth                  |int     |Traffic         |
-|bouncerate             |Bounce Rate                          |percent |Traffic         |
-|bounces                |Bounces                              |int     |Traffic         |
-|campaigninstances      |Campaign Click-throughs              |int     |Traffic Sources |
-|cartadditions          |Cart Additions                       |int     |Conversion      |
-|cartremovals           |Cart Removals                        |int     |Conversion      |
-|carts                  |Carts                                |int     |Conversion      |
 
 This data frame includes:
 
@@ -129,26 +92,10 @@ This data frame includes:
 
 `aw_get_metrics()` does _not_ return _calculated metrics_, so those require a separate function call.
 
-
-```r
+```{r get_calc_metrics}
 calc_metrics_df <- aw_get_calculatedmetrics()
 head(calc_metrics_df, 10) %>% select(id, name, type) %>% kable()
 ```
-
-
-
-|id                                   |name                            |type     |
-|:------------------------------------|:-------------------------------|:--------|
-|cm300003965_557fc577e4b07e827d177ad0 |Crash Rate (Mobile)             |percent  |
-|cm300003965_557fc577e4b07e827d177ad3 |Average Session Length (Mobile) |time     |
-|cm300003965_557fc578e4b0094eea4f5201 |Single Access (Calculated)      |decimal  |
-|cm300003965_557fc578e4b0094eea4f5204 |Crash Rate (Mobile)             |percent  |
-|cm300003965_557fc578e4b0416196926008 |Average Session Length (Mobile) |time     |
-|cm300003965_557fc656e4b0adadba08f337 |Avg. Order Value                |currency |
-|cm300003965_557fc656e4b0094eea4f58b6 |Average Order Value             |decimal  |
-|cm300003965_557fc656e4b0094eea4f58b8 |Bounce Rate                     |decimal  |
-|cm300003965_557fc790e4b0094eea4f6222 |Crash Rate (Mobile)             |percent  |
-|cm300003965_557fc790e4b0416196926fac |Average Session Length (Mobile) |time     |
 
 Calculated metric IDs start with `cm` and are assigned by Adobe when the calculated metric is created.
 
@@ -158,11 +105,9 @@ These two metrics data frames can be searched and filtered for specific metrics 
 
 The default limit for the number of segments returned by the `aw_get_segments()` function is 10, so, depending on the number of segments you have, the limit value can be increased to return a complete list of segments.
 
-
-```r
+```{r get_segments}
 segments_df <- aw_get_segments(limit = 1000)
 names(segments_df)
-#> [1] "name"        "description" "id"          "owner"       "migratedIds" "rsid"
 ```
 
 Similar to the dimensions and metrics, `aw_get_segments()` returns a data frame of available segments that can be searched and filtered to identify the specific `id` values to use in subsequent data calls.
@@ -175,8 +120,7 @@ Just as in Analysis Workspace, the freeform table is the workhorse of `adobeanal
 
 The following is a breakdown of visits by device category for the last 30 full days for the report suite that is specified in the `AW_REPORTSUITE_ID` environment variable.
 
-
-```r
+```{r basic_freeform}
 # Specify a start date and end date. These can be specified as Date
 # objects or as string objects in YYYY-MM-DD format.
 start_date <- Sys.Date() - 30
@@ -185,19 +129,10 @@ end_date <- Sys.Date() - 1
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "mobiledevicetype",
                         metrics = "visits")
-#> A total of 3 rows have been pulled.
 
 # Output the results as a formatted table
 df %>% kable()
 ```
-
-
-
-|mobiledevicetype | visits|
-|:----------------|------:|
-|Other            |   5546|
-|Mobile Phone     |   1509|
-|Tablet           |     28|
 
 Note that the `top` argument for `aw_freeform_table()` defaults to `5`, so only the top 5 values will be shown unless that argument is passed a higher value.
 
@@ -205,48 +140,28 @@ Note that the `top` argument for `aw_freeform_table()` defaults to `5`, so only 
 
 Getting multiple metrics is simply a matter of passing a vector to the `metrics` argument rather than a single string:
 
-
-```r
+```{r multi_metrics}
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "mobiledevicetype",
                         metrics = c("visits", "pageviews", "visitors"))
-#> A total of 3 rows have been pulled.
 
 # Output the results as a formatted table
 df %>% kable()
 ```
-
-
-
-|mobiledevicetype | visits| pageviews| visitors|
-|:----------------|------:|---------:|--------:|
-|Other            |   5546|     10055|     3829|
-|Mobile Phone     |   1509|      2414|     1216|
-|Tablet           |     28|        95|       23|
 
 The example above used standard metrics, but custom metrics (e.g., "event10") and calculated metrics (e.g., "cm300003965_557fc578e4b0094efa4f5204") can also be included in the vector of metrics as needed.
 
 The default for the function is to return the API field names, but the "pretty names" can be returned instead by setting the `prettynames` argument to `TRUE`:
 
-
-```r
+```{r pretty_names}
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "mobiledevicetype",
                         metrics = c("visits", "pageviews", "visitors"),
                         prettynames = TRUE)
-#> A total of 3 rows have been pulled.
 
 # Output the results as a formatted table
 df %>% kable()
 ```
-
-
-
-|Mobile Device Type | Visits| Page Views| Unique Visitors|
-|:------------------|------:|----------:|---------------:|
-|Other              |   5546|      10055|            3829|
-|Mobile Phone       |   1509|       2414|            1216|
-|Tablet             |     28|         95|              23|
 
 While the pretty names are, indeed, "prettier," they can add downstream complexity to the code. And, since custom metrics and calculated metrics can have their names changed at any point, if subsequent code references columns using these pretty names, the code is subject to break in the future if the metric(s) it references gets renamed. So, it is generally considered a best practice to work with the API field names (`prettynames = FALSE`) and then only convert to more readable names at the point of the data being presented to the end user.
 
@@ -256,138 +171,53 @@ What is time? This could be a deeply philosophical question, but, instead, we'll
 
 The first thing to note is that the `id` values for time values are all prepended with `daterange`.
 
-
-```r
+```{r date_range_ids}
 dims_df %>% filter(grepl("^daterange.*", id)) %>% 
   select(id, name) %>% 
   kable()
 ```
 
-
-
-|id               |name    |
-|:----------------|:-------|
-|daterangeday     |Day     |
-|daterangehour    |Hour    |
-|daterangeminute  |Minute  |
-|daterangemonth   |Month   |
-|daterangequarter |Quarter |
-|daterangeweek    |Week    |
-|daterangeyear    |Year    |
-
 To get trended data for one or more metrics, simply use the appropriate date dimension as a dimension. The first "special" thing that happens here is that you don't need to worry about setting the `top` argument to include all of the values. The package will assume that you want to include all of the date values in the range and will do this automatically.
 
 What will _not_ (yet) be done automatically is for the package to return the results ordered by the date value (it will sort them by the first metric or whatever is specified in the `metricSort` argument), so we'll need to do that sorting with the results:
 
-
-```r
+```{r simple_trend}
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "daterangeday",
                         metrics = "visits") %>% 
   arrange(daterangeday)
-#> A total of 30 rows have been pulled.
 
 # Output the results as a formatted table
 df %>% kable()
 ```
 
-
-
-|daterangeday | visits|
-|:------------|------:|
-|2021-01-23   |     66|
-|2021-01-24   |     67|
-|2021-01-25   |    268|
-|2021-01-26   |    359|
-|2021-01-27   |    331|
-|2021-01-28   |    291|
-|2021-01-29   |    257|
-|2021-01-30   |     81|
-|2021-01-31   |     99|
-|2021-02-01   |    286|
-|2021-02-02   |    336|
-|2021-02-03   |    396|
-|2021-02-04   |    334|
-|2021-02-05   |    329|
-|2021-02-06   |     85|
-|2021-02-07   |    119|
-|2021-02-08   |    372|
-|2021-02-09   |    557|
-|2021-02-10   |    352|
-|2021-02-11   |    337|
-|2021-02-12   |    244|
-|2021-02-13   |     85|
-|2021-02-14   |    106|
-|2021-02-15   |    193|
-|2021-02-16   |    260|
-|2021-02-17   |    214|
-|2021-02-18   |    307|
-|2021-02-19   |    207|
-|2021-02-20   |     65|
-|2021-02-21   |     84|
-
 To include a non-date dimension and specify a `top` value for that dimension while also returning all of the date values, use `0` in the position of the date dimension when specifying the `top` argument.
 
 The following code breaks down each day by **Mobile Device Type**, but only includes the top 2 values for each breakdown:
 
-
-```r
+```{r trend_breakdown_1}
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = c("daterangeday", "mobiledevicetype"),
                         metrics = "visits",
                         top = c(0, 2)) %>% 
   arrange(daterangeday)
-#> Estimated runtime: 24.8sec./0.41min.
-#> 1 of 31 possible data requests complete. Starting the next 30 requests.
-#> Request failed [429]. Retrying in 6 seconds...
-#> A total of 60 rows have been pulled.
 
 # Output the first few rows as a formatted table
 head(df, 10) %>% kable()
 ```
 
-
-
-|daterangeday |mobiledevicetype | visits|
-|:------------|:----------------|------:|
-|2021-01-23   |Other            |     38|
-|2021-01-23   |Mobile Phone     |     28|
-|2021-01-24   |Other            |     41|
-|2021-01-24   |Mobile Phone     |     25|
-|2021-01-25   |Other            |    236|
-|2021-01-25   |Mobile Phone     |     31|
-|2021-01-26   |Other            |    280|
-|2021-01-26   |Mobile Phone     |     79|
-|2021-01-27   |Other            |    266|
-|2021-01-27   |Mobile Phone     |     62|
-
 If the `daterange...` dimension is not the first dimension (and, for speed reasons, it may make sense to not have it there, as is discussed in the next section), the `0` can simply be re-located:
 
-
-```r
+```{r trend_breakdown_2}
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = c("mobiledevicetype", "daterangeday"),
                         metrics = "visits",
                         top = c(2, 0)) %>% 
   arrange(mobiledevicetype, daterangeday)
-#> Estimated runtime: 2.4sec./0.04min.
-#> 1 of 3 possible data requests complete. Starting the next 2 requests.
-#> A total of 60 rows have been pulled.
 
 # Output the first few rows as a formatted table
 head(df) %>% kable()
 ```
-
-
-
-|mobiledevicetype |daterangeday | visits|
-|:----------------|:------------|------:|
-|Mobile Phone     |2021-01-23   |     28|
-|Mobile Phone     |2021-01-24   |     25|
-|Mobile Phone     |2021-01-25   |     31|
-|Mobile Phone     |2021-01-26   |     79|
-|Mobile Phone     |2021-01-27   |     62|
-|Mobile Phone     |2021-01-28   |     60|
 
 ### Multiple Dimensions, Multiple Metrics
 
@@ -447,15 +277,13 @@ Where things get a little trickier is when it comes to specifying how many rows 
 
 First, let's query each of the dimensions independently to see how many unique dimension values we're dealing with. This isn't something that is required, but we're going to do a little math to illustrate the differences that dimension order can make.
 
-
-```r
+```{r multi_dims_uniques}
 device_types <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "mobiledevicetype",
                         metrics = "visits",
                         # The default of 5 is probably going to get all of them,
                         # but set a higher cutoff just in case.
                         top = 10)
-#> A total of 3 rows have been pulled.
 
 browsers <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "browser",
@@ -463,7 +291,6 @@ browsers <- aw_freeform_table(date_range = c(start_date, end_date),
                         # We want to get all of the browsers, so set top as a high 
                         # value rather than the default of "5"
                         top = 1000)
-#> A total of 113 rows have been pulled.
 ```
 
 When making our actual call to get both dimensions at once, we have two options for the `dimensions` argument value:
@@ -476,78 +303,54 @@ Assuming we set `top` appropropriately to include all possible values, we should
 For **`dimensions = c("mobiledevicetype", "browser")`**, the API calls will be:
 
 1. One call to get the full list of `mobiledevicetype` values.
-2. One query for _each_ of the 3 `mobiledevicetype` values to get each value broken down by `browser`.
+2. One query for _each_ of the `r nrow(device_types)` `mobiledevicetype` values to get each value broken down by `browser`.
 
-This will result in a total of **4 API calls.**
+This will result in a total of **`r 1 + nrow(device_types)` API calls.**
 
 Let's try it out, including logging how long the function takes to run.
 
-
-```r
+```{r multi_dims_faster}
 start_time <- Sys.time()
 
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = c("mobiledevicetype", "browser"),
                         metrics = "visits",
                         top = c(10, 1000))
-#> Estimated runtime: 8.8sec./0.15min.
-#> 1 of 11 possible data requests complete. Starting the next 3 requests.
-#> A total of 125 rows have been pulled.
 
 end_time <- Sys.time()
 
 # Show the summary for the resulting df for comparison to the next approach.
 summary(df)
-#>  mobiledevicetype     browser              visits       
-#>  Length:125         Length:125         Min.   :   1.00  
-#>  Class :character   Class :character   1st Qu.:   1.00  
-#>  Mode  :character   Mode  :character   Median :   3.00  
-#>                                        Mean   :  56.66  
-#>                                        3rd Qu.:  11.00  
-#>                                        Max.   :3488.00
 
 # Output how long it took to run the query
 end_time - start_time
-#> Time difference of 4.994079 secs
 ```
 
 
 Now, instead, let's consider what happens if we swap the order of our dimensions and, instead, use **`dimensions = c("browser", "mobiledevicetype")`**. Now, the API calls will be:
 
 1. One call to get the full list of `browser` values.
-2. One query for _each_ of the 113 `browser` values to get each value broken down by `mobiledevicetype`.
+2. One query for _each_ of the `r nrow(browsers)` `browser` values to get each value broken down by `mobiledevicetype`.
 
-This will result in a total of **114 API calls!!!**
+This will result in a total of **`r 1 + nrow(browsers)` API calls!!!**
 
 Let's try it out:
 
-
-```r
+```{r multi_dims_slower}
 start_time <- Sys.time()
 
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = c("browser", "mobiledevicetype"),
                         metrics = "visits",
                         top = c(1000, 10))
-#> Estimated runtime: 800.8sec./13.35min.
-#> 1 of 1001 possible data requests complete. Starting the next 113 requests.
-#> A total of 125 rows have been pulled.
 
 end_time <- Sys.time()
 
 # Show the summary for the resulting df for comparison to the next approach.
 summary(df)
-#>    browser          mobiledevicetype       visits       
-#>  Length:125         Length:125         Min.   :   1.00  
-#>  Class :character   Class :character   1st Qu.:   1.00  
-#>  Mode  :character   Mode  :character   Median :   3.00  
-#>                                        Mean   :  56.66  
-#>                                        3rd Qu.:  11.00  
-#>                                        Max.   :3488.00
 
 # Output how long it took to run the query
 end_time - start_time
-#> Time difference of 1.615242 mins
 ```
 
 This is a *BIG* difference in run-time even though, aside from the column order being slightly different, the resulting data is identical.
