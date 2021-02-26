@@ -8,6 +8,8 @@
 #' @param client_id Set in environment args, or pass directly here
 #' @param client_secret Set in environment args, or pass directly here
 #'
+#' @return A data frame of dimensions and metrics
+#'
 #' @export
 #' @import assertthat httr dplyr tidyr
 #'

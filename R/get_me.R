@@ -6,11 +6,11 @@
 #' @param client_id Set in environment args, or pass directly here
 #' @param client_secret Set in environment args, or pass directly here
 #'
+#' @return A data frame of company ids and company names
 #' @examples
 #' \dontrun{
 #' get_me()
 #' }
-#'
 #' @export
 #' @import assertthat httr
 get_me <- function(req_path = 'discovery/me',

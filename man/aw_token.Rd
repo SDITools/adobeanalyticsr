@@ -17,6 +17,9 @@ aw_token(
 
 \item{use_oob}{for the purpose of testing. Default is set to TRUE}
 }
+\value{
+An authorization token is saved the file name aa.oauth. If the file aa.oauth does not exist then one will be created at the end of the authorization process.
+}
 \description{
 OAuth2 Token for Adobe Analytics
 }
