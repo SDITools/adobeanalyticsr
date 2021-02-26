@@ -38,6 +38,13 @@ aw_anomaly_report(
 
 \item{debug}{default is FALSE but set to TRUE to see the json request being sent to the Adobe API}
 }
+\value{
+If quickView = 'FALSE' (default) then a data frame including the day, metric, data, dataExpected, dataUpperBound, dataLowerBound, and
+dataAnomalyDetected will be returned.  If quickView = 'TRUE' then a list of three lists will be returned. The first list will be a data frame including
+all the default columns. The second list item will be a filtered data frame that includes rows where dataAnomalyDetected = 'TRUE'.  The third list
+item is a visual made using ggplot with the error band and points where the dataAnomalyDetected = 'TRUE'. If more than one metric is in the request
+and quickView is set to TRUE then the lists will be split by each metric requested.
+}
 \description{
 Get an anomaly report for one or more metrics
 }

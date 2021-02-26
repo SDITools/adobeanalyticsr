@@ -5,6 +5,8 @@
 #' @param client_secret defined by global variable or manually defined
 #' @param use_oob for the purpose of testing. Default is set to TRUE
 #'
+#' @return An authorization token is saved the file name aa.oauth. If the file aa.oauth does not exist then one will be created at the end of the authorization process.
+#'
 #' @export
 #' @import httr
 #'

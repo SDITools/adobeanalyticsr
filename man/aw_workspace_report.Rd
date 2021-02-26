@@ -20,6 +20,9 @@ aw_workspace_report(
 
 \item{client_secret}{Set in environment args, or pass directly here}
 }
+\value{
+A data frame of dimensions and metrics
+}
 \description{
 Organizes the arguments into a json string and then structures the data after the internal function makes
 the api call. Only runs a single dimension with as many metrics as you want.

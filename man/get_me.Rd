@@ -17,6 +17,9 @@ get_me(
 
 \item{client_secret}{Set in environment args, or pass directly here}
 }
+\value{
+A data frame of company ids and company names
+}
 \description{
 This function will quickly pull the list of company ids that you have access to.
 }
@@ -24,5 +27,4 @@ This function will quickly pull the list of company ids that you have access to.
 \dontrun{
 get_me()
 }
-
 }
