@@ -25,7 +25,7 @@
 #' * **compatability**: should add a column with the products that the metric is compatible with, but this
 #' behavior has not actually been shown to be true, so this may actually do nothing if included.
 #'
-#' * **reportSuiteName**: adds a `reportSuiteName` and a `siteTitle` column with the friendy report
+#' * **reportSuiteName**: adds a `reportSuiteName` and a `siteTitle` column with the friendly report
 #' suite name for the RSID.
 #'
 #' * **tags**: adds a column with an embedded data frame with all of the existing tags that are
@@ -65,7 +65,7 @@
 #' @param limit The number of results to return per page. The default is 1,000.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
 #' zero-based. For instance, if `limit = 10` and `page = 1`, the results returned would be 11 through 20.
-#' @param sortDirection The sort direction for teh results: `ASC` (default) for ascending or `DESC` for
+#' @param sortDirection The sort direction for the results: `ASC` (default) for ascending or `DESC` for
 #' descending. (This is case insensitive, so `asc` and `desc` work as well.)
 #' @param sortProperty The property to sort the results by. Currently available values are `id` (default), `name`,
 #' and `modified_date`. Note that setting `expansion = modified` returns results with a column added called

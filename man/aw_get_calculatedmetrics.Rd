@@ -65,7 +65,7 @@ value of \code{FALSE} will return all calculated metrics, including those that a
 \item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
 zero-based. For instance, if \code{limit = 10} and \code{page = 1}, the results returned would be 11 through 20.}
 
-\item{sortDirection}{The sort direction for teh results: \code{ASC} (default) for ascending or \code{DESC} for
+\item{sortDirection}{The sort direction for the results: \code{ASC} (default) for ascending or \code{DESC} for
 descending. (This is case insensitive, so \code{asc} and \code{desc} work as well.)}
 
 \item{sortProperty}{The property to sort the results by. Currently available values are \code{id} (default), \code{name},
@@ -108,7 +108,7 @@ This is returned from the API as a JSON object and converted into columns by the
 means it is pretty messy, so, really, it's not recommended that you use this value.
 \item \strong{compatability}: should add a column with the products that the metric is compatible with, but this
 behavior has not actually been shown to be true, so this may actually do nothing if included.
-\item \strong{reportSuiteName}: adds a \code{reportSuiteName} and a \code{siteTitle} column with the friendy report
+\item \strong{reportSuiteName}: adds a \code{reportSuiteName} and a \code{siteTitle} column with the friendly report
 suite name for the RSID.
 \item \strong{tags}: adds a column with an embedded data frame with all of the existing tags that are
 associated with the calculated metric. This can be a bit messy to work with, but the information

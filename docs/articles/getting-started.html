@@ -111,7 +111,7 @@
 <a href="#basic-setup" class="anchor"></a>Basic Setup</h2>
 <p>The basic setup is documented on the home page of <a href="https://adobeanalyticsr.com">adobeanalyticsr.com</a>, which reviews the details for:</p>
 <ul>
-<li>Creating an Adobe Console API project through <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a> (this is availabe with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)</li>
+<li>Creating an Adobe Console API project through <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a> (this is available with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)</li>
 <li>Adding <code>AW_CLIENT_ID</code> and <code>AW_CLIENT_SECRET</code> environment variables (the recommended mechanism for this is through the <code>.Renviron</code> file). If these environment variables are not available, then the <code>client_id</code> and <code>client_secret</code> arguments in <code><a href="../reference/aw_token.html">aw_token()</a></code> need to be populated with the client ID and secret.</li>
 <li>Adding <code>AW_COMPANY_ID</code> and <code>AW_REPORTSUITE_ID</code> environment variables (again, this is recommended to be done via a <code>.Renviron</code> file).</li>
 </ul>
@@ -932,7 +932,7 @@
 <li><code>dimensions = c("mobiledevicetype", "browser")</code></li>
 <li><code>dimensions = c("browser", "mobiledevicetype")</code></li>
 </ul>
-<p>Assuming we set <code>top</code> appropropriately to include all possible values, we should get the same data, ultimately. But, the number of API calls required behind the scenes and, therefore, the time it will take for the function to run, will vary quite a bit between these two!</p>
+<p>Assuming we set <code>top</code> appropriately to include all possible values, we should get the same data, ultimately. But, the number of API calls required behind the scenes and, therefore, the time it will take for the function to run, will vary quite a bit between these two!</p>
 <p>For <strong><code>dimensions = c("mobiledevicetype", "browser")</code></strong>, the API calls will be:</p>
 <ol style="list-style-type: decimal">
 <li>One call to get the full list of <code>mobiledevicetype</code> values.</li>

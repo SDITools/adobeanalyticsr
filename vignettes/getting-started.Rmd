@@ -15,7 +15,7 @@ This vignette goes through the basics of getting started with `adobeanalyticsr`.
 
 The basic setup is documented on the home page of [adobeanalyticsr.com](https://adobeanalyticsr.com), which reviews the details for:
 
-* Creating an Adobe Console API project through https://console.adobe.io/integrations (this is availabe with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)
+* Creating an Adobe Console API project through https://console.adobe.io/integrations (this is available with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)
 * Adding `AW_CLIENT_ID` and `AW_CLIENT_SECRET` environment variables (the recommended mechanism for this is through the `.Renviron` file). If these environment variables are not available, then the `client_id` and `client_secret` arguments in `aw_token()` need to be populated with the client ID and secret.
 * Adding `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables (again, this is recommended to be done via a `.Renviron` file). 
 
@@ -471,7 +471,7 @@ When making our actual call to get both dimensions at once, we have two options 
 * `dimensions = c("mobiledevicetype", "browser")`
 * `dimensions = c("browser", "mobiledevicetype")`
 
-Assuming we set `top` appropropriately to include all possible values, we should get the same data, ultimately. But, the number of API calls required behind the scenes and, therefore, the time it will take for the function to run, will vary quite a bit between these two!
+Assuming we set `top` appropriately to include all possible values, we should get the same data, ultimately. But, the number of API calls required behind the scenes and, therefore, the time it will take for the function to run, will vary quite a bit between these two!
 
 For **`dimensions = c("mobiledevicetype", "browser")`**, the API calls will be:
 
