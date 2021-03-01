@@ -25,7 +25,7 @@ As a purely editorial side note, the creators and maintainers of this package wo
 
 ```
 # Install from CRAN
-install.packages('adobeanaltyicsr')
+install.packages('adobeanalyticsr')
 
 # Load the package
 library(adobeanalyticsr) 
