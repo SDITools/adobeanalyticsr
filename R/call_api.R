@@ -25,46 +25,60 @@ aw_call_api <- function(req_path,
                         debug = FALSE,
                         company_id = Sys.getenv("AW_COMPANY_ID"),
                         client_id = Sys.getenv("AW_CLIENT_ID"),
-                        client_secret = Sys.getenv("AW_CLIENT_SECRET"),
-                        use_oob = TRUE ){
+                        client_secret = Sys.getenv("AW_CLIENT_SECRET")) {
 
-  assertthat::assert_that(
-    assertthat::is.string(req_path),
-    assertthat::is.string(company_id),
-    assertthat::is.string(client_id),
-    assertthat::is.string(client_secret)
-  )
+    assertthat::assert_that(
+        assertthat::is.string(req_path),
+        assertthat::is.string(company_id),
+        assertthat::is.string(client_id),
+        assertthat::is.string(client_secret)
+    )
 
-  # creates token to aa.oauth if not present
-  token <- aw_token(client_id, client_secret, use_oob = use_oob)
+    request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
+                           company_id, req_path)
+    token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
+    debug_call <- NULL
 
-  request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
-                         company_id, req_path)
+    if (debug) {
+        debug_call <- httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE)
+    }
 
-  if(debug == F) {
-  req <- httr::RETRY("GET",
-                     url = request_url,
-                     encode = "json",
-                     body = FALSE,
-                     httr::config(token = token),
-                     httr::add_headers(
-                       `x-api-key` = client_id,
-                       `x-proxy-global-company-id` = company_id
-                     ))
-  }
-  if(debug == T) {
     req <- httr::RETRY("GET",
                        url = request_url,
                        encode = "json",
                        body = FALSE,
-                       httr::config(token = token),
-                       httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE),
+                       token_config,
+                       debug_call,
                        httr::add_headers(
-                         `x-api-key` = client_id,
-                         `x-proxy-global-company-id` = company_id
+                           `x-api-key` = client_id,
+                           `x-proxy-global-company-id` = company_id
                        ))
-  }
-  httr::stop_for_status(req)
 
-  httr::content(req, as = "text",encoding = "UTF-8")
+    httr::stop_for_status(req)
+
+    httr::content(req, as = "text",encoding = "UTF-8")
+}
+
+
+#' Get token configuration for GET
+#'
+#' Returns a configuration for `httr::GET` for the correct token type.
+#'
+#' @param client_id Client ID
+#' @param client_secret Client secret
+#'
+#' @return Config objects that can be passed to `httr::GET` or similar
+#' functions (e.g. `httr::RETRY`)
+get_token_config <- function(client_id,
+                             client_secret) {
+    token <- retrieve_aw_token(token_type(.adobeanalytics$token),
+                               client_id,
+                               client_secret)
+    type <- token_type(token)
+
+    switch(type,
+        oauth = httr::config(token = token),
+        jwt = httr::add_headers(Authorization = paste("Bearer", content(token)$access_token)),
+        stop("Unknown token type")
+    )
 }

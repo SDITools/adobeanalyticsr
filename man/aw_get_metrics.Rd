@@ -10,8 +10,7 @@ aw_get_metrics(
   segmentable = "NULL",
   expansion = NA,
   company_id = Sys.getenv("AW_COMPANY_ID"),
-  debug = FALSE,
-  use_oob = TRUE
+  debug = FALSE
 )
 }
 \arguments{

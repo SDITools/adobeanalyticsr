@@ -4,7 +4,6 @@
 #'
 #' @param req_path The endpoint for that particular report
 #' @param client_id Set in environment args, or pass directly here
-#' @param client_secret Set in environment args, or pass directly here
 #'
 #' @return A data frame of company ids and company names
 #' @examples
@@ -14,37 +13,45 @@
 #' @export
 #' @import assertthat httr
 get_me <- function(req_path = 'discovery/me',
-                    client_id = Sys.getenv("AW_CLIENT_ID"),
-                    client_secret = Sys.getenv("AW_CLIENT_SECRET")){
+                   client_id = Sys.getenv("AW_CLIENT_ID")) {
 
-  assertthat::assert_that(
-    is.string(req_path),
-    is.string(client_id),
-    is.string(client_secret)
-  )
+    assertthat::assert_that(
+        is.string(req_path)
+    )
 
-  # creates token to aa.oauth if not present
-  token <- aw_token(client_id, client_secret)
+    # creates token to aa.oauth if not present
+    token <- retrieve_aw_token(token_type(.adobeanalytics$token))
 
-  request_url <- sprintf("https://analytics.adobe.io/%s",
-                          req_path)
+    request_url <- sprintf("https://analytics.adobe.io/%s",
+                           req_path)
 
-  req <- httr::RETRY("GET",
-                     url = request_url,
-                     encode = "json",
-                     body = FALSE,
-                     config(token = token),
-                     httr::add_headers(
-                       `x-api-key` = client_id
-                     ))
-  stop_for_status(req)
-  res <- httr::content(req, as = "text",encoding = "UTF-8")
+    if (token_type(token) == "oauth") {
+        req <- httr::RETRY("GET",
+                           url = request_url,
+                           encode = "json",
+                           body = FALSE,
+                           config(token = token),
+                           httr::add_headers(
+                               `x-api-key` = client_id
+                           ))
+    } else {
+        req <- httr::RETRY("GET",
+                           url = request_url,
+                           encode = "json",
+                           body = FALSE,
+                           httr::add_headers(
+                               Authorization = paste("Bearer", content(token)$access_token),
+                               `x-api-key` = client_id
+                           ))
+    }
 
-  me <- jsonlite::fromJSON(res)
 
-  message('Your data is now available!')
+    stop_for_status(req)
+    res <- httr::content(req, as = "text",encoding = "UTF-8")
 
-  return(me$imsOrgs$companies %>%
-           dplyr::bind_rows() %>%
-           dplyr::select(1:2))
+    me <- jsonlite::fromJSON(res)
+
+    return(me$imsOrgs$companies %>%
+               dplyr::bind_rows() %>%
+               dplyr::select(1:2))
 }
