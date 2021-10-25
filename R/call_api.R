@@ -59,26 +59,3 @@ aw_call_api <- function(req_path,
     httr::content(req, as = "text",encoding = "UTF-8")
 }
 
-
-#' Get token configuration for GET
-#'
-#' Returns a configuration for `httr::GET` for the correct token type.
-#'
-#' @param client_id Client ID
-#' @param client_secret Client secret
-#'
-#' @return Config objects that can be passed to `httr::GET` or similar
-#' functions (e.g. `httr::RETRY`)
-get_token_config <- function(client_id,
-                             client_secret) {
-    token <- retrieve_aw_token(token_type(.adobeanalytics$token),
-                               client_id,
-                               client_secret)
-    type <- token_type(token)
-
-    switch(type,
-        oauth = httr::config(token = token),
-        jwt = httr::add_headers(Authorization = paste("Bearer", content(token)$access_token)),
-        stop("Unknown token type")
-    )
-}

@@ -20,11 +20,10 @@
 #' @return The path of the cached token, invisibly
 #' @family auth
 #' @aliases aw_auth auth_jwt auth_oauth
-aw_auth <- function(type = "oauth", ...) {
-    # Type will be null if you pass .adobeanalyticsr$type without authenticating first
-    # Hence the circular error message
+#' @export
+aw_auth <- function(type = aw_auth_with(), ...) {
     if (is.null(type)) {
-        stop("Authentication type missing, please authenticate with `aw_auth`")
+        stop("Authentication type missing, please set an auth type with `aw_auth_with`")
     }
     type <- match.arg(type, c("jwt", "oauth"))
 
@@ -37,45 +36,85 @@ aw_auth <- function(type = "oauth", ...) {
 }
 
 
-#' Specify the type of auth for the session
+#' Set authentication options
+#'
+#' @description
+#' If get or set an auth option. If called without an argument, gets the current
+#' setting for the requested option. Pass `NULL` as an argument to clear the
+#' setting and return to defaults.
+#'
+#' `aw_auth_with` sets the type of authorization for the session. This is used
+#' as a default when no specific option is given.
 #'
 #' @param type Either "oauth" or "jwt"
+#' @param path Location for the auth file. If the location does not exist,
+#'   it will be created the first time a token is cached.
+#' @param name Filename, such as `aw_auth.rds`. The file is stored as an RDS
+#'   file, but there is no requirement for the `.rds` file extension. `.rds` is
+#'   not appended automatically.
 #'
-#' @return `type`, invisibly
+#' @return The option value, invisibly
+#' @family options
+#' @rdname aw_auth_with
+#' @aliases aw_auth_with aw_auth_path aw_auth_name
+#' @export
 aw_auth_with <- function(type) {
-    type <- match.arg(type, c("oauth", "jwt"))
+    if (missing(type)) return(getOption("adobeanalyticsr.auth_type"))
 
-    .adobeanalytics$type <- type
+    if (!is.null(type)) {
+        type <- match.arg(type, c("oauth", "jwt"))
+    }
+
+    options(adobeanalyticsr.auth_type = type)
     invisible(type)
 }
+
+
+#' @description
+#' `aw_auth_path` sets the file path for the cached authorization token. It
+#' should be a directoy, rather than a filename. If this option is not set, the
+#' current working directory is used instead.
+#'
+#' @rdname aw_auth_with
+#' @family options
+#' @export
+aw_auth_path <- function(path) {
+    if (missing(path)) return(getOption("adobeanalyticsr.auth_path"))
+    options(adobeanalyticsr.auth_path = path)
+    invisible(path)
+}
+
+
+#' @description
+#' `aw_auth_name` sets the file name for the cached authorization token. If this
+#' option is not set, the default filename is `aw_auth.rds`
+#'
+#' @rdname aw_auth_with
+#' @family options
+#' @export
+aw_auth_name <- function(name) {
+    if (missing(name)) return(getOption("adobeanalyticsr.auth_name"))
+    options(adobeanalyticsr.auth_name = name)
+    invisible(name)
+}
+
 
 
 #' Retrieve a token
 #'
 #' Updates (if necessary) and returns session token. First checks for a session
-#' token, then a cached token, then generates a new token. The type may
-#' be set for the session with `aw_auth_with`. It is also automatically set when
-#' any auth function is executed.
+#' token, then a cached token, then generates a new token. The default type may
+#' be set for the session with `aw_auth_with`.
 #'
-#' The `type` argument can be used to override the precedence of the tokens, but
-#' this will throw a warning. If there is no session token, the token returned
-#' by `retrieve_aw_token()` is guaranteed to be of type `type`. However, this
-#' is not the intended use of this function (use `aw_auth` instead), so a
-#' warning is thrown.
-#'
-#' @param type Type of auth to use if there is no session token or cached token.
-#'   One of "oauth" or "jwt".
 #' @param ... Further arguments passed to auth functions
 #'
 #' @importFrom rlang %||%
 #'
 #' @return A token object of type `response` (JWT) or `Token2.0` (OAuth)
-retrieve_aw_token <- function(type = NULL, ...) {
-    stopifnot(is.character(type) || is.null(type))
-
+retrieve_aw_token <- function(...) {
     # Check session token
     token <- .adobeanalytics$token
-    type <- type %||% .adobeanalytics$type
+    type <- token_type(token) %||% aw_auth_with()
 
     if (!is.null(token) & !is.null(type)) {
         if (type != token_type(token)) {
@@ -85,26 +124,19 @@ retrieve_aw_token <- function(type = NULL, ...) {
 
     # Session token > cached token > generating new token
     if (is.null(token)) {
-        path <- token_path(getOption("aw_auth_name", "aw_auth.rds"))
+        path <- token_path(getOption("adobeanalyticsr.auth_name", "aw_auth.rds"))
         cached_token_exists <- file.exists(path)
 
         if (cached_token_exists) {
             message(paste("Retrieving cached token:", path))
             token <- readRDS(path)
-            type <- type %||% token_type(token)
-
-            if (type != token_type(token)) {
-                warning("Type mismatch when fetching cached token -- did you mean to call aw_auth() instead?\n--> Calling aw_auth to override cached token")
-                aw_auth(type, ...)
-                token <- .adobeanalytics$token
-                type <- .adobeanalytics$type
-            }
+            type <- token_type(token)
 
             .adobeanalytics$token <- token
-            .adobeanalytics$type <- type
         } else {
             message("No session token or cached token -- generating new token")
-            aw_auth(type = type, ...)
+            aw_auth(type = aw_auth_with(), ...)
+            token <- .adobeanalytics$token
         }
     }
 
@@ -115,6 +147,8 @@ retrieve_aw_token <- function(type = NULL, ...) {
         aw_auth(type = "oauth", ...)
     } else if (type == "jwt") {
         # JWT can easily be regenerated
+        # TODO Store credentials used to generate JWT token so it can be
+        # regenerated even without environment variables
         if (is_jwt_expired(token)) aw_auth(type = "jwt", ...)
     }
 
@@ -124,15 +158,17 @@ retrieve_aw_token <- function(type = NULL, ...) {
 
 #' Cache token
 #'
-#' The token is saved as `aw_auth.rds` in `rappdirs::user_data_dir("adobeanalyticsr", "R")`
-#' The `"aw_auth_name"` option can be used to override the default filename.
-#' In a pinch, this could be used to store multiple tokens.
+#' The token is saved as `aw_auth.rds` in the current working directory, or
+#' in the location pointed to by the option `adobeanalyticsr.auth_path`.
+#' The `adobeanalyticsr.auth_name` option can be used to override the default
+#' filename. In a pinch, this could be used to store multiple tokens.
 #'
 #' @return Invisibly, the filename of the token
+#' @export
 stash_token <- function() {
-    if(is.null(.adobeanalytics$token)) stop("Token not set correctly")
+    if (is.null(.adobeanalytics$token)) stop("Token not set correctly")
 
-    path <- token_path(getOption("aw_auth_name", "aw_auth.rds"))
+    path <- token_path(getOption("adobeanalyticsr.auth_name", "aw_auth.rds"))
 
     message(paste0("Saving token to '", path, "'"))
     dir.create(token_path(), showWarnings = FALSE, recursive = TRUE)
@@ -144,13 +180,17 @@ stash_token <- function() {
 
 #' Standard location for token caching
 #'
+#' The default path for the token is the current working directory, but
+#' the option `adobeanalyticsr.auth_path` overrides this behavior.
+#'
 #' @param ... Passed to file.path, usually a filename
 #'
 #' @return File path
 token_path <- function(...) {
-    loc <- rappdirs::user_data_dir("adobeanalyticsr", "R")
+    loc <- getOption("adobeanalyticsr.auth_path", getwd())
     file.path(loc, ...)
 }
+
 
 #' Get type of token
 #'
@@ -161,6 +201,7 @@ token_path <- function(...) {
 #' @param token An `httr` `reponse` object or `oauth2.0_token` object
 #'
 #' @return Either 'oauth' or 'jwt'
+#' @export
 token_type <- function(token) {
     if (inherits(token, "Token2.0")) {
         "oauth"
@@ -171,6 +212,29 @@ token_type <- function(token) {
     } else {
         stop("Unknown token type")
     }
+}
+
+
+#' Get token configuration for requests
+#'
+#' Returns a configuration for `httr::GET` for the correct token type.
+#'
+#' @param client_id Client ID
+#' @param client_secret Client secret
+#'
+#' @return Config objects that can be passed to `httr::GET` or similar
+#' functions (e.g. `httr::RETRY`)
+get_token_config <- function(client_id,
+                             client_secret) {
+    token <- retrieve_aw_token(client_id,
+                               client_secret)
+    type <- token_type(token)
+
+    switch(type,
+        oauth = httr::config(token = token),
+        jwt = httr::add_headers(Authorization = paste("Bearer", content(token)$access_token)),
+        stop("Unknown token type")
+    )
 }
 
 
@@ -219,7 +283,6 @@ auth_jwt <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
                   token$date + httr::content(token)$expires_in / 1000)
 
     .adobeanalytics$token <- token
-    .adobeanalytics$type <- "jwt"
 }
 
 
@@ -269,6 +332,7 @@ get_jwt_token <- function(jwt_token = NULL,
 #' @param token The access token to check
 #'
 #' @return TRUE or FALSE
+#' @export
 is_jwt_expired <- function(token) {
     # allow 20 mins grace for long calls
     token$date + httr::content(token)$expires_in / 1000 <= Sys.time() - 1200
@@ -314,5 +378,4 @@ auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
 
     message("Successfully authenticated with OAuth")
     .adobeanalytics$token <- token
-    .adobeanalytics$type <- "oauth"
 }

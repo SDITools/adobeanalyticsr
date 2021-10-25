@@ -13,5 +13,6 @@ token_path(...)
 File path
 }
 \description{
-Standard location for token caching
+The default path for the token is the current working directory, but
+the option \code{adobeanalyticsr.auth_path} overrides this behavior.
 }

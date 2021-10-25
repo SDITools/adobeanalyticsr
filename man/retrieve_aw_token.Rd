@@ -4,12 +4,9 @@
 \alias{retrieve_aw_token}
 \title{Retrieve a token}
 \usage{
-retrieve_aw_token(type = NULL, ...)
+retrieve_aw_token(...)
 }
 \arguments{
-\item{type}{Type of auth to use if there is no session token or cached token.
-One of "oauth" or "jwt".}
-
 \item{...}{Further arguments passed to auth functions}
 }
 \value{
@@ -17,14 +14,6 @@ A token object of type \code{response} (JWT) or \code{Token2.0} (OAuth)
 }
 \description{
 Updates (if necessary) and returns session token. First checks for a session
-token, then a cached token, then generates a new token. The type may
-be set for the session with \code{aw_auth_with}. It is also automatically set when
-any auth function is executed.
-}
-\details{
-The \code{type} argument can be used to override the precedence of the tokens, but
-this will throw a warning. If there is no session token, the token returned
-by \code{retrieve_aw_token()} is guaranteed to be of type \code{type}. However, this
-is not the intended use of this function (use \code{aw_auth} instead), so a
-warning is thrown.
+token, then a cached token, then generates a new token. The default type may
+be set for the session with \code{aw_auth_with}.
 }

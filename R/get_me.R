@@ -13,37 +13,28 @@
 #' @export
 #' @import assertthat httr
 get_me <- function(req_path = 'discovery/me',
-                   client_id = Sys.getenv("AW_CLIENT_ID")) {
+                   client_id = Sys.getenv("AW_CLIENT_ID"),
+                   client_secret = Sys.getenv("AW_CLIENT_SECRET")) {
 
     assertthat::assert_that(
-        is.string(req_path)
+        is.string(req_path),
+        is.string(client_id),
+        is.string(client_secret)
     )
-
-    # creates token to aa.oauth if not present
-    token <- retrieve_aw_token(token_type(.adobeanalytics$token))
 
     request_url <- sprintf("https://analytics.adobe.io/%s",
                            req_path)
+    token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
 
-    if (token_type(token) == "oauth") {
-        req <- httr::RETRY("GET",
-                           url = request_url,
-                           encode = "json",
-                           body = FALSE,
-                           config(token = token),
-                           httr::add_headers(
-                               `x-api-key` = client_id
-                           ))
-    } else {
-        req <- httr::RETRY("GET",
-                           url = request_url,
-                           encode = "json",
-                           body = FALSE,
-                           httr::add_headers(
-                               Authorization = paste("Bearer", content(token)$access_token),
-                               `x-api-key` = client_id
-                           ))
-    }
+    req <- httr::RETRY("GET",
+                       url = request_url,
+                       encode = "json",
+                       body = FALSE,
+                       token_config,
+                       httr::add_headers(
+                           `x-api-key` = client_id
+                       ))
+
 
 
     stop_for_status(req)

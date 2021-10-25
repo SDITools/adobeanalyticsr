@@ -10,7 +10,8 @@ stash_token()
 Invisibly, the filename of the token
 }
 \description{
-The token is saved as \code{aw_auth.rds} in \code{rappdirs::user_data_dir("adobeanalyticsr", "R")}
-The \code{"aw_auth_name"} option can be used to override the default filename.
-In a pinch, this could be used to store multiple tokens.
+The token is saved as \code{aw_auth.rds} in the current working directory, or
+in the location pointed to by the option \code{adobeanalyticsr.auth_path}.
+The \code{adobeanalyticsr.auth_name} option can be used to override the default
+filename. In a pinch, this could be used to store multiple tokens.
 }

@@ -6,7 +6,7 @@
 \alias{auth_oauth}
 \title{Generate an access token for Adobe Analytics 2.0}
 \usage{
-aw_auth(type = "oauth", ...)
+aw_auth(type = aw_auth_with(), ...)
 
 auth_jwt(
   client_id = Sys.getenv("AW_CLIENT_ID"),
