@@ -109,7 +109,7 @@ aw_auth_name <- function(name) {
 #' @param ... Further arguments passed to auth functions
 #'
 #' @importFrom rlang %||%
-#'
+#' @keywords internal
 #' @return A token object of type `response` (JWT) or `Token2.0` (OAuth)
 retrieve_aw_token <- function(...) {
     # Check session token
@@ -143,7 +143,9 @@ retrieve_aw_token <- function(...) {
 
     # Check expiration
     if (!token$validate()) {
-        token$refresh()
+        # This might be the wrong thing to do with OAuth, but it's the right
+        # thing to do for JWT
+        .adobeanalytics$token$refresh()
     }
 
     return(.adobeanalytics$token)
