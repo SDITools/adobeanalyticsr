@@ -1,3 +1,5 @@
+# General auth -------------------------------------------------
+
 #' Generate an access token for Adobe Analytics 2.0
 #'
 #' `aw_oauth` and `aw_jwt` should not be called directly, as these do not cache
@@ -31,8 +33,6 @@ aw_auth <- function(type = aw_auth_with(), ...) {
         jwt = auth_jwt(...),
         oauth = auth_oauth(...)
     )
-
-    stash_token()
 }
 
 
@@ -389,11 +389,15 @@ AdobeJwtToken <- R6::R6Class("AdobeJwtToken", list(
 auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
                        client_secret = Sys.getenv("AW_CLIENT_SECRET"),
                        use_oob = TRUE) {
-    # Temporarily disable httr token caching
-    withr::local_options(list("httr_oauth_cache" = FALSE))
-
     stopifnot(is.character(client_id))
     stopifnot(is.character(client_secret))
+
+    if (use_oob) {
+        oob_value <- "https://adobeanalyticsr.com/token_result.html"
+    } else {
+        oob_value <- NULL
+    }
+
 
     if (any(c(client_id, client_secret) == "")) {
         stop("Client ID or Client Secret not found. Are your environment variables named `AW_CLIENT_ID` and `AW_CLIENT_SECRET`?")
@@ -416,8 +420,9 @@ auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
         endpoint = aw_endpoint,
         app = aw_app,
         scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
+        cache = token_path(getOption("adobeanalyticsr.auth_path", "aa.oauth")),
         use_oob = use_oob,
-        oob_value = ifelse(use_oob, "https://adobeanalyticsr.com/token_result.html", NULL)
+        oob_value = oob_value
     )
 
     message("Successfully authenticated with OAuth")

@@ -14,6 +14,8 @@ get_me(
 \item{req_path}{The endpoint for that particular report}
 
 \item{client_id}{Set in environment args, or pass directly here}
+
+\item{client_secret}{Set in environment args, or pass directly here}
 }
 \value{
 A data frame of company ids and company names

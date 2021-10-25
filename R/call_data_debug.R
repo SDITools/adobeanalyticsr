@@ -30,7 +30,7 @@ aw_call_data_debug <- function(req_path,
   )
 
   # creates token to aa.oauth if not present
-  token <- aw_token(client_id, client_secret)
+  token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
 
   request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                          company_id, req_path)
@@ -39,7 +39,7 @@ aw_call_data_debug <- function(req_path,
                      url = request_url,
                      body = body,
                      encode = "json",
-                     config(token = token),
+                     token_config,
                      verbose(data_out = debug),
                      httr::add_headers(
                        `x-api-key` = client_id,

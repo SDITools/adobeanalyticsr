@@ -30,6 +30,8 @@ Imports:
     lubridate (>= 1.7.9),
     ggplot2 (>= 3.3.2),
     scales (>= 1.1.1),
+    R6,
+    jose,
     lifecycle,
     glue,
     tibble,

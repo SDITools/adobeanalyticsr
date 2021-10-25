@@ -6,7 +6,11 @@
 \alias{adobeanalyticsr-package}
 \title{\code{adobeanalyticsr} Package}
 \description{
-Description of \code{adobeanalyticsr}
+Connect to the 'Adobe Analytics' API v2.0
+\url{https://github.com/AdobeDocs/analytics-2.0-apis} which powers 'Analysis
+Workspace'. The package was developed with the analyst in mind, and it will
+continue to be developed with the guiding principles of iterative,
+repeatable, timely analysis.
 }
 \seealso{
 Useful links:

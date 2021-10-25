@@ -49,7 +49,8 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                            segmentable = 'NULL',
                            expansion = NA,
                            company_id = Sys.getenv("AW_COMPANY_ID"),
-                           debug = FALSE){
+                           debug = FALSE,
+                           use_oob = TRUE){
 
   #remove spaces from the list of expansion tags
   if(is.na(paste(expansion,collapse=","))) {
