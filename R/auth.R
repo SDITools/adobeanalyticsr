@@ -127,7 +127,7 @@ retrieve_aw_token <- function(...) {
         path <- token_path(getOption("adobeanalyticsr.auth_name", "aw_auth.rds"))
         cached_token_exists <- file.exists(path)
 
-        if (cached_token_exists) {
+        if (cached_token_exists && type == "oauth") {
             message(paste("Retrieving cached token:", path))
             token <- readRDS(path)
             type <- token_type(token)
@@ -137,23 +137,19 @@ retrieve_aw_token <- function(...) {
             message("No session token or cached token -- generating new token")
             aw_auth(type = aw_auth_with(), ...)
             token <- .adobeanalytics$token
+            type <- aw_auth_with()
         }
     }
 
-    # Check expiration for cached token
-    if (type == "oauth") {
-        # OAuth 2.0 refresh takes care of itself
-        # Note: there might not be a way to use the refresh token
-        aw_auth(type = "oauth", ...)
-    } else if (type == "jwt") {
-        # JWT can easily be regenerated
-        # TODO Store credentials used to generate JWT token so it can be
-        # regenerated even without environment variables
-        if (is_jwt_expired(token)) aw_auth(type = "jwt", ...)
+    # Check expiration
+    if (!token$validate()) {
+        token$refresh()
     }
 
     return(.adobeanalytics$token)
 }
+
+
 
 
 #' Cache token
@@ -205,7 +201,7 @@ token_path <- function(...) {
 token_type <- function(token) {
     if (inherits(token, "Token2.0")) {
         "oauth"
-    } else if (inherits(token, "response")) {
+    } else if (inherits(token, "AdobeJwtToken")) {
         "jwt"
     } else if (is.null(token)) {
         NULL
@@ -232,7 +228,7 @@ get_token_config <- function(client_id,
 
     switch(type,
         oauth = httr::config(token = token),
-        jwt = httr::add_headers(Authorization = paste("Bearer", content(token)$access_token)),
+        jwt = httr::add_headers(Authorization = paste("Bearer", content(token$token)$access_token)),
         stop("Unknown token type")
     )
 }
@@ -250,39 +246,62 @@ auth_jwt <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
                      tech_id = Sys.getenv("AW_TECHNICAL_ID"),
                      jwt_token = NULL,
                      ...) {
-    stopifnot(is.character(client_id))
-    stopifnot(is.character(client_secret))
-    stopifnot(is.character(private_key))
-    stopifnot(is.character(org_id))
-    stopifnot(is.character(tech_id))
+    secrets <- list(
+        client_id = client_id,
+        client_secret = client_secret,
+        private_key = private_key,
+        org_id = org_id,
+        tech_id = tech_id
+    )
 
-    if (any(c(client_id, client_secret) == "")) {
+    resp <- auth_jwt_gen(secrets = secrets, jwt_token = jwt_token)
+
+
+    # If successful
+    message("Successfully authenticated with JWT: access token valid until ",
+                  resp$date + httr::content(resp)$expires_in / 1000)
+
+    .adobeanalytics$token <- AdobeJwtToken$new(resp, secrets)
+}
+
+
+#' Generate the authentication response object
+#'
+#' @param secrets List of secret values, see `auth_jwt`
+#' @param jwt_token Optional, a JWT token (e.g., a cached token)
+#'
+#' @noRd
+auth_jwt_gen <- function(secrets,
+                         jwt_token = NULL) {
+
+    stopifnot(is.character(secrets$client_id))
+    stopifnot(is.character(secrets$client_secret))
+    stopifnot(is.character(secrets$private_key))
+    stopifnot(is.character(secrets$org_id))
+    stopifnot(is.character(secrets$tech_id))
+
+    if (any(c(secrets$client_id, secrets$client_secret) == "")) {
         stop("Client ID or Client Secret not found. Are your environment variables named `AW_CLIENT_ID` and `AW_CLIENT_SECRET`?")
     }
 
 
     jwt_token <- get_jwt_token(jwt_token = jwt_token,
-                               client_id = client_id,
-                               private_key = private_key,
-                               org_id = org_id,
-                               tech_id = tech_id)
+                               client_id = secrets$client_id,
+                               private_key = secrets$private_key,
+                               org_id = secrets$org_id,
+                               tech_id = secrets$tech_id)
 
 
     token <- httr::POST(url="https://ims-na1.adobelogin.com/ims/exchange/jwt",
                         body = list(
-                            client_id = client_id,
-                            client_secret = client_secret,
+                            client_id = secrets$client_id,
+                            client_secret = secrets$client_secret,
                             jwt_token = jwt_token
                         ),
                         encode = 'form')
 
     httr::stop_for_status(token)
-
-    # If successful
-    message("Successfully authenticated with JWT: access token valid until ",
-                  token$date + httr::content(token)$expires_in / 1000)
-
-    .adobeanalytics$token <- token
+    token
 }
 
 
@@ -317,9 +336,9 @@ get_jwt_token <- function(jwt_token = NULL,
             sub = tech_id,
             aud = paste0('https://ims-na1.adobelogin.com/c/', client_id),
             # Metascope for Adobe Analytics
-            "https://ims-na1.adobelogin.com/s/ent_analytics_bulk_ingest_sdk" = TRUE,
-            iat = NULL
+            "https://ims-na1.adobelogin.com/s/ent_analytics_bulk_ingest_sdk" = TRUE
         )
+
         jwt_token <- jose::jwt_encode_sig(jwt_claim, private_key, size = 256)
     }
 
@@ -327,17 +346,40 @@ get_jwt_token <- function(jwt_token = NULL,
 }
 
 
-#' Check whether token expired (internal)
+#' Adobe JWT token response
 #'
-#' @param token The access token to check
+#' Includes the response object containing the bearer token as well as the
+#' credentials used to generate the token for seamless refreshing.
 #'
-#' @return TRUE or FALSE
+#' Refreshing is disabled if the user used a custom JWT token.
+#'
+#' @setion Methods:
+#' * `refresh()`: refresh access token (if possible)
+#' * `validate()`: TRUE if the token is still valid, FALSE otherwise
+#'
+#' @docType class
+#' @keywords internal
+#' @format An R6 object
+#' @importFrom R6 R6Class
 #' @export
-is_jwt_expired <- function(token) {
-    # allow 20 mins grace for long calls
-    token$date + httr::content(token)$expires_in / 1000 <= Sys.time() - 1200
-}
-
+AdobeJwtToken <- R6::R6Class("AdobeJwtToken", list(
+    secrets = NULL,
+    token = NULL,
+    initialize = function(token, secrets) {
+        self$secrets <- secrets
+        self$token <- token
+    },
+    can_refresh = function() {
+        !all(c(secrets$private_key, secrets$org_id, secrets$tech_id) == "")
+    },
+    refresh = function() {
+        self$token <- auth_jwt_gen(self$secrets)
+        self
+    },
+    validate = function() {
+        self$token$date + httr::content(self$token)$expires_in / 1000 > Sys.time() - 1200
+    }
+))
 
 
 # OAuth ----------------------------------------------------------------
@@ -347,6 +389,9 @@ is_jwt_expired <- function(token) {
 auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
                        client_secret = Sys.getenv("AW_CLIENT_SECRET"),
                        use_oob = TRUE) {
+    # Temporarily disable httr token caching
+    withr::local_options(list("httr_oauth_cache" = FALSE))
+
     stopifnot(is.character(client_id))
     stopifnot(is.character(client_secret))
 
@@ -371,7 +416,6 @@ auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
         endpoint = aw_endpoint,
         app = aw_app,
         scope = "openid,AdobeID,read_organizations,additional_info.projectedProductContext,additional_info.job_function",
-        cache = "aa.oauth",
         use_oob = use_oob,
         oob_value = ifelse(use_oob, "https://adobeanalyticsr.com/token_result.html", NULL)
     )
