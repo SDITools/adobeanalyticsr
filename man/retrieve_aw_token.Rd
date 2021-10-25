@@ -17,3 +17,4 @@ Updates (if necessary) and returns session token. First checks for a session
 token, then a cached token, then generates a new token. The default type may
 be set for the session with \code{aw_auth_with}.
 }
+\keyword{internal}

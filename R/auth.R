@@ -152,30 +152,6 @@ retrieve_aw_token <- function(...) {
 }
 
 
-
-
-#' Cache token
-#'
-#' The token is saved as `aw_auth.rds` in the current working directory, or
-#' in the location pointed to by the option `adobeanalyticsr.auth_path`.
-#' The `adobeanalyticsr.auth_name` option can be used to override the default
-#' filename. In a pinch, this could be used to store multiple tokens.
-#'
-#' @return Invisibly, the filename of the token
-#' @export
-stash_token <- function() {
-    if (is.null(.adobeanalytics$token)) stop("Token not set correctly")
-
-    path <- token_path(getOption("adobeanalyticsr.auth_name", "aw_auth.rds"))
-
-    message(paste0("Saving token to '", path, "'"))
-    dir.create(token_path(), showWarnings = FALSE, recursive = TRUE)
-    saveRDS(.adobeanalytics$token, path)
-
-    invisible(path)
-}
-
-
 #' Standard location for token caching
 #'
 #' The default path for the token is the current working directory, but
