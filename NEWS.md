@@ -1,3 +1,5 @@
+# adobeanalyticsr (development version)
+
 # adobeanalyticsr 0.1.5
 
 * Adjusted a few minor things in prep for CRAN submission
