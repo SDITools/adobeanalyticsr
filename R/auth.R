@@ -222,6 +222,8 @@ token_type <- function(token) {
 #'
 #' @return Config objects that can be passed to `httr::GET` or similar
 #' functions (e.g. `httr::RETRY`)
+#' @export
+#' @rd
 get_token_config <- function(client_id,
                              client_secret) {
     token <- retrieve_aw_token(client_id,
@@ -408,7 +410,7 @@ auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
     aw_endpoint <- httr::oauth_endpoint(
         authorize = "authorize/v2/",
         access = "token/v3",
-        base_url = "https://ims-na1.adobelogin.com/ims/"
+        base_url = "https://ims-na1.adobelogin.com/ims"
     )
 
     aw_app <- httr::oauth_app(
