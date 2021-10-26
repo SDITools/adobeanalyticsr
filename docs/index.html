@@ -120,16 +120,25 @@
 <p>The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does <em>not</em> require that an Adobe Console API project be created, which <em>is</em> something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does <em>not</em> need web services access set up on an account-by-account basis to pull data using the package.</p>
 <p>As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining <code>RSiteCatalyst</code>. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that <code>adobeanalyticsr</code> can live up to the high standard he set with his work.</p>
 </div>
-<div id="install-the-package" class="section level3">
+<div id="install-the-package-recommended" class="section level3">
 <h3 class="hasAnchor">
-<a href="#install-the-package" class="anchor"></a>Install the package</h3>
+<a href="#install-the-package-recommended" class="anchor"></a>Install the package (recommended)</h3>
+<pre><code><a href="https://rdrr.io/r/utils/install.packages.html"># Install from CRAN
+install.packages('adobeanalyticsr')
+
+# Load the package
+library(adobeanalyticsr) </a></code></pre>
+</div>
+<div id="install-the-development-version-of-the-package" class="section level3">
+<h3 class="hasAnchor">
+<a href="#install-the-development-version-of-the-package" class="anchor"></a>Install the development version of the package</h3>
 <pre><code><a href="https://rdrr.io/r/utils/install.packages.html"># Install devtools from CRAN
 install.packages("devtools")
 
 # Install adobeanayticsr from github
 devtools::install_github('benrwoodard/adobeanalyticsr') 
 
-# Load the pacakge
+# Load the package
 library(adobeanalyticsr) </a></code></pre>
 </div>
 <div id="current-setup-process-overview" class="section level3">

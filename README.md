@@ -21,7 +21,17 @@ The v1.4 API also allows the user to pull data once they have web services acces
 
 As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining `RSiteCatalyst`. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that `adobeanalyticsr` can live up to the high standard he set with his work.
   
-### Install the package
+### Install the package (recommended)
+
+```
+# Install from CRAN
+install.packages('adobeanalyticsr')
+
+# Load the package
+library(adobeanalyticsr) 
+```
+
+### Install the development version of the package
 
 ```
 # Install devtools from CRAN
@@ -30,7 +40,7 @@ install.packages("devtools")
 # Install adobeanayticsr from github
 devtools::install_github('benrwoodard/adobeanalyticsr') 
 
-# Load the pacakge
+# Load the package
 library(adobeanalyticsr) 
 ```
 

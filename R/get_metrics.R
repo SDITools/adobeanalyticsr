@@ -61,7 +61,7 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   }
 
   #Turn the list into a string to create the query
-  prequery <- list(vars %>% select_if(~ any(!is.na(.))))
+  prequery <- list(vars %>% dplyr::select_if(~ any(!is.na(.))))
 
   #remove the extra parts of the string and replace it with the query parameter breaks
   query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
@@ -72,7 +72,6 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   #request the metrics list from the API
   res <- aw_call_api(req_path = urlstructure,
                      debug = debug,
-                     use_oob = use_oob,
                      company_id = company_id)
 
   #change the result to a list
