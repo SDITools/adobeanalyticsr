@@ -147,43 +147,35 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 {
 
   # Prep Work for the api calls ------------------------------------------------------------------
-  # Making sure metrics and dimensions are available. Error handling.
-  dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
-  mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
-
-  # pull out the calculated metrics
-  cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
-
-  if (length(cms_ids) > 0) {
-    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
-    dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)], cms[c(2, 3)])
-  } else {
-    dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)])
-  }
-
-  finalnames <- c(dimensions, metrics)
-
-  # include an error handler for metrics that do not appear in the list
-  for (x in seq(finalnames)) {
-    if (finalnames[[x]] %in% dimmets[, 1] == FALSE) {
-      stop(paste0('\'', finalnames[[x]], '\' is not an available element'))
-    }
-  }
-
-  # create the list of pretty named variables for the final output dataset
-  if (prettynames == TRUE) {
-    pnames <- function(x) {
-      dimmets %>% dplyr::filter(finalnames[x] == id) %>% dplyr::pull(name)
-    }
-    prettyfinalnames <- map_chr(seq(finalnames), pnames)
-  }
-
   # Identify the handling of unspecified
   unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
 
-  # Why is this here?
+  # All dimension and metric names
+  finalnames <- c(dimensions, metrics)
+
+  # Component lookup table
+  dimmets <- make_component_lookup(rsid, company_id, metrics)
+
+  # Check for invalid components
+  invalid_components <- invalid_component_names(component = finalnames,
+                                                lookup = dimmets)
+
+  if (length(invalid_components > 0)) {
+    invalid_compenents <- paste(invalid_compenents, collapse = ", ")
+    stop(paste("Components not found: ", invalid_compenents))
+  }
+
+
+  # create the list of pretty named variables for the final output dataset
+  if (prettynames == TRUE) {
+    prettyfinalnames <- dimmets$name[match(finalnames, dimmets$id)]
+  }
+
+
+  # TODO Why is this here? Why is this a list?
   itemId <- list(dimensions)
 
+  # TODO prefinalnames is a list, could most likely be a named vector instead
   prefinalnames <- purrr::map(seq(dimensions), function(level) {
    c(paste0('itemId_',dimensions[level]), dimensions[level])
   }) %>%
@@ -201,29 +193,14 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   top <- top_daterange_number(top, dimensions, date_range)
 
   # estimated runtime
-  if (length(top) > 1) {
-    toplength <- length(top)
-    i <- product <- 1
-    topestimate1 <- top[-toplength]
-    topestimate1 <- append(topestimate1, 1, after = 0)
+  n_requests <- estimate_requests(top)
 
-    for (i in seq(toplength)) {
-      product <- product + prod(topestimate1[1:i])
-    }
-    # sec
-    est_secs <- round((product-1)*.80, digits = 2)
-    # min
-    est_mins <- round(((product-1)*.80)/60, digits = 2)
-    message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
-    # message(paste0('Estimating a total of ', product-2, ' API calls'))
-  }
-
-  # segment filter builder
+  # Build segment filter
   segments <- purrr::map(segmentId, function(segmentId) {
     list(type = "segment", segmentId = segmentId)
   })
 
-  # create the DateRange list item (dr)
+  # Create the DateRange list item (dr)
   # Why is this a nested list?
   dr <- list(list(
     type = "dateRange",
@@ -498,7 +475,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
         dat <- resrows$rows %>%
           dplyr::select(itemId, value) %>%
           dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(paste0('1 of ', product-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' requests.'))
+        message(paste0('1 of ', n_requests-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' requests.'))
       }
     }
 
@@ -784,3 +761,76 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 }
 
 
+#' Make a component lookup table
+#'
+#' @param rsid Reportsuite ID
+#' @param company_id Company ID
+#' @param metrics Vector of metric IDs, for getting calculated metrics
+#'
+#' @return `data.frame`
+#' @noRd
+make_component_lookup <- function(rsid, company_id, metrics) {
+  # Get dimension and metric lookup tables
+  dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
+  mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
+
+  # pull out the calculated metrics
+  cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
+
+  if (length(cms_ids) > 0) {
+    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
+    dimmets <- rbind(dims[c("id", "name")], mets[c("id", "name")], cms[c(2, 3)])
+  } else {
+    dimmets <- rbind(dims[c("id", "name")], mets[c("id", "name")])
+  }
+
+  dimmets
+}
+
+
+#' Check if components are recognized by API
+#'
+#' Find components that aren't found in a lookup.
+#'
+#' @param component Character vector of component IDs
+#' @param lookup Data frame containing ID column to compare names to
+#'
+#' @return Character vector of components that weren't found
+#' @noRd
+invalid_component_names <- function(component, lookup) {
+  if (is.null(lookup$id)) {
+    stop("Invalid lookup, missing 'id' column")
+  }
+
+  component[!(component %in% lookup$id)]
+}
+
+
+#' Estimate number of requests for query
+#'
+#' Also calculates estimated runtime and sends it as a message to the console
+#'
+#' @param top Top argument
+#'
+#' @return Number of requests necessary to complete query
+#' @noRd
+estimate_requests <- function(top) {
+  if (length(top) > 1) {
+    toplength <- length(top)
+    i <- product <- 1
+    topestimate1 <- top[-toplength]
+    topestimate1 <- append(topestimate1, 1, after = 0)
+
+    for (i in seq(toplength)) {
+      product <- product + prod(topestimate1[1:i])
+    }
+    # sec
+    est_secs <- round((product-1)*.80, digits = 2)
+    # min
+    est_mins <- round(((product-1)*.80)/60, digits = 2)
+    message('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.')
+    # message(paste0('Estimating a total of ', product-2, ' API calls'))
+
+    product
+  }
+}
