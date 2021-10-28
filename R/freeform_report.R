@@ -237,41 +237,11 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   bdnumber <- as.numeric(max(df$breakdownorder))
   metnumber <- as.numeric(length(metrics))
 
-  # metrics list items
-  # if = 1st dimension
-  metricContainerFunction <- function(i) {
-    mc <- list()
-
-    if (i == 1) {
-      m1list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],
-                     metricSort = metricSort)
-      mc <- purrr::pmap(m1list, metriccontainer_1)
-    } else if (i == 2) {
-      m2list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],
-                     metricSort = metricSort,
-                     filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
-      mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
-    } else {
-      # if = 3rd dimension or more
-      L <- list(seq(nrow(df$metric[[i]][1])*(i-1))-1)
-      filteridslist <- split(L[[1]], rep(1:nrow(df$metric[[i]][1]), length = length(L[[1]])))
-
-      m3list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],
-                     metricSort = metricSort,
-                     filterId = filteridslist)
-      mc <- append(mc, values = purrr::pmap(m3list, metriccontainer_n))
-    }
-
-    mc
-  }
-
-  mlist <- purrr::map(seq(bdnumber), metricContainerFunction)
+  # Metric containers
+  mlist <- purrr::map(seq(bdnumber), metricContainerFunction, df = df, metricSort = metricSort)
 
   # Pre-create the MetricFilters list needed to iterate through the api calls
-  mfdims <- purrr::map(seq_along(dimensions)-1, function(dimItems) {
+  mfdims <- purrr::map(seq_along(dimensions) - 1, function(dimItems) {
     mflist <- list(dimension = rep(dimensions[1:dimItems], each = metnumber))
     mflist <- append(mflist, values = list('type' = 'breakdown'))
     mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
@@ -287,8 +257,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   })
 
   # API Calls ---------------------------------------------------------------
-  # TODO Check for no dimensions error
-  # TODO Check response for partial response error
+  # TODO Check for no-dimensions error
   # TODO Pull these call functions out, generalize, etc.
 
   ## Technique ------------
@@ -656,6 +625,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 #' @param metric Vector of metrics
 #'
 #' @return Logical, `TRUE` if metric is custom and `FALSE` otherwise
+#' @noRd
 is_custom_metric <- function(metric) {
   grepl('cm[1-9]*_*', metric)
 }
@@ -736,18 +706,33 @@ estimate_requests <- function(top) {
 }
 
 
-#' Generate metric container at the first level
+#' Generate metric containers
 #'
-#' The first metric container does not need filter IDs. It also serves as a
-#' good base for the other metric container levels.
+#' Vectorized metric container generator. Works for any level of metric
+#' container.
 #'
-#' @param metric Metric to add
-#' @param colId Column ID
+#' @param metric Metrics
+#' @param colId Column IDs
 #' @param metricSort Direction of metric sorting
+#' @param filterId Optional, filter IDs, defaults to NULL
 #'
-#' @return List, the metric container
+#' @return List, the metric containers
 #' @noRd
-metriccontainer_1 <- function(metric, colId, metricSort) {
+metriccontainers <- function(metric, colId, metricSort, filterId = NULL) {
+  met_list <- list(metric, colId, metricSort)
+  if (!is.null(filterId)) met_list$filterId <- filterId
+
+  purrr::pmap(met_list, metriccontainer)
+}
+
+
+#' Generate one metric container
+#'
+#' See `metriccontainers` for documentation.
+#'
+#' @noRd
+metriccontainer <- function(metric, colId, metricSort, filterId = NULL) {
+  # Common elements
   out <- list(
     columnId = colId,
     id = metric,
@@ -761,34 +746,38 @@ metriccontainer_1 <- function(metric, colId, metricSort) {
     }
   }
 
-  out
-}
-
-
-#' Generate metric container at the second level
-#'
-#' Same as at the first level, but with a filter ID
-#'
-#' @param metric Metric to add
-#' @param colId Column ID
-#' @param metricSort Direction of metric sorting
-#'
-#' @return List, the metric container
-#' @noRd
-metriccontainer_2 <- function(metric, colId, metricSort, filterId) {
-  out <- metriccontainer_1(metric, colId, metricSort)
-  out$filterId <- filterId
+  if (!is.null(filterId)) {
+    out$filterId <- filterId
+  }
 
   out
 }
 
 
-#' Just a wrapper around metriccontainer_2
+
+#' Generate a metric container
 #'
-#' @param ... Arguments passed to metriccontainer_2
+#' @param i Row of `df` to operate on
+#' @param df Data frame containing metric information
+#' @param metricSort How to sort metrics ("asc" or "desc")
 #'
-#' @return List, the metric container
 #' @noRd
-metriccontainer_n <- function(...) {
-  metriccontainer_2(...)
+metricContainerFunction <- function(i, df, metricSort) {
+  mc <- list()
+
+  if (i == 1) {
+    filterId <- NULL
+  } else if (i == 2) {
+    filterId <- seq(nrow(df$metric[[i]][1])*(i-1))-1
+  } else {
+    L <- seq(nrow(df$metric[[i]]) * (i - 1)) - 1
+    filterId <- split(L, rep(1:nrow(df$metric[[i]]), length = length(L)))
+  }
+
+  metriccontainers(
+      metric = df$metric[[i]][[1]],
+      colId = df$metric[[i]][[2]],
+      metricSort = metricSort,
+      filterId = filterId
+  )
 }
