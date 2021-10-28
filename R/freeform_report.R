@@ -145,18 +145,16 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               debug = FALSE
 )
 {
-
   # Prep Work for the api calls ------------------------------------------------------------------
-  # Identify the handling of unspecified
-  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
-
-  # All dimension and metric names
-  finalnames <- c(dimensions, metrics)
-
-  # Component lookup table
   dimmets <- make_component_lookup(rsid, company_id, metrics)
 
-  # Check for invalid components
+  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
+  top <- top_daterange_number(top, dimensions, date_range)
+  n_requests <- estimate_requests(top)
+  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
+  finalnames <- c(dimensions, metrics)
+
+
   invalid_components <- invalid_component_names(component = finalnames,
                                                 lookup = dimmets)
 
@@ -165,11 +163,10 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     stop(paste("Components not found: ", invalid_compenents))
   }
 
-
-  # create the list of pretty named variables for the final output dataset
   if (prettynames == TRUE) {
     prettyfinalnames <- dimmets$name[match(finalnames, dimmets$id)]
   }
+
 
 
   # TODO Why is this here? Why is this a list?
@@ -186,14 +183,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     paste0('itemId_', dimensions[[items]])
   })
 
-  ## set the timeframe for the query (timeframe)
-  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
-
-  ## setup the right number of limits for each dimension (top)
-  top <- top_daterange_number(top, dimensions, date_range)
-
-  # estimated runtime
-  n_requests <- estimate_requests(top)
 
   # Build segment filter
   segments <- purrr::map(segmentId, function(segmentId) {
@@ -206,26 +195,31 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     type = "dateRange",
     dateRange = timeframe))
 
-  # join Segment and DateRange builder function
-  s_dr <- function() {
-    if (is.na(segmentId[[1]])) {
-      list(list(
-        type = "dateRange",
-        dateRange = timeframe
-      ))
-    } else {
-      append(segments, dr)
-    }
+  # Create the global filters (gf)
+  if (is.na(segmentId[[1]])) {
+    gf <- list(list(
+      type = "dateRange",
+      dateRange = timeframe
+    ))
+  } else {
+    gf <- append(segments, dr)
   }
 
-  # Create the global filters (gf)
-  gf <- s_dr()
 
   # search item builder filter (search)
+  # TODO What's the goal here, to recycle search values?
+  # First, replace empty strings with NA
+  # Second, fill missing spots with NA
+
+  # Instead, it will be more useful to use a conventional recycle technique
+  #   i.e. throw an error if incompatible, instead of just filling with NA
   search[search == ''] <- NA
-  add_si <- length(dimensions) - length(search)
-  added_si <- rep(NA, add_si)
-  search <- append(search, added_si)
+
+  if (length(search) != length(dimensions) && length(search) != 1) {
+    stop("Incorrect number of search elements -- search must have length 1 or length(dimensions)")
+  } else {
+    search <- vctrs::vec_recycle(search, length(dimensions))
+  }
 
   search <- purrr::map(seq(dimensions), function(si) {
     if (!is.na(search[si])){
@@ -234,110 +228,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
       NA
     }
   })
-
-
-  # TODO Extract and generalize metric container functions
-  ## function to create the top level 'metricsContainer'
-  metriccontainer_1 <- function(metric, colId, metricSort) {
-    if (colId == 0) {
-      if (grepl('cm[1-9]*_*', metric)) {
-        list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort
-        )
-      } else {
-        list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          sort = metricSort
-        )
-      }
-    } else {
-      if (grepl('cm[1-9]*_*', metric)) {
-        list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort
-        )
-      } else {
-        list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric)
-        )
-      }}
-  }
-
-  ### function to create the  breakdown 'metricsContainer'
-  metriccontainer_2 <- function(metric, colId, metricSort, filterId) {
-    if (colId == 0) {
-      if (grepl('cm[1-9]*_*', metric)) {
-        list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort,
-          filters = list(
-            filterId
-          ))
-      } else {
-        list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          sort = metricSort,
-          filters = list(
-            filterId
-         ))
-      }
-    } else {
-      if (grepl('cm[1-9]*_*', metric)) {
-        list(
-          columnId = colId,
-          id = metric,
-          filters = list(
-            filterId
-        ))
-      } else {
-        list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          filters = list(
-            filterId
-        ))
-      }}
-  }
-
-  metriccontainer_n <- function(metric, colId, metricSort , filterId) {
-    if (colId == 0) {
-      if (grepl('cm[1-9]*_*', metric)) {
-        list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort,
-          filters = filterId
-        )
-      } else {
-        list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          sort = metricSort,
-          filters = filterId
-        )
-      }
-    } else {
-      if (grepl('cm[1-9]*_*', metric)) {
-        list(
-          columnId = colId,
-          id = metric,
-          filters = filterId
-        )
-      } else {
-        list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          filters = filterId
-        )
-      }
-    }}
 
   # setup the tibble for building the queries
   metIds <- tibble(metrics, colid = seq(length(metrics))-1)
@@ -761,6 +651,16 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 }
 
 
+#' Check if metrics are custom
+#'
+#' @param metric Vector of metrics
+#'
+#' @return Logical, `TRUE` if metric is custom and `FALSE` otherwise
+is_custom_metric <- function(metric) {
+  grepl('cm[1-9]*_*', metric)
+}
+
+
 #' Make a component lookup table
 #'
 #' @param rsid Reportsuite ID
@@ -775,7 +675,7 @@ make_component_lookup <- function(rsid, company_id, metrics) {
   mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
 
   # pull out the calculated metrics
-  cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
+  cms_ids <- metrics[is_custom_metric(metrics)]
 
   if (length(cms_ids) > 0) {
     cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
@@ -833,4 +733,62 @@ estimate_requests <- function(top) {
 
     product
   }
+}
+
+
+#' Generate metric container at the first level
+#'
+#' The first metric container does not need filter IDs. It also serves as a
+#' good base for the other metric container levels.
+#'
+#' @param metric Metric to add
+#' @param colId Column ID
+#' @param metricSort Direction of metric sorting
+#'
+#' @return List, the metric container
+#' @noRd
+metriccontainer_1 <- function(metric, colId, metricSort) {
+  out <- list(
+    columnId = colId,
+    id = metric,
+    sort = metricSort
+  )
+
+  if (!is_custom_metric(metric)) {
+    out$id <- paste("metrics", metric, sep = "/")
+    if (colId != 0) {
+      out$sort <- NULL
+    }
+  }
+
+  out
+}
+
+
+#' Generate metric container at the second level
+#'
+#' Same as at the first level, but with a filter ID
+#'
+#' @param metric Metric to add
+#' @param colId Column ID
+#' @param metricSort Direction of metric sorting
+#'
+#' @return List, the metric container
+#' @noRd
+metriccontainer_2 <- function(metric, colId, metricSort, filterId) {
+  out <- metriccontainer_1(metric, colId, metricSort)
+  out$filterId <- filterId
+
+  out
+}
+
+
+#' Just a wrapper around metriccontainer_2
+#'
+#' @param ... Arguments passed to metriccontainer_2
+#'
+#' @return List, the metric container
+#' @noRd
+metriccontainer_n <- function(...) {
+  metriccontainer_2(...)
 }
