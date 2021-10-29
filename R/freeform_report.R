@@ -118,7 +118,6 @@
 #'
 #' @import assertthat
 #' @import httr
-#' @import httr
 #' @import dplyr
 #' @import stringr
 #' @import purrr
@@ -147,20 +146,21 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 {
   # Prep Work for the api calls ------------------------------------------------------------------
   dimmets <- make_component_lookup(rsid, company_id, metrics)
+  # TODO Consider adding component lookups to environment
 
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
-  top <- top_daterange_number(top, dimensions, date_range)
   n_requests <- estimate_requests(top)
-  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
   finalnames <- c(dimensions, metrics)
+  top <- top_daterange_number(top, dimensions, date_range)
+  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
 
 
   invalid_components <- invalid_component_names(component = finalnames,
                                                 lookup = dimmets)
 
   if (length(invalid_components > 0)) {
-    invalid_compenents <- paste(invalid_compenents, collapse = ", ")
-    stop(paste("Components not found: ", invalid_compenents))
+    invalid_components <- paste(invalid_components, collapse = ", ")
+    stop(paste("Component(s) not found: ", invalid_components), call. = FALSE)
   }
 
   if (prettynames == TRUE) {
@@ -169,7 +169,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
 
-  # TODO Why is this here? Why is this a list?
+  # TODO Why is this here? Why is this a list? Should this be as.list?
   itemId <- list(dimensions)
 
   # TODO prefinalnames is a list, could most likely be a named vector instead
@@ -190,7 +190,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   })
 
   # Create the DateRange list item (dr)
-  # Why is this a nested list?
+  # TODO Why is this a nested list?
   dr <- list(list(
     type = "dateRange",
     dateRange = timeframe))
@@ -206,18 +206,13 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
 
-  # search item builder filter (search)
-  # TODO What's the goal here, to recycle search values?
-  # First, replace empty strings with NA
-  # Second, fill missing spots with NA
-
-  # Instead, it will be more useful to use a conventional recycle technique
-  #   i.e. throw an error if incompatible, instead of just filling with NA
+  # search item builder filter
   search[search == ''] <- NA
 
   if (length(search) != length(dimensions) && length(search) != 1) {
     stop("Incorrect number of search elements -- search must have length 1 or length(dimensions)")
   } else {
+    # TODO Pull out this functionality instead of using vctrs
     search <- vctrs::vec_recycle(search, length(dimensions))
   }
 
@@ -230,7 +225,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   })
 
   # setup the tibble for building the queries
-  metIds <- tibble(metrics, colid = seq(length(metrics))-1)
+  metIds <- tibble(metrics, colid = seq(length(metrics)) - 1)
 
   df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, top)
   df <- df %>% dplyr::mutate(breakdownorder = as.numeric(rownames(df)))
@@ -240,11 +235,16 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   # Metric containers
   mlist <- purrr::map(seq(bdnumber), metricContainerFunction, df = df, metricSort = metricSort)
 
+
   # Pre-create the MetricFilters list needed to iterate through the api calls
   mfdims <- purrr::map(seq_along(dimensions) - 1, function(dimItems) {
-    mflist <- list(dimension = rep(dimensions[1:dimItems], each = metnumber))
-    mflist <- append(mflist, values = list('type' = 'breakdown'))
-    mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
+    mflist <- list(
+      dimension = rep(dimensions[1:dimItems], each = metnumber),
+      type = "breakdown"
+    )
+    mflist$id <- seq(length(mflist$dimension)) - 1
+
+    mflist
   })
 
   # Format a list of metricFilters to run below the metricsContainer
