@@ -144,14 +144,18 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               debug = FALSE
 )
 {
+  # TODO All return values are identical, probably a bug with metriccontainers
+  # functions. Basically the worst thing.
+  # - metriccontainers function working as expected, unless it's zero indexed...
+
   # Prep Work for the api calls ------------------------------------------------------------------
   dimmets <- make_component_lookup(rsid, company_id, metrics)
   # TODO Consider adding component lookups to environment
 
   timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
-  n_requests <- estimate_requests(top)
   finalnames <- c(dimensions, metrics)
   top <- top_daterange_number(top, dimensions, date_range)
+  n_requests <- estimate_requests(top)
   unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
 
 
@@ -233,6 +237,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   metnumber <- as.numeric(length(metrics))
 
   # Metric containers
+  browser()
   mlist <- purrr::map(seq(bdnumber), metricContainerFunction, df = df, metricSort = metricSort)
 
 
@@ -715,11 +720,12 @@ estimate_requests <- function(top) {
 #' @param colId Column IDs
 #' @param metricSort Direction of metric sorting
 #' @param filterId Optional, filter IDs, defaults to NULL
+#' @param n Which request is being built
 #'
 #' @return List, the metric containers
 #' @noRd
-metriccontainers <- function(metric, colId, metricSort, filterId = NULL) {
-  met_list <- list(metric, colId, metricSort)
+metriccontainers <- function(metric, colId, metricSort, filterId = NULL, n) {
+  met_list <- list(metric = metric, colId = colId, metricSort = metricSort, n = n)
   if (!is.null(filterId)) met_list$filterId <- filterId
 
   purrr::pmap(met_list, metriccontainer)
@@ -731,7 +737,7 @@ metriccontainers <- function(metric, colId, metricSort, filterId = NULL) {
 #' See `metriccontainers` for documentation.
 #'
 #' @noRd
-metriccontainer <- function(metric, colId, metricSort, filterId = NULL) {
+metriccontainer <- function(metric, colId, metricSort, filterId = NULL, n) {
   # Common elements
   out <- list(
     columnId = colId,
@@ -747,7 +753,7 @@ metriccontainer <- function(metric, colId, metricSort, filterId = NULL) {
   }
 
   if (!is.null(filterId)) {
-    out$filterId <- filterId
+    out$filters <- ifelse(n == 2, list(filterId), filterId)
   }
 
   out
@@ -778,6 +784,7 @@ metricContainerFunction <- function(i, df, metricSort) {
       metric = df$metric[[i]][[1]],
       colId = df$metric[[i]][[2]],
       metricSort = metricSort,
-      filterId = filterId
+      filterId = filterId,
+      n = i
   )
 }
