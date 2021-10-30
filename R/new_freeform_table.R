@@ -442,6 +442,9 @@ toJSON(final_request, pretty = TRUE, auto_unbox = TRUE)
 
 #' Create requests for item IDs
 #'
+#' Mostly this function is for convenience when dealing with the proper field
+#' names.
+#'
 #' @param global_filter Global filter data structure
 #' @param dimension Dimension to get for the breakdown
 #' @param settings List of settings
@@ -475,6 +478,14 @@ make_request <- function(rsid,
 #' @param rsid Reportsuite ID
 #' @param global_filter Global filter list
 #' @param settings Settings list
+#' @param client_id Client ID
+#' @param client_secret Client secret
+#' @param company_id Company ID
+#' @param debug Whether to debug
+#' @param sort How to sort results
+#' @param top Top N items to get. Assumes input is same length as dimensions.
+#' @param page Which page of results to get. Assumes input is same length as
+#'   dimensions.
 #'
 #' @return Data frame
 #' @noRd
@@ -489,7 +500,11 @@ get_req_data <- function(current_dim,
                          client_secret,
                          company_id,
                          debug,
-                         sort) {
+                         sort,
+                         top,
+                         page) {
+  # TODO Encapsulate common bit of this?
+  # TODO Simplify number of arguments?
   pos_current_dim <- match(current_dim, dimensions)
   previous_dims <- dimensions[seq_len(pos_current_dim - 1)]
 
@@ -511,6 +526,10 @@ get_req_data <- function(current_dim,
     dateRange = dateRange
   )
 
+  # Set top for this query
+  settings$limit <- top[pos_current_dim]
+  settings$page <- page[pos_current_dim]
+
   req <- make_request(
     rsid = rsid,
     global_filter = global_filter,
@@ -519,7 +538,7 @@ get_req_data <- function(current_dim,
     metric_container = mc
   )
 
-
+  message("Requesting data...", appendLF = FALSE)
   data <- fromJSON(aw_call_data(
     req_path = "reports/ranked",
     body = req,
@@ -528,6 +547,7 @@ get_req_data <- function(current_dim,
     client_id = client_id,
     client_secret = client_secret
   ))
+  message(sample(c("Fuck yeah!", "Nicely done!", "You're the shit!"), 1))
 
 
   # Base case
@@ -543,21 +563,21 @@ get_req_data <- function(current_dim,
     if (is.null(item_ids)) item_ids <- character()
 
     purrr::pmap_dfr(dim_items, function(itemId, value, recent_dim) {
-      out <- get_req_data(next_dim,
-                   c(item_ids, itemId),
-                   dimensions,
-                   metrics,
-                   rsid,
-                   global_filter,
-                   settings,
-                   client_id,
-                   client_secret,
-                   company_id,
-                   debug,
-                   sort) %>%
+      get_req_data(current_dim = next_dim,
+                   item_ids = c(item_ids, itemId),
+                   dimensions = dimensions,
+                   metrics = metrics,
+                   rsid = rsid,
+                   global_filter = global_filter,
+                   settings = settings,
+                   client_id = client_id,
+                   client_secret = client_secret,
+                   company_id = company_id,
+                   debug = debug,
+                   sort = sort,
+                   top = top,
+                   page = page) %>%
         dplyr::mutate(!!recent_dim := value)
-
-      out
     }) %>%
       select(all_of(dimensions), data)
   }
@@ -575,5 +595,27 @@ get_req_data(
   client_secret = Sys.getenv("AW_CLIENT_SECRET"),
   company_id = "audiag5",
   debug = FALSE,
-  sort = "desc"
+  sort = "desc",
+  top = c(5, 10),
+  page = c(0, 0)
+)
+
+
+
+
+
+aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
+                              rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+                              date_range = c(Sys.Date()-30, Sys.Date()-1),
+                              dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
+                              metrics = c("visits", "visitors"),
+                              top = c(5),
+                              page = 0,
+                              filterType = 'breakdown',
+                              segmentId = NA,
+                              metricSort =  'desc',
+                              include_unspecified = TRUE,
+                              search = NA,
+                              prettynames = FALSE,
+                              debug = FALSE
 )
