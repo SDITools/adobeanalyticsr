@@ -455,14 +455,16 @@ make_request <- function(rsid,
                          global_filter,
                          dimension,
                          settings,
-                         metric_container) {
-  list(
+                         metric_container,
+                         search = NULL) {
+  purrr::compact(list(
     rsid = rsid,
     globalFilters = global_filter,
     metricContainer = metric_container,
     dimension = dimension,
-    settings = settings
-  )
+    settings = settings,
+    search = search
+  ))
 }
 
 
@@ -486,6 +488,7 @@ make_request <- function(rsid,
 #' @param top Top N items to get. Assumes input is same length as dimensions.
 #' @param page Which page of results to get. Assumes input is same length as
 #'   dimensions.
+#' @param search Search clause in final form
 #'
 #' @return Data frame
 #' @noRd
@@ -502,7 +505,8 @@ get_req_data <- function(current_dim,
                          debug,
                          sort,
                          top,
-                         page) {
+                         page,
+                         search = NULL) {
   # TODO Encapsulate common bit of this?
   # TODO Simplify number of arguments?
   pos_current_dim <- match(current_dim, dimensions)
@@ -535,7 +539,8 @@ get_req_data <- function(current_dim,
     global_filter = global_filter,
     dimension = paste("variables", current_dim, sep = "/"),
     settings = settings,
-    metric_container = mc
+    metric_container = mc,
+    search = search
   )
 
   message("Requesting data...", appendLF = FALSE)
@@ -547,7 +552,7 @@ get_req_data <- function(current_dim,
     client_id = client_id,
     client_secret = client_secret
   ))
-  message(sample(c("Fuck yeah!", "Nicely done!", "You're the shit!"), 1))
+  message(sample(c("Fuck yeah!", "Nicely done!", "Gimme that shit!", "Oh baby!"), 1))
 
 
   # Base case
@@ -618,4 +623,87 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               search = NA,
                               prettynames = FALSE,
                               debug = FALSE
-)
+) {
+  if (is.na(search)) search <- NULL
+  if (is.na(segmentId)) segmentId <- NULL
+
+  # Component lookup checks
+  comp_lookup <- make_component_lookup(rsid, company_id, metrics)
+  invalid_components <- invalid_component_names(component = c(dimensions, metrics),
+                                                lookup = comp_lookup)
+
+  if (length(invalid_components > 0)) {
+    invalid_components <- paste(invalid_components, collapse = ", ")
+    stop(paste("Component(s) not found: ", invalid_components), call. = FALSE)
+  }
+
+  if (prettynames == TRUE) {
+    comp_names <- c(dimensions) # , metrics)
+    prettyfinalnames <- comp_lookup$name[match(comp_names, comp_lookup$id)]
+    names(prettyfinalnames) <- comp_names
+  }
+
+  # Make global filter
+  # TODO Check this works as expected
+  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
+
+  gf <- global_filter(
+    type = c("dateRange", rep("segment", times = length(segmentId))),
+    dateRange = c(timeframe, rep(NA, times = length(segmentId))),
+    segmentId = c(NA, segmentId)
+  )
+
+  # Check search for at least one instance of a keyword
+  if (!is.null(search)) {
+    search_keywords <- c("AND", "OR", "NOT", "MATCH", "CONTAINS", "BEGINS-WITH", "ENDS-WITH")
+    if (sum(grepl(paste(search_keywords, collapse = "|"), search)) == 0) {
+      stop("Search field must contain one of: ", paste(search_keywords, collapse = ", "))
+    }
+    search <- list(clause = search)
+  }
+
+  # Set settings
+  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
+  top <- top_daterange_number(top, dimensions, date_range)
+
+  settings <- req_settings(
+    limit = 0,    # Placeholder, limit set during query
+    page = 0,     # Placeholder, page set during query
+    nonesBehavior = unspecified,
+    dimensionSort = "asc"
+  )
+
+  # Estimate requests
+  n_requests <- estimate_requests(top)
+
+  # Make requests
+  # browser()
+
+  output_data <- get_req_data(
+    current_dim = dimensions[1],
+    dimensions = dimensions,
+    metrics = metrics,
+    rsid = rsid,
+    global_filter = gf,
+    settings = settings,
+    client_id = client_id,
+    client_secret = client_secret,
+    company_id = company_id,
+    debug = debug,
+    sort = metricSort,
+    top = top,
+    page = page,
+    search = search
+  )
+
+  if (prettynames) {
+    output_data <- dplyr::select(output_data,
+                  all_of(prettyfinalnames),
+                  everything())
+  }
+
+  output_data
+}
+
+
+aw_freeform_table()
