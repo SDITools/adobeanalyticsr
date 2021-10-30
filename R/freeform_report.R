@@ -138,15 +138,17 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               search = NA,
                               prettynames = FALSE,
                               debug = FALSE,
-                              check_components = TRUE
-)
-{
-  if (is.na(search)) search <- NULL
-  if (is.na(segmentId)) segmentId <- NULL
+                              check_components = TRUE) {
+  # NOTE: Must be able to handle any length search or segmentId
+  # Search will be the same length as dimensions and contain either NA or
+  # a value. Search is applied for each request.
+  # segmentId may be any length and is applied as a global filter for all queries
+  if (all(is.na(segmentId))) segmentId <- NULL
+  search <- na_fill_vec(search, len = length(dimensions))
 
   # Component lookup checks
   # The component checking is optional, in case speed is a priority
-  if (check_components | pretty_names) {
+  if (check_components | prettynames) {
     comp_lookup <- make_component_lookup(rsid, company_id, metrics)
     invalid_components <- invalid_component_names(component = c(dimensions, metrics),
                                                   lookup = comp_lookup)
@@ -157,9 +159,8 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     }
 
     if (prettynames == TRUE) {
-      comp_names <- c(dimensions, metrics)
-      prettyfinalnames <- comp_lookup$name[match(comp_names, comp_lookup$id)]
-      names(prettyfinalnames) <- comp_names
+      pretty_comp_names <- c(dimensions, metrics)
+      names(pretty_comp_names) <- comp_lookup$name[match(pretty_comp_names, comp_lookup$id)]
     }
   }
 
@@ -174,17 +175,17 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   )
 
   # Check search for at least one instance of a keyword
-  if (!is.null(search)) {
+  if (!all(is.na(search))) {
     search_keywords <- c("AND", "OR", "NOT", "MATCH", "CONTAINS", "BEGINS-WITH", "ENDS-WITH")
     if (sum(grepl(paste(search_keywords, collapse = "|"), search)) == 0) {
-      stop("Search field must contain one of: ", paste(search_keywords, collapse = ", "))
+      stop("Search field must contain at least one of: ", paste(search_keywords, collapse = ", "))
     }
-    search <- list(clause = search)
   }
 
   # Set settings
   unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
   top <- top_daterange_number(top, dimensions, date_range)
+  page <- vctrs::vec_recycle(page, size = length(dimensions))
 
   settings <- req_settings(
     limit = 0,    # Placeholder, limit set during query
@@ -201,12 +202,13 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   output_data <- get_req_data(
     current_dim = dimensions[1],
     dimensions = dimensions,
+    item_ids = NULL,
     metrics = metrics,
     rsid = rsid,
     global_filter = gf,
     settings = settings,
-    client_id = client_id,
-    client_secret = client_secret,
+    client_id = Sys.getenv("AW_CLIENT_ID"),
+    client_secret = Sys.getenv("AW_CLIENT_SECRET"),
     company_id = company_id,
     debug = debug,
     sort = metricSort,
@@ -217,7 +219,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   if (prettynames) {
     output_data <- dplyr::select(output_data,
-                                 all_of(prettyfinalnames))
+                                 all_of(pretty_comp_names))
   }
 
   output_data
@@ -364,6 +366,8 @@ global_filter <- function(type,
   items <- purrr::compact(list(type = type, segmentId = segmentId, dateRange = dateRange))
   purrr::pmap(items, global_filter_elem)
 }
+
+
 
 
 #' Request settings
@@ -676,9 +680,11 @@ get_req_data <- function(current_dim,
     dateRange = dateRange
   )
 
-  # Set top for this query
+  # Set top, page, and search for this query
   settings$limit <- top[pos_current_dim]
   settings$page <- page[pos_current_dim]
+  search_field <- list(clause = search[pos_current_dim] %||% NA)
+
 
   req <- make_request(
     rsid = rsid,
@@ -686,8 +692,9 @@ get_req_data <- function(current_dim,
     dimension = paste("variables", current_dim, sep = "/"),
     settings = settings,
     metric_container = mc,
-    search = search
+    search = search_field
   )
+
 
   message("Requesting data...", appendLF = FALSE)
   data <- fromJSON(aw_call_data(
@@ -700,21 +707,28 @@ get_req_data <- function(current_dim,
   ))
   message(sample(c("Fuck yeah!", "Nicely done!", "Gimme that shit!", "Oh baby!"), 1))
 
-
   # Base case
   if (pos_current_dim == length(dimensions)) {
-    df <- data$rows %>%
-      dplyr::rename(df, !!current_dim := value) %>%
-      unpack_metrics(metrics)
+    message("Base case!")
+    # If no data is returned, data$rows is an empty list, so handle that
+    df <- fix_missing_metrics(data$rows)
+
+    if (!identical(df, data.frame())) {
+      df <- df %>%
+        dplyr::rename(!!current_dim := value) %>%
+        unpack_metrics(metrics)
+    }
 
     df
   }
   # Recursive case
   else {
+    message("Recursive case!")
     next_dim <- dimensions[pos_current_dim + 1]
     dim_items <- data$rows[c("itemId", "value")]
     dim_items$recent_dim <- current_dim
     if (is.null(item_ids)) item_ids <- character()
+    dimensions_so_far <- dimensions[seq(pos_current_dim, length(dimensions))]
 
     purrr::pmap_dfr(dim_items, function(itemId, value, recent_dim) {
       get_req_data(current_dim = next_dim,
@@ -733,7 +747,7 @@ get_req_data <- function(current_dim,
                    page = page) %>%
         dplyr::mutate(!!recent_dim := value)
     }) %>%
-      select(all_of(dimensions), data)
+      select(all_of(dimensions_so_far), all_of(metrics))
   }
 }
 
@@ -746,16 +760,55 @@ get_req_data <- function(current_dim,
 #' @return `df` with list column unpacked
 #' @noRd
 unpack_metrics <- function(df, metric_names) {
-  if (is.list(df$data)) {
-    data_list <- df$data
-    df$data <- NULL
+  if (identical(df, data.frame())) {
+    return(df)
+  } else {
+    if (is.list(df$data)) {
+      data_list <- df$data
+      df$data <- NULL
 
-    data_df <- lapply(purrr::transpose(data_list), flatten_dbl) %>%
-      setNames(metric_names) %>%
-      as.data.frame()
+      data_df <- lapply(purrr::transpose(data_list), flatten_dbl) %>%
+        setNames(metric_names) %>%
+        as.data.frame()
 
-    df <- cbind(df, data_df)
+      df <- cbind(df, data_df)
+    }
   }
 
+
   df
+}
+
+
+#' Expand missing metric data with NAs
+#'
+#' @param df Data frame
+#'
+#' @return `df`
+#' @noRd
+fix_missing_metrics <- function(df) {
+  if (identical(df, list())) stop("No data returned")
+  as.data.frame(df)
+}
+
+
+
+#' Fill a vector of a certain length with NA
+#'
+#' Similar to [vctrs::vec_recycle()], but fills remaining values with `NA`.
+#'
+#' @param x Vector
+#' @param len Length to fill to
+#'
+#' @return A vector the same length as `len` with the difference made up by `NA`
+#' @noRd
+na_fill_vec <- function(x, len) {
+  len_x <- length(x)
+  if (len_x != len & len_x != 1) {
+    stop("Vector has length !=1 but not `len`")
+  } else if (len_x == 1) {
+    x[2:len] <- NA
+  }
+
+  x
 }
