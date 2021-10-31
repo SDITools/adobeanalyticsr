@@ -18,7 +18,8 @@ aw_freeform_table(
   include_unspecified = TRUE,
   search = NA,
   prettynames = FALSE,
-  debug = FALSE
+  debug = FALSE,
+  check_components = TRUE
 )
 }
 \arguments{
@@ -67,14 +68,22 @@ which includes \strong{Unspecified} values in the results.}
 \item{search}{Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
 the \strong{Details} for more information on constructing values for this argument.}
 
-\item{prettynames}{A Boolean that determines whether the column names in the results use the API field name
+\item{prettynames}{A logical that determines whether the column names in the results use the API field name
 (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
 "Page Views"). This applies to both dimensions and metrics. The default value is \code{FALSE}, which returns the
 API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
-(e.g., "evar2", "prop3", "event15").}
+(e.g., "evar2", "prop3", "event15"). If \code{TRUE}, undoes any efficiency gains
+from setting \code{check_components} to \code{FALSE}.}
 
 \item{debug}{Set to \code{TRUE} to publish the full JSON request(s) being sent to the API to the console when the
 function is called. The default is \code{FALSE}.}
+
+\item{check_components}{Logical, whether to check the validity of metrics and
+dimensions before running the query. Defaults to \code{TRUE}, but causes
+\code{aw_freeform_report} to request all dimensions and metrics from the API,
+which may be inefficient if you're running many queries. If you have many
+queries, it's more efficient to implement validity checking yourself on either
+side of your queries.}
 }
 \value{
 A data frame with dimensions and metrics.

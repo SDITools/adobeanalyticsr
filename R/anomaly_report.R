@@ -97,7 +97,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
 
   res <- aw_call_data("reports/ranked", body = req_body,  debug = debug, company_id = company_id)
 
-  res <- fromJSON(res)
+  res <- jsonlite::fromJSON(res)
 
   # Clean up and return as data frame
     columnames <- colnames(res$rows[3:7])

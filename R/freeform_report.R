@@ -214,6 +214,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     search = search
   )
   message("Done!")
+  message(glue::glue("Returning {nrow(output_data)} x {ncol(output_data)} data frame"))
 
   if (prettynames) {
     output_data <- dplyr::select(output_data,
@@ -581,7 +582,7 @@ metric_container <- function(metrics,
 
   mets <- metric_elems(id = metrics,
                        columnId = as.character(seq_along(metrics)),
-                       filter = filter_ids,
+                       filters = filter_ids,
                        sort = sort_list)
 
   list(
@@ -601,7 +602,8 @@ metric_container <- function(metrics,
 #' @param settings List of settings
 #' @param metric_container Metric container
 #'
-#' @return Full request
+#' @return Full request list structure
+#' @noRd
 make_request <- function(rsid,
                          global_filter,
                          dimension,
@@ -639,6 +641,7 @@ make_request <- function(rsid,
 #' @param search Search clause in final form
 #'
 #' @return Data frame
+#'
 #' @noRd
 get_req_data <- function(current_dim,
                          item_ids,
@@ -694,7 +697,7 @@ get_req_data <- function(current_dim,
   )
 
 
-  data <- fromJSON(aw_call_data(
+  data <- jsonlite::fromJSON(aw_call_data(
     req_path = "reports/ranked",
     body = req,
     debug = debug,
@@ -764,7 +767,7 @@ unpack_metrics <- function(df, metric_names) {
       df$data <- NULL
 
       data_df <- lapply(purrr::transpose(data_list), flatten_dbl) %>%
-        setNames(metric_names) %>%
+        stats::setNames(metric_names) %>%
         as.data.frame()
 
       df <- cbind(df, data_df)
