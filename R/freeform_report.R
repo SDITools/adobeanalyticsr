@@ -230,7 +230,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 #'
 #' @return Logical, `TRUE` if metric is custom and `FALSE` otherwise
 #' @noRd
-is_custom_metric <- function(metric) {
+is_calculated_metric <- function(metric) {
   grepl('cm[1-9]*_*', metric)
 }
 
@@ -249,7 +249,7 @@ make_component_lookup <- function(rsid, company_id, metrics) {
   mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
 
   # pull out the calculated metrics
-  cms_ids <- metrics[is_custom_metric(metrics)]
+  cms_ids <- metrics[is_calculated_metric(metrics)]
 
   if (length(cms_ids) > 0) {
     cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
@@ -558,7 +558,11 @@ metric_container <- function(metrics,
                              itemIds = NULL,
                              dateRange = NULL) {
   # Error checking happens in lower level functions, should probably move them higher
-  metrics <- paste("metrics", metrics, sep = "/")
+  # Format for API request
+  metrics[!is_calculated_metric(metrics)] <- paste("metrics",
+                                               metrics[!is_calculated_metric(metrics)],
+                                               sep = "/")
+
   if (!is.null(dimensions)) {
     dimensions <- paste("variables", dimensions, sep = "/")
     filter_ids <- dimensions
