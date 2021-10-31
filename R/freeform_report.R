@@ -139,10 +139,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               prettynames = FALSE,
                               debug = FALSE,
                               check_components = TRUE) {
-  # NOTE: Must be able to handle any length search or segmentId
-  # Search will be the same length as dimensions and contain either NA or
-  # a value. Search is applied for each request.
-  # segmentId may be any length and is applied as a global filter for all queries
   if (all(is.na(segmentId))) segmentId <- NULL
   search <- na_fill_vec(search, len = length(dimensions))
 
@@ -199,6 +195,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
   # Make requests
+  message("Requesting data...", appendLF = FALSE)
   output_data <- get_req_data(
     current_dim = dimensions[1],
     dimensions = dimensions,
@@ -216,6 +213,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     page = page,
     search = search
   )
+  message("Done!")
 
   if (prettynames) {
     output_data <- dplyr::select(output_data,
@@ -696,7 +694,6 @@ get_req_data <- function(current_dim,
   )
 
 
-  message("Requesting data...", appendLF = FALSE)
   data <- fromJSON(aw_call_data(
     req_path = "reports/ranked",
     body = req,
@@ -705,32 +702,29 @@ get_req_data <- function(current_dim,
     client_id = client_id,
     client_secret = client_secret
   ))
-  message(sample(c("Fuck yeah!", "Nicely done!", "Gimme that shit!", "Oh baby!"), 1))
+
+
+  dimensions_so_far <- dimensions[seq(pos_current_dim, length(dimensions))]
 
   # Base case
   if (pos_current_dim == length(dimensions)) {
-    message("Base case!")
     # If no data is returned, data$rows is an empty list, so handle that
-    df <- fix_missing_metrics(data$rows)
+    output_data <- fix_missing_metrics(data$rows)
 
-    if (!identical(df, data.frame())) {
-      df <- df %>%
+    if (!identical(output_data, data.frame())) {
+      output_data <- output_data %>%
         dplyr::rename(!!current_dim := value) %>%
         unpack_metrics(metrics)
     }
-
-    df
   }
   # Recursive case
   else {
-    message("Recursive case!")
     next_dim <- dimensions[pos_current_dim + 1]
     dim_items <- data$rows[c("itemId", "value")]
     dim_items$recent_dim <- current_dim
     if (is.null(item_ids)) item_ids <- character()
-    dimensions_so_far <- dimensions[seq(pos_current_dim, length(dimensions))]
 
-    purrr::pmap_dfr(dim_items, function(itemId, value, recent_dim) {
+    output_data <- purrr::pmap_dfr(dim_items, function(itemId, value, recent_dim) {
       get_req_data(current_dim = next_dim,
                    item_ids = c(item_ids, itemId),
                    dimensions = dimensions,
@@ -746,9 +740,11 @@ get_req_data <- function(current_dim,
                    top = top,
                    page = page) %>%
         dplyr::mutate(!!recent_dim := value)
-    }) %>%
-      select(all_of(dimensions_so_far), all_of(metrics))
+    })
   }
+
+  output_data %>%
+    select(all_of(dimensions_so_far), all_of(metrics))
 }
 
 
@@ -787,7 +783,7 @@ unpack_metrics <- function(df, metric_names) {
 #' @return `df`
 #' @noRd
 fix_missing_metrics <- function(df) {
-  if (identical(df, list())) stop("No data returned")
+  if (identical(df, list())) warning("Response contained no data")
   as.data.frame(df)
 }
 
@@ -806,6 +802,8 @@ na_fill_vec <- function(x, len) {
   len_x <- length(x)
   if (len_x != len & len_x != 1) {
     stop("Vector has length !=1 but not `len`")
+  } else if (len_x == len) {
+    return(x)
   } else if (len_x == 1) {
     x[2:len] <- NA
   }
