@@ -9,7 +9,7 @@
 #' This function is based on the **Freeform Table** visualization in Analysis Workspace. It is accessing
 #' the same API call type that is used to generate those visualizations.
 #'
-#' **Dimension Ordering**
+#' ## Dimension Ordering
 #'
 #' Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
 #' frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
@@ -32,7 +32,7 @@
 #' Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
 #' ways to improve query performance.
 #'
-#' **Date Handling**
+#' ## Date Handling
 #'
 #' Date handling has several special characteristics that are worth getting familiar with:
 #' * The API names for day, week, month, etc. are prepended with `daterange`, so daily data uses
@@ -52,7 +52,7 @@
 #' * If you are using a `daterange...` value _not_ as the first dimension, then simply using `0` at the
 #' same level in the `top` argument specification will return all of the values for that date/time value.
 #'
-#' **Search/Filtering**
+#' ## Search/Filtering
 #'
 #' There are powerful filtering abilities within the function. However, to support that power requires a
 #' syntax that can feel a bit cumbersome for simple queries. **_Note:_** search filters are case-insensitive.
@@ -65,27 +65,27 @@
 #' The default for any search string is to use `CONTAINS`. Consider a query where
 #' `dimensions = c("mobiledevicetype", "lasttouchchannel")`:
 #'
-#' * `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
-#' * This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
-#' * `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
-#' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
+#' - `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
+#' - This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
+#' - `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
+#' - `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
-#' @seealso \code{\link{get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
-#' \code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
+#' @seealso [get_me()], [aw_get_reportsuites()], [aw_get_segments()],
+#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()]
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' Use \code{\link{get_me}} to get a list of available `company_id` values.
+#' Use [get_me()] to get a list of available `company_id` values.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
-#' be used. Use \code{\link{aw_get_reportsuites}} to get a list of available `rsid` values.
+#' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
 #' @param date_range A vector containing the start and end date for the report as **Date** objects.
-#' @param metrics A character vector of metrics. Use \code{\link{aw_get_metrics}} and \code{\link{aw_get_calculatedmetrics}}
+#' @param metrics A character vector of metrics. Use [aw_get_metrics()] and [aw_get_calculatedmetrics()]
 #' to get a list of available `metrics` IDs.
 #' @param dimensions A character vector of dimensions. There is currently a limit of 20 dimension
 #' breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 #' call, so the more dimensions that are included, the longer the function will take to return results.
-#' This is how the Adobe Analytics API works. Use \code{\link{aw_get_dimensions}} to get a list of available
+#' This is how the Adobe Analytics API works. Use [aw_get_dimensions()] to get a list of available
 #' `dimensions` IDs.
 #' @param top The number of values to be pulled for each dimension. The default is 5 and the "top" is based on
 #' the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can
@@ -102,7 +102,7 @@
 #' which includes **Unspecified** values in the results.
 #' @param segmentId A single segment ID or a vector of multiple segment IDs to apply to the overall report.
 #' If multiple `segmentId` values are included, the segments will be effectived ANDed together, just as if
-#' multiple segments were added to the header of an Analysis Workspace panel. Use \code{\link{aw_get_segments}}
+#' multiple segments were added to the header of an Analysis Workspace panel. Use [aw_get_segments()]
 #' to get a list of available `segmentId` values.
 #' @param search Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
 #' the **Details** for more information on constructing values for this argument.
@@ -712,20 +712,32 @@ get_req_data <- function(current_dim,
   # Base case
   if (pos_current_dim == length(dimensions)) {
     # If no data is returned, data$rows is an empty list, so handle that
-    output_data <- fix_missing_metrics(data$rows)
+    output_data <- fix_missing_metrics(data$rows,
+                                       n_metrics = length(metrics))
 
-    if (!identical(output_data, data.frame())) {
-      output_data <- output_data %>%
-        dplyr::rename(!!current_dim := value) %>%
-        unpack_metrics(metrics)
-    }
+    output_data <- output_data %>%
+      dplyr::rename(!!current_dim := value) %>%
+      unpack_metrics(metrics)
   }
   # Recursive case
   else {
+    # Abort recursion if response is empty
+    if (identical(data$rows, list())) {
+      output_data <- fix_missing_metrics(
+        data$rows,
+        n_metrics = length(metrics),
+        dimensions = dimensions[pos_current_dim:length(dimensions)]
+      ) %>%
+        unpack_metrics(metrics)
+
+      return(output_data)
+    }
+
     next_dim <- dimensions[pos_current_dim + 1]
     dim_items <- data$rows[c("itemId", "value")]
     dim_items$recent_dim <- current_dim
     if (is.null(item_ids)) item_ids <- character()
+
 
     output_data <- purrr::pmap_dfr(dim_items, function(itemId, value, recent_dim) {
       get_req_data(current_dim = next_dim,
@@ -781,14 +793,42 @@ unpack_metrics <- function(df, metric_names) {
 
 #' Expand missing metric data with NAs
 #'
-#' @param df Data frame
 #'
-#' @return `df`
+#' @param df Data frame
+#' @param n_metrics Number of metrics in request
+#' @param dimensions Dimension columns to create. Defaults to `value`, which is
+#'   what gets returned in the base case (leaf nodes) of recursive function. For
+#'   recursive cases where no data is returned, `dimensions` should be the
+#'   current dimension and all remaining dimensions.
+#'
+#' @return If `df` is a data frame, nothing is done to it. If it is an empty
+#'   list, creates a data frame that imitates the response from the API, with
+#'   a dimension column given by `dimensions` and a list column of metrics,
+#'   where each row has length `n_metrics`.
 #' @noRd
-fix_missing_metrics <- function(df) {
-  if (identical(df, list())) warning("Response contained no data")
+#' @examples
+#' # Nothing done to data frames
+#' fix_missing_metrics(data.frame(x = 1:10))
+#'
+#' # If no rows are returned, first argument is empty list
+#' # Uses 'value' by default, for the leaf node cases
+#' fix_missing_metrics(list(), 1)
+#'
+#' # You can override dimensions that get created with 'dimensions'
+#' fix_missing_metrics(list(), 2, c("one", "two"))
+fix_missing_metrics <- function(df, n_metrics, dimensions = "value") {
+  if (identical(df, list())) {
+    warning("Response contained no data; filling with NA", call. = FALSE)
+    df <- as.list(rep(NA, length(dimensions)))
+    df <- as.data.frame(df, col.names = dimensions)
+
+    metric_list_col <- list(rep(NA, n_metrics))
+    df$data <- metric_list_col
+  }
+
   as.data.frame(df)
 }
+
 
 
 

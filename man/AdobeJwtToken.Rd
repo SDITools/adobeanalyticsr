@@ -14,6 +14,14 @@ credentials used to generate the token for seamless refreshing.
 \details{
 Refreshing is disabled if the user used a custom JWT token.
 }
+\section{Methods}{
+
+\itemize{
+\item \code{refresh()}: refresh access token (if possible)
+\item \code{validate()}: TRUE if the token is still valid, FALSE otherwise
+}
+}
+
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{

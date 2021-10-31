@@ -331,7 +331,7 @@ get_jwt_token <- function(jwt_token = NULL,
 #'
 #' Refreshing is disabled if the user used a custom JWT token.
 #'
-#' @setion Methods:
+#' @section Methods:
 #' * `refresh()`: refresh access token (if possible)
 #' * `validate()`: TRUE if the token is still valid, FALSE otherwise
 #'
