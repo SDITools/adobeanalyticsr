@@ -566,9 +566,6 @@ metric_container <- function(metrics,
     filter_ids <- "daterange"
   }
 
-  # Sort by first metric
-  sort_list <- rep(NA, times = length(dimensions))
-  sort_list[1] <- sort
 
   filter_components <- purrr::compact(list(
     id = filter_ids,
@@ -583,7 +580,7 @@ metric_container <- function(metrics,
   mets <- metric_elems(id = metrics,
                        columnId = as.character(seq_along(metrics)),
                        filters = filter_ids,
-                       sort = sort_list)
+                       sort = sort)
 
   list(
     metrics = mets,
