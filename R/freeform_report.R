@@ -79,7 +79,9 @@
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
 #' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
-#' @param date_range A vector containing the start and end date for the report as **Date** objects.
+#' @param date_range A length-2 vector with a start date and an end date.
+#'   `POSIXt` objects are sent as is, for fine control over the date range.
+#'   Numeric values are automatically converted to dates.
 #' @param metrics A character vector of metrics. Use [aw_get_metrics()] and [aw_get_calculatedmetrics()]
 #' to get a list of available `metrics` IDs.
 #' @param dimensions A character vector of dimensions. There is currently a limit of 20 dimension
@@ -141,11 +143,14 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               check_components = TRUE) {
   if (all(is.na(segmentId))) segmentId <- NULL
   search <- na_fill_vec(search, len = length(dimensions))
+  metricSort <- na_fill_vec(metricSort, len = length(metrics))
 
   # Component lookup checks
   # The component checking is optional, in case speed is a priority
   if (check_components | prettynames) {
-    comp_lookup <- make_component_lookup(rsid, company_id, metrics)
+    comp_lookup <- make_component_lookup(rsid,
+                                         company_id,
+                                         metrics[is_calculated_metric(metrics)])
     invalid_components <- invalid_component_names(component = c(dimensions, metrics),
                                                   lookup = comp_lookup)
 
@@ -162,7 +167,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
   # Make global filter
-  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
+  timeframe <- make_timeframe(date_range)
 
   gf <- global_filter(
     type = c("dateRange", rep("segment", times = length(segmentId))),
@@ -239,23 +244,24 @@ is_calculated_metric <- function(metric) {
 #'
 #' @param rsid Reportsuite ID
 #' @param company_id Company ID
-#' @param metrics Vector of metric IDs, for getting calculated metrics
+#' @param calculated_metrics Vector of calculated metric IDs. Defaults to NULL.
 #'
 #' @return `data.frame`
 #' @noRd
-make_component_lookup <- function(rsid, company_id, metrics) {
+make_component_lookup <- function(rsid, company_id, calculated_metrics = NULL) {
   # Get dimension and metric lookup tables
   dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
   mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
 
   # pull out the calculated metrics
-  cms_ids <- metrics[is_calculated_metric(metrics)]
-
-  if (length(cms_ids) > 0) {
-    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
-    dimmets <- rbind(dims[c("id", "name")], mets[c("id", "name")], cms[c(2, 3)])
+  if (length(calculated_metrics) > 0) {
+    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = calculated_metrics)
+    dimmets <- rbind(dims[c("id", "name")],
+                     mets[c("id", "name")],
+                     cms[c("id", "name")])
   } else {
-    dimmets <- rbind(dims[c("id", "name")], mets[c("id", "name")])
+    dimmets <- rbind(dims[c("id", "name")],
+                     mets[c("id", "name")])
   }
 
   dimmets

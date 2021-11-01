@@ -31,7 +31,9 @@ Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id}
 in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
 be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a list of available \code{rsid} values.}
 
-\item{date_range}{A vector containing the start and end date for the report as \strong{Date} objects.}
+\item{date_range}{A length-2 vector with a start date and an end date.
+\code{POSIXt} objects are sent as is, for fine control over the date range.
+Numeric values are automatically converted to dates.}
 
 \item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension
 breakdowns. Each dimension value that gets broken down by another dimension requires an additional API

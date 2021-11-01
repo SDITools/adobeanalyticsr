@@ -37,7 +37,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
 
 
   # set the timeframe variable
-  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
+  timeframe <- make_timeframe(date_range)
 
   if(granularity == "hour") {
     limit <- as.numeric(as.Date(date_range[[2]]) - as.Date(date_range[[1]]))*24
