@@ -48,11 +48,12 @@ aw_call_data_debug <- function(req_path,
 
   stop_for_status(req)
 
-  if(status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
+  if (status_code(req) == 206  & length(content(req)$columns$columnErrors[[1]]) != 0) {
     stop(paste0('The error code is ',content(req)$columns$columnErrors[[1]]$errorCode,' - ',content(req)$columns$columnErrors[[1]]$errorDescription))
-  } else if(status_code(req) == 206) {
-    stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
+  } else if (status_code(req) == 206) {
+    stop('Please check the metrics your requested. A 206 error was returned.')
   }
+
   httr::content(req, as = "text",encoding = "UTF-8")
 }
 

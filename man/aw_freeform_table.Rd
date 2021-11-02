@@ -18,27 +18,30 @@ aw_freeform_table(
   include_unspecified = TRUE,
   search = NA,
   prettynames = FALSE,
-  debug = FALSE
+  debug = FALSE,
+  check_components = TRUE
 )
 }
 \arguments{
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
 elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
-Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
+Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
 
 \item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
 in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
-be used. Use \code{\link{aw_get_reportsuites}} to get a list of available \code{rsid} values.}
+be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a list of available \code{rsid} values.}
 
-\item{date_range}{A vector containing the start and end date for the report as \strong{Date} objects.}
+\item{date_range}{A length-2 vector with a start date and an end date.
+\code{POSIXt} objects are sent as is, for fine control over the date range.
+Numeric values are automatically converted to dates.}
 
 \item{dimensions}{A character vector of dimensions. There is currently a limit of 20 dimension
 breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 call, so the more dimensions that are included, the longer the function will take to return results.
-This is how the Adobe Analytics API works. Use \code{\link{aw_get_dimensions}} to get a list of available
+This is how the Adobe Analytics API works. Use \code{\link[=aw_get_dimensions]{aw_get_dimensions()}} to get a list of available
 \code{dimensions} IDs.}
 
-\item{metrics}{A character vector of metrics. Use \code{\link{aw_get_metrics}} and \code{\link{aw_get_calculatedmetrics}}
+\item{metrics}{A character vector of metrics. Use \code{\link[=aw_get_metrics]{aw_get_metrics()}} and \code{\link[=aw_get_calculatedmetrics]{aw_get_calculatedmetrics()}}
 to get a list of available \code{metrics} IDs.}
 
 \item{top}{The number of values to be pulled for each dimension. The default is 5 and the "top" is based on
@@ -55,7 +58,7 @@ Currently, it defaults to \code{breakdown}, and that is the only supported value
 
 \item{segmentId}{A single segment ID or a vector of multiple segment IDs to apply to the overall report.
 If multiple \code{segmentId} values are included, the segments will be effectived ANDed together, just as if
-multiple segments were added to the header of an Analysis Workspace panel. Use \code{\link{aw_get_segments}}
+multiple segments were added to the header of an Analysis Workspace panel. Use \code{\link[=aw_get_segments]{aw_get_segments()}}
 to get a list of available \code{segmentId} values.}
 
 \item{metricSort}{Pre-sorts the table by metrics. Values are either \code{asc} (ascending) or \code{desc} (descending).}
@@ -67,14 +70,22 @@ which includes \strong{Unspecified} values in the results.}
 \item{search}{Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
 the \strong{Details} for more information on constructing values for this argument.}
 
-\item{prettynames}{A Boolean that determines whether the column names in the results use the API field name
+\item{prettynames}{A logical that determines whether the column names in the results use the API field name
 (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
 "Page Views"). This applies to both dimensions and metrics. The default value is \code{FALSE}, which returns the
 API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
-(e.g., "evar2", "prop3", "event15").}
+(e.g., "evar2", "prop3", "event15"). If \code{TRUE}, undoes any efficiency gains
+from setting \code{check_components} to \code{FALSE}.}
 
 \item{debug}{Set to \code{TRUE} to publish the full JSON request(s) being sent to the API to the console when the
 function is called. The default is \code{FALSE}.}
+
+\item{check_components}{Logical, whether to check the validity of metrics and
+dimensions before running the query. Defaults to \code{TRUE}, but causes
+\code{aw_freeform_report} to request all dimensions and metrics from the API,
+which may be inefficient if you're running many queries. If you have many
+queries, it's more efficient to implement validity checking yourself on either
+side of your queries.}
 }
 \value{
 A data frame with dimensions and metrics.
@@ -87,8 +98,7 @@ the results as a data frame.
 \details{
 This function is based on the \strong{Freeform Table} visualization in Analysis Workspace. It is accessing
 the same API call type that is used to generate those visualizations.
-
-\strong{Dimension Ordering}
+\subsection{Dimension Ordering}{
 
 Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
 frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
@@ -110,8 +120,9 @@ those \emph{7 mobile device type values} to return the results for the 30 days w
 
 Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
 ways to improve query performance.
+}
 
-\strong{Date Handling}
+\subsection{Date Handling}{
 
 Date handling has several special characteristics that are worth getting familiar with:
 \itemize{
@@ -132,8 +143,9 @@ all of the date/time values for the specified \code{date_range}, the top 3 value
 \item If you are using a \code{daterange...} value \emph{not} as the first dimension, then simply using \code{0} at the
 same level in the \code{top} argument specification will return all of the values for that date/time value.
 }
+}
 
-\strong{Search/Filtering}
+\subsection{Search/Filtering}{
 
 There are powerful filtering abilities within the function. However, to support that power requires a
 syntax that can feel a bit cumbersome for simple queries. \strong{\emph{Note:}} search filters are case-insensitive.
@@ -152,7 +164,8 @@ The default for any search string is to use \code{CONTAINS}. Consider a query wh
 \item \code{search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")} will return results where \code{mobiledevicetype} contains "mobile" \emph{or} "tablet" and, within those results, will only include results where \code{lasttouchchannel} exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 }
 }
+}
 \seealso{
-\code{\link{get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
-\code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
+\code{\link[=get_me]{get_me()}}, \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}}, \code{\link[=aw_get_segments]{aw_get_segments()}},
+\code{\link[=aw_get_dimensions]{aw_get_dimensions()}}, \code{\link[=aw_get_metrics]{aw_get_metrics()}}, \code{\link[=aw_get_calculatedmetrics]{aw_get_calculatedmetrics()}}
 }

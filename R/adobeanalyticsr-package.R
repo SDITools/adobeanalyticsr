@@ -6,6 +6,7 @@
 #' continue to be developed with the guiding principles of iterative,
 #' repeatable, timely analysis.
 #'
+#' @importFrom rlang :=
 #'
 "_PACKAGE"
 

@@ -35,7 +35,9 @@ Imports:
     lifecycle,
     glue,
     tibble,
-    knitr
+    knitr,
+    vctrs,
+    progress
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Suggests:
