@@ -334,6 +334,12 @@ increment_global_counter <- function() {
 
 
 
+#' Convert date columns to date objects
+#'
+#' @param dat Data frame
+#'
+#' @return Data frame with date columns as dates
+#' @noRd
 convert_date_columns <- function(dat) {
   # change time variables from character strings
   if("daterangeminute" %in% colnames(dat)) {
