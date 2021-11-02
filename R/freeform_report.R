@@ -142,8 +142,12 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               debug = FALSE,
                               check_components = TRUE) {
   if (all(is.na(segmentId))) segmentId <- NULL
-  search <- na_fill_vec(search, len = length(dimensions))
-  metricSort <- na_fill_vec(metricSort, len = length(metrics))
+  # Repeated dimensions will cause an infinite loop
+  if (length(dimensions) > length(unique(dimensions))) {
+    stop("List of dimensions is not unique")
+  }
+  # No harm in repeated metrics, simply take the unique ones
+  metrics <- unique(metrics)
 
   # Component lookup checks
   # The component checking is optional, in case speed is a priority
@@ -183,6 +187,10 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     }
   }
 
+  # Set settings-like settings
+  search <- na_fill_vec(search, len = length(dimensions))
+  metricSort <- na_fill_vec(metricSort, len = length(metrics))
+
   # Set settings
   unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
   top <- top_daterange_number(top, dimensions, date_range)
@@ -195,12 +203,15 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     dimensionSort = "asc"
   )
 
-  # Estimate requests
+  # Estimate requests and reset global counter
   n_requests <- estimate_requests(top)
+  if (n_requests > 20) {
+    initialize_global_counter(top)
+  }
 
 
   # Make requests
-  message("Requesting data...", appendLF = FALSE)
+  message("Requesting data...", appendLF = TRUE)
   output_data <- get_req_data(
     current_dim = dimensions[1],
     dimensions = dimensions,
@@ -713,6 +724,9 @@ get_req_data <- function(current_dim,
     client_secret = client_secret
   ))
 
+  # Increment progress bar
+  increment_global_counter()
+
 
   dimensions_so_far <- dimensions[seq(pos_current_dim, length(dimensions))]
 
@@ -860,3 +874,48 @@ na_fill_vec <- function(x, len) {
 
   x
 }
+
+
+#' Calculate queries to be completed
+#'
+#' The number of queries required to complete a request. Useful for vetting a
+#' query to find an efficient dimension order.
+#'
+#' @param top Top argument, essentially the number of rows returned from
+#' each query (can be inaccurate when fewer rows returned, but mostly correct)
+#'
+#' @return Number of queries needed to get top
+#' @noRd
+n_queries <- function(top) {
+  top_ind <- c(1, top[-length(top)])
+  sum(cumprod(top_ind))
+}
+
+
+
+#' Initializes the global decile query list
+#'
+#' This is used for generating the progress bar on long queries.
+#'
+#' @param top Top argument, essentially the number of rows returned from each
+#' query
+#'
+#' @return Query quantiles, invisibly
+#' @noRd
+initialize_global_counter <- function(top) {
+  total_queries <- n_queries(top)
+  prog_format <- "Progress [:bar] :percent in :elapsed"
+
+  .adobeanalytics$prog_bar <- progress::progress_bar$new(total = total_queries,
+                                                         format = prog_format,
+                                                         clear = FALSE)
+  invisible(total_queries)
+}
+
+increment_global_counter <- function() {
+  if (!is.null(.adobeanalytics$prog_bar)) {
+    .adobeanalytics$prog_bar$tick()
+  }
+}
+
+
