@@ -273,8 +273,9 @@ estimate_requests <- function(top) {
   if (length(top) > 1) {
     queries <- n_queries(top)
 
+    # I reckon about 1 second per query
     # sec
-    est_secs <- round((queries-1)*.80, digits = 0)
+    est_secs <- round(queries * 1.1, digits = 0)
     # min
     est_mins <- round(est_secs/60, digits = 0)
     # hour
@@ -357,3 +358,4 @@ convert_date_columns <- function(dat) {
 
   dat
 }
+
