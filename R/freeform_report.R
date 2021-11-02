@@ -237,7 +237,8 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                                  all_of(pretty_comp_names))
   }
 
-  output_data
+  output_data %>%
+    convert_date_columns()
 }
 
 
@@ -332,3 +333,27 @@ increment_global_counter <- function() {
 }
 
 
+
+#' Convert date columns to date objects
+#'
+#' @param dat Data frame
+#'
+#' @return Data frame with date columns as dates
+#' @noRd
+convert_date_columns <- function(dat) {
+  # change time variables from character strings
+  if("daterangeminute" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
+  }
+  if("daterangehour" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
+  }
+  if("daterangeday" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+  }
+  if("daterangeweek" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+  }
+
+  dat
+}
