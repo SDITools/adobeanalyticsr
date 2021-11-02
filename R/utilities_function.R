@@ -53,3 +53,25 @@ make_startDate_endDate <- function(start_date, end_date){
   list(glue::glue('{start_date}T00:00:00.000'), glue::glue('{end_date}T23:59:59.999'))
 }
 
+
+#' Fill a vector of a certain length with NA
+#'
+#' Similar to [vctrs::vec_recycle()], but fills remaining values with `NA`.
+#'
+#' @param x Vector
+#' @param len Length to fill to
+#'
+#' @return A vector the same length as `len` with the difference made up by `NA`
+#' @noRd
+na_fill_vec <- function(x, len) {
+  len_x <- length(x)
+  if (len_x != len & len_x != 1) {
+    stop("Vector has length !=1 but not `len`")
+  } else if (len_x == len) {
+    return(x)
+  } else if (len_x == 1) {
+    x[2:len] <- NA
+  }
+
+  x
+}

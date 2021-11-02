@@ -240,60 +240,23 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   output_data
 }
 
-#' Check if metrics are custom
+
+
+
+
+#' Calculate queries to be completed
 #'
-#' @param metric Vector of metrics
+#' The number of queries required to complete a request. Also useful for vetting
+#' a query to find an efficient dimension order.
 #'
-#' @return Logical, `TRUE` if metric is custom and `FALSE` otherwise
+#' @param top Top argument, essentially the number of rows returned from
+#' each query (can be inaccurate when fewer rows returned, but mostly correct)
+#'
+#' @return Number of queries needed to get top
 #' @noRd
-is_calculated_metric <- function(metric) {
-  grepl('cm[1-9]*_*', metric)
-}
-
-
-#' Make a component lookup table
-#'
-#' @param rsid Reportsuite ID
-#' @param company_id Company ID
-#' @param calculated_metrics Vector of calculated metric IDs. Defaults to NULL.
-#'
-#' @return `data.frame`
-#' @noRd
-make_component_lookup <- function(rsid, company_id, calculated_metrics = NULL) {
-  # Get dimension and metric lookup tables
-  dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
-  mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
-
-  # pull out the calculated metrics
-  if (length(calculated_metrics) > 0) {
-    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = calculated_metrics)
-    dimmets <- rbind(dims[c("id", "name")],
-                     mets[c("id", "name")],
-                     cms[c("id", "name")])
-  } else {
-    dimmets <- rbind(dims[c("id", "name")],
-                     mets[c("id", "name")])
-  }
-
-  dimmets
-}
-
-
-#' Check if components are recognized by API
-#'
-#' Find components that aren't found in a lookup.
-#'
-#' @param component Character vector of component IDs
-#' @param lookup Data frame containing ID column to compare names to
-#'
-#' @return Character vector of components that weren't found
-#' @noRd
-invalid_component_names <- function(component, lookup) {
-  if (is.null(lookup$id)) {
-    stop("Invalid lookup, missing 'id' column")
-  }
-
-  component[!(component %in% lookup$id)]
+n_queries <- function(top) {
+  top_ind <- c(1, top[-length(top)])
+  sum(cumprod(top_ind))
 }
 
 
@@ -307,589 +270,29 @@ invalid_component_names <- function(component, lookup) {
 #' @noRd
 estimate_requests <- function(top) {
   if (length(top) > 1) {
-    toplength <- length(top)
-    i <- product <- 1
-    topestimate1 <- top[-toplength]
-    topestimate1 <- append(topestimate1, 1, after = 0)
+    queries <- n_queries(top)
 
-    for (i in seq(toplength)) {
-      product <- product + prod(topestimate1[1:i])
-    }
     # sec
-    est_secs <- round((product-1)*.80, digits = 2)
+    est_secs <- round((queries-1)*.80, digits = 0)
     # min
-    est_mins <- round(((product-1)*.80)/60, digits = 2)
-    message('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.')
-    # message(paste0('Estimating a total of ', product-2, ' API calls'))
+    est_mins <- round(est_secs/60, digits = 0)
+    # hour
+    est_hours <- round(est_mins / 60, digits = 1)
 
-    product
-  }
-}
-
-#' Global filter element
-#'
-#' Both types of filter elements (dateRange, segment) are supported.
-#'
-#' @param String, one of 'daterange' or 'segment'
-#' @param segmentId For segment, segment ID
-#' @param dateRage For daterange, date range
-#' @param id I'm actually not sure
-#'
-#' @return Properly formatted global filter element
-#' @noRd
-#' @examples
-#' global_filter_elem(type = "daterange",
-#'                    dateRange = "really-long-daterange-string")
-#'
-#' global_filter_elem(segmentId = "segid",
-#'                    type = "segment")
-global_filter_elem <- function(type,
-                               segmentId = NULL,
-                               dateRange = NULL,
-                               id = NULL) {
-  if (!is.null(segmentId) && is.na(segmentId)) segmentId <- NULL
-  if (!is.null(dateRange) && is.na(dateRange)) dateRange <- NULL
-
-  if (type == "daterange" && is.null(dateRange)) stop("Missing daterange in global filter element", call. = FALSE)
-  if (type == "segment" && is.null(segmentId)) stop("Missing segment ID in global filter element", call. = FALSE)
-  if (is.null(segmentId) && is.null(dateRange)) stop("No content for global filter element", call. = FALSE)
-  if (!is.null(segmentId) && !is.null(dateRange)) stop("Only one of segmentId or dateRange may be specified in global filter element", call. = FALSE)
-
-  purrr::compact(list(
-    id = id,
-    type = type,
-    segmentId = segmentId,
-    dateRange = dateRange
-  ))
-}
-
-#' Generate a global filter
-#'
-#' Vectorized global filter generator. Generates one or more global filter
-#' elements with `global_filter_elem`. This might not be as useful as calling
-#' `global_filter_elem` directly.
-#'
-#'
-#' @param type Character, vector of filter types
-#' @param segmentId Character, vector of segment IDs
-#' @param dateRange Character, vector of date ranges
-#'
-#' @return List of global filter elements
-#' @noRd
-global_filter <- function(type,
-                          segmentId = NULL,
-                          dateRange = NULL) {
-  items <- purrr::compact(list(type = type, segmentId = segmentId, dateRange = dateRange))
-  purrr::pmap(items, global_filter_elem)
-}
-
-
-
-
-#' Request settings
-#'
-#' @param limit Numeric, number of results to display
-#' @param page Numeric, which page to return
-#' @param nonesBehavior How to treat "Unspecified"
-#' @param ... Other settings, not error checked
-#'
-#' @return List
-#' @noRd
-req_settings <- function(limit,
-                         page,
-                         nonesBehavior,
-                         ...) {
-  assertthat::assert_that(
-    is.numeric(limit),
-    is.numeric(page),
-    is.character(nonesBehavior),
-    nonesBehavior %in% c("return-nones", "exclude-nones")
-  )
-
-
-  list(
-    limit = limit,
-    page = page,
-    nonesBehavior = nonesBehavior,
-    ...
-  )
-}
-
-
-#' Construct a metric element
-#'
-#' Metric elements are lists composed of two mandatory fields and two optional
-#' fields.
-#'
-#' @param id Metric ID
-#' @param columnId Assigned column, always the same for each metric
-#' @param filters Character vector of metric filter IDs to include, identified
-#'   by ID given in the `metricFilters` field
-#' @param sort Sorting directing, typically only applied to one metric
-#'
-#' @return List, one metric element
-#' @noRd
-metric_elem <- function(id,
-                        columnId,
-                        filters = NULL,
-                        sort = NULL) {
-  assertthat::assert_that(
-    is.character(id),
-    is.character(columnId)
-  )
-  if (!is.null(filters)) {
-    assertthat::assert_that(
-      is.character(filters)
-    )
-    filters <- I(filters)
-  }
-  if (!is.null(sort)) {
-    if (is.na(sort)) sort <- NULL
-    else sort <- match.arg(sort, c("asc", "desc"))
-  }
-
-  purrr::compact(list(
-    id = id,
-    columnId = columnId,
-    filters = filters,
-    sort = sort
-  ))
-}
-
-
-#' Make metric elements
-#'
-#' Vectorized version of metric_elem that handles NA values and some other
-#' things.
-#'
-#' @param id Vector of metric IDs
-#' @param columnId Assigned columns, should be always the same for each metric
-#' @param filter List of metric filters to include in each metric, identified by
-#'   ID given in the `metricFilters` field
-#' @param sort Sorting directing, typically only applied to one metric
-#'
-#' @return List, one metric element
-#' @noRd
-metric_elems <- function(id,
-                         columnId,
-                         filters = NULL,
-                         sort = NULL) {
-  # Input: character vector of filters
-  # Output: List of filters, one filter for each element of ID
-  if (!is.null(filters) & length(filters) > 1) {
-    id_len <- length(id)
-    filters <- list(filters)[rep(1, id_len)]
-  }
-
-  elems <- purrr::compact(list(
-    id = id,
-    columnId = columnId,
-    filters = filters,
-    sort = sort
-  ))
-
-  purrr::pmap(elems, metric_elem)
-}
-
-
-#' Make a metric filter data frame
-#'
-#' @description
-#' Construct a metric filter data frame. The intended use is to row bind several
-#' of these together to form the full `metricFilters` field. Thus, in each
-#' call, you are restricted to:
-#'
-#' - A vector of filter IDs
-#' - A type (dateRange or breakdown)
-#' - Depending on type:
-#'   - One dimension with the same number of item IDs as filter IDs (usu. 1)
-#'   - One daterange to be applied to all filters
-#'
-#' @param id Metric filter ID, assigned by form creator
-#' @param type Filter type, one of "dateRange" or "breakdown"
-#' @param dimension Optional, dimension ID
-#' @param itemId Optional, dimension item ID
-#' @param dateRange Optional, date range
-#'
-#' @return data.frame
-#' @noRd
-metric_filters <- function(id,
-                           type,
-                           dimension = NULL,
-                           itemId = NULL,
-                           dateRange = NULL) {
-  assertthat::assert_that(
-    is.character(id),
-    length(dimension) < 2,
-    length(dateRange) < 2
-  )
-  type <- match.arg(type, c("dateRange", "breakdown"))
-
-  if (type == "dateRange") {
-    if (is.null(dateRange)) stop("No date range provided for dateRange metric filter",
-                                 call. = FALSE)
-  }
-
-  if (type == "breakdown") {
-    if (is.null(dimension) || is.null(itemId)) stop("No dimension/item ID given for breakdown metric filter",
-                                                    call. = FALSE)
-  }
-
-  purrr::compact(list(
-    id = id,
-    type = type,
-    dimension = dimension,
-    itemId = itemId,
-    dateRange = dateRange
-  )) %>%
-    data.frame()
-}
-
-
-
-#' Encompass metrics and filters in a container
-#'
-#' @description
-#' For any call, there will be 1 metric filter for each dimension, and this
-#' filter is applied to all metrics. This function takes care of the metric
-#' filter ID, since it is not needed outside the query (i.e., it's not returned
-#' in the response).
-#'
-#' This function also fixes the names of metrics and dimensions, so you can
-#' pass in normal values. You know, for user friendliness.
-#'
-#' @param metrics Metric names in the order they were requested
-#' @param type Type of filter to apply. One of "dateRange" or "breakdown"
-#' @param sort Direction to sort in, one of "asc", "desc". Applied only to first
-#'   metric.
-#' @param dimensions Dimensions to apply as filters. Must be same length as IDs.
-#' @param itemIds Dimension item IDs. Must be same length as dimensions.
-#' @param dateRange If type is dateRange, the dateRange to use.
-#'
-#' @return Metric container list
-#' @noRd
-metric_container <- function(metrics,
-                             type,
-                             sort,
-                             dimensions = NULL,
-                             itemIds = NULL,
-                             dateRange = NULL) {
-  # Error checking happens in lower level functions, should probably move them higher
-  # Format for API request
-  metrics[!is_calculated_metric(metrics)] <- paste("metrics",
-                                               metrics[!is_calculated_metric(metrics)],
-                                               sep = "/")
-
-  if (!is.null(dimensions)) {
-    dimensions <- paste("variables", dimensions, sep = "/")
-    filter_ids <- dimensions
-  } else {
-    filter_ids <- "daterange"
-  }
-
-
-  filter_components <- purrr::compact(list(
-    id = filter_ids,
-    type = type,
-    dimension = dimensions,
-    itemId = itemIds,
-    dateRange = dateRange
-  ))
-
-  met_filters <- purrr::pmap_dfr(filter_components, metric_filters)
-
-  mets <- metric_elems(id = metrics,
-                       columnId = as.character(seq_along(metrics)),
-                       filters = filter_ids,
-                       sort = sort)
-
-  list(
-    metrics = mets,
-    metricFilters = met_filters
-  )
-}
-
-
-#' Create requests for item IDs
-#'
-#' Mostly this function is for convenience when dealing with the proper field
-#' names.
-#'
-#' @param global_filter Global filter data structure
-#' @param dimension Dimension to get for the breakdown
-#' @param settings List of settings
-#' @param metric_container Metric container
-#'
-#' @return Full request list structure
-#' @noRd
-make_request <- function(rsid,
-                         global_filter,
-                         dimension,
-                         settings,
-                         metric_container,
-                         search = NULL) {
-  purrr::compact(list(
-    rsid = rsid,
-    globalFilters = global_filter,
-    metricContainer = metric_container,
-    dimension = dimension,
-    settings = settings,
-    search = search
-  ))
-}
-
-
-#' Recursively query for data
-#'
-#' @param current_dim Current dimension being queried
-#' @param item_ids Item IDs for previous dimensions
-#' @param dimensions All dimensions to be queried
-#' @param metrics Metrics in the request
-#' @param rsid Reportsuite ID
-#' @param global_filter Global filter list
-#' @param settings Settings list
-#' @param client_id Client ID
-#' @param client_secret Client secret
-#' @param company_id Company ID
-#' @param debug Whether to debug
-#' @param sort How to sort results
-#' @param top Top N items to get. Assumes input is same length as dimensions.
-#' @param page Which page of results to get. Assumes input is same length as
-#'   dimensions.
-#' @param search Search clause in final form
-#'
-#' @return Data frame
-#'
-#' @noRd
-get_req_data <- function(current_dim,
-                         item_ids,
-                         dimensions,
-                         metrics,
-                         rsid,
-                         global_filter,
-                         settings,
-                         client_id,
-                         client_secret,
-                         company_id,
-                         debug,
-                         sort,
-                         top,
-                         page,
-                         search = NULL) {
-  # TODO Encapsulate common bit of this?
-  # TODO Simplify number of arguments?
-  pos_current_dim <- match(current_dim, dimensions)
-  previous_dims <- dimensions[seq_len(pos_current_dim - 1)]
-
-  if (length(previous_dims) == 0) {
-    previous_dims <- NULL
-    dateRange <- global_filter[[1]]$dateRange
-    type <- "dateRange"
-  } else {
-    dateRange <- NULL
-    type <- "breakdown"
-  }
-
-  mc <- metric_container(
-    metrics = metrics,
-    type = type,
-    sort = sort,
-    dimensions = previous_dims,
-    itemIds = item_ids,
-    dateRange = dateRange
-  )
-
-  # Set top, page, and search for this query
-  settings$limit <- top[pos_current_dim]
-  settings$page <- page[pos_current_dim]
-  search_field <- list(clause = search[pos_current_dim] %||% NA)
-
-
-  req <- make_request(
-    rsid = rsid,
-    global_filter = global_filter,
-    dimension = paste("variables", current_dim, sep = "/"),
-    settings = settings,
-    metric_container = mc,
-    search = search_field
-  )
-
-
-  data <- jsonlite::fromJSON(aw_call_data(
-    req_path = "reports/ranked",
-    body = req,
-    debug = debug,
-    company_id = company_id,
-    client_id = client_id,
-    client_secret = client_secret
-  ))
-
-  # Increment progress bar
-  increment_global_counter()
-
-
-  dimensions_so_far <- dimensions[seq(pos_current_dim, length(dimensions))]
-
-  # Base case
-  if (pos_current_dim == length(dimensions)) {
-    # If no data is returned, data$rows is an empty list, so handle that
-    output_data <- fix_missing_metrics(data$rows,
-                                       n_metrics = length(metrics))
-
-    output_data <- output_data %>%
-      dplyr::rename(!!current_dim := value) %>%
-      unpack_metrics(metrics)
-  }
-  # Recursive case
-  else {
-    # Abort recursion if response is empty
-    if (identical(data$rows, list())) {
-      output_data <- fix_missing_metrics(
-        data$rows,
-        n_metrics = length(metrics),
-        dimensions = dimensions[pos_current_dim:length(dimensions)]
-      ) %>%
-        unpack_metrics(metrics)
-
-      return(output_data)
+    if (est_secs < 60) {
+      message_text <- glue::glue("{est_secs}sec.")
+    } else if (est_mins < 60) {
+      message_text <- glue::glue("{est_mins}min.")
+    } else {
+      message_text <- glue::glue("{est_hours}hr.")
     }
 
-    next_dim <- dimensions[pos_current_dim + 1]
-    dim_items <- data$rows[c("itemId", "value")]
-    dim_items$recent_dim <- current_dim
-    if (is.null(item_ids)) item_ids <- character()
+    message('Estimated runtime: ', message_text)
 
-
-    output_data <- purrr::pmap_dfr(dim_items, function(itemId, value, recent_dim) {
-      get_req_data(current_dim = next_dim,
-                   item_ids = c(item_ids, itemId),
-                   dimensions = dimensions,
-                   metrics = metrics,
-                   rsid = rsid,
-                   global_filter = global_filter,
-                   settings = settings,
-                   client_id = client_id,
-                   client_secret = client_secret,
-                   company_id = company_id,
-                   debug = debug,
-                   sort = sort,
-                   top = top,
-                   page = page) %>%
-        dplyr::mutate(!!recent_dim := value)
-    })
+    queries
   }
-
-  output_data %>%
-    select(all_of(dimensions_so_far), all_of(metrics))
 }
 
-
-#' Unpacks metric column
-#'
-#' @param df Data frame possibly containing a list column called `data`
-#' @param metric_names Metric names in the order they appear in the list column
-#'
-#' @return `df` with list column unpacked
-#' @noRd
-unpack_metrics <- function(df, metric_names) {
-  if (identical(df, data.frame())) {
-    return(df)
-  } else {
-    if (is.list(df$data)) {
-      data_list <- df$data
-      df$data <- NULL
-
-      data_df <- lapply(purrr::transpose(data_list), flatten_dbl) %>%
-        stats::setNames(metric_names) %>%
-        as.data.frame()
-
-      df <- cbind(df, data_df)
-    }
-  }
-
-
-  df
-}
-
-
-#' Expand missing metric data with NAs
-#'
-#'
-#' @param df Data frame
-#' @param n_metrics Number of metrics in request
-#' @param dimensions Dimension columns to create. Defaults to `value`, which is
-#'   what gets returned in the base case (leaf nodes) of recursive function. For
-#'   recursive cases where no data is returned, `dimensions` should be the
-#'   current dimension and all remaining dimensions.
-#'
-#' @return If `df` is a data frame, nothing is done to it. If it is an empty
-#'   list, creates a data frame that imitates the response from the API, with
-#'   a dimension column given by `dimensions` and a list column of metrics,
-#'   where each row has length `n_metrics`.
-#' @noRd
-#' @examples
-#' # Nothing done to data frames
-#' fix_missing_metrics(data.frame(x = 1:10))
-#'
-#' # If no rows are returned, first argument is empty list
-#' # Uses 'value' by default, for the leaf node cases
-#' fix_missing_metrics(list(), 1)
-#'
-#' # You can override dimensions that get created with 'dimensions'
-#' fix_missing_metrics(list(), 2, c("one", "two"))
-fix_missing_metrics <- function(df, n_metrics, dimensions = "value") {
-  if (identical(df, list())) {
-    warning("Response contained no data; filling with NA", call. = FALSE)
-    df <- as.list(rep(NA, length(dimensions)))
-    df <- as.data.frame(df, col.names = dimensions)
-
-    metric_list_col <- list(rep(NA, n_metrics))
-    df$data <- metric_list_col
-  }
-
-  as.data.frame(df)
-}
-
-
-
-
-#' Fill a vector of a certain length with NA
-#'
-#' Similar to [vctrs::vec_recycle()], but fills remaining values with `NA`.
-#'
-#' @param x Vector
-#' @param len Length to fill to
-#'
-#' @return A vector the same length as `len` with the difference made up by `NA`
-#' @noRd
-na_fill_vec <- function(x, len) {
-  len_x <- length(x)
-  if (len_x != len & len_x != 1) {
-    stop("Vector has length !=1 but not `len`")
-  } else if (len_x == len) {
-    return(x)
-  } else if (len_x == 1) {
-    x[2:len] <- NA
-  }
-
-  x
-}
-
-
-#' Calculate queries to be completed
-#'
-#' The number of queries required to complete a request. Useful for vetting a
-#' query to find an efficient dimension order.
-#'
-#' @param top Top argument, essentially the number of rows returned from
-#' each query (can be inaccurate when fewer rows returned, but mostly correct)
-#'
-#' @return Number of queries needed to get top
-#' @noRd
-n_queries <- function(top) {
-  top_ind <- c(1, top[-length(top)])
-  sum(cumprod(top_ind))
-}
 
 
 
@@ -912,10 +315,20 @@ initialize_global_counter <- function(top) {
   invisible(total_queries)
 }
 
+
+#' Increment global counter
+#'
+#' Send a `tick` to the progress bar (see `progress::progress_bar`).
+#' If no progress bar is initialized, do nothing.
+#'
+#' @return NULL
+#' @noRd
 increment_global_counter <- function() {
   if (!is.null(.adobeanalytics$prog_bar)) {
     .adobeanalytics$prog_bar$tick()
   }
+
+  NULL
 }
 
 
