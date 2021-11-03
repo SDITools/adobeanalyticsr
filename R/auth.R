@@ -234,11 +234,12 @@ get_env_vars <- function() {
 
     if (client_id == "" | client_secret == "") {
         env_vars <- c(AW_CLIENT_ID = client_id,
-                      AW_CLIENT_SECRET = client_secret,
-                      AW_COMPANY_ID = company_id)
+                      AW_CLIENT_SECRET = client_secret)
+
         missing_envs <- names(env_vars[env_vars == ""])
 
-        stop("Missing environment variables: ", paste(missing_envs, collapse = ", "))
+        stop("Cannot automatically authenticate due to missing environment variables: ", paste(missing_envs, collapse = ", "),
+             call. = FALSE)
     }
 
     list(
