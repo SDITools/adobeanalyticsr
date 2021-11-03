@@ -16,6 +16,9 @@
 #' @noRd
 #'
 #' @examples
+#' dates <- c(29367, 29368)
+#' dates <- c('2021-01-01', '2021-01-10')
+#' dates <- c(Sys.Date()-31, Sys.Date()-1)
 #' dates <- as.Date(c("2021-01-01", "2021-01-10"))
 #' posixs <- as.POSIXct(c("2021-01-01T00:00:00", "2021-01-10T23:59:59"), format = "%Y-%m-%dT%H:%M:%S")
 #' posixs2 <- as.POSIXct(c("2021-01-01T12:00:00", "2021-01-10T15:59:59"), format = "%Y-%m-%dT%H:%M:%S")
@@ -24,17 +27,22 @@
 #' make_timeframe(posixs)
 #' make_timeframe(posixs2)
 make_timeframe <- function(dates, origin = lubridate::origin) {
+
   stopifnot(length(dates) == 2)
   if (is.numeric(dates)) {
     warning("Numeric values for date range will be converted to dates")
   }
-
+  #change posix to date formats
   if (lubridate::is.POSIXt(dates)) {
     return(paste(
       lubridate::format_ISO8601(dates[1], usetz = FALSE),
       lubridate::format_ISO8601(dates[2], usetz = FALSE),
       sep = "/"
     ))
+  }
+  #check if is character format i.e. '2021-01-01'
+  if (is.character(dates)) {
+    dates <- as.Date(dates)
   }
   dates <- as.Date(dates, origin)
 
@@ -43,7 +51,6 @@ make_timeframe <- function(dates, origin = lubridate::origin) {
 
   paste(start, end, sep = "/")
 }
-
 
 # set the timeframe for the query (timeframe)
 make_startDate_endDate <- function(start_date, end_date){

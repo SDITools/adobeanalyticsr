@@ -72,7 +72,7 @@ aw_auth_with <- function(type) {
 
 #' @description
 #' `aw_auth_path` sets the file path for the cached authorization token. It
-#' should be a directoy, rather than a filename. If this option is not set, the
+#' should be a directory, rather than a filename. If this option is not set, the
 #' current working directory is used instead.
 #'
 #' @rdname aw_auth_with
@@ -83,7 +83,6 @@ aw_auth_path <- function(path) {
     options(adobeanalyticsr.auth_path = path)
     invisible(path)
 }
-
 
 #' @description
 #' `aw_auth_name` sets the file name for the cached authorization token. If this
@@ -97,8 +96,6 @@ aw_auth_name <- function(name) {
     options(adobeanalyticsr.auth_name = name)
     invisible(name)
 }
-
-
 
 #' Retrieve a token
 #'
@@ -142,10 +139,12 @@ retrieve_aw_token <- function(...) {
     }
 
     # Check expiration
-    if (!token$validate()) {
+    if(type == 'jwt'){
+        if (!token$validate()) {
         # This might be the wrong thing to do with OAuth, but it's the right
         # thing to do for JWT
         .adobeanalytics$token$refresh()
+        }
     }
 
     return(.adobeanalytics$token)
@@ -164,7 +163,6 @@ token_path <- function(...) {
     loc <- getOption("adobeanalyticsr.auth_path", getwd())
     file.path(loc, ...)
 }
-
 
 #' Get type of token
 #'
@@ -198,6 +196,8 @@ token_type <- function(token) {
 #'
 #' @return Config objects that can be passed to `httr::GET` or similar
 #' functions (e.g. `httr::RETRY`)
+#' @export
+#' @rd
 get_token_config <- function(client_id,
                              client_secret) {
     token <- retrieve_aw_token(client_id,
@@ -424,7 +424,7 @@ auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
     aw_endpoint <- httr::oauth_endpoint(
         authorize = "authorize/v2/",
         access = "token/v3",
-        base_url = "https://ims-na1.adobelogin.com/ims/"
+        base_url = "https://ims-na1.adobelogin.com/ims"
     )
 
     aw_app <- httr::oauth_app(
