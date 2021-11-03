@@ -8,8 +8,6 @@
 #' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
 #' @param body An R list that will be parsed to JSON
 #' @param company_id Set in environment args, or pass directly here
-#' @param client_id Set in environment args, or pass directly here
-#' @param client_secret Set in environment args, or pass directly here
 #' @param use_oob Always set to TRUE. Needed for tests
 #'
 #' @examples
@@ -26,23 +24,22 @@
 aw_call_data <- function(req_path,
                          body = NULL,
                          debug = FALSE,
-                         company_id = Sys.getenv("AW_COMPANY_ID"),
-                         client_id = Sys.getenv("AW_CLIENT_ID"),
-                         client_secret = Sys.getenv("AW_CLIENT_SECRET"),
+                         company_id,
                          use_oob = TRUE
 ){
     assert_that(
         is.string(req_path),
         is.list(body),
-        is.string(company_id),
-        is.string(client_id),
-        is.string(client_secret)
+        is.string(company_id)
     )
+
+    env_vars <- get_env_vars()
+    token_config <- get_token_config(client_id = env_vars$client_id,
+                                     client_secret = env_vars$client_secret)
 
     request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                            company_id, req_path)
 
-    token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
     debug_call <- NULL
 
     if (debug) {
@@ -56,7 +53,7 @@ aw_call_data <- function(req_path,
                        token_config,
                        debug_call,
                        httr::add_headers(
-                           `x-api-key` = client_id,
+                           `x-api-key` = env_vars$client_id,
                            `x-proxy-global-company-id` = company_id
                        ))
 

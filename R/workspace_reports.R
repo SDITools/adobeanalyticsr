@@ -14,20 +14,18 @@
 #' @import assertthat httr dplyr tidyr
 #'
 aw_workspace_report <- function(req_body = '',
-                                company_id = Sys.getenv('AW_COMPANY_ID'),
-                                client_id = Sys.getenv("AW_CLIENT_ID"),
-                                client_secret = Sys.getenv("AW_CLIENT_SECRET")) {
+                                company_id = Sys.getenv('AW_COMPANY_ID')) {
 
   #assert for better error control
   assertthat::assert_that(
     file.exists(req_body),
-    is.string(company_id),
-    is.string(client_id),
-    is.string(client_secret)
+    is.string(company_id)
   )
 
   # creates token to aa.oauth if not present
-  token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
+  env_vars <- get_env_vars()
+  token_config <- get_token_config(client_id = env_vars$client_id,
+                                   client_secret = env_vars$client_secret)
 
   #grab the dimensions and metric names from the query
   query <-jsonlite::fromJSON(txt=req_body)

@@ -13,19 +13,17 @@
 #' }
 #' @export
 #' @import assertthat httr
-get_me <- function(req_path = 'discovery/me',
-                   client_id = Sys.getenv("AW_CLIENT_ID"),
-                   client_secret = Sys.getenv("AW_CLIENT_SECRET")) {
-
+get_me <- function(req_path = 'discovery/me') {
     assertthat::assert_that(
-        is.string(req_path),
-        is.string(client_id),
-        is.string(client_secret)
+        is.string(req_path)
     )
+
+    env_vars <- get_env_vars()
+    token_config <- get_token_config(client_id = env_vars$client_id,
+                                     client_secret = env_vars$client_secret)
 
     request_url <- sprintf("https://analytics.adobe.io/%s",
                            req_path)
-    token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
 
     req <- httr::RETRY("GET",
                        url = request_url,
@@ -33,7 +31,7 @@ get_me <- function(req_path = 'discovery/me',
                        body = FALSE,
                        token_config,
                        httr::add_headers(
-                           `x-api-key` = client_id
+                           `x-api-key` = env_vars$client_id
                        ))
 
 
