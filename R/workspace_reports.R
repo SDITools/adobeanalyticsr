@@ -5,8 +5,6 @@
 #'
 #' @param req_body The json string copied from Workspace
 #' @param company_id Company Id.  Taken from the global environment by default if not provided.
-#' @param client_id Set in environment args, or pass directly here
-#' @param client_secret Set in environment args, or pass directly here
 #'
 #' @return A data frame of dimensions and metrics
 #'
@@ -68,7 +66,7 @@ aw_workspace_report <- function(req_body = '',
                      encode = "json",
                      token_config,
                      httr::add_headers(
-                       `x-api-key` = client_id,
+                       `x-api-key` = env_vars$client_id,
                        `x-proxy-global-company-id` = company_id
                      ))
 

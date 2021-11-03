@@ -4,18 +4,10 @@
 \alias{get_me}
 \title{Get Company Ids}
 \usage{
-get_me(
-  req_path = "discovery/me",
-  client_id = Sys.getenv("AW_CLIENT_ID"),
-  client_secret = Sys.getenv("AW_CLIENT_SECRET")
-)
+get_me(req_path = "discovery/me")
 }
 \arguments{
 \item{req_path}{The endpoint for that particular report}
-
-\item{client_id}{Set in environment args, or pass directly here}
-
-\item{client_secret}{Set in environment args, or pass directly here}
 }
 \value{
 A data frame of company ids and company names
