@@ -50,8 +50,7 @@ make_timeframe <- function(dates, origin = lubridate::origin) {
   end <- paste0(as.character(dates[2]), "T23:59:59")
 
   paste(start, end, sep = "/")
-}as.Date(c("2021-01-01", "2021-01-10"))
-make_timeframe(as.Date(c("2021-01-01", "2021-01-10")))
+}
 
 # set the timeframe for the query (timeframe)
 make_startDate_endDate <- function(start_date, end_date){
