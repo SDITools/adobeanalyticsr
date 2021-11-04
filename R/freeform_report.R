@@ -262,9 +262,9 @@ n_queries <- function(top) {
 #' @return Number of requests necessary to complete query
 #' @noRd
 estimate_requests <- function(top) {
-  if (length(top) > 1) {
-    queries <- n_queries(top)
+  queries <- n_queries(top)
 
+  if (length(top) > 1) {
     # I reckon about 1 second per query
     # sec
     est_secs <- round(queries * 1.1, digits = 0)
@@ -282,9 +282,9 @@ estimate_requests <- function(top) {
     }
 
     message('Estimated runtime: ', message_text)
-
-    queries
   }
+
+  queries
 }
 
 
