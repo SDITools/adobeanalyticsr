@@ -179,14 +179,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     segmentId = c(NA, segmentId)
   )
 
-  # Check search for at least one instance of a keyword
-  if (!all(is.na(search))) {
-    search_keywords <- c("AND", "OR", "NOT", "MATCH", "CONTAINS", "BEGINS-WITH", "ENDS-WITH")
-    if (sum(grepl(paste(search_keywords, collapse = "|"), search)) == 0) {
-      stop("Search field must contain at least one of: ", paste(search_keywords, collapse = ", "))
-    }
-  }
-
   # Set settings-like settings
   search <- na_fill_vec(search, len = length(dimensions))
   metricSort <- na_fill_vec(metricSort, len = length(metrics))
