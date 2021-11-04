@@ -7,8 +7,6 @@
 #' @param rsid Reportsuite ID
 #' @param global_filter Global filter list
 #' @param settings Settings list
-#' @param client_id Client ID
-#' @param client_secret Client secret
 #' @param company_id Company ID
 #' @param debug Whether to debug
 #' @param sort How to sort results
@@ -27,8 +25,6 @@ get_req_data <- function(current_dim,
                          rsid,
                          global_filter,
                          settings,
-                         client_id,
-                         client_secret,
                          company_id,
                          debug,
                          sort,
@@ -78,9 +74,7 @@ get_req_data <- function(current_dim,
     req_path = "reports/ranked",
     body = req,
     debug = debug,
-    company_id = company_id,
-    client_id = client_id,
-    client_secret = client_secret
+    company_id = company_id
   ))
 
   # Increment progress bar
@@ -127,13 +121,12 @@ get_req_data <- function(current_dim,
                    rsid = rsid,
                    global_filter = global_filter,
                    settings = settings,
-                   client_id = client_id,
-                   client_secret = client_secret,
                    company_id = company_id,
                    debug = debug,
                    sort = sort,
                    top = top,
-                   page = page) %>%
+                   page = page,
+                   search = search) %>%
         dplyr::mutate(!!recent_dim := value)
     })
   }

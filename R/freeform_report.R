@@ -179,14 +179,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     segmentId = c(NA, segmentId)
   )
 
-  # Check search for at least one instance of a keyword
-  if (!all(is.na(search))) {
-    search_keywords <- c("AND", "OR", "NOT", "MATCH", "CONTAINS", "BEGINS-WITH", "ENDS-WITH")
-    if (sum(grepl(paste(search_keywords, collapse = "|"), search)) == 0) {
-      stop("Search field must contain at least one of: ", paste(search_keywords, collapse = ", "))
-    }
-  }
-
   # Set settings-like settings
   search <- na_fill_vec(search, len = length(dimensions))
   metricSort <- na_fill_vec(metricSort, len = length(metrics))
@@ -207,6 +199,8 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   n_requests <- estimate_requests(top)
   if (n_requests > 20) {
     initialize_global_counter(top)
+  } else {
+    kill_global_counter()
   }
 
 
@@ -220,8 +214,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     rsid = rsid,
     global_filter = gf,
     settings = settings,
-    client_id = Sys.getenv("AW_CLIENT_ID"),
-    client_secret = Sys.getenv("AW_CLIENT_SECRET"),
     company_id = company_id,
     debug = debug,
     sort = metricSort,
@@ -273,8 +265,9 @@ estimate_requests <- function(top) {
   if (length(top) > 1) {
     queries <- n_queries(top)
 
+    # I reckon about 1 second per query
     # sec
-    est_secs <- round((queries-1)*.80, digits = 0)
+    est_secs <- round(queries * 1.1, digits = 0)
     # min
     est_mins <- round(est_secs/60, digits = 0)
     # hour
@@ -314,6 +307,18 @@ initialize_global_counter <- function(top) {
                                                          format = prog_format,
                                                          clear = FALSE)
   invisible(total_queries)
+}
+
+
+#' Kill global counter
+#'
+#' Tears down the global counter
+#'
+#' @return NULL
+#' @noRd
+kill_global_counter <- function() {
+  .adobeanalytics$prog_bar <- NULL
+  NULL
 }
 
 
@@ -357,3 +362,4 @@ convert_date_columns <- function(dat) {
 
   dat
 }
+

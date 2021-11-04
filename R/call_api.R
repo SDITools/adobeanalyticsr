@@ -23,20 +23,20 @@
 #' @import assertthat httr
 aw_call_api <- function(req_path,
                         debug = FALSE,
-                        company_id = Sys.getenv("AW_COMPANY_ID"),
-                        client_id = Sys.getenv("AW_CLIENT_ID"),
-                        client_secret = Sys.getenv("AW_CLIENT_SECRET")) {
+                        company_id) {
 
     assertthat::assert_that(
         assertthat::is.string(req_path),
-        assertthat::is.string(company_id),
-        assertthat::is.string(client_id),
-        assertthat::is.string(client_secret)
+        assertthat::is.string(company_id)
     )
+
+
+    env_vars <- get_env_vars()
+    token_config <- get_token_config(client_id = env_vars$client_id,
+                                     client_secret = env_vars$client_secret)
 
     request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                            company_id, req_path)
-    token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
     debug_call <- NULL
 
     if (debug) {
@@ -50,7 +50,7 @@ aw_call_api <- function(req_path,
                        token_config,
                        debug_call,
                        httr::add_headers(
-                           `x-api-key` = client_id,
+                           `x-api-key` = env_vars$client_id,
                            `x-proxy-global-company-id` = company_id
                        ))
 

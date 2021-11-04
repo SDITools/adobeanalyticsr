@@ -212,6 +212,44 @@ get_token_config <- function(client_id,
 }
 
 
+
+#' Get user's credentials
+#'
+#' The order of precedence is:
+#'
+#' 1. Variables set by auth functions
+#' 2. If auth functions haven't been called, use environment variables
+#' 3. If environment variables are empty, throw an error
+#'
+#' @return List of length two with elements `client_id` and `client_secret`
+#' @noRd
+get_env_vars <- function() {
+    client_id <- .adobeanalytics$client_id
+    client_secret <- .adobeanalytics$client_secret
+
+    if (is.null(client_id) | is.null(client_secret)) {
+        client_id <- Sys.getenv("AW_CLIENT_ID")
+        client_secret <- Sys.getenv("AW_CLIENT_SECRET")
+    }
+
+    if (client_id == "" | client_secret == "") {
+        env_vars <- c(AW_CLIENT_ID = client_id,
+                      AW_CLIENT_SECRET = client_secret)
+
+        missing_envs <- names(env_vars[env_vars == ""])
+
+        stop("Cannot automatically authenticate due to missing environment variables: ", paste(missing_envs, collapse = ", "),
+             call. = FALSE)
+    }
+
+    list(
+        client_id = client_id,
+        client_secret = client_secret
+    )
+}
+
+
+
 # JWT ------------------------------------------------------------------
 
 #' @family auth
@@ -240,6 +278,8 @@ auth_jwt <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
                   resp$date + httr::content(resp)$expires_in / 1000)
 
     .adobeanalytics$token <- AdobeJwtToken$new(resp, secrets)
+    .adobeanalytics$client_id <- client_id
+    .adobeanalytics$client_secret <- client_secret
 }
 
 
@@ -405,4 +445,6 @@ auth_oauth <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
 
     message("Successfully authenticated with OAuth")
     .adobeanalytics$token <- token
+    .adobeanalytics$client_id <- client_id
+    .adobeanalytics$client_secret <- client_secret
 }

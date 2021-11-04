@@ -34,7 +34,7 @@ setting and return to defaults.
 as a default when no specific option is given.
 
 \code{aw_auth_path} sets the file path for the cached authorization token. It
-should be a directoy, rather than a filename. If this option is not set, the
+should be a directory, rather than a filename. If this option is not set, the
 current working directory is used instead.
 
 \code{aw_auth_name} sets the file name for the cached authorization token. If this
