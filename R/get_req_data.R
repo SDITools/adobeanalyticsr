@@ -125,7 +125,8 @@ get_req_data <- function(current_dim,
                    debug = debug,
                    sort = sort,
                    top = top,
-                   page = page) %>%
+                   page = page,
+                   search = search) %>%
         dplyr::mutate(!!recent_dim := value)
     })
   }
