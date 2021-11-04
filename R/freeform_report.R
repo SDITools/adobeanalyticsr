@@ -199,6 +199,8 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   n_requests <- estimate_requests(top)
   if (n_requests > 20) {
     initialize_global_counter(top)
+  } else {
+    kill_global_counter()
   }
 
 
@@ -305,6 +307,18 @@ initialize_global_counter <- function(top) {
                                                          format = prog_format,
                                                          clear = FALSE)
   invisible(total_queries)
+}
+
+
+#' Kill global counter
+#'
+#' Tears down the global counter
+#'
+#' @return NULL
+#' @noRd
+kill_global_counter <- function() {
+  .adobeanalytics$prog_bar <- NULL
+  NULL
 }
 
 
