@@ -51,7 +51,7 @@ Defaults to the value of the \code{httr_oob_default} default, or TRUE if
 The path of the cached token, invisibly
 }
 \description{
-\code{aw_oauth} and \code{aw_jwt} should not be called directly, as these do not cache
+\code{auth_oauth} and \code{auth_jwt} should not be called directly, as these do not cache
 the token.
 }
 \section{Functions}{
