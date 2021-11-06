@@ -10,7 +10,7 @@ Description: Connect to the 'Adobe Analytics' API v2.0 <https://github.com/Adobe
 Authors@R: c(
     person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
     person("Tim", "Wilson", email = "timwilson7@gmail.com", role = c("aut", "ctb")),
-    person("Charles", "Gallagher", email = "charlesjgallagher15@gmail.com", role = c("ctb"))
+    person("Charles", "Gallagher", email = "charlesjgallagher15@gmail.com", role = c("ctb")),
     person("Mark", "Edmondson", role = "ctb")
     )
 License: MIT + file LICENSE
