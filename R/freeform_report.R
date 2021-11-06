@@ -9,7 +9,7 @@
 #' This function is based on the **Freeform Table** visualization in Analysis Workspace. It is accessing
 #' the same API call type that is used to generate those visualizations.
 #'
-#' **Dimension Ordering**
+#' ## Dimension Ordering
 #'
 #' Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
 #' frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
@@ -32,7 +32,7 @@
 #' Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
 #' ways to improve query performance.
 #'
-#' **Date Handling**
+#' ## Date Handling
 #'
 #' Date handling has several special characteristics that are worth getting familiar with:
 #' * The API names for day, week, month, etc. are prepended with `daterange`, so daily data uses
@@ -52,7 +52,7 @@
 #' * If you are using a `daterange...` value _not_ as the first dimension, then simply using `0` at the
 #' same level in the `top` argument specification will return all of the values for that date/time value.
 #'
-#' **Search/Filtering**
+#' ## Search/Filtering
 #'
 #' There are powerful filtering abilities within the function. However, to support that power requires a
 #' syntax that can feel a bit cumbersome for simple queries. **_Note:_** search filters are case-insensitive.
@@ -65,27 +65,29 @@
 #' The default for any search string is to use `CONTAINS`. Consider a query where
 #' `dimensions = c("mobiledevicetype", "lasttouchchannel")`:
 #'
-#' * `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
-#' * This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
-#' * `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
-#' * `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
+#' - `search = "CONTAINS 'mobile'"` will return results where `mobiledevicetype` contains "mobile", so would return all rows for **Mobile Phone**.
+#' - This could be shortened to `search = "'mobile'"` and would behave exactly the same, since `CONTAINS` is the default operator
+#' - `search = c("CONTAINS 'mobile'", "CONTAINS 'search'")` will return results where `mobiledevicetype` contains "mobile" and, within those results, results where `lasttouchchannel` contains "search".
+#' - `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
-#' @seealso \code{\link{get_me}}, \code{\link{aw_get_reportsuites}}, \code{\link{aw_get_segments}},
-#' \code{\link{aw_get_dimensions}}, \code{\link{aw_get_metrics}}, \code{\link{aw_get_calculatedmetrics}}
+#' @seealso [get_me()], [aw_get_reportsuites()], [aw_get_segments()],
+#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()]
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' Use \code{\link{get_me}} to get a list of available `company_id` values.
+#' Use [get_me()] to get a list of available `company_id` values.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
-#' be used. Use \code{\link{aw_get_reportsuites}} to get a list of available `rsid` values.
-#' @param date_range A vector containing the start and end date for the report as **Date** objects.
-#' @param metrics A character vector of metrics. Use \code{\link{aw_get_metrics}} and \code{\link{aw_get_calculatedmetrics}}
+#' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
+#' @param date_range A length-2 vector with a start date and an end date.
+#'   `POSIXt` objects are sent as is, for fine control over the date range.
+#'   Numeric values are automatically converted to dates.
+#' @param metrics A character vector of metrics. Use [aw_get_metrics()] and [aw_get_calculatedmetrics()]
 #' to get a list of available `metrics` IDs.
 #' @param dimensions A character vector of dimensions. There is currently a limit of 20 dimension
 #' breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 #' call, so the more dimensions that are included, the longer the function will take to return results.
-#' This is how the Adobe Analytics API works. Use \code{\link{aw_get_dimensions}} to get a list of available
+#' This is how the Adobe Analytics API works. Use [aw_get_dimensions()] to get a list of available
 #' `dimensions` IDs.
 #' @param top The number of values to be pulled for each dimension. The default is 5 and the "top" is based on
 #' the first `metric` value (along with `metricSort`). If there are multiple dimensions, then this argument can
@@ -102,706 +104,262 @@
 #' which includes **Unspecified** values in the results.
 #' @param segmentId A single segment ID or a vector of multiple segment IDs to apply to the overall report.
 #' If multiple `segmentId` values are included, the segments will be effectived ANDed together, just as if
-#' multiple segments were added to the header of an Analysis Workspace panel. Use \code{\link{aw_get_segments}}
+#' multiple segments were added to the header of an Analysis Workspace panel. Use [aw_get_segments()]
 #' to get a list of available `segmentId` values.
 #' @param search Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
 #' the **Details** for more information on constructing values for this argument.
-#' @param prettynames A Boolean that determines whether the column names in the results use the API field name
+#' @param prettynames A logical that determines whether the column names in the results use the API field name
 #' (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
 #' "Page Views"). This applies to both dimensions and metrics. The default value is `FALSE`, which returns the
 #' API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
-#' (e.g., "evar2", "prop3", "event15").
+#' (e.g., "evar2", "prop3", "event15"). If `TRUE`, undoes any efficiency gains
+#' from setting `check_components` to `FALSE`.
 #' @param debug Set to `TRUE` to publish the full JSON request(s) being sent to the API to the console when the
 #' function is called. The default is `FALSE`.
+#' @param check_components Logical, whether to check the validity of metrics and
+#' dimensions before running the query. Defaults to `TRUE`, but causes
+#' `aw_freeform_report` to request all dimensions and metrics from the API,
+#' which may be inefficient if you're running many queries. If you have many
+#' queries, it's more efficient to implement validity checking yourself on either
+#' side of your queries.
 #'
 #' @return A data frame with dimensions and metrics.
 #'
-#' @import assertthat
-#' @import httr
-#' @import httr
-#' @import dplyr
-#' @import stringr
-#' @import purrr
-#' @import tidyr
-#' @import purrrlyr
-#' @importFrom rlang :=
-#' @importFrom jsonlite fromJSON
-#' @importFrom lubridate parse_date_time
-#'
 #' @export
 aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
-                               rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-                               date_range = c(Sys.Date()-30, Sys.Date()-1),
-                               dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
-                               metrics = c("visits", "visitors"),
-                               top = c(5),
-                               page = 0,
-                               filterType = 'breakdown',
-                               segmentId = NA,
-                               metricSort =  'desc',
-                               include_unspecified = TRUE,
-                               search = NA,
-                               prettynames = FALSE,
-                               debug = FALSE
-                               )
-{
+                              rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+                              date_range = c(Sys.Date()-30, Sys.Date()-1),
+                              dimensions = c('page', 'lasttouchchannel', 'mobiledevicetype'),
+                              metrics = c("visits", "visitors"),
+                              top = c(5),
+                              page = 0,
+                              filterType = 'breakdown',
+                              segmentId = NA,
+                              metricSort =  'desc',
+                              include_unspecified = TRUE,
+                              search = NA,
+                              prettynames = FALSE,
+                              debug = FALSE,
+                              check_components = TRUE) {
+  if (all(is.na(segmentId))) segmentId <- NULL
+  # Repeated dimensions will cause an infinite loop
+  if (length(dimensions) > length(unique(dimensions))) {
+    stop("List of dimensions is not unique")
+  }
+  # No harm in repeated metrics, simply take the unique ones
+  metrics <- unique(metrics)
 
-# Prep Work for the api calls ------------------------------------------------------------------
-  #Making sure metrics and dimensions are available.  Error handling.
-  dims <- aw_get_dimensions(rsid = rsid, company_id = company_id)
-  mets <- aw_get_metrics(rsid = rsid, company_id = company_id)
-  #pull out the calculated metrics
-  cms_ids <- metrics[grepl('cm[1-9]*_*', metrics)]
-  if (length(cms_ids) > 0) {
-    cms <- aw_get_calculatedmetrics(company_id = company_id, filterByIds = cms_ids)
-    dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)], cms[c(2, 3)])
+  # Component lookup checks
+  # The component checking is optional, in case speed is a priority
+  if (check_components | prettynames) {
+    comp_lookup <- make_component_lookup(rsid,
+                                         company_id,
+                                         metrics[is_calculated_metric(metrics)])
+    invalid_components <- invalid_component_names(component = c(dimensions, metrics),
+                                                  lookup = comp_lookup)
+
+    if (length(invalid_components > 0)) {
+      invalid_components <- paste(invalid_components, collapse = ", ")
+      stop(paste("Component(s) not found: ", invalid_components), call. = FALSE)
+    }
+
+    if (prettynames == TRUE) {
+      pretty_comp_names <- c(dimensions, metrics)
+      names(pretty_comp_names) <- comp_lookup$name[match(pretty_comp_names, comp_lookup$id)]
+    }
+  }
+
+
+  # Make global filter
+  timeframe <- make_timeframe(date_range)
+
+  gf <- global_filter(
+    type = c("dateRange", rep("segment", times = length(segmentId))),
+    dateRange = c(timeframe, rep(NA, times = length(segmentId))),
+    segmentId = c(NA, segmentId)
+  )
+
+  # Set settings-like settings
+  search <- na_fill_vec(search, len = length(dimensions))
+  metricSort <- na_fill_vec(metricSort, len = length(metrics))
+
+  # Set settings
+  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
+  top <- top_daterange_number(top, dimensions, date_range)
+  page <- vctrs::vec_recycle(page, size = length(dimensions))
+
+  settings <- req_settings(
+    limit = 0,    # Placeholder, limit set during query
+    page = 0,     # Placeholder, page set during query
+    nonesBehavior = unspecified,
+    dimensionSort = "asc"
+  )
+
+  # Estimate requests and reset global counter
+  n_requests <- estimate_requests(top)
+  if (n_requests > 20) {
+    initialize_global_counter(top)
   } else {
-    dimmets <- rbind(dims[c(1, 3)], mets[c(1, 3)])
-  }
-  finalnames <- c(dimensions, metrics)
-  #include an error handler for metrics that do not appear in the list
-  for (x in seq(finalnames)) {
-    if (finalnames[[x]] %in% dimmets[, 1] == FALSE) {
-      stop(paste0('\'', finalnames[[x]], '\' is not an available element'))
-    }
-  }
-  #create the list of pretty named variables for the final output dataset
-  if (prettynames == TRUE) {
-    pnames <- function(x) {
-      dimmets %>% dplyr::filter(finalnames[x] == id) %>% dplyr::pull(name)
-    }
-    prettyfinalnames <- map_chr(seq(finalnames), pnames)
-  }
-  #Identify the handling of unspecified
-  if (include_unspecified == FALSE) {
-    unspecified <- "exclude-nones"
-  }
-  if (include_unspecified == TRUE) {
-    unspecified <- "return-nones"
-  }
-  itemId <- list(dimensions)
-
-  finalnames_function <- function(level) {
-    c(paste0('itemId_',dimensions[level]), dimensions[level])
+    kill_global_counter()
   }
 
-  prefinalnames <- purrr::map(seq(dimensions), finalnames_function) %>%
-    append(list(metrics))
 
-  #based on given names, create the list to be used for filtering and defining
-  itemidnamesfunction <- function(items) {
-    paste0('itemId_', dimensions[[items]])
-  }
-  itemidnames <-purrr::map(seq(dimensions), itemidnamesfunction)
+  # Make requests
+  message("Requesting data...", appendLF = TRUE)
+  output_data <- get_req_data(
+    current_dim = dimensions[1],
+    dimensions = dimensions,
+    item_ids = NULL,
+    metrics = metrics,
+    rsid = rsid,
+    global_filter = gf,
+    settings = settings,
+    company_id = company_id,
+    debug = debug,
+    sort = metricSort,
+    top = top,
+    page = page,
+    search = search
+  )
+  message("Done!")
+  message(glue::glue("Returning {nrow(output_data)} x {ncol(output_data)} data frame"))
 
-  ##set the timeframe for the query (timeframe)
-  timeframe <- make_timeframe(date_range[[1]], date_range[[2]])
-
-##setup the right number of limits for each dimension (top)
-top <- top_daterange_number(top, dimensions, date_range)
-
-  #estimated runtime
-  if(length(top) > 1) {
-    toplength <- length(top)
-    i <- 1
-    product = 1
-    topestimate1 <-  top[-toplength]
-    topestimate1 <- append(topestimate1, 1, after = 0)
-    for(i in seq(toplength)) {
-      product <- product + prod(topestimate1[1:i])
-    }
-    #sec
-    est_secs <- round((product-1)*.80, digits = 2)
-    #min
-    est_mins <- round(((product-1)*.80)/60, digits = 2)
-    message(paste0('Estimated runtime: ', est_secs, 'sec./', est_mins, 'min.'))
-    #message(paste0('Estimating a total of ', product-2, ' API calls'))
-  }
-  #segment filter builder function (segments)
-  seg <- function(segmentId) {
-    structure(list(type = "segment",
-                   segmentId = segmentId))
+  if (prettynames) {
+    output_data <- dplyr::select(output_data,
+                                 all_of(pretty_comp_names))
   }
 
-  segments <- purrr::map(segmentId, seg)
-
-  #create the DateRange list item (dr)
-  dr <- list(list(
-    type = "dateRange",
-    dateRange = timeframe))
-
-  #join Segment and DateRange builder function
-  s_dr <- function() {
-    if(is.na(segmentId[[1]])) {
-      list(list(
-        type = "dateRange",
-        dateRange = timeframe
-      ))
-    } else {
-      append(segments, dr)
-    }
-  }
-
-  #Create the global filters (gf)
-  gf <- s_dr()
-
-  #search item builder filter (search)
-  search[search == ''] <- NA
-  add_si <- length(dimensions) - length(search)
-  added_si <- rep(NA, add_si)
-  search <- append(search, added_si)
-
-  si_fun <- function(si) {
-    if(!is.na(search[si])){
-      search <-  structure(list('clause' = search[si]))
-    } else {
-      NA
-    }
-  }
-  search <- purrr::map(seq(dimensions), si_fun)
-
-
-  ##function to create the top level 'metricsContainer'
-  metriccontainer_1 <- function(metric, colId, metricSort) {
-    if(colId == 0) {
-      if(grepl('cm[1-9]*_*', metric)) {
-        structure(list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort
-        ))
-      } else {
-        structure(list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          sort = metricSort
-        ))
-      }
-    } else {
-      if(grepl('cm[1-9]*_*', metric)) {
-        structure(list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort
-        ))
-      } else {
-        structure(list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric)
-        ))
-      }}
-  }
-
-  ### function to create the  breakdown 'metricsContainer'
-  metriccontainer_2 <- function(metric, colId, metricSort, filterId) {
-    if(colId == 0) {
-      if(grepl('cm[1-9]*_*', metric)) {
-        structure(list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort,
-          filters = list(
-            filterId
-          )))
-      } else {
-        structure(list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          sort = metricSort,
-          filters = list(
-            filterId
-          )))
-      }
-    } else {
-      if(grepl('cm[1-9]*_*', metric)) {
-        structure(list(
-          columnId = colId,
-          id = metric,
-          filters = list(
-            filterId
-          )))
-      } else {
-        structure(list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          filters = list(
-            filterId
-          )))
-      }}
-  }
-
-  metriccontainer_n <- function(metric, colId, metricSort , filterId) {
-    if(colId == 0) {
-      if(grepl('cm[1-9]*_*', metric)) {
-        structure(list(
-          columnId = colId,
-          id = metric,
-          sort = metricSort,
-          filters =
-            filterId
-        ))
-      } else {
-        structure(list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          sort = metricSort,
-          filters =
-            filterId
-        ))
-      }
-    } else {
-      if(grepl('cm[1-9]*_*', metric)) {
-        structure(list(
-          columnId = colId,
-          id = metric,
-          filters =
-            filterId
-        ))
-      } else {
-        structure(list(
-          columnId = colId,
-          id = sprintf('metrics/%s',metric),
-          filters =
-            filterId
-        ))
-      }
-    }}
-
-  #setup the tibble for building the queries
-  metIds <- tibble(metrics,colid = seq(length(metrics))-1)
-
-  df <- tibble(dimension = c(dimensions), metric = list(metIds), filterType, top)
-  df <- df %>% dplyr::mutate(breakdownorder = as.numeric(rownames(df)))
-  bdnumber <- as.numeric(max(df$breakdownorder))
-  metnumber <- as.numeric(length(metrics))
-
-  #metrics list items
-  #if = 1st dimension
-  metricContainerFunction <- function(i){
-    mc <- list()
-    if(i == 1) {
-      mc <- list()
-      m1list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],
-                     metricSort = metricSort)
-      mc <- purrr::pmap(m1list, metriccontainer_1)
-      return(mc)
-    } else if(i == 2) {
-      m2list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],
-                     metricSort = metricSort,
-                     filterId = seq(nrow(df$metric[[i]][1])*(i-1))-1)
-      mc <- append(mc, values = purrr::pmap(m2list, metriccontainer_2))
-      return(mc)
-    } else  {
-      #if = 3rd dimension or more
-      L <- list(seq(nrow(df$metric[[i]][1])*(i-1))-1)
-      filteridslist <- split(L[[1]], rep(1:nrow(df$metric[[i]][1]), length = length(L[[1]])))
-
-      m3list <- list(metric = df$metric[[i]][[1]],
-                     colId = df$metric[[i]][[2]],
-                     metricSort = metricSort,
-                     filterId = filteridslist)
-      mc <-  append(mc, values = purrr::pmap(m3list, metriccontainer_n))
-      return(mc)
-    }
-  }
-
-  mlist <- purrr::map(seq(bdnumber), metricContainerFunction)
-
-  #function to pre-create the MetricFilters list needed to iterate through the api calls
-  load_dims <- function(dimItems) {
-    mflist <- list(dimension = rep(dimensions[1:dimItems], each = metnumber))
-    mflist <- append(mflist, values = list('type' = 'breakdown'))
-    mflist <- append(mflist, values = list('id' = seq(length(mflist[[1]]))-1))
-  }
-  #run the function
-  mfdims <- purrr::map(seq_along(dimensions)-1, load_dims)
-
-  #Formats a ist of metricFilters to run below the metricsContainer
-  metricFiltersFunction <- function(i) {
-    mfdimslist <-structure(list(id = mfdims[[i]]$id, type = 'breakdown', dimension = mfdims[[i]]$dimension, itemId = ''))
-  }
-  #map the function to list out the metricFiltres section of the api call
-  lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
-
-# 1 Call ------------------------------------------------------------------
-for(i in seq(dimensions)) {
-    if(i == 1) {
-      #generating the body of the first api request
-      req_body <- structure(
-        list(
-          rsid = rsid,
-          globalFilters =
-            gf,
-          metricContainer = list(metrics = mlist[[i]]),
-          dimension = sprintf("variables/%s", df$dimension[[i]]),
-          search = search[[i]],
-          settings = list(
-            countRepeatInstances = TRUE,
-            limit = top[i],
-            page = page,
-            nonesBehavior = unspecified
-          ),
-          statistics = list(functions = c("col-max", "col-min"))
-        )
-      )
-
-      if (debug == FALSE) {
-        res <- aw_call_data("reports/ranked", body = req_body, company_id = company_id)
-      }
-      if (debug == TRUE) {
-        res <- aw_call_data_debug("reports/ranked", body = req_body, company_id = company_id)
-      }
-
-      resrows <- jsonlite::fromJSON(res)
-
-      #conditional statement to determine if the function should terminate or start over with the new itemIds
-      if (length(dimensions) == 1) {
-        itemidname <- paste0('itemId_', dimensions[[i]])
-        dat <- resrows$rows %>%
-          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
-          dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
-          tidyr::unnest(c(metrics, data)) %>%
-          tidyr::spread(metrics, data) %>%
-          dplyr::select(all_of(finalnames))
-        if(metricSort == 'desc') {
-          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
-        }
-        if(metricSort == 'asc') {
-          dat <- dplyr::arrange(dat, across(starts_with(metrics)))
-        }
-        #change time variables from character strings
-        if("daterangeminute" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
-        }
-        if("daterangehour" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
-        }
-        if("daterangeday" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
-        }
-        if("daterangeweek" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
-        }
-
-        if (prettynames == T) {
-          names(dat) <- prettyfinalnames
-        }
-        message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
-
-        return(dat)
-      } else if (length(dimensions) != i) {
-        ## second and not last data pull
-        itemidname <- paste0('itemId_', dimensions[[i]])
-
-        dat <- resrows$rows %>%
-          dplyr::select(itemId, value) %>%
-          dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-        message(paste0('1 of ', product-1, ' possible data requests complete. Starting the next ', nrow(dat) ,' requests.'))
-      }
-    }
-
-# 2 Call -----------------------------------------------------------------
-  if (i == 2) {
-    ### function to create the breakdown 'metricsFilters'
-    metricfilter_2 <-
-      function(filterId , type, dimension, itemId = '') {
-        list(
-          id = filterId,
-          type = type,
-          dimension = sprintf('variables/%s', dimension),
-          itemId = itemId
-        )
-      }
-    #run the list function to genereate the formated json string like list
-    mflist <-
-      list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
-
-    mf_item <- purrr::pmap(mflist, metricfilter_2)
-
-    mf_itemlist <- function(itemid) {
-      purrr::map(mf_item, update_list, itemId = itemid)
-    }
-
-    api2 <- purrr::map(dat[[1]], mf_itemlist)
-
-    req_bodies_2 <- function(i, mf = api2) {
-      structure(
-        list(
-          rsid = rsid,
-          globalFilters =
-            gf,
-          metricContainer = list(metrics = mlist[[i]]
-                                 ,
-                                 metricFilters =
-                                   mf),
-          dimension = sprintf("variables/%s", df$dimension[[i]]),
-          search = search[[i]],
-          settings = list(
-            countRepeatInstances = TRUE,
-            limit = top[i],
-            page = page,
-            nonesBehavior = unspecified
-          ),
-          statistics = list(functions = c("col-max", "col-min"))
-        )
-      )
-    }
-
-    calls <- purrr::map2(i, api2, req_bodies_2)
-
-    call_data_n <- function(calls) {
-      aw_call_data("reports/ranked", body = calls, company_id = company_id)
-    }
-    call_data_n_debug <- function(calls) {
-      aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
-    }
-
-    if (debug == FALSE) {
-      res <- purrr::map(calls, call_data_n)
-    }
-    if (debug == TRUE) {
-      res <- purrr::map(calls, call_data_n_debug)
-    }
-    getdata <- function(it) {
-      jsonlite::fromJSON(res[[it]])
-    }
-
-    res <- purrr::map(seq(length(res)),  getdata)
-
-    t = 0
-    el <- function(els) {
-      if_else(res[[els]]$numberOfElements != 0, t + 1, 0)
-    }
-    elnum <- sum(unlist(purrr::map(seq(length(
-      res
-    )), el)))
-
-    rowsdata <- function(it, i) {
-      if (res[[it]]$numberOfElements != 0) {
-        res[[it]]$rows %>% dplyr::mutate(!!prefinalnames[[1]][[1]] := dat[[1]][[it]],!!prefinalnames[[1]][[2]] := dat[[2]][[it]])
-      }
-    }
-
-    resrows <- purrr::map2_dfr(seq(elnum), i, rowsdata)
-
-    #conditional statement to determine if the function should terminate or rerun the next iteration of api calls
-    if (length(dimensions) != i) {
-      ## second and not last data pull
-      itemidname <- paste0('itemId_', dimensions[[i]])
-      dat <- resrows %>%
-        dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value)
-      dat <- dat %>% dplyr::select(-data)
-      message(paste0('Starting the next ', nrow(dat) ,' requests.'))
-    } else {
-      itemidname <- paste0('itemId_', dimensions[[i]])
-      ## Change all data to numeric (made originally to catch 'infinite' numbers)
-      resrows$data <- purrr::map(resrows$data, as.numeric)
-      ## Compile the data into a data frame
-      dat <- resrows %>%
-        dplyr::rename(!!itemidname := itemId,!!finalnames[[i]] := value) %>%
-        dplyr::mutate(metrics = list(prefinalnames[[i + 1]])) %>%
-        tidyr::unnest(c(metrics, data)) %>%
-        tidyr::spread(metrics, data) %>%
-        dplyr::select(all_of(finalnames))
-        if(metricSort == 'desc') {
-          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
-        }
-      if(metricSort == 'asc') {
-         dat <- dplyr::arrange(dat, across(starts_with(metrics)))
-      }
-      #change time variables from character strings
-      if("daterangeminute" %in% colnames(dat)) {
-        dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
-      }
-      if("daterangehour" %in% colnames(dat)) {
-        dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
-      }
-      if("daterangeday" %in% colnames(dat)) {
-        dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
-      }
-      if("daterangeweek" %in% colnames(dat)) {
-        dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
-      }
-
-      if (prettynames == T) {
-        names(dat) <- prettyfinalnames
-      }
-      message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
-      return(dat)
-    }
-  }
-
-# N Calls -----------------------------------------------------------------
-  if(i >= 3 && i <= length(dimensions)) {
-
-      # a function that formats the list of metricFilters too run below the metricsContainer
-      metricFiltersFunction <- function(i) {
-        mfdimslist <-structure(list(id = mfdims[[i]]$id, type = 'breakdown', dimension = mfdims[[i]]$dimension))
-      }
-      #map the function to list out the metricFiltres section of the api call
-      lists_built <- purrr::map( seq_along(dimensions), metricFiltersFunction)
-
-      ### function to create the breakdown 'metricsFilters'
-      metricfilter_n <- function(filterId , type, dimension) {
-        list(
-          id = filterId,
-          type = type,
-          dimension = sprintf('variables/%s', dimension)
-        )
-      }
-
-      #run the list function to genereate the formated json string like list
-      mflist <- list(lists_built[[i]]$id, lists_built[[i]]$type, lists_built[[i]]$dimension)
-
-      #pulls together all the main items minus the itemIds for the query
-      mf_item <- purrr::pmap(mflist, metricfilter_n)
-
-      #build the item ids needed for the next query
-      mf_itemlist <- function(itemid) {
-        ids <- purrr::map(purrr::map_depth(itemid, 1, unlist), rep,  each = length(metrics))
-      }
-
-      selectlist <- list()
-      for(series in seq(i-1)){
-        selectlist <-  append(selectlist, itemidnames[[series]])
-      }
-      itemidlist_n <- dplyr::select(dat, unlist(selectlist))
-
-      listum <- list()
-
-      for(n_item in seq(nrow(itemidlist_n))) {
-        listum <- append(listum, list(paste(itemidlist_n[n_item, ])))
-      }
-      itemidlist_n <- listum
-
-      ##Create the itemids list in the correct number of times.
-      itemidser <- purrr::map(itemidlist_n, mf_itemlist)
-
-      ##join the 2 different itemids in their correct order. (ncapable)
-      listing <- function(p = seq(itemidser)) {
-        unlist(itemidser[[p]], use.names = F)
-      }
-
-      ##creating the list of lists for the appropriate number of metricFilter items (ncapable)
-      itemidser <- purrr::map(seq(itemidser),  listing)
-
-      #duplicate the list to match the list length of the next api call (ncapable)
-      mf_list <- rep(list(mf_item), length(itemidser))
-
-      #create the list that will hold the list of api calls (ncapable)
-      apicalls <- rep(list(rep(list(), length(mf_list[[1]]))), length(mf_list))
-
-      for(l in seq(mf_list)) {
-        for(t in seq(mf_list[[1]])) {
-          apicalls[[l]][[t]] <- append(mf_list[[l]][[t]],  list('itemId'=itemidser[[l]][t]))
-        }
-      }
-
-      #(ncapable)
-      req_bodies <- function(i, mf = apicalls) {
-        structure(list(rsid = rsid,
-                       globalFilters =
-                         gf,
-                       metricContainer = list(
-                         metrics = mlist[[i]]
-                         ,
-                         metricFilters =
-                           mf
-                       ),
-                       dimension = sprintf("variables/%s",df$dimension[[i]]),
-                       search = search[[i]],
-                       settings = list(
-                         countRepeatInstances = TRUE,
-                         limit = top[i],
-                         page = page,
-                         nonesBehavior = unspecified
-                       ),
-                       statistics = list(
-                         functions = c("col-max", "col-min")
-                       ) ) )
-      }
-
-      #(ncapable)
-      calls <- purrr::map2(i, apicalls, req_bodies)
-
-      #(ncapable)
-      call_data_n <- function(calls) {
-        aw_call_data("reports/ranked", body = calls, company_id = company_id)
-      }
-      call_data_n_debug <- function(calls) {
-        aw_call_data_debug("reports/ranked", body = calls, company_id = company_id)
-      }
-
-      #(ncapable)
-      if(debug == FALSE) {
-        res <- purrr::map(calls, call_data_n)
-      }
-      if(debug == TRUE) {
-        res <- purrr::map(calls, call_data_n_debug)
-      }
-
-      #(ncapable)
-      getdata <- function(it) {
-        jsonlite::fromJSON(res[[it]])
-      }
-
-      #(ncapable)
-      resn <- purrr::map(seq(length(res)),  getdata)
-
-
-      #apply previous rows of data to the most recent data request
-      resrows <- apply_rowsdata(i, resn, prefinalnames, dat)
-
-      if(length(dimensions) != i) {
-        ## second and not last data pull
-        itemidname <- paste0('itemId_', finalnames[[i]])
-        dat <- resrows %>%
-          dplyr::rename(!!itemidname := itemId,
-                 !!finalnames[[i]] := value)
-        dat <- dat %>% dplyr::select(-data)
-        message(paste0('Starting the next ', nrow(dat) ,' requests.'))
-      } else {
-        itemidname <- paste0('itemId_', dimensions[[i]])
-        ## Change all data to numeric (made originally to catch 'infinite' numbers)
-        resrows$data <- purrr::map(resrows$data, as.numeric)
-        ## Compile the data into a data frame
-        dat <- resrows %>%
-          dplyr::rename(!!itemidname := itemId,
-                 !!finalnames[[i]] := value) %>%
-          dplyr::mutate(metrics = list(prefinalnames[[i+1]])) %>%
-          tidyr::unnest(c(metrics, data)) %>%
-          tidyr::spread(metrics, data) %>%
-          dplyr::select(all_of(finalnames))
-        if(metricSort == 'desc') {
-          dat <- dplyr::arrange(dat, across(starts_with(metrics), desc))
-        }
-        if(metricSort == 'asc') {
-          dat <- dplyr::arrange(dat, across(starts_with(metrics)))
-        }
-        #change time variables from character strings
-        if("daterangeminute" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
-        }
-        if("daterangehour" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
-        }
-        if("daterangeday" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
-        }
-        if("daterangeweek" %in% colnames(dat)) {
-          dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
-        }
-
-        if(prettynames == T) {
-          names(dat) <- prettyfinalnames
-        }
-        message(paste0('A total of ',nrow(dat), ' rows have been pulled.'))
-        return(dat)
-      }
-   }
-  }
+  output_data %>%
+    convert_date_columns()
 }
 
+
+
+
+
+#' Calculate queries to be completed
+#'
+#' The number of queries required to complete a request. Also useful for vetting
+#' a query to find an efficient dimension order.
+#'
+#' @param top Top argument, essentially the number of rows returned from
+#' each query (can be inaccurate when fewer rows returned, but mostly correct)
+#'
+#' @return Number of queries needed to get top
+#' @noRd
+n_queries <- function(top) {
+  top_ind <- c(1, top[-length(top)])
+  sum(cumprod(top_ind))
+}
+
+
+#' Estimate number of requests for query
+#'
+#' Also calculates estimated runtime and sends it as a message to the console
+#'
+#' @param top Top argument
+#'
+#' @return Number of requests necessary to complete query
+#' @noRd
+estimate_requests <- function(top) {
+  queries <- n_queries(top)
+
+  if (length(top) > 1) {
+    # I reckon about 1 second per query
+    # sec
+    est_secs <- round(queries * 1.1, digits = 0)
+    # min
+    est_mins <- round(est_secs/60, digits = 0)
+    # hour
+    est_hours <- round(est_mins / 60, digits = 1)
+
+    if (est_secs < 60) {
+      message_text <- glue::glue("{est_secs}sec.")
+    } else if (est_mins < 60) {
+      message_text <- glue::glue("{est_mins}min.")
+    } else {
+      message_text <- glue::glue("{est_hours}hr.")
+    }
+
+    message('Estimated runtime: ', message_text)
+  }
+
+  queries
+}
+
+
+
+
+#' Initializes the global decile query list
+#'
+#' This is used for generating the progress bar on long queries.
+#'
+#' @param top Top argument, essentially the number of rows returned from each
+#' query
+#'
+#' @return Query quantiles, invisibly
+#' @noRd
+initialize_global_counter <- function(top) {
+  total_queries <- n_queries(top)
+  prog_format <- "Progress [:bar] :percent in :elapsed"
+
+  .adobeanalytics$prog_bar <- progress::progress_bar$new(total = total_queries,
+                                                         format = prog_format,
+                                                         clear = FALSE)
+  invisible(total_queries)
+}
+
+
+#' Kill global counter
+#'
+#' Tears down the global counter
+#'
+#' @return NULL
+#' @noRd
+kill_global_counter <- function() {
+  .adobeanalytics$prog_bar <- NULL
+  NULL
+}
+
+
+#' Increment global counter
+#'
+#' Send a `tick` to the progress bar (see `progress::progress_bar`).
+#' If no progress bar is initialized, do nothing.
+#'
+#' @return NULL
+#' @noRd
+increment_global_counter <- function() {
+  if (!is.null(.adobeanalytics$prog_bar)) {
+    .adobeanalytics$prog_bar$tick()
+  }
+
+  NULL
+}
+
+
+
+#' Convert date columns to date objects
+#'
+#' @param dat Data frame
+#'
+#' @return Data frame with date columns as dates
+#' @noRd
+convert_date_columns <- function(dat) {
+  # change time variables from character strings
+  if("daterangeminute" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangeminute'] <- lubridate::parse_date_time(dat$daterangeminute, orders = "HM ymd")
+  }
+  if("daterangehour" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangehour'] <- lubridate::parse_date_time(dat$daterangehour, orders = "HM ymd")
+  }
+  if("daterangeday" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangeday'] <- as.Date(dat$daterangeday, format = '%b %d, %Y')
+  }
+  if("daterangeweek" %in% colnames(dat)) {
+    dat[names(dat) == 'daterangeweek'] <- as.Date(dat$daterangeweek, format = '%b %d, %Y')
+  }
+
+  dat
+}
 
