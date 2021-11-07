@@ -3,7 +3,6 @@
 #' Quickly query for many segments and the same metrics. This is the
 #' equivalent of a freeform table with segments as the row components.
 #'
-#' @inheritParams aw_freeform_table
 #' @param globalSegment One or more segments to apply globally
 #' @param segmentIds One or more segments that will compose the rows of the
 #'   table.
@@ -16,7 +15,6 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              globalSegment = NULL,
                              segmentIds = NULL,
                              metricSort =  'desc',
-                             prettynames = FALSE,
                              debug = FALSE) {
   if (length(segmentIds) == 0) {
     stop("At least one segment ID must be given", call. = FALSE)
@@ -27,7 +25,7 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   # Initialize global counter
   n_requests <- length(cut_segments(segmentIds)) * length(metrics)
-  if (n_requests > 1) {
+  if (n_requests > 3) {
     initialize_global_counter(n_requests)
   } else {
     kill_global_counter()
@@ -45,7 +43,6 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                             globalSegment = globalSegment,
                             segmentIds = seg_group,
                             metricSort =  metricSort,
-                            prettynames = prettyNames,
                             debug = debug)
 
       increment_global_counter()
@@ -55,7 +52,7 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   message("Done!")
 
-  join_metric_cols <- purrr::partial(left_join, by = "name")
+  join_metric_cols <- purrr::partial(left_join, by = c("name", "id"))
   Reduce(join_metric_cols, metric_result_list)
 }
 
@@ -117,7 +114,7 @@ make_pretty_segments <- function(rsid,
     select(id, name)
 
   left_join(df, segs, by = c("segmentIds" = "id")) %>%
-    select(name, value, metrics)
+    select(name, id = segmentIds, value, metrics)
 }
 
 
@@ -135,9 +132,7 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              globalSegment = NULL,
                              segmentIds = NULL,
                              metricSort =  'desc',
-                             prettynames = FALSE,
-                             debug = FALSE,
-                             check_components = TRUE) {
+                             debug = FALSE) {
   metrics <- unique(metrics)
 
   # Make global filter
@@ -168,7 +163,7 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   met_cont <- metric_container(
     metrics = seg_ctrl$metrics,
     metricIds = seg_ctrl$metric_id,
-    sort = "desc",
+    sort = "desc", # Sort has no effect, since only 1 row returned
     segmentIds = seg_ctrl$segmentIds
   )
 
