@@ -292,6 +292,11 @@ metric_container <- function(metrics,
                                                metrics[!is_calculated_metric(metrics)],
                                                sep = "/")
 
+  # Format dimensions for API request
+  if (!is.null(dimensions)) {
+    dimensions <- paste("variables", dimensions, sep = "/")
+  }
+
   # Get a list of unique segment IDs needed for filtering
   filter_segids <- unique(unlist(segmentIds))
   filter_segids <- filter_segids[!is.na(filter_segids)]

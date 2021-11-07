@@ -39,15 +39,13 @@ get_req_data <- function(current_dim,
   if (length(previous_dims) == 0) {
     previous_dims <- NULL
     dateRange <- global_filter[[1]]$dateRange
-    type <- "dateRange"
   } else {
     dateRange <- NULL
-    type <- "breakdown"
   }
 
   mc <- metric_container(
     metrics = metrics,
-    type = type,
+    metricIds = metrics,
     sort = sort,
     dimensions = previous_dims,
     itemIds = item_ids,

@@ -1,11 +1,44 @@
-#' Query quickly for segments
+#' Get a segment-row freeform table
 #'
-#' Quickly query for many segments and the same metrics. This is the
-#' equivalent of a freeform table with segments as the row components.
+#' This is the equivalent of a freeform table with segments as the row
+#' components. This type of table offers a few components that `aw_freeform_table`
+#' does not. For example, this function does not require (or allow) dimensions
+#' to be included in the breakdown. Segment IDs are automatically translated
+#' into their human-readable names.
 #'
-#' @param globalSegment One or more segments to apply globally
+#' This is a specialized function.
+#' To see segments broken down by dimensions, we recommend making multiple
+#' requests to `aw_freeform_table` with different global segments applied, and
+#' then row-binding them together yourself.
+#'
+#' Unlike `aw_freeform_table`, this function automatically handles the 10-metric
+#' restriction imposed by the API.
+#'
+#' ## Efficiency
+#' In short, segments are cheap, metrics are expensive. Adding 1 metric is the
+#' equivalent of adding 10 segments, judging by the number of requests necessary
+#' to collect the data.
+#'
+#' ## Stacking segments
+#' The function does not currently support segment breakdowns, but you can
+#' stack segments by applying a global segment to your query.
+#'
+#' @seealso [aw_freeform_table()]
+#'
+#'
+#' @param company_id Company ID
+#' @param rsid Reportsuite ID
+#' @param date_range Date range
+#' @param metrics Metrics to request for each segment
+#' @param globalSegment One or more segments to apply globally over all other
+#'   segments
 #' @param segmentIds One or more segments that will compose the rows of the
-#'   table.
+#'   table
+#' @param debug Logical, whether to make verbose requests to the API and view
+#' the whole exchange
+#'
+#' @return [tibble::tibble()] of segments and metrics. Rows are returned with
+#' segments in the order they were requested, not by metric sorting.
 #'
 #' @export
 aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -14,7 +47,6 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              metrics = c("visits", "visitors"),
                              globalSegment = NULL,
                              segmentIds = NULL,
-                             metricSort =  'desc',
                              debug = FALSE) {
   if (length(segmentIds) == 0) {
     stop("At least one segment ID must be given", call. = FALSE)
@@ -42,7 +74,6 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                             metrics = met,
                             globalSegment = globalSegment,
                             segmentIds = seg_group,
-                            metricSort =  metricSort,
                             debug = debug)
 
       increment_global_counter()
@@ -63,7 +94,7 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 #'
 #' @return Vector of breaks to pass to `cut`
 #' @noRd
-#' @example
+#' @examples
 #' cut_breaks(20)
 #' cut(seq(20), breaks = cut_breaks(20))
 cut_breaks <- function(len) {
@@ -131,7 +162,6 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              metrics = c("visits", "visitors"),
                              globalSegment = NULL,
                              segmentIds = NULL,
-                             metricSort =  'desc',
                              debug = FALSE) {
   metrics <- unique(metrics)
 

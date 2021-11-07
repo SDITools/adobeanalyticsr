@@ -71,7 +71,8 @@
 #' - `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
 #' @seealso [get_me()], [aw_get_reportsuites()], [aw_get_segments()],
-#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()]
+#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()],
+#' [aw_segment_table()]
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
@@ -149,6 +150,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
   # No harm in repeated metrics, simply take the unique ones
   metrics <- unique(metrics)
+
 
   # Component lookup checks
   # The component checking is optional, in case speed is a priority
