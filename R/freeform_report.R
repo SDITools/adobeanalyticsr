@@ -142,6 +142,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               debug = FALSE,
                               check_components = TRUE) {
   if (all(is.na(segmentId))) segmentId <- NULL
+
   # Repeated dimensions will cause an infinite loop
   if (length(dimensions) > length(unique(dimensions))) {
     stop("List of dimensions is not unique")
@@ -198,7 +199,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   # Estimate requests and reset global counter
   n_requests <- estimate_requests(top)
   if (n_requests > 20) {
-    initialize_global_counter(top)
+    initialize_global_counter(n_requests)
   } else {
     kill_global_counter()
   }
@@ -294,13 +295,11 @@ estimate_requests <- function(top) {
 #'
 #' This is used for generating the progress bar on long queries.
 #'
-#' @param top Top argument, essentially the number of rows returned from each
-#' query
+#' @param n_queries Number of queries to be completed
 #'
 #' @return Query quantiles, invisibly
 #' @noRd
-initialize_global_counter <- function(top) {
-  total_queries <- n_queries(top)
+initialize_global_counter <- function(total_queries) {
   prog_format <- "Progress [:bar] :percent in :elapsed"
 
   .adobeanalytics$prog_bar <- progress::progress_bar$new(total = total_queries,

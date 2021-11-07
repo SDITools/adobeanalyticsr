@@ -279,6 +279,7 @@ metric_filters <- function(type,
 #'   segmentIds = list(NA, c("s1234_5555", "s1234_9999"))
 #' )
 metric_container <- function(metrics,
+                             metricIds,
                              sort,
                              dimensions = NULL,
                              itemIds = NULL,
@@ -291,16 +292,18 @@ metric_container <- function(metrics,
                                                metrics[!is_calculated_metric(metrics)],
                                                sep = "/")
 
+  # Get a list of unique segment IDs needed for filtering
+  filter_segids <- unique(unlist(segmentIds))
+  filter_segids <- filter_segids[!is.na(filter_segids)]
+
+
   # Derive type argument
   type <- c(
     rep("dateRange", length(dateRange)),
     rep("breakdown", length(dimensions)),
-    rep("segment", length(segmentIds))
+    rep("segment", length(filter_segids))
   )
 
-  # Get a list of unique segment IDs needed for filtering
-  filter_segids <- unique(unlist(segmentIds))
-  filter_segids <- filter_segids[!is.na(filter_segids)]
 
   met_filters <- metric_filters(
     type = type,
@@ -322,7 +325,7 @@ metric_container <- function(metrics,
   }
 
   mets <- metric_elems(id = metrics,
-                       columnId = as.character(seq_along(metrics)),
+                       columnId = metricIds,
                        filters = filter_ids,
                        sort = sort)
 
