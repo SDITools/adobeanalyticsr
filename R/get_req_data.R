@@ -142,6 +142,9 @@ get_req_data <- function(current_dim,
 #' @param metric_names Metric names in the order they appear in the list column
 #'
 #' @return `df` with list column unpacked
+#'
+#' @importFrom purrr flatten_dbl
+#' @importFrom purrr transpose
 #' @noRd
 unpack_metrics <- function(df, metric_names) {
   if (identical(df, data.frame())) {
@@ -151,7 +154,7 @@ unpack_metrics <- function(df, metric_names) {
       data_list <- df$data
       df$data <- NULL
 
-      data_df <- lapply(purrr::transpose(data_list), flatten_dbl) %>%
+      data_df <- lapply(purrr::transpose(data_list), purrr::flatten_dbl) %>%
         stats::setNames(metric_names) %>%
         as.data.frame()
 
