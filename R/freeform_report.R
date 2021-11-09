@@ -224,13 +224,14 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   message("Done!")
   message(glue::glue("Returning {nrow(output_data)} x {ncol(output_data)} data frame"))
 
+  output_data <- convert_date_columns(output_data)
+
   if (prettynames) {
     output_data <- dplyr::select(output_data,
                                  all_of(pretty_comp_names))
   }
 
-  output_data %>%
-    convert_date_columns()
+  output_data
 }
 
 
