@@ -116,14 +116,15 @@
 #' from setting `check_components` to `FALSE`.
 #' @param debug Set to `TRUE` to publish the full JSON request(s) being sent to the API to the console when the
 #' function is called. The default is `FALSE`.
-#' @param check_components Logical, whether to check the validity of metrics and
-#' dimensions before running the query. Defaults to `TRUE`, but causes
-#' `aw_freeform_report` to request all dimensions and metrics from the API,
-#' which may be inefficient if you're running many queries. If you have many
-#' queries, it's more efficient to implement validity checking yourself on either
-#' side of your queries.
+#' @param check_components Specifies whether to check the validity of metrics and
+#' dimensions before running the query. This defaults to `TRUE`, which triggers
+#' several additional API calls behind the scenes to retrieve all dimensions and
+#' metrics from the API. This has a nominal performance impact and may not be
+#' ideal if you are running many queries. If you have many queries, consider
+#' implementing validity checking through other means (manually or within the
+#' code) and then set this value to `FALSE`.
 #'
-#' @return A data frame with dimensions and metrics.
+#' @return A data frame with the specified dimensions and metrics.
 #'
 #' @export
 aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),

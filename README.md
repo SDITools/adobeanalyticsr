@@ -7,9 +7,9 @@
 
 ## R Client for Adobe Analytics API 2.0
 
-Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as [issues in this Github repository](https://github.com/benrwoodard/adobeanalyticsr/issues).
+Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed, and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as [issues in this Github repository](https://github.com/benrwoodard/adobeanalyticsr/issues).
 
-A special thanks to my company [Search Discovery](https://www.searchdiscovery.com) for giving me the opportunity to build out this package. There is no way this would have been possible without the opportunity to learn from and work with some of the most amazing people in the analytics industry.
+A special thanks to our company, [Search Discovery](https://www.searchdiscovery.com), for giving us the time, encouragement, and support to build out this package. There is no way this would have been possible without the opportunity to learn from and work with some of the most amazing people in the analytics industry.
 
 ### A Note about 2.0 vs. 1.4
 
@@ -17,9 +17,10 @@ The Adobe Analytics v1.4 API, while on its way out, still has some functionality
 
 * Data Warehouse queries
 * Marketing Channel configuration and processing rules
+* Some configuration details for variables (eVar, prop, events)
 * Data Feed details
 
-The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does _not_ require that an Adobe Console API project be created, which _is_ something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does _not_ need web services access set up on an account-by-account basis to pull data using the package if using the OAUTH authentication.  If using the JWT authentication method in API v2.0 then a project will need to be created for each company account.
+The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does _not_ require that an Adobe Console API project be created, which _is_ something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does _not_ need web services access set up on an account-by-account basis to pull data using the package if using the OAUTH authentication. If using the JWT authentication method with v2.0 API, then a project _does_ need to be created for each company account.
 
 As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining `RSiteCatalyst`. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that `adobeanalyticsr` can live up to the high standard he set with his work.
   
@@ -52,32 +53,30 @@ There are four setup steps required to start accessing your Adobe Analytics data
 
   1. Create an Adobe Console API Project
   2. Create and add the OAuth/JWT arguments to your `.Renviron` file.
-  3. Get your authorization token by using the functions: 
-      * `aw_auth_with(type = "")` - Value should be 'jwt' or 'oauth'
-      * `aw_auth()` - Once type has been set this will look for `.Renviron` variables and complete the authorization
-  4. Get your `company_id` by using the function `get_me()`.
+  3. Set the type of authorization being used by calling `aw_auth_with(type = "")`. The `type` value should be **jwt** or **oauth**
+  4. Get your authorization token using `aw_auth()`. Once the authorization type has been set (the previous step), this will look for `.Renviron` variables and complete the authorization.
+  5. Get your `company_id` by using the function `get_me()`.
 
 #### 1. Create an Adobe Console API Project
 
-If you are using the OAUTH authorization, regardless of how many different Adobe Analytics accounts you will be accessing, you only need a single Adobe Console API project (you will still need to have working user credentials for each account you want to access, but the Adobe Console API project is just the way you then get access to authenticate using those user credentials; yes...confusing!) If you are using the JWT authorization then you will need an Adobe Console API project created for each company you will be accessing.  The following steps will get you setup on either of the different authorizations:
+If you are using the OAuth authorization, regardless of how many different Adobe Analytics accounts you will be accessing, you only need a single Adobe Console API project (you will still need to have working user credentials for each account you want to access, but the Adobe Console API project is just the way you then get access to authenticate using those user credentials; yes...confusing!) If you are using the JWT authorization then you will need an Adobe Console API project created for each company you will be accessing.  The following steps will get you setup on either of the different authorizations:
 
   1. Navigate to the following URL: https://console.adobe.io/integrations.
   2. Click the **Create New Project** button and select **Empty Project**
   3. Click the **Add API** button.
   4. Select the Experience Cloud product icon and then choose **Adobe Analytics** and click **Next**.
   5. The next series of steps depends on your choice of authorization.
-  *  *OAUTH*
+  *  *OAuth*
       1. Select the  OAuth option and then click **Next**.
       2. Select **Web** as the platform where you want the integration.
-      3. Add Default redirect URI <code>https://adobeanalyticsr.com/token_result.html</code>*
-      4. Add Redirect URI pattern <code>https://adobeanalyticsr\.com/token_result\.html</code>*
+      3. Add Default redirect URI <code>https://adobeanalyticsr.com/token_result.html</code>*.
+      4. Add Redirect URI pattern <code>https://adobeanalyticsr\.com/token_result\.html</code>*.
   * *JWT*
-      1. Select the 'Service Account (JWT)' options and then click **Next**
-      2. Click on the Generate a Key Pair button. A config file will download onto your desktop.
-      3. Select product profiles to be included in the access and click 'Save configured API'
+      1. Select the **Service Account (JWT)** options and then click **Next**.
+      2. Click on the **Generate a Key Pair** button. A config file will download onto your desktop.
+      3. Select the product profiles to be included in the access and click **Save configured API**.
   
-\* This is simply a helper site I've set up in order to make it easier to generate a token. The site does not store any information.
-
+\* This is simply a helper site we've set up in order to make it easier to generate a token. The site does not store any information.
 
 **Creating an Adobe Console API Project in under 60 seconds**
 <img src="man/figures/createoauthproject.gif" align="center" />
@@ -90,11 +89,11 @@ This file is essential to keeping your information secure. It also speeds up ana
   
   2. Get the following variables from the OAuth project and add them to the file* (see _Creating an Adobe Console API Project_ above):
 
-      * `AW_CLIENT_ID` - OAuth/JWT - client id found in the Adobe Developer Console
-      * `AW_CLIENT_SECRET` - OAuth/JWT - client secret key found in the Adobe Developer Console
-      * `AW_PRIVATE_KEY` - JWT - unzip the downloaded config.zip file and move the .key file to your working directory. Example file name is 'private.key'. This variable should reference the accurate path for the .key file.
-      * `AW_ORGANIZATION_ID` - JWT - organization id found in the Adobe Developer Console 
-      * `AW_TECHNICAL_ID` - JWT - technical id found in the Adobe Developer Console
+      * (OAuth & JWT) `AW_CLIENT_ID` -- the client id found in the Adobe Developer Console
+      * (OAuth & JWT) `AW_CLIENT_SECRET` -- the client secret key found in the Adobe Developer Console
+      * (JWT Only) `AW_PRIVATE_KEY` -- unzip the downloaded **config.zip** file and move the **.key** file to your working directory. An example file name is **private.key**. This variable should reference the accurate path for the **.key** file.
+      * (JWT Only) `AW_ORGANIZATION_ID` -- the organization id found in the Adobe Developer Console 
+      * (JWT Only) `AW_TECHNICAL_ID` -- the technical id found in the Adobe Developer Console
 
   3. (Optional) Add `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` variables once you know them (how to find available values for these two variables is described in step 4 below).
       
@@ -124,24 +123,28 @@ AW_REPORTSUITE_ID = "[RSID]"
 The token is actually a lonnnnng alphanumeric string that is the what ultimately enables you to access your data:
 
 **OAuth process**
-1. In the console, enter `aw_auth_with('oauth')` and press _Enter_.
-1. Next enter `aw_auth()` and press _Enter_.
-2. A browser window should appear that prompts you to log in to your Adobe Marketing Cloud account.
-3. Log in.
-4. You will then be redirected to `adobeanalyticsr.com`* and a screen that displays your token.*
-5. Copy the token (only).
-6. Return to the R console. You should see a prompt to **Enter authorization code:**
-7. Paste the token you copied and press _Enter_.
-8. You should see the confirmation message: "Successfully authenticated with OAuth"
+OAuth requires an interactive environment (see step 3 below), and the authentication token expires after 24 hours, which then requires repeating steps 2-9 below:
 
-This token will expire every 24 hours, so you will have to periodically repeat this step.
+1. In the console, enter `aw_auth_with('oauth')` and press **Enter**.
+2. Enter `aw_auth()` and press **Enter**.
+3. A browser window should appear that prompts you to log in to your Adobe Marketing Cloud account.
+4. Log in.
+5. You will then be redirected to `adobeanalyticsr.com`* and a screen that displays your token.*
+6. Copy the token (only).
+7. Return to the R console. You should see a prompt to **Enter authorization code:**
+8. Paste the token you copied and press **Enter**.
+9. You should see the confirmation message: "Successfully authenticated with OAuth"
+
+As noted above, this token will expire every 24 hours, so you will have to periodically repeat this step.
 
 \* Again, this is simply a helper site I've set up in order to make it easier to generate a token. The site does not store any information.
 
 **JWT process**
+JWT does _not_ require an interactive environment and does not require a token refresh every 24 hours, but it does require a bit more work to set up initially (as described above). To authenticate using JWT:
+
 1. In the console, enter `aw_auth_with('jwt')` and press _Enter_.
-1. Next enter `aw_auth()` and press _Enter_.
-2. You should see the confirmation message: "Successfully authenticated with JWT: access token valid until..."
+2. Enter `aw_auth()` and press **Enter**.
+3. You should see the confirmation message: "Successfully authenticated with JWT: access token valid until..."
 
 #### 4. Confirm the process worked and get available company_id and reports
 
