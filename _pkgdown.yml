@@ -1,8 +1,12 @@
 reference:
   - title: "Setup"
-    desc: "Functions for pulling basic company and reportsuite information."
+    desc: "Functions for pulling basic company and report suite information."
   - contents:
-      - aw_token
+      - aw_auth
+      - aw_auth_path
+      - aw_auth_name
+      - aw_auth_with
+      - aw_token - This is the old aw_token function, which is deprecated in the new version of the package. It will still work, but `aw_auth` is the recommended way to auth now.
       - get_me
       - get_users
       - get_usage_logs

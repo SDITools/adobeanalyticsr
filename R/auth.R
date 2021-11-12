@@ -1,25 +1,29 @@
 # General auth -------------------------------------------------
 
-#' Generate an access token for Adobe Analytics 2.0
+#' Generate an Access Token for the Adobe Analytics v2.0 API
 #'
-#' `aw_oauth` and `aw_jwt` should not be called directly, as these do not cache
-#' the token.
+#' **Note:** `aw_auth()` is the primary function used for authorization. `auth_oauth()`
+#' and `auth_jwt()` should not be called directly, as these do not cache the token.
 #'
-#' @param type Either 'jwt' or 'oauth'. Defaults to 'oauth'.
-#' @param ... Arguments passed to auth functions.
-#' @param client_id Client ID
-#' @param client_secret Client secret
-#' @param private_key File path to private key for token signature
-#' @param org_id Organization ID from integration console
-#' @param tech_id Technical account ID from integration console
-#' @param jwt_token Optional, a custom, encoded, signed JWT claim. If used,
+#' @param type Either 'jwt' or 'oauth'. This can be set explicitly, but a best practice is
+#' to run `aw_auth_with()` to set the authorization type as an environment variable before
+#' running `aw_auth()`
+#' @param ... Additional arguments passed to auth functions.
+#' @param client_id The client ID, defined by a global variable or manually defined
+#' @param client_secret The client secret, defined by a global variable or manually defined
+#' @param private_key The file path to private key for token signature (JWT auth only)
+#' @param org_id Organization ID from integration console (JWT auth only)
+#' @param tech_id Technical account ID from integration console (JWT auth only)
+#' @param jwt_token _(Optional)_ A custom, encoded, signed JWT claim. If used,
 #'   only `client_id` and `client_secret` are required.
 #' @param use_oob if `FALSE`, use a local webserver for the OAuth dance.
 #'   Otherwise, provide a URL to the user and prompt for a validation code.
 #'   Defaults to the value of the `httr_oob_default` default, or TRUE if
 #'   `httpuv` is not installed.
 #'
-#' @return The path of the cached token, invisibly
+#' @seealso [aw_auth_with()]
+#'
+#' @return The path of the cached token. This is returned invisibly.
 #' @family auth
 #' @aliases aw_auth auth_jwt auth_oauth
 #' @export
@@ -35,24 +39,27 @@ aw_auth <- function(type = aw_auth_with(), ...) {
     )
 }
 
-
-#' Set authentication options
+#' Set authorization options
 #'
 #' @description
-#' If get or set an auth option. If called without an argument, gets the current
-#' setting for the requested option. Pass `NULL` as an argument to clear the
-#' setting and return to defaults.
+#' **Get** or **set** various authorization options. If called without an argument, then
+#' these functions return the current setting for the requested option (which can be
+#' `NULL` if the option has not been set). To clear the setting, pass `NULL` as an
+#' argument.
 #'
 #' `aw_auth_with` sets the type of authorization for the session. This is used
-#' as a default when no specific option is given.
+#' as the default by `aw_auth()` when no specific option is given.
 #'
-#' @param type Either "oauth" or "jwt"
-#' @param path Location for the auth file. If the location does not exist,
-#'   it will be created the first time a token is cached.
-#' @param name Filename, such as `aw_auth.rds`. The file is stored as an RDS
-#'   file, but there is no requirement for the `.rds` file extension. `.rds` is
-#'   not appended automatically.
+#' @param type The authorization type: 'oauth' or 'jwt'
+#' @param path The location for the cached authorization token. It should be a
+#' directory, rather than a filename. If this option is not set, the current
+#' working directory is used instead. If the location does not exist, it will
+#' be created the first time a token is cached.
+#' @param name The filename, such as `aw_auth.rds` for the cached authorization
+#' token file. The file is stored as an RDS file, but there is no requirement
+#' for the `.rds` file extension. `.rds` is not appended automatically.
 #'
+#' @seealso [aw_auth()]
 #' @return The option value, invisibly
 #' @family options
 #' @rdname aw_auth_with
@@ -68,7 +75,6 @@ aw_auth_with <- function(type) {
     options(adobeanalyticsr.auth_type = type)
     invisible(type)
 }
-
 
 #' @description
 #' `aw_auth_path` sets the file path for the cached authorization token. It
@@ -99,9 +105,9 @@ aw_auth_name <- function(name) {
 
 #' Retrieve a token
 #'
-#' Updates (if necessary) and returns session token. First checks for a session
-#' token, then a cached token, then generates a new token. The default type may
-#' be set for the session with `aw_auth_with`.
+#' Updates (if necessary) and returns a session token. This function first checks
+#' for a session token, then for a cached token, and, finally, generates a
+#' new token. The default type may be set for the session with `aw_auth_with()`.
 #'
 #' @param ... Further arguments passed to auth functions
 #'
@@ -159,6 +165,7 @@ retrieve_aw_token <- function(...) {
 #' @param ... Passed to file.path, usually a filename
 #'
 #' @return File path
+#' @noRd
 token_path <- function(...) {
     loc <- getOption("adobeanalyticsr.auth_path", getwd())
     file.path(loc, ...)
@@ -173,7 +180,8 @@ token_path <- function(...) {
 #' @param token An `httr` `reponse` object or `oauth2.0_token` object
 #'
 #' @return Either 'oauth' or 'jwt'
-#' @export
+#'
+#' @noRd
 token_type <- function(token) {
     if (inherits(token, "Token2.0")) {
         "oauth"
@@ -196,8 +204,8 @@ token_type <- function(token) {
 #'
 #' @return Config objects that can be passed to `httr::GET` or similar
 #' functions (e.g. `httr::RETRY`)
-#' @export
-#' @rd
+#'
+#' @noRd
 get_token_config <- function(client_id,
                              client_secret) {
     token <- retrieve_aw_token(client_id,
@@ -283,7 +291,7 @@ auth_jwt <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
 }
 
 
-#' Generate the authentication response object
+#' Generate the authorization response object
 #'
 #' @param secrets List of secret values, see `auth_jwt`
 #' @param jwt_token Optional, a JWT token (e.g., a cached token)
@@ -334,6 +342,7 @@ auth_jwt_gen <- function(secrets,
 #' @param tech_id Technical account ID from integration console
 #'
 #' @return A JWT token generated by [jose::jwt_encode_sig()]
+#' @noRd
 get_jwt_token <- function(jwt_token = NULL,
                           client_id,
                           private_key,
@@ -379,7 +388,7 @@ get_jwt_token <- function(jwt_token = NULL,
 #' @keywords internal
 #' @format An R6 object
 #' @importFrom R6 R6Class
-#' @export
+#' @noRd
 AdobeJwtToken <- R6::R6Class("AdobeJwtToken", list(
     secrets = NULL,
     token = NULL,
