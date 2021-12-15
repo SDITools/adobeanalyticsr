@@ -93,7 +93,7 @@ seg_pred <- function(subject = 'page',
     if(subject == 'daterangeday' && !verb %in% exists_verbs){
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object), '-'))-100)
-      object <- stringr::str_replace(minus100, '20', '1')
+      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
     }
     if(subject == 'daterangemonth' && !verb %in% exists_verbs){
       #assert that the date is in the correct format
