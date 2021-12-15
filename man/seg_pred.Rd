@@ -9,7 +9,10 @@ seg_pred(
   subject = "page",
   verb = "contains",
   object = "pagename",
+  description = NULL,
   is_distinct = FALSE,
+  attribution = "repeating",
+  attribution_context = "hits",
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
@@ -19,9 +22,15 @@ seg_pred(
 
 \item{verb}{Choose from any of the 30 different verbs}
 
-\item{object}{this is the object of the predicate and answer the question what or how many}
+\item{object}{This is the object of the predicate and answer the question what or how many}
 
-\item{is_distinct}{count the distinct items to compare against instead of dimension number}
+\item{description}{The internal description for the predicate if wanted}
+
+\item{is_distinct}{Count the distinct items to compare against instead of dimension number}
+
+\item{attribution}{Repeating (default), instance, or non-repeating instance}
+
+\item{attribution_context}{When applying a non-repeating instance attribution model to a predicate the context for the attribution must be provided}
 
 \item{rsid}{This is the report suite that the segment will be referenced to.}
 

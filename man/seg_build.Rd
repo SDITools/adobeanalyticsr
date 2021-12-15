@@ -9,10 +9,14 @@ seg_build(
   description = "this is the description",
   containers = NULL,
   predicates = NULL,
+  sequences = NULL,
   context = "hits",
   conjunction = "and",
+  sequence = "in_order",
+  sequence_context = "hits",
   exclude = FALSE,
   version = list(1, 0, 0),
+  debug = FALSE,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID"),
   client_id = Sys.getenv("AW_CLIENT_ID"),
@@ -28,13 +32,21 @@ seg_build(
 
 \item{predicates}{List of the predicate(s) to create a segment}
 
+\item{sequences}{List of the predicates and sequence containers that are combined to make a segment}
+
 \item{context}{This defines the main container context, either hits, visits (Default), or visitors}
 
 \item{conjunction}{This will tell how the different containers and predicates should be compared. Use either 'and' or 'or' at this time. Sequential 'then' will be added in a future update.}
 
-\item{exclude}{excludes the main container which will include all predicates. Only used when the predicate arguments are used.}
+\item{sequence}{Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events}
+
+\item{sequence_context}{Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits}
+
+\item{exclude}{Excludes the main container which will include all predicates. Only used when the predicate arguments are used.}
 
 \item{version}{This is the default version. Only used if updating an existing segment. Not to be edited at this time.}
+
+\item{debug}{This enables the api call information to show in the console for help with debugging issues. default is FALSE}
 
 \item{rsid}{This is the report suite that the segment will be referenced to.}
 

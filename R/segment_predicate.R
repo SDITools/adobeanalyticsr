@@ -3,8 +3,11 @@
 #'
 #' @param subject This is the subject of the predicate. It is the dimension or metric id.
 #' @param verb  Choose from any of the 30 different verbs
-#' @param object this is the object of the predicate and answer the question what or how many
-#' @param is_distinct count the distinct items to compare against instead of dimension number
+#' @param object This is the object of the predicate and answer the question what or how many
+#' @param description The internal description for the predicate if wanted
+#' @param is_distinct Count the distinct items to compare against instead of dimension number
+#' @param attribution Repeating (default), instance, or non-repeating instance
+#' @param attribution_context When applying a non-repeating instance attribution model to a predicate the context for the attribution must be provided
 #' @param rsid This is the report suite that the segment will be referenced to.
 #' @param company_id This is the report suite that the segment will be referenced to.
 #'
@@ -17,15 +20,15 @@
 #'
 #' @export
 #'
-
-
-seg_pred <- function(subject = 'page', # one of hits, visits, or visitors
-                     verb = 'contains', #Choose one of the 30 different verb options available for strings and numbers
-                     object = 'pagename', #The object of the verb.Answers the question what or how much
-                     is_distinct = FALSE, #used in number verbs to identify distinct counts
+seg_pred <- function(subject = 'page',
+                     verb = 'contains',
+                     object = 'pagename',
+                     description = NULL,
+                     is_distinct = FALSE,
+                     attribution = 'repeating',
+                     attribution_context = 'hits',
                      rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-                     company_id = Sys.getenv("AW_COMPANY_ID")
-                     ){
+                     company_id = Sys.getenv("AW_COMPANY_ID")){
   ### Define the different elements of a segment
   #########################
   ## Exists Verbs
@@ -78,7 +81,7 @@ seg_pred <- function(subject = 'page', # one of hits, visits, or visitors
 
   #if subject is a date the object must be changed in the definition to the correct format
   if(subject %in% date_subjects){
-    if(subject == 'daterangehour'){
+    if(subject == 'daterangehour' && !verb %in% exists_verbs){
       #check if date and hour is included in object
       assertthat::assert_that(length(object) == 2 & grepl('-', object[[1]]), msg = "Make sure to object is a vector including the date and then time when using the 'daterangehour' subject. ex: c('2021-02-02', '1400')")
       #check the hour to make sure it is the correct format
@@ -87,19 +90,19 @@ seg_pred <- function(subject = 'page', # one of hits, visits, or visitors
       hour <- str_extract(object[[2]], '\\d{2}') #use only the first two numbers for the hour
       object <- glue::glue("{stringr::str_replace(minus100, '20', '1')}{hour}")
     }
-    if(subject == 'daterangeday'){
+    if(subject == 'daterangeday' && !verb %in% exists_verbs){
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object), '-'))-100)
       object <- stringr::str_replace(minus100, '20', '1')
     }
-    if(subject == 'daterangemonth'){
+    if(subject == 'daterangemonth' && !verb %in% exists_verbs){
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'month' )
       minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
       object <- stringr::str_replace(minus100, '20', '1')
     }
-    if(subject == 'daterangequarter'){
+    if(subject == 'daterangequarter' && !verb %in% exists_verbs){
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object[[1]], format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object[[1]], format="%Y-%m-%d")) & lubridate::year(as.Date(object[[1]])) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       ##assert that the fiscal start month is between 1-12
@@ -112,7 +115,7 @@ seg_pred <- function(subject = 'page', # one of hits, visits, or visitors
       minus100 <- as.character(as.numeric(stringr::str_remove_all(adjusted_date, '-'))-100)
       object <- stringr::str_replace(minus100, '20', '1')
     }
-    if(subject == 'daterangeyear'){
+    if(subject == 'daterangeyear' && !verb %in% exists_verbs){
       #assert that the date is full date format
       assertthat::assert_that(grepl(object, '-'), msg = "The full date must be supplied. Any valid date within the desired year will work. ex: YYYY-MM-DD")
       #assert that the date is in the correct format
@@ -132,7 +135,7 @@ seg_pred <- function(subject = 'page', # one of hits, visits, or visitors
   }
 
   #This forms the predicate or pred
-  if(verb %in%  exists_verbs && val_func == 'attr'){
+prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
     structure(list(
       func = verb,
       val = list(
@@ -220,4 +223,21 @@ seg_pred <- function(subject = 'page', # one of hits, visits, or visitors
       )
     ))
   }
+#add in the description
+if(!is.null(description)){
+  prepred$description = description
+}
+#add the context when necessary for proper attribution
+if(attribution == 'instance') {
+    prepred$val$`allocation-model`$func = 'allocation-instance'
+} else if(attribution == 'nonrepeating'){
+  if(!is.null(attribution_context) && attribution_context == 'visits'){
+    prepred$val$`allocation-model`$context = 'sessions'
+    prepred$val$`allocation-model`$func = 'allocation-dedupedInstance'
+  } else {
+    prepred$val$`allocation-model`$context = attribution_context
+    prepred$val$`allocation-model`$func = 'allocation-dedupedInstance'
+  }
+  }
+return(prepred)
 }

@@ -18,7 +18,7 @@ seg_con <- function(context = 'hits',
                     conjunction = 'and',
                     predicates = NULL,
                     exclude = FALSE) {
-  if(length(unlist(predicates)) > 3 & exclude == FALSE) {
+container <- if(length(unlist(predicates)) > 3 & exclude == FALSE) {
     structure(list(
       func = 'container',
       context = context,
@@ -58,5 +58,12 @@ seg_con <- function(context = 'hits',
       )
     ))
   }
+
+  for(i in length(container$pred$preds)){
+    if(!is.null(container$pred$preds[[i]]$val$`allocation-model`$func) & context == 'visits') {
+      container$pred$preds[[i]]$val$`allocation-model`$context = 'sessions'
+    }
+  }
+return(container)
 }
 
