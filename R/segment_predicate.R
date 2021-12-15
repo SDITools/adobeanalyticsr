@@ -88,7 +88,7 @@ seg_pred <- function(subject = 'page',
       assertthat::assert_that(nchar(object[[2]]) == 4 & !is.na(as.numeric(object[[2]])), msg = "Make sure the hour is in military time. ex: '1500' if you wanted to use 3 PM as the hour" )
       minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object[[1]]), '-'))-100)
       hour <- str_extract(object[[2]], '\\d{2}') #use only the first two numbers for the hour
-      object <- glue::glue("{stringr::str_replace(minus100, '20', '1')}{hour}")
+      object <- as.numeric(glue::glue("{stringr::str_replace(minus100, '20', '1')}{hour}"))
     }
     if(subject == 'daterangeday' && !verb %in% exists_verbs){
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
@@ -100,7 +100,7 @@ seg_pred <- function(subject = 'page',
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'month' )
       minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
-      object <- stringr::str_replace(minus100, '20', '1')
+      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
     }
     if(subject == 'daterangequarter' && !verb %in% exists_verbs){
       #assert that the date is in the correct format
@@ -113,7 +113,7 @@ seg_pred <- function(subject = 'page',
       fiscalstart <- case_when(length(object) == 1 ~ '1', TRUE ~ object[2])
       adjusted_date <- lubridate::quarter(x = as.Date(object), type = "date_first", fiscal_start = as.numeric(fiscalstart))
       minus100 <- as.character(as.numeric(stringr::str_remove_all(adjusted_date, '-'))-100)
-      object <- stringr::str_replace(minus100, '20', '1')
+      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
     }
     if(subject == 'daterangeyear' && !verb %in% exists_verbs){
       #assert that the date is full date format
@@ -122,7 +122,7 @@ seg_pred <- function(subject = 'page',
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must be supplied in the YYYY-MM-DD format.")
       adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'year')
       minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
-      object <- stringr::str_replace(minus100, '20', '1')
+      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
     }
   }
   #/end date formatting
