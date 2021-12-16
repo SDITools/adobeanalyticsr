@@ -255,5 +255,11 @@ seg_build <- function(name = 'this is the name',
                        `x-proxy-global-company-id` = company_id
                      ))
 
- dplyr::bind_rows(unlist(httr::content(req)))
+ res <- dplyr::bind_rows(unlist(httr::content(req)))
+
+ if(names(res)[1] %in% 'errorCode'){
+   res[, 2]
+ } else {
+   res
+ }
 }

@@ -9,9 +9,9 @@ seg_then(limit = "within", count = 1, unit = "week")
 \arguments{
 \item{limit}{The limitation of the restriction. Either \code{within} (default) or \code{after}}
 
-\item{count}{How many of the units should be used}
+\item{count}{How many of the units should be used. \code{1} is set as default.}
 
-\item{unit}{A unit of time. Valid values are \code{minute}, \code{hour}, \code{day}, \code{week} (default), \code{month}, \code{quarter}, or \code{year}.}
+\item{unit}{A unit of time. Valid values are \code{hit}, \code{visit}, \code{minute}, \code{hour}, \code{day}, \code{week} (default), \code{month}, \code{quarter}, or \code{year}. Always use the singular form.}
 }
 \value{
 a structured list of time restrictions to be used to build the sequential segment
@@ -20,7 +20,21 @@ a structured list of time restrictions to be used to build the sequential segmen
 This function creates a then list object which restricts the time constraint of a segment to be added to a sequence segment.
 }
 \details{
-\strong{Using within and after in the same time restriction:}
+\subsection{Combining \code{seg_then} arguments}{
+
+In the UI you can add 'after' and 'within' statements to create a more complex time restriction.
+The same can be accomplished using this function by listing the limits, counts, and units in a c()
+function. This would look like:  \verb{limit = c('within', 'after'), count = c(5, 1), unit = c('hit', 'visit')}
+}
+
+\subsection{Using within and after in the same time \code{seg_then} function call}{
+
 Time restrictions can only be combined using 'within' first before 'after'.
 The function will automatically align these to be in the correct list item order.
+}
+
+\subsection{A word about unit values}{
+
+In the UI \code{pageviews} and \code{dimensions} are options but they are not currently available in this function.
+}
 }
