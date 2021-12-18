@@ -49,7 +49,7 @@ seg_then <- function(limit = 'within',
     stop("The limit values cannot be the same. Use either ")
   }
 
-  if (length(limit) == 2 & which(limit == 'within') == 2) {
+  if (length(limit) == 2 && which(limit == 'within') == 2) {
     limit <- rev(limit)
     count <- rev(count)
     unit <- rev(unit)
