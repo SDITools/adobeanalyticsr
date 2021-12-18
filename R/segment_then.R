@@ -29,8 +29,8 @@
 #' @export
 #'
 #'
-seg_then <- function(limit = 'after',
-                     count =   1,
+seg_then <- function(limit = 'within',
+                     count =  1,
                      unit = 'week') {
 #validation check for the limit argument
   #Check the spelling of the 2 variables
@@ -56,7 +56,7 @@ seg_then <- function(limit = 'after',
   }
 
 if(length(limit) == 2){
-  restriction <- c(
+  restriction <- list(
         list(count = count[[1]],
              limit = limit[[1]],
              container = 'hits',
