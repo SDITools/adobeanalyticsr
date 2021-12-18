@@ -29,18 +29,18 @@
 #' @export
 #'
 #'
-seg_then <- function(limit = c('after', 'within'),
-                     count =  c(2, 1),
-                     unit = c('visit', 'visit')) {
+seg_then <- function(limit = 'within',
+                     count =  1,
+                     unit = 'week') {
 #validation check for the limit argument
-  if(length(limit) > 2 || length(count) > 2 || length(unit) > 2){
+  if (length(limit) > 2 | length(count) > 2 | length(unit) > 2) {
     stop("Only 2 rules can be combined in a single sequence time restriction.")
   }
-  if(length(limit) == 2 && sum(duplicated(limit)) == 1){
+  if (length(limit) == 2 & sum(duplicated(limit)) == 1) {
     stop("The limit values cannot be the same. Use either ")
   }
 
-  if(length(limit) == 2 && which(limit == 'within') == 2){
+  if (length(limit) == 2 & which(limit == 'within') == 2) {
     limit <- rev(limit)
     count <- rev(count)
     unit <- rev(unit)
