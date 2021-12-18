@@ -56,8 +56,8 @@ seg_then <- function(limit = 'within',
   }
 
 if(length(limit) == 2){
-  restriction <- list(
-        list(count = count[[1]],
+  restriction <- structure(list(
+       list(count = count[[1]],
              limit = limit[[1]],
              container = 'hits',
              unit = unit[[1]],
@@ -67,7 +67,7 @@ if(length(limit) == 2){
              container = 'hits',
              unit = unit[[2]],
              func = 'time-restriction')
-  )
+  ))
   #check where units == 'hit'
   unithitlocation <- which(restriction == 'hit' & names(restriction) == 'unit')
   #remove the unit
@@ -105,5 +105,6 @@ if(length(limit) == 2){
 }
 
 return(restriction)
+
 }
 
