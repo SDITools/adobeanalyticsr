@@ -29,9 +29,9 @@
 #' @export
 #'
 #'
-seg_then <- function(limit = 'within',
-                     count =  1,
-                     unit = 'week') {
+seg_then <- function(limit = c('after', 'within'),
+                     count =  c(2, 1),
+                     unit = c('visit', 'visit')) {
 #validation check for the limit argument
   if(length(limit) > 2 || length(count) > 2 || length(unit) > 2){
     stop("Only 2 rules can be combined in a single sequence time restriction.")
@@ -64,13 +64,15 @@ if(length(limit) == 2){
   #remove the unit
   if(sum(unithitlocation) > 0){
     restriction <- restriction[-unithitlocation]
+    restriction[which(names(restriction) == 'func')] <- 'container-restriction'
   }
   #check where units == 'visit'
   unitvisitlocation <- which(restriction == 'visit' & names(restriction) == 'unit')
   #remove the unit list item and change the container to 'visits'
-  if(sum(unithitlocation) > 0){
+  if(sum(unitvisitlocation) > 0){
     restriction[unitvisitlocation-1] <- 'visits'
-    restriction[-unitvisitlocation]
+    restriction <- restriction[-unitvisitlocation]
+    restriction[which(names(restriction) == 'func')] <- 'container-restriction'
   }
 
 } else {
@@ -78,12 +80,12 @@ if(length(limit) == 2){
   restriction <- list(count = count[[1]],
                       limit = limit[[1]],
                       container = 'hits',
-                      func = 'time-restriction')
+                      func = 'container-restriction')
   } else if(unit[[1]] == 'visit'){
     restriction <- list(count = count[[1]],
                         limit = limit[[1]],
                         container = 'visits',
-                        func = 'time-restriction')
+                        func = 'container-restriction')
   } else {
   restriction <- list(count = count[[1]],
                       limit = limit[[1]],
