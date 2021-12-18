@@ -49,7 +49,7 @@ pred_items <- list()
 for(i in seq_along(predicates)){
   if(!is.null(predicates[[i]]$val)) {
     pred_items[[i]] <- list(
-      context = context,
+      context = 'hits',
       func = 'container',
       pred = predicates[[i]]
     )
