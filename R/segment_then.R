@@ -80,19 +80,6 @@ if(length(limit) == 2){
       restriction[[i]]['func'] <- 'container-restriction'
     }
   }
-  #remove the unit
-  if(sum(unithitlocation) > 0){
-    restriction <- restriction[-unithitlocation]
-    restriction[which(names(restriction) == 'func')] <- 'container-restriction'
-  }
-  #check where units == 'visit'
-  unitvisitlocation <- which(restriction == 'visit' & names(restriction) == 'unit')
-  #remove the unit list item and change the container to 'visits'
-  if(sum(unitvisitlocation) > 0){
-    restriction[unitvisitlocation-1] <- 'visits'
-    restriction <- restriction[-unitvisitlocation]
-    restriction[which(names(restriction) == 'func')] <- 'container-restriction'
-  }
 
 } else {
   if(unit[[1]] == 'hit'){
