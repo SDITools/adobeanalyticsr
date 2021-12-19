@@ -46,13 +46,18 @@ if(!is.null(exclude_checkpoint)) {
 }
 ## Add in the necessary 'container' and 'hits' variables to each predicate for sequence to work
 pred_items <- list()
-for(i in seq_along(predicates)){
-  if(!is.null(predicates[[i]]$val)) {
+for (i in seq_along(predicates)) {
+  if (!is.null(predicates[[i]]$val)) {
     pred_items[[i]] <- list(
       context = 'hits',
       func = 'container',
       pred = predicates[[i]]
     )
+  } else if (length(predicates[[i]]) == 2) {
+      if (is.list(predicates[[i]][[1]])){
+        for(item in length(predicates[[i]]))
+        pred_items[[i]] <- predicates[[i]][item]
+      }
   } else {
     pred_items[[i]] <- predicates[[i]]
   }
