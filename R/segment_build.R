@@ -182,6 +182,12 @@ seg_build <- function(name = 'this is the name',
           func = 'container',
           pred = sequences[[i]]
         )
+      } else if(!is.null(sequences[[i]]$val)) {
+        seq_items[[i]] <- list(
+          context = sequence_context,
+          func = 'container',
+          pred = sequences[[i]]
+        )
       } else {
         seq_items[[i]] <- sequences[[i]]
       }
