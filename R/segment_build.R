@@ -176,7 +176,7 @@ seg_build <- function(name = 'this is the name',
     ## Add in the necessary 'container' and 'hits' variables to each predicate for sequence to work
     seq_items <- list()
     for(i in seq_along(sequences)){
-      if(!is.null(sequences[[i]]$val)) {
+      if(!is.null(sequences[[i]]$stream)) {
         seq_items[[i]] <- list(
           context = sequence_context,
           func = 'container',
