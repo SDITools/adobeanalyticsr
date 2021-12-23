@@ -6,7 +6,7 @@
 #' @param object This is the object of the predicate and answer the question what or how many
 #' @param description The internal description for the predicate if wanted
 #' @param is_distinct Count the distinct items to compare against instead of dimension number
-#' @param attribution Repeating (default), instance, or non-repeating instance
+#' @param attribution Define the type of attribution. Either `repeating` (default), `instance`, or `nonrepeating`
 #' @param attribution_context When applying a non-repeating instance attribution model to a predicate the context for the attribution must be provided
 #' @param rsid This is the report suite that the segment will be referenced to.
 #' @param company_id This is the report suite that the segment will be referenced to.
