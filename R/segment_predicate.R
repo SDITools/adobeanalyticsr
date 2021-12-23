@@ -231,6 +231,10 @@ if(!is.null(description)){
 if(attribution == 'instance') {
     prepred$val$`allocation-model`$func = 'allocation-instance'
 } else if(attribution == 'nonrepeating'){
+  if(attribution_context == 'hits') {
+    warning('attribution_context cannot be set to `hits`, changing to default `visitors`')
+    attribution_context <- 'visitors'
+  }
   if(!is.null(attribution_context) && attribution_context == 'visits'){
     prepred$val$`allocation-model`$context = 'sessions'
     prepred$val$`allocation-model`$func = 'allocation-dedupedInstance'
