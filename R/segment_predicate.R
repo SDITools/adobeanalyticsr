@@ -7,7 +7,7 @@
 #' @param description The internal description for the predicate if wanted
 #' @param is_distinct Count the distinct items to compare against instead of dimension number
 #' @param attribution Define the type of attribution. Either `repeating` (default), `instance`, or `nonrepeating`
-#' @param attribution_context When applying a non-repeating instance attribution model to a predicate the context for the attribution must be provided
+#' @param attribution_context When applying a non-repeating instance attribution model to a predicate the context for the attribution must be `visitors` (default) or `visits`
 #' @param rsid This is the report suite that the segment will be referenced to.
 #' @param company_id This is the report suite that the segment will be referenced to.
 #'
@@ -26,7 +26,7 @@ seg_pred <- function(subject = 'page',
                      description = NULL,
                      is_distinct = FALSE,
                      attribution = 'repeating',
-                     attribution_context = 'hits',
+                     attribution_context = 'visitors',
                      rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                      company_id = Sys.getenv("AW_COMPANY_ID")){
   ### Define the different elements of a segment

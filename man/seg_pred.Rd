@@ -12,7 +12,7 @@ seg_pred(
   description = NULL,
   is_distinct = FALSE,
   attribution = "repeating",
-  attribution_context = "hits",
+  attribution_context = "visitors",
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
@@ -28,9 +28,9 @@ seg_pred(
 
 \item{is_distinct}{Count the distinct items to compare against instead of dimension number}
 
-\item{attribution}{Repeating (default), instance, or non-repeating instance}
+\item{attribution}{Define the type of attribution. Either \code{repeating} (default), \code{instance}, or \code{nonrepeating}}
 
-\item{attribution_context}{When applying a non-repeating instance attribution model to a predicate the context for the attribution must be provided}
+\item{attribution_context}{When applying a non-repeating instance attribution model to a predicate the context for the attribution must be \code{visitors} (default) or \code{visits}}
 
 \item{rsid}{This is the report suite that the segment will be referenced to.}
 

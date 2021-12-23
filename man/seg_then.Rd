@@ -35,6 +35,6 @@ The function will automatically align these to be in the correct list item order
 
 \subsection{A word about unit values}{
 
-In the UI \code{pageviews} and \code{dimensions} are options but they are not currently available in this function.
+Currently \code{pageviews} and \code{dimensions} are not supported unit values.
 }
 }
