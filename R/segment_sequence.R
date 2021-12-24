@@ -78,10 +78,8 @@ sequence_items <- if(sequence_dir == 'sequence') {
       list(
         func = 'without',
         pred = list(
-          list(
-            func = sequence_dir,
-            stream = pred_items
-          )
+          func = sequence_dir,
+          stream = pred_items
         )
       )
     )
@@ -100,11 +98,9 @@ sequence_items <- if(sequence_dir == 'sequence') {
       list(
         func = 'without',
         pred = list(
-          list(
-            func = sequence_dir,
-            context = context,
-            stream = pred_items
-          )
+          func = sequence_dir,
+          context = context,
+          stream = pred_items
         )
       )
     )
@@ -122,10 +118,8 @@ sequence_items <- if(sequence_dir == 'sequence') {
       list(
         func = 'without',
         pred = list(
-          list(
-            func = sequence_dir,
-            checkpoints = pred_items
-          )
+          func = sequence_dir,
+          checkpoints = pred_items
         )
       )
     )
