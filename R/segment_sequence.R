@@ -5,6 +5,7 @@
 #' @param context One of hits, visits, or visitors. Also known as scope
 #' @param predicates List of predicates created using `seg_pred()` function. Must wrapped in a list() function.
 #' @param sequence  How should the sequence of items be considered. Options: `in_order` (default), `before`, `after`, `and`, `or`
+#' @param exclude Excludes the entire sequence container which will include all predicates.
 #' @param exclude_checkpoint Which checkpoints (predicates) should be excluded.
 #'
 #' @details
@@ -26,6 +27,7 @@
 seg_seq <- function(context = 'visits',
                     predicates = NULL,
                     sequence = 'in_order',
+                    exclude = FALSE,
                     exclude_checkpoint = NULL) {
 
 sequence_dir <- dplyr::case_when(sequence == 'in_order' ~ 'sequence',
@@ -64,27 +66,70 @@ for (i in seq_along(predicates)) {
 }
 
 sequence_items <- if(sequence_dir == 'sequence') {
+  if(exclude == FALSE) {
     structure(
       list(
         func = sequence_dir,
         stream = pred_items
       )
     )
+  } else if(exclude == TRUE){
+    structure(
+      list(
+        func = 'without',
+        pred = list(
+          list(
+            func = sequence_dir,
+            stream = pred_items
+          )
+        )
+      )
+    )
+  }
 } else if(sequence_dir %in% c('sequence-prefix', 'sequence-suffix')) {
-  structure(
-    list(
-      func = sequence_dir,
-      context = context,
-      stream = pred_items
+  if(exclude == FALSE) {
+    structure(
+      list(
+        func = sequence_dir,
+        context = context,
+        stream = pred_items
+      )
     )
-  )
+  } else if(exclude == TRUE) {
+    structure(
+      list(
+        func = 'without',
+        pred = list(
+          list(
+            func = sequence_dir,
+            context = context,
+            stream = pred_items
+          )
+        )
+      )
+    )
+  }
 } else if(sequence_dir %in% c('sequence-and', 'sequence-or')) {
-  structure(
-    list(
-      func = sequence_dir,
-      checkpoints = pred_items
+  if(exclude == FALSE) {
+    structure(
+      list(
+        func = sequence_dir,
+        checkpoints = pred_items
+      )
     )
-  )
+  } else if(exclude == TRUE){
+    structure(
+      list(
+        func = 'without',
+        pred = list(
+          list(
+            func = sequence_dir,
+            checkpoints = pred_items
+          )
+        )
+      )
+    )
+  }
 }
 
 return(sequence_items)

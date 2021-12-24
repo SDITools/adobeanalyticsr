@@ -8,6 +8,7 @@ seg_seq(
   context = "visits",
   predicates = NULL,
   sequence = "in_order",
+  exclude = FALSE,
   exclude_checkpoint = NULL
 )
 }
@@ -17,6 +18,8 @@ seg_seq(
 \item{predicates}{List of predicates created using \code{seg_pred()} function. Must wrapped in a list() function.}
 
 \item{sequence}{How should the sequence of items be considered. Options: \code{in_order} (default), \code{before}, \code{after}, \code{and}, \code{or}}
+
+\item{exclude}{Excludes the entire sequence container which will include all predicates.}
 
 \item{exclude_checkpoint}{Which checkpoints (predicates) should be excluded.}
 }
