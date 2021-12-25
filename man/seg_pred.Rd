@@ -2,8 +2,7 @@
 % Please edit documentation in R/segment_predicate.R
 \name{seg_pred}
 \alias{seg_pred}
-\title{Create the Segment Predicate
-This function creates the simple predicate of a segment.}
+\title{Create the Segment Predicate}
 \usage{
 seg_pred(
   subject = "page",
@@ -40,6 +39,5 @@ seg_pred(
 A structured list defining the predicate for a segment
 }
 \description{
-Create the Segment Predicate
 This function creates the simple predicate of a segment.
 }

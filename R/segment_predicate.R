@@ -1,4 +1,5 @@
 #' Create the Segment Predicate
+#'
 #' This function creates the simple predicate of a segment.
 #'
 #' @param subject This is the subject of the predicate. It is the dimension or metric id.
