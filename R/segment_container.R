@@ -3,7 +3,7 @@
 #' This function combines predicates into a container.
 #'
 #' @param context One of hits, visits, or visitors. Also known as scope
-#' @param conjunction  How should the predicates be combined?  And is the default.
+#' @param conjunction  This defines the relationship of the predicates.  `And` (default) and `or` are the two options.
 #' @param predicates List of predicates created using `seg_pred()` function. Must wrapped in a list() function.
 #' @param exclude Exclude the entire container
 #'

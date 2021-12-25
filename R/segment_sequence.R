@@ -69,17 +69,25 @@ sequence_items <- if(sequence_dir == 'sequence') {
   if(exclude == FALSE) {
     structure(
       list(
-        func = sequence_dir,
-        stream = pred_items
+        func = 'container',
+        context = context,
+        pred = list(
+          func = sequence_dir,
+          stream = pred_items
+        )
       )
     )
   } else if(exclude == TRUE){
     structure(
       list(
-        func = 'without',
+        func = 'container',
+        context = context,
         pred = list(
-          func = sequence_dir,
-          stream = pred_items
+          func = 'without',
+          pred = list(
+            func = sequence_dir,
+            stream = pred_items
+          )
         )
       )
     )
@@ -88,19 +96,27 @@ sequence_items <- if(sequence_dir == 'sequence') {
   if(exclude == FALSE) {
     structure(
       list(
-        func = sequence_dir,
+        func = 'container',
         context = context,
-        stream = pred_items
+        pred = list(
+          func = sequence_dir,
+          context = context,
+          stream = pred_items
+        )
       )
     )
   } else if(exclude == TRUE) {
     structure(
       list(
-        func = 'without',
+        func = 'container',
+        context = context,
         pred = list(
-          func = sequence_dir,
-          context = context,
-          stream = pred_items
+          func = 'without',
+          pred = list(
+            func = sequence_dir,
+            context = context,
+            stream = pred_items
+          )
         )
       )
     )
@@ -109,17 +125,25 @@ sequence_items <- if(sequence_dir == 'sequence') {
   if(exclude == FALSE) {
     structure(
       list(
-        func = sequence_dir,
-        checkpoints = pred_items
+        func = 'container',
+        context = context,
+        pred = list(
+          func = sequence_dir,
+          checkpoints = pred_items
+        )
       )
     )
   } else if(exclude == TRUE){
     structure(
       list(
-        func = 'without',
+        func = 'container',
+        context = context,
         pred = list(
-          func = sequence_dir,
-          checkpoints = pred_items
+          func = 'without',
+          pred = list(
+            func = sequence_dir,
+            checkpoints = pred_items
+          )
         )
       )
     )
