@@ -7,8 +7,12 @@
 seg_verbs()
 }
 \value{
-A list of all available verbs
+A dataframe of all available segment verbs
 }
 \description{
 This function generates a list of linking verbs that can be used to build segments
+}
+\examples{
+seg_verbs()
+
 }

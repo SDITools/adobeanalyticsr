@@ -10,7 +10,7 @@
 #'
 #' @details
 #'
-#' Exclude checkpoint: Ensures the next checkpoint doesn't happen between the
+#' **Exclude checkpoint**: Ensures the next checkpoint doesn't happen between the
 #' preceding checkpoint and the subsequent checkpoint. If there is no subsequent
 #' checkpoint then the excluded checkpoint must not occur at any point after
 #' the preceding checkpoint. If there is no preceding checkpoint then the

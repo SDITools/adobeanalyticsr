@@ -21,7 +21,7 @@ seg_seq(
 
 \item{exclude}{Excludes the entire sequence container which will include all predicates.}
 
-\item{exclude_checkpoint}{Which checkpoints (predicates) should be excluded.}
+\item{exclude_checkpoint}{Which checkpoints (predicates) should be excluded. Example \code{c(1, 4)}}
 }
 \value{
 a structured list of containers to be used to build the segment
@@ -30,7 +30,7 @@ a structured list of containers to be used to build the segment
 This function combines predicates into a sequence container.
 }
 \details{
-Exclude checkpoint: Ensures the next checkpoint doesn't happen between the
+\strong{Exclude checkpoint}: Ensures the next checkpoint doesn't happen between the
 preceding checkpoint and the subsequent checkpoint. If there is no subsequent
 checkpoint then the excluded checkpoint must not occur at any point after
 the preceding checkpoint. If there is no preceding checkpoint then the

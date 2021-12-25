@@ -14,7 +14,7 @@ seg_con(
 \arguments{
 \item{context}{One of hits, visits, or visitors. Also known as scope}
 
-\item{conjunction}{How should the predicates be combined?  And is the default.}
+\item{conjunction}{This defines the relationship of the predicates.  \code{And} (default) and \code{or} are the two options.}
 
 \item{predicates}{List of predicates created using \code{seg_pred()} function. Must wrapped in a list() function.}
 
