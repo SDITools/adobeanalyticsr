@@ -1,6 +1,6 @@
-#' Build the Segment
+#' Build the segment in Adobe Analytics
 #'
-#' This function combines predicates into a container.
+#' This function combines predicates and/or containers and then makes the post call to create the segment in Adobe Analytics.
 #'
 #' @param name This is the name of the new segment
 #' @param description  This is the description of the segment
@@ -19,7 +19,8 @@
 #' @param client_id This is the report suite that the segment will be referenced to.
 #' @param client_secret This is the report suite that the segment will be referenced to.
 #'
-#' @return A data frame of the new created segment id and other meta elements
+#' @return If the segment validates it will return a data frame of the new created segment id and other basic elements. If it returns and error then the error
+#' response will be returned to help understand what needs to be corrected.
 #'
 #' @import dplyr
 #' @import assertthat

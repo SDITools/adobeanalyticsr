@@ -2,7 +2,7 @@
 % Please edit documentation in R/segment_build.R
 \name{seg_build}
 \alias{seg_build}
-\title{Build the Segment}
+\title{Build the segment in Adobe Analytics}
 \usage{
 seg_build(
   name = "this is the name",
@@ -57,8 +57,9 @@ seg_build(
 \item{client_secret}{This is the report suite that the segment will be referenced to.}
 }
 \value{
-A data frame of the new created segment id and other meta elements
+If the segment validates it will return a data frame of the new created segment id and other basic elements. If it returns and error then the error
+response will be returned to help understand what needs to be corrected.
 }
 \description{
-This function combines predicates into a container.
+This function combines predicates and/or containers and then makes the post call to create the segment in Adobe Analytics.
 }
