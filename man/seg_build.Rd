@@ -34,7 +34,7 @@ seg_build(
 
 \item{sequences}{List of the predicates and sequence containers that are combined to make a segment}
 
-\item{context}{This defines the main container context, either hits, visits (Default), or visitors}
+\item{context}{Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details}
 
 \item{conjunction}{This will tell how the different containers and predicates should be compared. Use either 'and' or 'or' at this time. Sequential 'then' will be added in a future update.}
 
@@ -62,4 +62,13 @@ response will be returned to help understand what needs to be corrected.
 }
 \description{
 This function combines predicates and/or containers and then makes the post call to create the segment in Adobe Analytics.
+}
+\details{
+\strong{Context}
+The rules in a segment have a context that specify the level of operation. The context can be visitors, visits or hits.
+As an example, let's build a segment rule where revenue is greater than 0 (meaning a purchase took place) and change the context to see how things change.
+If the context is set to visitors, the segment includes all hits from visitors that have a purchase of some kind during a visit. This is useful in analyzing customer behavior in visits leading up to a purchase and possibly behavior after a purchase.
+the context is set to visits, the segment includes all hits from visits where a purchase occurred. This is useful for seeing the behavior of a visitor in immediate page views leading up to the purchase.
+If the context is set to hit, the segment only includes hits where a purchase occurred, and no other hits. This is useful in seeing which products were most popular.
+In the above example, the context for the container listed is hits. This means that the container only evaluates data at the hit level, (in contrast to visit or visitor level). The rows in the container are also at the hit level.
 }

@@ -12,11 +12,11 @@ seg_con(
 )
 }
 \arguments{
-\item{context}{One of hits, visits, or visitors. Also known as scope}
+\item{context}{Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details}
 
 \item{conjunction}{This defines the relationship of the predicates.  \code{And} (default) and \code{or} are the two options.}
 
-\item{predicates}{List of predicates created using \code{seg_pred()} function. Must wrapped in a list() function.}
+\item{predicates}{List of predicates and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.}
 
 \item{exclude}{Exclude the entire container}
 }
@@ -25,4 +25,13 @@ a structured list of containers to be used to build the segment
 }
 \description{
 This function combines predicates into a container.
+}
+\details{
+\strong{Context}
+The rules in a segment have a context that specify the level of operation. The context can be visitors, visits or hits.
+As an example, let's build a segment rule where revenue is greater than 0 (meaning a purchase took place) and change the context to see how things change.
+If the context is set to visitors, the segment includes all hits from visitors that have a purchase of some kind during a visit. This is useful in analyzing customer behavior in visits leading up to a purchase and possibly behavior after a purchase.
+the context is set to visits, the segment includes all hits from visits where a purchase occurred. This is useful for seeing the behavior of a visitor in immediate page views leading up to the purchase.
+If the context is set to hit, the segment only includes hits where a purchase occurred, and no other hits. This is useful in seeing which products were most popular.
+In the above example, the context for the container listed is hits. This means that the container only evaluates data at the hit level, (in contrast to visit or visitor level). The rows in the container are also at the hit level.
 }

@@ -7,7 +7,7 @@
 #' @param containers List of the container(s) that make up the segment
 #' @param predicates List of the predicate(s) to create a segment
 #' @param sequences List of the predicates and sequence containers that are combined to make a segment
-#' @param context This defines the main container context, either hits, visits (Default), or visitors
+#' @param context Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details
 #' @param conjunction This will tell how the different containers and predicates should be compared. Use either 'and' or 'or' at this time. Sequential 'then' will be added in a future update.
 #' @param sequence Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events
 #' @param sequence_context Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits
@@ -18,6 +18,16 @@
 #' @param company_id This is the report suite that the segment will be referenced to.
 #' @param client_id This is the report suite that the segment will be referenced to.
 #' @param client_secret This is the report suite that the segment will be referenced to.
+#'
+#' @details
+#'
+#' **Context**
+#' The rules in a segment have a context that specify the level of operation. The context can be visitors, visits or hits.
+#' As an example, let's build a segment rule where revenue is greater than 0 (meaning a purchase took place) and change the context to see how things change.
+#' If the context is set to visitors, the segment includes all hits from visitors that have a purchase of some kind during a visit. This is useful in analyzing customer behavior in visits leading up to a purchase and possibly behavior after a purchase.
+#' the context is set to visits, the segment includes all hits from visits where a purchase occurred. This is useful for seeing the behavior of a visitor in immediate page views leading up to the purchase.
+#' If the context is set to hit, the segment only includes hits where a purchase occurred, and no other hits. This is useful in seeing which products were most popular.
+#' In the above example, the context for the container listed is hits. This means that the container only evaluates data at the hit level, (in contrast to visit or visitor level). The rows in the container are also at the hit level.
 #'
 #' @return If the segment validates it will return a data frame of the new created segment id and other basic elements. If it returns and error then the error
 #' response will be returned to help understand what needs to be corrected.
