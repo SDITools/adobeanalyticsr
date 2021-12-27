@@ -5,8 +5,8 @@
 \title{Build the segment in Adobe Analytics}
 \usage{
 seg_build(
-  name = "this is the name",
-  description = "this is the description",
+  name = NULL,
+  description = NULL,
   containers = NULL,
   predicates = NULL,
   sequences = NULL,
@@ -15,7 +15,6 @@ seg_build(
   sequence = "in_order",
   sequence_context = "hits",
   exclude = FALSE,
-  version = list(1, 0, 0),
   debug = FALSE,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -24,19 +23,19 @@ seg_build(
 )
 }
 \arguments{
-\item{name}{This is the name of the new segment}
+\item{name}{This is the name of the new segment (required)}
 
-\item{description}{This is the description of the segment}
+\item{description}{This is the description of the segment (required)}
 
-\item{containers}{List of the container(s) that make up the segment}
+\item{containers}{List of the container(s) that make up the segment. Containers are list objects created using the \code{seg_con()} function.}
 
-\item{predicates}{List of the predicate(s) to create a segment}
+\item{predicates}{List of the predicate(s) to create a segment. Predicates are list objects created using the \code{seg_pred()} function.}
 
-\item{sequences}{List of the predicates and sequence containers that are combined to make a segment}
+\item{sequences}{List of the predicate(s) and sequence container(s) that are combined to make a segment. Sequence containers are list objects created using the \code{seg_seq()} function.}
 
 \item{context}{Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details}
 
-\item{conjunction}{This will tell how the different containers and predicates should be compared. Use either 'and' or 'or' at this time. Sequential 'then' will be added in a future update.}
+\item{conjunction}{This will tell how the different containers and predicates should be compared. Use either 'and' or 'or'.}
 
 \item{sequence}{Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events}
 
@@ -44,20 +43,22 @@ seg_build(
 
 \item{exclude}{Excludes the main container which will include all predicates. Only used when the predicate arguments are used.}
 
-\item{version}{This is the default version. Only used if updating an existing segment. Not to be edited at this time.}
-
 \item{debug}{This enables the api call information to show in the console for help with debugging issues. default is FALSE}
 
-\item{rsid}{This is the report suite that the segment will be referenced to.}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a list of available \code{rsid} values.}
 
-\item{company_id}{This is the report suite that the segment will be referenced to.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
 
-\item{client_id}{This is the report suite that the segment will be referenced to.}
+\item{client_id}{Set in environment args, or pass directly here}
 
-\item{client_secret}{This is the report suite that the segment will be referenced to.}
+\item{client_secret}{Set in environment args, or pass directly here}
 }
 \value{
-If the segment validates it will return a data frame of the new created segment id and other basic elements. If it returns and error then the error
+If the segment validates it will return a data frame of the newly created segment id along with some other basic meta data. If it returns and error then the error
 response will be returned to help understand what needs to be corrected.
 }
 \description{

@@ -9,8 +9,12 @@
 #' @param is_distinct Count the distinct items to compare against instead of dimension number
 #' @param attribution Define the type of attribution. Either `repeating` (default), `instance`, or `nonrepeating`
 #' @param attribution_context When applying a non-repeating instance attribution model to a predicate the context for the attribution must be `visitors` (default) or `visits`
-#' @param rsid This is the report suite that the segment will be referenced to.
-#' @param company_id This is the report suite that the segment will be referenced to.
+#' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
+#' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
+#' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' Use [get_me()] to get a list of available `company_id` values.
 #'
 #' @return A structured list defining the predicate for a segment
 #'
@@ -75,7 +79,7 @@ seg_pred <- function(subject = 'page',
 
   # assert that the verb is on the list
   assertthat::assert_that(verb %in% c(exists_verbs, str_verbs, list_verbs, glob_verbs, num_verbs, numlist_verbs),
-                          msg = "'verb' argument must be one of the verbs listed on https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
+                          msg = "The 'verb' argument is not a valid verb. Use the function `seg_verb()` on https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
 
   ## define available date_subjects
   date_subjects <- c('daterangehour', 'daterangeday', 'daterangeweek', 'daterangemonth', 'daterangequarter', 'daterangeyear')

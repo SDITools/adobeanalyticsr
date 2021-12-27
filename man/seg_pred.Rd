@@ -31,9 +31,13 @@ seg_pred(
 
 \item{attribution_context}{When applying a non-repeating instance attribution model to a predicate the context for the attribution must be \code{visitors} (default) or \code{visits}}
 
-\item{rsid}{This is the report suite that the segment will be referenced to.}
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a list of available \code{rsid} values.}
 
-\item{company_id}{This is the report suite that the segment will be referenced to.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
+Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
 }
 \value{
 A structured list defining the predicate for a segment

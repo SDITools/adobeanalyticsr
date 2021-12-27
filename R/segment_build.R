@@ -2,22 +2,25 @@
 #'
 #' This function combines predicates and/or containers and then makes the post call to create the segment in Adobe Analytics.
 #'
-#' @param name This is the name of the new segment
-#' @param description  This is the description of the segment
-#' @param containers List of the container(s) that make up the segment
-#' @param predicates List of the predicate(s) to create a segment
-#' @param sequences List of the predicates and sequence containers that are combined to make a segment
+#' @param name This is the name of the new segment (required)
+#' @param description  This is the description of the segment (required)
+#' @param containers List of the container(s) that make up the segment. Containers are list objects created using the `seg_con()` function.
+#' @param predicates List of the predicate(s) to create a segment. Predicates are list objects created using the `seg_pred()` function.
+#' @param sequences List of the predicate(s) and sequence container(s) that are combined to make a segment. Sequence containers are list objects created using the `seg_seq()` function.
 #' @param context Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details
-#' @param conjunction This will tell how the different containers and predicates should be compared. Use either 'and' or 'or' at this time. Sequential 'then' will be added in a future update.
+#' @param conjunction This will tell how the different containers and predicates should be compared. Use either 'and' or 'or'.
 #' @param sequence Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events
 #' @param sequence_context Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits
 #' @param exclude Excludes the main container which will include all predicates. Only used when the predicate arguments are used.
-#' @param version This is the default version. Only used if updating an existing segment. Not to be edited at this time.
-#' @param rsid This is the report suite that the segment will be referenced to.
+#' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
+#' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
+#' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
 #' @param debug This enables the api call information to show in the console for help with debugging issues. default is FALSE
-#' @param company_id This is the report suite that the segment will be referenced to.
-#' @param client_id This is the report suite that the segment will be referenced to.
-#' @param client_secret This is the report suite that the segment will be referenced to.
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
+#' Use [get_me()] to get a list of available `company_id` values.
+#' @param client_id Set in environment args, or pass directly here
+#' @param client_secret Set in environment args, or pass directly here
 #'
 #' @details
 #'
@@ -29,7 +32,7 @@
 #' If the context is set to hit, the segment only includes hits where a purchase occurred, and no other hits. This is useful in seeing which products were most popular.
 #' In the above example, the context for the container listed is hits. This means that the container only evaluates data at the hit level, (in contrast to visit or visitor level). The rows in the container are also at the hit level.
 #'
-#' @return If the segment validates it will return a data frame of the new created segment id and other basic elements. If it returns and error then the error
+#' @return If the segment validates it will return a data frame of the newly created segment id along with some other basic meta data. If it returns and error then the error
 #' response will be returned to help understand what needs to be corrected.
 #'
 #' @import dplyr
@@ -38,8 +41,8 @@
 #' @importFrom glue glue
 #' @export
 #'
-seg_build <- function(name = 'this is the name',
-                      description = 'this is the description',
+seg_build <- function(name = NULL,
+                      description = NULL,
                       containers = NULL,
                       predicates = NULL,
                       sequences = NULL,
@@ -48,13 +51,20 @@ seg_build <- function(name = 'this is the name',
                       sequence = 'in_order',
                       sequence_context = 'hits',
                       exclude = FALSE, #only used if the 'predicates' argument is used
-                      version = list(1, 0, 0),
                       debug = FALSE,
                       rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                       company_id = Sys.getenv("AW_COMPANY_ID"),
                       client_id = Sys.getenv("AW_CLIENT_ID"),
                       client_secret = Sys.getenv("AW_CLIENT_SECRET")){
+  #validate arguments
+  if(is.null(name) | is.null(description)) {
+    stop('The arguments `name` and `description` must be included.')
+  }
 
+  #define the segment version
+  version <- list(1, 0, 0)
+
+  #Create the segment list object
   if(is.null(containers) & !is.null(predicates) & is.null(sequences)) {
     if(exclude == FALSE) {
       if(length(predicates) == 1){
