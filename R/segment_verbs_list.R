@@ -43,7 +43,7 @@ seg_verbs <- function(){
       "exists",
       "exists"
     ),
-    Function = c(
+    Verb = c(
       'streq',
       'not-streq',
       'strlt',
