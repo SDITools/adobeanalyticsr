@@ -89,7 +89,7 @@ seg_pred <- function(subject = 'page',
 
   # assert that the verb is on the list
   assertthat::assert_that(verb %in% c(exists_verbs, str_verbs, list_verbs, glob_verbs, num_verbs, numlist_verbs),
-                          msg = "The 'verb' argument is not a valid verb. Use the function `seg_verb()` on https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
+                          msg = "The 'verb' argument is not a valid verb. Use the function `seg_verb()` to see all available verbs or visit Adobe Experience League for more information. https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
 
   ## define available date_subjects
   date_subjects <- c('daterangehour', 'daterangeday', 'daterangeweek', 'daterangemonth', 'daterangequarter', 'daterangeyear')
