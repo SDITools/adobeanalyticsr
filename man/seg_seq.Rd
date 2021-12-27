@@ -21,7 +21,7 @@ seg_seq(
 
 \item{exclude}{Excludes the entire sequence container which will include all predicates.}
 
-\item{exclude_checkpoint}{Which checkpoints (predicates) should be excluded. Example \code{c(1, 4)}}
+\item{exclude_checkpoint}{Which checkpoints (predicates) should be excluded. Example \code{c(1, 4)}. See Details}
 }
 \value{
 a structured list of containers to be used to build the segment
@@ -47,4 +47,8 @@ checkpoint then the excluded checkpoint must not occur at any point after
 the preceding checkpoint. If there is no preceding checkpoint then the
 excluded checkpoint must not have occurred at any point preceding the
 subsequent checkpoint.
+
+\strong{More Information}
+
+Sequential segments can be difficult to get right. Referencing this article can help: https://experienceleague.adobe.com/docs/analytics/components/segmentation/segmentation-workflow/seg-sequential-build.html?lang=en
 }

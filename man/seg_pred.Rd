@@ -19,15 +19,15 @@ seg_pred(
 \arguments{
 \item{subject}{This is the subject of the predicate. It is the dimension or metric id.}
 
-\item{verb}{Choose from any of the 30 different verbs}
+\item{verb}{Choose from any of the 30 different verbs. Use the \code{seg_verbs()} function to see all available verbs along with the descriptions.}
 
-\item{object}{This is the object of the predicate and answer the question what or how many}
+\item{object}{This is the object of the predicate and answers the question \code{what} or \verb{how many}}
 
-\item{description}{The internal description for the predicate if wanted}
+\item{description}{The internal description for the predicate. (optional) This will not show in the UI but could be very helpful when using the API.}
 
-\item{is_distinct}{Count the distinct items to compare against instead of dimension number}
+\item{is_distinct}{This will segment on a distinct count of items within a dimension. Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where more than 5 distinct pages were seen.”}
 
-\item{attribution}{Define the type of attribution. Either \code{repeating} (default), \code{instance}, or \code{nonrepeating}}
+\item{attribution}{Define the type of attribution. Either \code{repeating} (default), \code{instance}, or \code{nonrepeating}. See Details for more information.}
 
 \item{attribution_context}{When applying a non-repeating instance attribution model to a predicate the context for the attribution must be \code{visitors} (default) or \code{visits}}
 
@@ -44,4 +44,12 @@ A structured list defining the predicate for a segment
 }
 \description{
 This function creates the simple predicate of a segment.
+}
+\details{
+\strong{Attribution Models}
+
+Available for dimensions only, these models determine what values in a dimension to segment for. Dimension models are particularly useful in sequential segmentation.
+\emph{repeating} (default): Includes instances and persisted values for the dimension.
+\emph{instance}: Includes instances for the dimension.
+\emph{nonrepeating} instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
 }

@@ -6,7 +6,7 @@
 #' @param predicates List of predicates created using `seg_pred()` function. Must wrapped in a list() function.
 #' @param sequence  How should the sequence of items be considered. Options: `in_order` (default), `before`, `after`, `and`, `or`
 #' @param exclude Excludes the entire sequence container which will include all predicates.
-#' @param exclude_checkpoint Which checkpoints (predicates) should be excluded. Example `c(1, 4)`
+#' @param exclude_checkpoint Which checkpoints (predicates) should be excluded. Example `c(1, 4)`. See Details
 #'
 #' @details
 #'
@@ -27,6 +27,14 @@
 #' the preceding checkpoint. If there is no preceding checkpoint then the
 #' excluded checkpoint must not have occurred at any point preceding the
 #' subsequent checkpoint.
+#'
+#' **More Information**
+#'
+#' Sequential segments can be difficult to get right. Referencing this article can help: https://experienceleague.adobe.com/docs/analytics/components/segmentation/segmentation-workflow/seg-sequential-build.html?lang=en
+#'
+#' @example
+#' \donotrun
+#' sequenceitem <- seg_seq(context = 'visits', predicates = list(pred1, pred2), sequence = 'in_order', exclude = FALSE)
 #'
 #' @return a structured list of containers to be used to build the segment
 #'
