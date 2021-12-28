@@ -71,7 +71,8 @@
 #' - `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
 #' @seealso [get_me()], [aw_get_reportsuites()], [aw_get_segments()],
-#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()]
+#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()],
+#' [aw_segment_table()]
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
@@ -143,12 +144,14 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               debug = FALSE,
                               check_components = TRUE) {
   if (all(is.na(segmentId))) segmentId <- NULL
+
   # Repeated dimensions will cause an infinite loop
   if (length(dimensions) > length(unique(dimensions))) {
     stop("List of dimensions is not unique")
   }
   # No harm in repeated metrics, simply take the unique ones
   metrics <- unique(metrics)
+
 
   # Component lookup checks
   # The component checking is optional, in case speed is a priority
@@ -199,7 +202,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   # Estimate requests and reset global counter
   n_requests <- estimate_requests(top)
   if (n_requests > 20) {
-    initialize_global_counter(top)
+    initialize_global_counter(n_requests)
   } else {
     kill_global_counter()
   }
@@ -296,13 +299,11 @@ estimate_requests <- function(top) {
 #'
 #' This is used for generating the progress bar on long queries.
 #'
-#' @param top Top argument, essentially the number of rows returned from each
-#' query
+#' @param n_queries Number of queries to be completed
 #'
 #' @return Query quantiles, invisibly
 #' @noRd
-initialize_global_counter <- function(top) {
-  total_queries <- n_queries(top)
+initialize_global_counter <- function(total_queries) {
   prog_format <- "Progress [:bar] :percent in :elapsed"
 
   .adobeanalytics$prog_bar <- progress::progress_bar$new(total = total_queries,

@@ -167,5 +167,6 @@ The default for any search string is to use \code{CONTAINS}. Consider a query wh
 }
 \seealso{
 \code{\link[=get_me]{get_me()}}, \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}}, \code{\link[=aw_get_segments]{aw_get_segments()}},
-\code{\link[=aw_get_dimensions]{aw_get_dimensions()}}, \code{\link[=aw_get_metrics]{aw_get_metrics()}}, \code{\link[=aw_get_calculatedmetrics]{aw_get_calculatedmetrics()}}
+\code{\link[=aw_get_dimensions]{aw_get_dimensions()}}, \code{\link[=aw_get_metrics]{aw_get_metrics()}}, \code{\link[=aw_get_calculatedmetrics]{aw_get_calculatedmetrics()}},
+\code{\link[=aw_segment_table]{aw_segment_table()}}
 }

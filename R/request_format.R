@@ -136,18 +136,23 @@ metric_elem <- function(id,
 #' @param id Vector of metric IDs
 #' @param columnId Assigned columns, should be always the same for each metric
 #' @param filter List of metric filters to include in each metric, identified by
-#'   ID given in the `metricFilters` field
+#'   ID given in the `metricFilters` field of metric container
 #' @param sort Sorting directing, typically only applied to one metric
 #'
 #' @return List, one metric element
 #' @noRd
+#' @examples
+#' metric_elems(id = c("met1", "met2"),
+#'              columnId = as.character(1:2),
+#'              filters = list("one", c("one", "two")),
+#'              sort = c("asc", NA))
 metric_elems <- function(id,
                          columnId,
                          filters = NULL,
                          sort = NULL) {
   # Input: character vector of filters
   # Output: List of filters, one filter for each element of ID
-  if (!is.null(filters) & length(filters) > 1) {
+  if (!is.null(filters) & length(filters) > 1 & !is.list(filters)) {
     id_len <- length(id)
     filters <- list(filters)[rep(1, id_len)]
   }
@@ -163,57 +168,71 @@ metric_elems <- function(id,
 }
 
 
-#' Make a metric filter data frame
+
+#' Create metric filter data frame
 #'
-#' @description
-#' Construct a metric filter data frame. The intended use is to row bind several
-#' of these together to form the full `metricFilters` field. Thus, in each
-#' call, you are restricted to:
+#' Combines elements into a single metric filter data frame. Automatically
+#' generates an ID column for use with matching to the metric fields.
 #'
-#' - A vector of filter IDs
-#' - A type (dateRange or breakdown)
-#' - Depending on type:
-#'   - One dimension with the same number of item IDs as filter IDs (usu. 1)
-#'   - One daterange to be applied to all filters
+#' @param type Type
+#' @param dimension Dimensions
+#' @param itemId Item IDs for those dimensions
+#' @param dateRange Date range
+#' @param segmentId segment IDs
 #'
-#' @param id Metric filter ID, assigned by form creator
-#' @param type Filter type, one of "dateRange" or "breakdown"
-#' @param dimension Optional, dimension ID
-#' @param itemId Optional, dimension item ID
-#' @param dateRange Optional, date range
+#' @return Data.frame containing the necessary fields to generate the metric
+#' filters field of the metric container
 #'
-#' @return data.frame
 #' @noRd
-metric_filters <- function(id,
-                           type,
+#' @examples
+#'
+#' metric_filters(
+#'   type = c("segment", "breakdown", "breakdown", "dateRange"),
+#'   segmentId = c("s1234567890_09583204824324"),
+#'   dimension = c("evar45", "prop11"),
+#'   itemId = c("1234", "5678"),
+#'   dateRange = "today/tomorrow"
+#' )
+#'
+#'
+#' metric_filters(
+#'   type = c("segment", "breakdown"),
+#'   segmentId = c("s1234567890_09583204824324"),
+#'   dimension = "evar45",
+#'   itemId = "1234"
+#' )
+metric_filters <- function(type,
                            dimension = NULL,
                            itemId = NULL,
-                           dateRange = NULL) {
-  assertthat::assert_that(
-    is.character(id),
-    length(dimension) < 2,
-    length(dateRange) < 2
-  )
-  type <- match.arg(type, c("dateRange", "breakdown"))
-
-  if (type == "dateRange") {
-    if (is.null(dateRange)) stop("No date range provided for dateRange metric filter",
-                                 call. = FALSE)
+                           dateRange = NULL,
+                           segmentId = NULL) {
+  if (length(dimension) != length(itemId)) {
+    stop("Mismatch between dimensions and itemIds in metric filter")
   }
 
-  if (type == "breakdown") {
-    if (is.null(dimension) || is.null(itemId)) stop("No dimension/item ID given for breakdown metric filter",
-                                                    call. = FALSE)
-  }
+  stopifnot(length(dateRange) <= 1)
+  stopifnot(length(type) == length(c(dimension, dateRange, segmentId)))
 
-  purrr::compact(list(
-    id = id,
-    type = type,
-    dimension = dimension,
-    itemId = itemId,
+  dr <- data.frame(
+    id = type[type == "dateRange"],
+    type = type[type == "dateRange"],
     dateRange = dateRange
-  )) %>%
-    data.frame()
+  )
+
+  dims <- data.frame(
+    id = dimension,
+    type = type[type == "breakdown"],
+    dimension = dimension,
+    itemId = itemId
+  )
+
+  segs <- data.frame(
+    id = segmentId,
+    type = type[type == "segment"],
+    segmentId = segmentId
+  )
+
+  dplyr::bind_rows(dr, dims, segs)
 }
 
 
@@ -230,7 +249,8 @@ metric_filters <- function(id,
 #' pass in normal values. You know, for user friendliness.
 #'
 #' @param metrics Metric names in the order they were requested
-#' @param type Type of filter to apply. One of "dateRange" or "breakdown"
+#' @param segmentIds List (or vector) of segment IDs the same length as the
+#' metrics. These will be added to metrics as appropriate.
 #' @param sort Direction to sort in, one of "asc", "desc". Applied only to first
 #'   metric.
 #' @param dimensions Dimensions to apply as filters. Must be same length as IDs.
@@ -239,38 +259,78 @@ metric_filters <- function(id,
 #'
 #' @return Metric container list
 #' @noRd
+#'
+#' @examples
+#'
+#' metric_container(
+#'   metrics = c("met1", "met2"),
+#'   type = c("breakdown", "dateRange"),
+#'   sort = c("asc", NA),
+#'   dimensions = c("evar45"),
+#'   itemIds = c("1234"),
+#'   dateRange = "yesterday/today"
+#' )
+#'
+#' metric_container(
+#'   metrics = c("met1", "met2"),
+#'   sort = c("asc", NA),
+#'   dimensions = c("evar45"),
+#'   itemIds = c("1234"),
+#'   segmentIds = list(NA, c("s1234_5555", "s1234_9999"))
+#' )
 metric_container <- function(metrics,
-                             type,
+                             metricIds,
                              sort,
                              dimensions = NULL,
                              itemIds = NULL,
+                             segmentIds = NULL,
                              dateRange = NULL) {
-  # Error checking happens in lower level functions, should probably move them higher
-  # Format for API request
+  sort <- na_fill_vec(sort, len = length(metrics))
+
+  # Format metrics for API request
   metrics[!is_calculated_metric(metrics)] <- paste("metrics",
                                                metrics[!is_calculated_metric(metrics)],
                                                sep = "/")
 
+  # Format dimensions for API request
   if (!is.null(dimensions)) {
     dimensions <- paste("variables", dimensions, sep = "/")
-    filter_ids <- dimensions
-  } else {
-    filter_ids <- "daterange"
   }
 
+  # Get a list of unique segment IDs needed for filtering
+  filter_segids <- unique(unlist(segmentIds))
+  filter_segids <- filter_segids[!is.na(filter_segids)]
 
-  filter_components <- purrr::compact(list(
-    id = filter_ids,
+
+  # Derive type argument
+  type <- c(
+    rep("dateRange", length(dateRange)),
+    rep("breakdown", length(dimensions)),
+    rep("segment", length(filter_segids))
+  )
+
+
+  met_filters <- metric_filters(
     type = type,
     dimension = dimensions,
     itemId = itemIds,
+    segmentId = filter_segids,
     dateRange = dateRange
-  ))
+  )
 
-  met_filters <- purrr::pmap_dfr(filter_components, metric_filters)
+  # Segment IDs can be applied on a per metric basis
+  if (!is.null(segmentIds)) {
+    stopifnot(length(metrics) == length(segmentIds))
+
+    filter_ids <- purrr::map2(metrics, segmentIds, function(met, seg) {
+      met_filters[met_filters$type %in% c("breakdown", "dateRange") | met_filters$segmentId %in% seg, "id"]
+    })
+  } else {
+    filter_ids <- list(met_filters$id)
+  }
 
   mets <- metric_elems(id = metrics,
-                       columnId = as.character(seq_along(metrics)),
+                       columnId = metricIds,
                        filters = filter_ids,
                        sort = sort)
 
