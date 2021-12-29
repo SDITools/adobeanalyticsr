@@ -6,7 +6,8 @@
   * `aw_auth_with()`
   * `aw_auth_name()`
   * `aw_auth_path()`
-* Added support for `aw_token()` function with lifecycle warning
+* Added support for `aw_token()` function with life-cycle warning
+* Added new function called `aw_segment_table()` which returns one or multiple segments and their corresponding metrics
 * Cleanup and edits to the `aw_freeform_table()` function
 * Token support updates for all api call functions.
 * Removed `client_id` and `client_secret` from functions that were not using those variables even if defined in the arguments.

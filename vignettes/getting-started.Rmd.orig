@@ -20,9 +20,9 @@ knitr::opts_chunk$set(
 
 The basic setup is documented on the home page of [adobeanalyticsr.com](https://adobeanalyticsr.com), which reviews the details for:
 
-* Creating an Adobe Console API project through https://console.adobe.io/integrations (this is availabe with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)
+* Creating an Adobe Console API project through https://developer.adobe.com/console (this is availabe with all Adobe Analytics accounts, but requires the appropriate level of admin access to set up the project)
 * Adding `AW_CLIENT_ID` and `AW_CLIENT_SECRET` environment variables (the recommended mechanism for this is through the `.Renviron` file). If these environment variables are not available, then the `client_id` and `client_secret` arguments in `aw_token()` need to be populated with the client ID and secret.
-* Adding `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables (again, this is recommended to be done via a `.Renviron` file). 
+* Adding `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables (again, this is recommended to be done via a `.Renviron` file).
 
 ## Understanding AW_COMPANY_ID and AW_REPORTSUITE_ID
 
@@ -30,9 +30,9 @@ Many `adobeanalyticsr` functions require a company ID (the Adobe account being a
 
 This approach has some important ramifications:
 
-* If you primarily access a single company and/or a single report suite, then creating `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables means you will 
+* If you primarily access a single company and/or a single report suite, then creating `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables means you will
 _not_ have to set them on every function call, which can make for shorter and cleaner code.
-* If you periodically (or often) need to use a different `company_id` or `rsid` from what is specified as an environment variable, all you need to do is call them explicitly within the function calls. The values you specify for either of these (or both of them) directly in a function call will take precedence over any environment variables that are set up (this is core R behavior: function arguments often have default values built into them, but any value specified in the code will be used in place of those defaults; this is not anything unique to `adobeanalyticsr`).  
+* If you periodically (or often) need to use a different `company_id` or `rsid` from what is specified as an environment variable, all you need to do is call them explicitly within the function calls. The values you specify for either of these (or both of them) directly in a function call will take precedence over any environment variables that are set up (this is core R behavior: function arguments often have default values built into them, but any value specified in the code will be used in place of those defaults; this is not anything unique to `adobeanalyticsr`).
 * If you do _not_ have `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables created _and_ you do not specify values for them in the `adobeanalyticsr` function calls, then the functions will fail.
 
 In this vignette, both `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` environment variables have been set up (but not shown).
@@ -172,8 +172,8 @@ What is time? This could be a deeply philosophical question, but, instead, we'll
 The first thing to note is that the `id` values for time values are all prepended with `daterange`.
 
 ```{r date_range_ids}
-dims_df %>% filter(grepl("^daterange.*", id)) %>% 
-  select(id, name) %>% 
+dims_df %>% filter(grepl("^daterange.*", id)) %>%
+  select(id, name) %>%
   kable()
 ```
 
@@ -184,7 +184,7 @@ What will _not_ (yet) be done automatically is for the package to return the res
 ```{r simple_trend}
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "daterangeday",
-                        metrics = "visits") %>% 
+                        metrics = "visits") %>%
   arrange(daterangeday)
 
 # Output the results as a formatted table
@@ -199,7 +199,7 @@ The following code breaks down each day by **Mobile Device Type**, but only incl
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = c("daterangeday", "mobiledevicetype"),
                         metrics = "visits",
-                        top = c(0, 2)) %>% 
+                        top = c(0, 2)) %>%
   arrange(daterangeday)
 
 # Output the first few rows as a formatted table
@@ -212,7 +212,7 @@ If the `daterange...` dimension is not the first dimension (and, for speed reaso
 df <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = c("mobiledevicetype", "daterangeday"),
                         metrics = "visits",
-                        top = c(2, 0)) %>% 
+                        top = c(2, 0)) %>%
   arrange(mobiledevicetype, daterangeday)
 
 # Output the first few rows as a formatted table
@@ -250,7 +250,7 @@ At this point, you're cursing the constraint of not being able to use the `<Shif
 3. API Call #3 is similar to #2, except the results are filtered for **Marketing Channel = Page Search**).
 4. And so on...
 
-These API calls all happen relatively quickly (_wildly_ faster than API calls using the older v1.4 API), but they still all have to happen, and they happen one after another (serially rather than in parallel). 
+These API calls all happen relatively quickly (_wildly_ faster than API calls using the older v1.4 API), but they still all have to happen, and they happen one after another (serially rather than in parallel).
 
 To push this experiment one step farther, think about what you would have to do if you wanted to drill down to a _third_ dimension: **Entry Page**. You would have to repeatedly drag the **Entry Page** dimension onto each of:
 
@@ -288,7 +288,7 @@ device_types <- aw_freeform_table(date_range = c(start_date, end_date),
 browsers <- aw_freeform_table(date_range = c(start_date, end_date),
                         dimensions = "browser",
                         metrics = "visits",
-                        # We want to get all of the browsers, so set top as a high 
+                        # We want to get all of the browsers, so set top as a high
                         # value rather than the default of "5"
                         top = 1000)
 ```
