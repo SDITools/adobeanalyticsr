@@ -18,8 +18,18 @@ aw_token(
 \item{use_oob}{for the purpose of testing. Default is set to TRUE}
 }
 \value{
-An authorization token is saved the file name aa.oauth. If the file aa.oauth does not exist then one will be created at the end of the authorization process.
+An authorization token is saved the file name aa.oauth. If the
+file aa.oauth does not exist then one will be created at the end of the
+authorization process.
 }
 \description{
+#' @description
+This is the legacy mechanism for retrieving the authorization token using
+OAuth. It has been replaced by \code{aw_auth()}.
+}
+\details{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+}
+\seealso{
+\code{\link[=aw_auth]{aw_auth()}}
 }

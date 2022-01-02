@@ -30,6 +30,7 @@ Authors:
 
 Other contributors:
 \itemize{
+  \item Charles Gallagher \email{charlesjgallagher15@gmail.com} [contributor]
   \item Mark Edmondson [contributor]
 }
 

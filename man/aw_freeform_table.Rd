@@ -80,15 +80,16 @@ from setting \code{check_components} to \code{FALSE}.}
 \item{debug}{Set to \code{TRUE} to publish the full JSON request(s) being sent to the API to the console when the
 function is called. The default is \code{FALSE}.}
 
-\item{check_components}{Logical, whether to check the validity of metrics and
-dimensions before running the query. Defaults to \code{TRUE}, but causes
-\code{aw_freeform_report} to request all dimensions and metrics from the API,
-which may be inefficient if you're running many queries. If you have many
-queries, it's more efficient to implement validity checking yourself on either
-side of your queries.}
+\item{check_components}{Specifies whether to check the validity of metrics and
+dimensions before running the query. This defaults to \code{TRUE}, which triggers
+several additional API calls behind the scenes to retrieve all dimensions and
+metrics from the API. This has a nominal performance impact and may not be
+ideal if you are running many queries. If you have many queries, consider
+implementing validity checking through other means (manually or within the
+code) and then set this value to \code{FALSE}.}
 }
 \value{
-A data frame with dimensions and metrics.
+A data frame with the specified dimensions and metrics.
 }
 \description{
 Get a report analogous to a \strong{Freeform Table} visualization in Analysis Workspace. The function uses

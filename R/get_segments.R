@@ -61,17 +61,26 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   if(!all(is.na(tagNames))) {tagNames = utils::URLencode(paste0(tagNames, collapse = ',')) }
   if(!all(is.na(name))) {name = utils::URLencode(paste0(name, collapse = ',')) }
 
-  vars <- tibble::tibble(rsids, segmentFilter, locale, name, tagNames, filterByPublishedSegments, limit, page, sortDirection,
-  sortProperty, expansion, includeType)
-  #Turn the list into a string to create the query
-  prequery <- list(vars %>% dplyr::select_if(~ !any(is.na(.))))
-  #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
+  query_param_list <- list(
+    rsids = rsids,
+    segmentFilter = segmentFilter,
+    locale = locale,
+    name = name,
+    tagNames = tagNames,
+    filterByPublishedSegments = filterByPublishedSegments,
+    limit = limit,
+    page = page,
+    sortDirection = sortDirection,
+    sortProperty = sortProperty,
+    expansion = expansion,
+    includeType = includeType
+  )
+
+  query_param <- format_parameters(query_param_list)
 
   #create the url to send with the query
   urlstructure <- paste0('segments?',query_param)
 
-  #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
   res <- aw_call_api(req_path = urlstructure[1], debug = debug, company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
@@ -83,3 +92,47 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   }
 
+
+#' Format list as query parameters
+#'
+#' Pretty much ripped straight from `httr`, but it's not exported there so I
+#' had to do this. Made some updates to remove NAs as well as NULLs. Requires
+#' curl, though, which is already required by httr, so not a huge leap. Added
+#' curl to description. In the future, we should aim to escape with
+#' `curl::curl_escape`.
+#'
+#' @param elements Named list of query parameters
+#'
+#' @return String, `x` formatted as a parameter list
+#' @noRd
+format_parameters <- function(elements) {
+  if (length(elements) == 0) {
+    return("")
+  }
+
+  if (!is_fully_named_list(elements)) {
+    stop("All components of query must be named", call. = FALSE)
+  }
+
+  stopifnot(is.list(elements))
+
+  elements <- purrr::discard(purrr::compact(elements), function(x) is.na(x))
+  names <- curl::curl_escape(names(elements))
+  encode <- function(x) {
+    if (inherits(x, "AsIs"))
+      return(x)
+    curl::curl_escape(x)
+  }
+  values <- vapply(elements, encode, character(1))
+  paste0(names, "=", values, collapse = "&")
+}
+
+
+
+is_fully_named_list <- function(l) {
+  if (length(names(l)[names(l) != ""]) != length(l)) {
+    FALSE
+  } else {
+    TRUE
+  }
+}

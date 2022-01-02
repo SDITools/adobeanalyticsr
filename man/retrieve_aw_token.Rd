@@ -13,8 +13,8 @@ retrieve_aw_token(...)
 A token object of type \code{response} (JWT) or \code{Token2.0} (OAuth)
 }
 \description{
-Updates (if necessary) and returns session token. First checks for a session
-token, then a cached token, then generates a new token. The default type may
-be set for the session with \code{aw_auth_with}.
+Updates (if necessary) and returns a session token. This function first checks
+for a session token, then for a cached token, and, finally, generates a
+new token. The default type may be set for the session with \code{aw_auth_with()}.
 }
 \keyword{internal}
