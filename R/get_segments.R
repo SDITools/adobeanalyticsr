@@ -36,31 +36,41 @@
 #'
 #' @return A data frame of segments and their meta data.
 #'
-#' @import stringr
 #' @export
 #'
 aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
-                          rsids = NA,
-                          segmentFilter = NA,
+                          rsids = NULL,
+                          segmentFilter = NULL,
                           locale = 'en_US',
-                          name = NA,
-                          tagNames = NA,
+                          name = NULL,
+                          tagNames = NULL,
                           filterByPublishedSegments = 'all',
                           limit = 10,
                           page = 0,
                           sortDirection = 'ASC',
                           sortProperty = 'id',
-                          expansion = NA,
+                          expansion = NULL,
                           includeType = 'all',
                           debug = FALSE)
 {
-  # Format URL parameter string
-  if(!all(is.na(tagNames))) {tagNames <- utils::URLencode(paste0(tagNames, collapse = ',')) }
-  if(!all(is.na(name))) {name <- utils::URLencode(paste0(name, collapse = ',')) }
+  # Some NAs can be handled, but all NAs is regarded as an error
+  assertthat::assert_that(is.null(rsids) | !all(is.na(rsids)))
+  assertthat::assert_that(is.null(segmentFilter) | !all(is.na(segmentFilter)))
+  assertthat::assert_that(is.null(name) | !all(is.na(name)))
+  assertthat::assert_that(is.null(tagNames) | !all(is.na(tagNames)))
+  assertthat::assert_that(is.null(expansion) | !all(is.na(expansion)))
+
+  # paste(NULL, collapse = ",") produces a length 1 character vector, so have
+  # to explicitly keep NULLs
+  if (!is.null(rsids)) rsids <- paste(rsids, collapse = ",")
+  if (!is.null(segmentFilter)) segmentFilter <- paste(segmentFilter, collapse = ",")
+  if (!is.null(expansion)) expansion <- paste(expansion, collapse = ",")
+  if (!is.null(tagNames)) tagNames <- paste0(tagNames, collapse = ',')
+  if (!is.null(name)) name <- paste0(name, collapse = ',')
 
   query_params <- list(
-    rsids = paste(rsids, collapse = ","),
-    segmentFilter = paste(segmentFilter, collapse = ","),
+    rsids = rsids,
+    segmentFilter = segmentFilter,
     locale = locale,
     name = name,
     tagNames = tagNames,
@@ -69,26 +79,22 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     page = page,
     sortDirection = sortDirection,
     sortProperty = sortProperty,
-    expansion = paste(expansion, collapse = ","),
+    expansion = expansion,
     includeType = includeType
   )
 
-  # Create the url to send with the query
   urlstructure <- paste('segments', format_parameters(query_params), sep = "?")
-
   res <- aw_call_api(req_path = urlstructure[1], debug = debug, company_id = company_id)
 
   jsonlite::fromJSON(res)$content
-  }
+}
+
 
 
 #' Format list as query parameters
 #'
 #' Pretty much ripped straight from `httr`, but it's not exported there so I
-#' had to do this. Made some updates to remove NAs as well as NULLs. Requires
-#' curl, though, which is already required by httr, so not a huge leap. Added
-#' curl to description. In the future, we should aim to escape with
-#' `curl::curl_escape`.
+#' had to do this.
 #'
 #' @param elements Named list of query parameters
 #'
@@ -105,14 +111,18 @@ format_parameters <- function(elements) {
 
   stopifnot(is.list(elements))
 
-  elements <- purrr::discard(purrr::compact(elements), function(x) is.na(x))
+  elements <- purrr::compact(elements)
   names <- utils::URLencode(names(elements))
-  encode <- function(x) {
-    if (inherits(x, "AsIs"))
-      return(x)
-    curl::curl_escape(x)
-  }
-  values <- vapply(elements, encode, character(1))
+
+  values <- vapply(
+    elements,
+    function(x) {
+      if (inherits(x, "AsIs"))
+        return(x)
+      utils::URLencode(as.character(x))
+    },
+    character(1))
+
   paste0(names, "=", values, collapse = "&")
 }
 
