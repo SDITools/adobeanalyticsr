@@ -54,16 +54,13 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                           includeType = 'all',
                           debug = FALSE)
 {
-  #make the list of params into a dataframe
-  if(length(rsids) > 1) {rsids = paste0(rsids, collapse = ',') }
-  if(length(segmentFilter) > 1) {segmentFilter = paste0(segmentFilter, collapse = ',') }
-  if(length(expansion) > 1) {expansion = paste0(expansion, collapse = ',') }
-  if(!all(is.na(tagNames))) {tagNames = utils::URLencode(paste0(tagNames, collapse = ',')) }
-  if(!all(is.na(name))) {name = utils::URLencode(paste0(name, collapse = ',')) }
+  # Format URL parameter string
+  if(!all(is.na(tagNames))) {tagNames <- utils::URLencode(paste0(tagNames, collapse = ',')) }
+  if(!all(is.na(name))) {name <- utils::URLencode(paste0(name, collapse = ',')) }
 
-  query_param_list <- list(
-    rsids = rsids,
-    segmentFilter = segmentFilter,
+  query_params <- list(
+    rsids = paste(rsids, collapse = ","),
+    segmentFilter = paste(segmentFilter, collapse = ","),
     locale = locale,
     name = name,
     tagNames = tagNames,
@@ -72,24 +69,16 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     page = page,
     sortDirection = sortDirection,
     sortProperty = sortProperty,
-    expansion = expansion,
+    expansion = paste(expansion, collapse = ","),
     includeType = includeType
   )
 
-  query_param <- format_parameters(query_param_list)
-
-  #create the url to send with the query
-  urlstructure <- paste0('segments?',query_param)
+  # Create the url to send with the query
+  urlstructure <- paste('segments', format_parameters(query_params), sep = "?")
 
   res <- aw_call_api(req_path = urlstructure[1], debug = debug, company_id = company_id)
 
-  res <- jsonlite::fromJSON(res)
-
-  #Just need the content of the returned json
-  res <- res$content
-
-  res
-
+  jsonlite::fromJSON(res)$content
   }
 
 
@@ -117,7 +106,7 @@ format_parameters <- function(elements) {
   stopifnot(is.list(elements))
 
   elements <- purrr::discard(purrr::compact(elements), function(x) is.na(x))
-  names <- curl::curl_escape(names(elements))
+  names <- utils::URLencode(names(elements))
   encode <- function(x) {
     if (inherits(x, "AsIs"))
       return(x)
