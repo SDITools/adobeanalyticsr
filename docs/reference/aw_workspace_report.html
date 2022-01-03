@@ -93,7 +93,7 @@ the api call. Only runs a single dimension with as many metrics as you want." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -154,12 +154,7 @@ the api call. Only runs a single dimension with as many metrics as you want." />
 the api call. Only runs a single dimension with as many metrics as you want.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>aw_workspace_report</span><span class='op'>(</span>
-  req_body <span class='op'>=</span> <span class='st'>""</span>,
-  company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>,
-  client_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_CLIENT_ID"</span><span class='op'>)</span>,
-  client_secret <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_CLIENT_SECRET"</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>aw_workspace_report</span><span class='op'>(</span>req_body <span class='op'>=</span> <span class='st'>""</span>, company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -171,14 +166,6 @@ the api call. Only runs a single dimension with as many metrics as you want.</p>
     <tr>
       <th>company_id</th>
       <td><p>Company Id.  Taken from the global environment by default if not provided.</p></td>
-    </tr>
-    <tr>
-      <th>client_id</th>
-      <td><p>Set in environment args, or pass directly here</p></td>
-    </tr>
-    <tr>
-      <th>client_secret</th>
-      <td><p>Set in environment args, or pass directly here</p></td>
     </tr>
     </table>
 

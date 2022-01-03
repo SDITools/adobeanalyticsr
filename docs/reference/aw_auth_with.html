@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get list of users — get_users • adobeanalyticsr</title>
+<title>Set authorization options — aw_auth_with • adobeanalyticsr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,18 @@
   
   <script src="../extra.js"></script>
 
-<meta property="og:title" content="Get list of users — get_users" />
-<meta property="og:description" content="Retrieves a list of all users for the company designated by the auth token." />
+<meta property="og:title" content="Set authorization options — aw_auth_with" />
+<meta property="og:description" content="Get or set various authorization options. If called without an argument, then
+these functions return the current setting for the requested option (which can be
+NULL if the option has not been set). To clear the setting, pass NULL as an
+argument.
+aw_auth_with sets the type of authorization for the session. This is used
+as the default by aw_auth() when no specific option is given.
+aw_auth_path sets the file path for the cached authorization token. It
+should be a directory, rather than a filename. If this option is not set, the
+current working directory is used instead.
+aw_auth_name sets the file name for the cached authorization token. If this
+option is not set, the default filename is aw_auth.rds" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -143,48 +153,60 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get list of users</h1>
-    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/get_users.R'><code>R/get_users.R</code></a></small>
-    <div class="hidden name"><code>get_users.Rd</code></div>
+    <h1>Set authorization options</h1>
+    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/auth.R'><code>R/auth.R</code></a></small>
+    <div class="hidden name"><code>aw_auth_with.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieves a list of all users for the company designated by the auth token.</p>
+    <p><strong>Get</strong> or <strong>set</strong> various authorization options. If called without an argument, then
+these functions return the current setting for the requested option (which can be
+<code>NULL</code> if the option has not been set). To clear the setting, pass <code>NULL</code> as an
+argument.</p>
+<p><code>aw_auth_with</code> sets the type of authorization for the session. This is used
+as the default by <code><a href='aw_auth.html'>aw_auth()</a></code> when no specific option is given.</p>
+<p><code>aw_auth_path</code> sets the file path for the cached authorization token. It
+should be a directory, rather than a filename. If this option is not set, the
+current working directory is used instead.</p>
+<p><code>aw_auth_name</code> sets the file name for the cached authorization token. If this
+option is not set, the default filename is <code>aw_auth.rds</code></p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_users</span><span class='op'>(</span>company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>, limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>aw_auth_with</span><span class='op'>(</span><span class='va'>type</span><span class='op'>)</span>
+
+<span class='fu'>aw_auth_path</span><span class='op'>(</span><span class='va'>path</span><span class='op'>)</span>
+
+<span class='fu'>aw_auth_name</span><span class='op'>(</span><span class='va'>name</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>company_id</th>
-      <td><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
-elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
-Use <code><a href='get_me.html'>get_me</a></code> to get a list of available <code>company_id</code> values.</p></td>
+      <th>type</th>
+      <td><p>The authorization type: 'oauth' or 'jwt'</p></td>
     </tr>
     <tr>
-      <th>limit</th>
-      <td><p>The number of results to return per page. This argument works in conjunction with the
-<code>page</code> argument. The default is 10.</p></td>
+      <th>path</th>
+      <td><p>The location for the cached authorization token. It should be a
+directory, rather than a filename. If this option is not set, the current
+working directory is used instead. If the location does not exist, it will
+be created the first time a token is cached.</p></td>
     </tr>
     <tr>
-      <th>page</th>
-      <td><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
-zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></td>
+      <th>name</th>
+      <td><p>The filename, such as <code>aw_auth.rds</code> for the cached authorization
+token file. The file is stored as an RDS file, but there is no requirement
+for the <code>.rds</code> file extension. <code>.rds</code> is not appended automatically.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of users and their meta data.</p>
+    <p>The option value, invisibly</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>get_users</span><span class='op'>(</span>limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
-<span class='op'>}</span>
+    <div class='dont-index'><p><code><a href='aw_auth.html'>aw_auth()</a></code></p></div>
 
-</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -20,7 +20,7 @@
 <script src="pkgdown.js"></script><script src="extra.js"></script><meta property="og:title" content="R Client for Adobe Analytics API 2.0">
 <meta property="og:description" content="Connect to the Adobe Analytics API v2.0 &lt;https://github.com/AdobeDocs/analytics-2.0-apis&gt;
              which powers Analysis Workspace. The package was developed
-             with the analyst in  mind, and it will continue to be
+             with the analyst in mind, and it will continue to be
              developed with the guiding principles of iterative,
              repeatable, timely analysis.">
 <meta property="og:image" content="/logo.png">
@@ -48,7 +48,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -107,7 +107,8 @@
 <div id="r-client-for-adobe-analytics-api-20" class="section level2">
 <h2 class="hasAnchor">
 <a href="#r-client-for-adobe-analytics-api-20" class="anchor"></a>R Client for Adobe Analytics API 2.0</h2>
-<p>Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as <a href="https://github.com/benrwoodard/adobeanalyticsr/issues">issues in this Github repository</a>.</p>
+<p>Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed, and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as <a href="https://github.com/benrwoodard/adobeanalyticsr/issues">issues in this Github repository</a>.</p>
+<p>A special thanks to our company, <a href="https://www.searchdiscovery.com">Search Discovery</a>, for giving us the time, encouragement, and support to build out this package. There is no way this would have been possible without the opportunity to learn from and work with some of the most amazing people in the analytics industry.</p>
 <div id="a-note-about-20-vs-14" class="section level3">
 <h3 class="hasAnchor">
 <a href="#a-note-about-20-vs-14" class="anchor"></a>A Note about 2.0 vs. 1.4</h3>
@@ -115,9 +116,10 @@
 <ul>
 <li>Data Warehouse queries</li>
 <li>Marketing Channel configuration and processing rules</li>
+<li>Some configuration details for variables (eVar, prop, events)</li>
 <li>Data Feed details</li>
 </ul>
-<p>The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does <em>not</em> require that an Adobe Console API project be created, which <em>is</em> something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does <em>not</em> need web services access set up on an account-by-account basis to pull data using the package.</p>
+<p>The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does <em>not</em> require that an Adobe Console API project be created, which <em>is</em> something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does <em>not</em> need web services access set up on an account-by-account basis to pull data using the package if using the OAUTH authentication. If using the JWT authentication method with v2.0 API, then a project <em>does</em> need to be created for each company account.</p>
 <p>As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining <code>RSiteCatalyst</code>. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that <code>adobeanalyticsr</code> can live up to the high standard he set with his work.</p>
 </div>
 <div id="install-the-package-recommended" class="section level3">
@@ -147,26 +149,44 @@ library(adobeanalyticsr) </a></code></pre>
 <p>There are four setup steps required to start accessing your Adobe Analytics data. The following steps are each outlined in greater detail in the following sections:</p>
 <ol>
 <li>Create an Adobe Console API Project</li>
-<li>Create and add the OAuth arguments to your <code>.Renviron</code> file.</li>
-<li>Get your authorization token by using the function <code><a href="reference/aw_token.html">aw_token()</a></code>.</li>
+<li>Create and add the OAuth/JWT arguments to your <code>.Renviron</code> file.</li>
+<li>Set the type of authorization being used by calling <code><a href="reference/aw_auth_with.html">aw_auth_with(type = "")</a></code>. The <code>type</code> value should be <strong>jwt</strong> or <strong>oauth</strong>
+</li>
+<li>Get your authorization token using <code><a href="reference/aw_auth.html">aw_auth()</a></code>. Once the authorization type has been set (the previous step), this will look for <code>.Renviron</code> variables and complete the authorization.</li>
 <li>Get your <code>company_id</code> by using the function <code><a href="reference/get_me.html">get_me()</a></code>.</li>
 </ol>
 <div id="1-create-an-adobe-console-api-project" class="section level4">
 <h4 class="hasAnchor">
 <a href="#1-create-an-adobe-console-api-project" class="anchor"></a>1. Create an Adobe Console API Project</h4>
-<p>Regardless of how many different Adobe Analytics accounts you will be accessing, you only need a single Adobe Console API project (you will still need to have working user credentials for each account you want to access, but the Adobe Console API project is just the way you then get access to authenticate using those user credentials; yes…confusing!):</p>
+<p>If you are using the OAuth authorization, regardless of how many different Adobe Analytics accounts you will be accessing, you only need a single Adobe Console API project (you will still need to have working user credentials for each account you want to access, but the Adobe Console API project is just the way you then get access to authenticate using those user credentials; yes…confusing!) If you are using the JWT authorization then you will need an Adobe Console API project created for each company you will be accessing. The following steps will get you setup on either of the different authorizations:</p>
 <ol>
 <li>Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>.</li>
-<li>Click the <strong>Create New Project</strong> button.</li>
+<li>Click the <strong>Create New Project</strong> button and select <strong>Empty Project</strong>
+</li>
 <li>Click the <strong>Add API</strong> button.</li>
 <li>Select the Experience Cloud product icon and then choose <strong>Adobe Analytics</strong> and click <strong>Next</strong>.</li>
+<li>The next series of steps depends on your choice of authorization.</li>
+</ol>
+<ul>
+<li>
+<em>OAuth</em>
+<ol>
 <li>Select the OAuth option and then click <strong>Next</strong>.</li>
 <li>Select <strong>Web</strong> as the platform where you want the integration.</li>
-<li>Add Default redirect URI <code><a href="https://adobeanalyticsr.com/token_result.html" class="uri">https://adobeanalyticsr.com/token_result.html</a></code>*</li>
-<li>Add Redirect URI pattern <code><a href="https://adobeanalyticsr%5C.com/token_result%5C.html" class="uri">https://adobeanalyticsr\.com/token_result\.html</a></code>*</li>
+<li>Add Default redirect URI <code><a href="https://adobeanalyticsr.com/token_result.html" class="uri">https://adobeanalyticsr.com/token_result.html</a></code>*.</li>
+<li>Add Redirect URI pattern <code><a href="https://adobeanalyticsr%5C.com/token_result%5C.html" class="uri">https://adobeanalyticsr\.com/token_result\.html</a></code>*.</li>
 </ol>
-<p>* This is simply a helper site I’ve set up in order to make it easier to generate a token. The site does not store any information.</p>
-<p><em>If you are knowledgeable of the ins and outs of this auth process and feel you have a better way to explain and/or set this up, please <a href="https://github.com/benrwoodard/adobeanalyticsr/issues">submit an issue</a> or create a pull request with your recommendation!</em></p>
+</li>
+<li>
+<em>JWT</em>
+<ol>
+<li>Select the <strong>Service Account (JWT)</strong> options and then click <strong>Next</strong>.</li>
+<li>Click on the <strong>Generate a Key Pair</strong> button. A config file will download onto your desktop.</li>
+<li>Select the product profiles to be included in the access and click <strong>Save configured API</strong>.</li>
+</ol>
+</li>
+</ul>
+<p>* This is simply a helper site we’ve set up in order to make it easier to generate a token. The site does not store any information.</p>
 <p><strong>Creating an Adobe Console API Project in under 60 seconds</strong> <img src="reference/figures/createoauthproject.gif" align="center"></p>
 </div>
 <div id="2-set-up-the-renviron-file" class="section level4">
@@ -178,18 +198,29 @@ library(adobeanalyticsr) </a></code></pre>
 <li>
 <p>Get the following variables from the OAuth project and add them to the file* (see <em>Creating an Adobe Console API Project</em> above):</p>
 <ul>
-<li>
-<code>AW_CLIENT_ID</code> - OAuth client id found in the Adobe Developer Console</li>
-<li>
-<code>AW_CLIENT_SECRET</code> - OAuth client secret key found in the Adobe Developer Console</li>
+<li>(OAuth &amp; JWT) <code>AW_CLIENT_ID</code> – the client id found in the Adobe Developer Console</li>
+<li>(OAuth &amp; JWT) <code>AW_CLIENT_SECRET</code> – the client secret key found in the Adobe Developer Console</li>
+<li>(JWT Only) <code>AW_PRIVATE_KEY</code> – unzip the downloaded <strong>config.zip</strong> file and move the <strong>.key</strong> file to your working directory. An example file name is <strong>private.key</strong>. This variable should reference the accurate path for the <strong>.key</strong> file.</li>
+<li>(JWT Only) <code>AW_ORGANIZATION_ID</code> – the organization id found in the Adobe Developer Console</li>
+<li>(JWT Only) <code>AW_TECHNICAL_ID</code> – the technical id found in the Adobe Developer Console</li>
 </ul>
 </li>
 <li><p>(Optional) Add <code>AW_COMPANY_ID</code> and <code>AW_REPORTSUITE_ID</code> variables once you know them (how to find available values for these two variables is described in step 4 below).</p></li>
 </ol>
-<p>After adding these 2-4 variables to the <code>.Renviron</code> file and saving it, restart your R session (<strong>Session &gt; Restart R</strong> in RStudio) and reload <code>adobeanalyticsr</code> (<code><a href="https://github.com/benrwoodard/adobeanalyticsr">library(adobeanalyticsr)</a></code>).</p>
+<p>After adding these 2-7 variables to the <code>.Renviron</code> file and saving it, restart your R session (<strong>Session &gt; Restart R</strong> in RStudio) and reload <code>adobeanalyticsr</code> (<code><a href="https://github.com/benrwoodard/adobeanalyticsr">library(adobeanalyticsr)</a></code>).</p>
 <p>* The format of variables in the <code>.Renviron</code> file is straightforward. If you add all four of the variables above, they would simply each be their own line in the file:</p>
-<pre><code>AW_CLIENT_ID = "[OAuth client ID]"
+<pre><code>## If using OAuth 
+AW_CLIENT_ID = "[OAuth client ID]"
 AW_CLIENT_SECRET = "[OAuth client secret]"
+AW_COMPANY_ID = "[Company ID]"
+AW_REPORTSUITE_ID = "[RSID]"
+
+## If using JWT 
+AW_CLIENT_ID = "[OAuth client ID]"
+AW_CLIENT_SECRET = "[OAuth client secret]"
+AW_PRIVATE_KEY = "[private.key]"
+AW_ORGANIZATION_ID = "[xxxxxxxxxxxxxx@AdobeOrg]"
+AW_TECHNICAL_ID = "[xxxxxxxxxxxxx@techacct.adobe.com]"
 AW_COMPANY_ID = "[Company ID]"
 AW_REPORTSUITE_ID = "[RSID]"</code></pre>
 </div>
@@ -197,25 +228,34 @@ AW_REPORTSUITE_ID = "[RSID]"</code></pre>
 <h4 class="hasAnchor">
 <a href="#3-get-your-authorization-token" class="anchor"></a>3. Get your authorization token</h4>
 <p>The token is actually a lonnnnng alphanumeric string that is the what ultimately enables you to access your data:</p>
+<p><strong>OAuth process</strong> OAuth requires an interactive environment (see step 3 below), and the authentication token expires after 24 hours, which then requires repeating steps 2-9 below:</p>
 <ol>
-<li>In the console, enter <code><a href="reference/aw_token.html">aw_token()</a></code> and press <em><enter></enter></em>.</li>
+<li>In the console, enter <code><a href="reference/aw_auth_with.html">aw_auth_with('oauth')</a></code> and press <strong>Enter</strong>.</li>
+<li>Enter <code><a href="reference/aw_auth.html">aw_auth()</a></code> and press <strong>Enter</strong>.</li>
 <li>A browser window should appear that prompts you to log in to your Adobe Marketing Cloud account.</li>
 <li>Log in.</li>
 <li>You will then be redirected to <code>adobeanalyticsr.com</code>* and a screen that displays your token.*</li>
 <li>Copy the token (only).</li>
 <li>Return to the R console. You should see a prompt to <strong>Enter authorization code:</strong>
 </li>
-<li>Paste the token you copied and press <em><enter></enter></em>.</li>
+<li>Paste the token you copied and press <strong>Enter</strong>.</li>
+<li>You should see the confirmation message: “Successfully authenticated with OAuth”</li>
 </ol>
-<p>This token will expire every 24 hours, so you will have to periodically repeat this step.</p>
+<p>As noted above, this token will expire every 24 hours, so you will have to periodically repeat this step.</p>
 <p>* Again, this is simply a helper site I’ve set up in order to make it easier to generate a token. The site does not store any information.</p>
+<p><strong>JWT process</strong> JWT does <em>not</em> require an interactive environment and does not require a token refresh every 24 hours, but it does require a bit more work to set up initially (as described above). To authenticate using JWT:</p>
+<ol>
+<li>In the console, enter <code><a href="reference/aw_auth_with.html">aw_auth_with('jwt')</a></code> and press <em>Enter</em>.</li>
+<li>Enter <code><a href="reference/aw_auth.html">aw_auth()</a></code> and press <strong>Enter</strong>.</li>
+<li>You should see the confirmation message: “Successfully authenticated with JWT: access token valid until…”</li>
+</ol>
 </div>
 <div id="4-confirm-the-process-worked-and-get-available-company_id-and-reports" class="section level4">
 <h4 class="hasAnchor">
 <a href="#4-confirm-the-process-worked-and-get-available-company_id-and-reports" class="anchor"></a>4. Confirm the process worked and get available company_id and reports</h4>
 <p>The last step is to get your <code>company_id</code> (or, if you have access to multiple accounts, get the <code>company_id</code> you want to work with). This is also an excellent way to confirm that everything is set up correctly:</p>
 <ol>
-<li>In the console, type <code><a href="reference/get_me.html">get_me()</a></code> and press <em><enter></enter></em>.</li>
+<li>In the console, type <code><a href="reference/get_me.html">get_me()</a></code> and press <em>Enter</em>.</li>
 <li>You should then see a list of all of the companies you have access to. The <strong>globalCompanyId</strong> value is what you will use to specify the company that you want to access. If you are working solely (or primarily) with one company, then consider adding the <code>company_id</code> as <code>AW_COMPANY_ID</code> in your <code>.Renviron</code> file as described in step 2 above. Otherwise, you can specify it within each function call that requires it.</li>
 <li>If you will be working solely (or primarily) with a single report suite, then consider adding the report suite ID (RSID) as <code>AW_REPORTSUITE_ID</code> in your file as described in step 2 above. You can retrieve all of the report suite IDs for a given <code>company_id</code> using the function <code><a href="reference/aw_get_reportsuites.html">aw_get_reportsuites(company_id = '[the company ID for account of interest]')</a></code>.</li>
 </ol>

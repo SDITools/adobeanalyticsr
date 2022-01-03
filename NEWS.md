@@ -1,4 +1,4 @@
-# adobeanalyticsr 0.2.0
+# adobeanalyticsr 0.2.1
 
 * Added support for JWT Authentication
 * Changed authentication process with new functions 

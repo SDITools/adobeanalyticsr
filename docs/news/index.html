@@ -91,7 +91,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -146,6 +146,35 @@
       <small>Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
+    <div id="adobeanalyticsr-020" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#adobeanalyticsr-020" class="anchor"></a>adobeanalyticsr 0.2.0<small> 2022-01-03 </small>
+</h1>
+<ul>
+<li>Added support for JWT Authentication</li>
+<li>Changed authentication process with new functions
+<ul>
+<li><code><a href="../reference/aw_auth.html">aw_auth()</a></code></li>
+<li><code><a href="../reference/aw_auth_with.html">aw_auth_with()</a></code></li>
+<li><code><a href="../reference/aw_auth_with.html">aw_auth_name()</a></code></li>
+<li><code><a href="../reference/aw_auth_with.html">aw_auth_path()</a></code></li>
+</ul>
+</li>
+<li>Added support for <code><a href="../reference/aw_token.html">aw_token()</a></code> function with life-cycle warning</li>
+<li>Added new function called <code><a href="../reference/aw_segment_table.html">aw_segment_table()</a></code> which returns one or multiple segments and their corresponding metrics</li>
+<li>Cleanup and edits to the <code><a href="../reference/aw_freeform_table.html">aw_freeform_table()</a></code> function</li>
+<li>Token support updates for all api call functions.</li>
+<li>Removed <code>client_id</code> and <code>client_secret</code> from functions that were not using those variables even if defined in the arguments.</li>
+<li>Fixed a few bugs around api calls that returned NA</li>
+<li>Added argument to the <code><a href="../reference/aw_freeform_table.html">aw_freeform_table()</a></code> function that will prevent metric and dimension validation check to run at the start of every function call. This will save users a small amount of time but could be significant in the long run.</li>
+<li>Added progress bar to <code><a href="../reference/aw_freeform_table.html">aw_freeform_table()</a></code> and re-calibrated the estimated finish time.</li>
+<li>Enhanced authorization retention by saving client ID and client secret in the session environment</li>
+<li>Killed global counter on short requests</li>
+<li>Removed the search clause restriction to enable “CONTAINS” to be understood as the default for <code>aw_freeform_report()</code> search arguments.</li>
+<li>Added search argument to recursive call</li>
+<li>Updated date_range argument to handle datetimes better</li>
+</ul>
+</div>
     <div id="adobeanalyticsr-015" class="section level1">
 <h1 class="page-header" data-toc-text="0.1.5">
 <a href="#adobeanalyticsr-015" class="anchor"></a>adobeanalyticsr 0.1.5<small> 2021-03-01 </small>
