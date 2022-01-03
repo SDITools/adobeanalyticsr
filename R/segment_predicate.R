@@ -32,6 +32,7 @@
 #' @import assertthat
 #' @import stringr
 #' @importFrom glue glue
+#' @importFrom memoise memoise
 #'
 #' @export
 #'
@@ -59,11 +60,19 @@ seg_pred <- function(subject = 'page',
   ##########################
   #assign the element to be either a variable or metric
   #pull the lists of metrics and dimensions if not available
-  if(!exists('aw_metrics')){
-    aw_metrics <- aw_get_metrics(company_id = company_id) }
-  if(!exists('aw_dimensions')) {
-    aw_dimensions <- aw_get_dimensions(company_id = company_id)
+
+  get_mets <- aw_get_metrics
+  if (!memoise::is.memoised(get_mets)) {
+    get_mets <- memoise::memoise(get_mets)
   }
+  aw_metrics <- get_mets(company_id = company_id, rsid = rsid)
+
+  get_dims <- aw_get_dimensions
+  if (!memoise::is.memoised(get_dims)) {
+    get_dims <- memoise::memoise(get_dims)
+  }
+  aw_dimensions <- get_dims(company_id = company_id, rsid = rsid)
+
   #define the variable to be either a metric or dimension and save it as the adjective
   adj <- dplyr::case_when(subject %in% aw_metrics$id ~ 'metrics/',
                           subject %in% aw_dimensions$id ~ 'variables/')
@@ -85,7 +94,7 @@ seg_pred <- function(subject = 'page',
   if(verb == 'not-eq-any-of'){
     verb <- 'not-eq-in'
   }
-  #/fix equal any list for numbers
+  #fix equal any list for numbers
 
   # assert that the verb is on the list
   assertthat::assert_that(verb %in% c(exists_verbs, str_verbs, list_verbs, glob_verbs, num_verbs, numlist_verbs),
