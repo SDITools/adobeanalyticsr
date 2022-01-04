@@ -53,20 +53,9 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                           includeType = 'all',
                           debug = FALSE)
 {
-  # Some NAs can be handled, but all NAs is regarded as an error
-  assertthat::assert_that(is.null(rsids) | !all(is.na(rsids)))
-  assertthat::assert_that(is.null(segmentFilter) | !all(is.na(segmentFilter)))
-  assertthat::assert_that(is.null(name) | !all(is.na(name)))
-  assertthat::assert_that(is.null(tagNames) | !all(is.na(tagNames)))
-  assertthat::assert_that(is.null(expansion) | !all(is.na(expansion)))
-
-  # paste(NULL, collapse = ",") produces a length 1 character vector, so have
-  # to explicitly keep NULLs
-  if (!is.null(rsids)) rsids <- paste(rsids, collapse = ",")
-  if (!is.null(segmentFilter)) segmentFilter <- paste(segmentFilter, collapse = ",")
-  if (!is.null(expansion)) expansion <- paste(expansion, collapse = ",")
-  if (!is.null(tagNames)) tagNames <- paste0(tagNames, collapse = ',')
-  if (!is.null(name)) name <- paste0(name, collapse = ',')
+  # Only tagNames, segmentFilter, expansion, and rsids may be vectors
+  # Trying to have multiple names could be a common mistake
+  assertthat::assert_that(length(name) < 2, msg = "'name' is a search string and may not have length > 1\nUse 'segmentFilter' to request specific segments")
 
   query_params <- list(
     rsids = rsids,
@@ -83,7 +72,7 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     includeType = includeType
   )
 
-  urlstructure <- paste('segments', format_parameters(query_params), sep = "?")
+  urlstructure <- paste('segments', format_URL_parameters(query_params), sep = "?")
   res <- aw_call_api(req_path = urlstructure[1], debug = debug, company_id = company_id)
 
   jsonlite::fromJSON(res)$content
@@ -91,47 +80,4 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
 
-#' Format list as query parameters
-#'
-#' Pretty much ripped straight from `httr`, but it's not exported there so I
-#' had to do this.
-#'
-#' @param elements Named list of query parameters
-#'
-#' @return String, `x` formatted as a parameter list
-#' @noRd
-format_parameters <- function(elements) {
-  if (length(elements) == 0) {
-    return("")
-  }
 
-  if (!is_fully_named_list(elements)) {
-    stop("All components of query must be named", call. = FALSE)
-  }
-
-  stopifnot(is.list(elements))
-
-  elements <- purrr::compact(elements)
-  names <- utils::URLencode(names(elements))
-
-  values <- vapply(
-    elements,
-    function(x) {
-      if (inherits(x, "AsIs"))
-        return(x)
-      utils::URLencode(as.character(x))
-    },
-    character(1))
-
-  paste0(names, "=", values, collapse = "&")
-}
-
-
-
-is_fully_named_list <- function(l) {
-  if (length(names(l)[names(l) != ""]) != length(l)) {
-    FALSE
-  } else {
-    TRUE
-  }
-}
