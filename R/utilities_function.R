@@ -27,12 +27,13 @@
 #' make_timeframe(posixs)
 #' make_timeframe(posixs2)
 make_timeframe <- function(dates, origin = lubridate::origin) {
-
   stopifnot(length(dates) == 2)
+
   if (is.numeric(dates)) {
     warning("Numeric values for date range will be converted to dates")
   }
-  #change posix to date formats
+
+  # Change posix to date formats
   if (lubridate::is.POSIXt(dates)) {
     return(paste(
       lubridate::format_ISO8601(dates[1], usetz = FALSE),
@@ -40,10 +41,12 @@ make_timeframe <- function(dates, origin = lubridate::origin) {
       sep = "/"
     ))
   }
-  #check if is character format i.e. '2021-01-01'
+
+  # Check if is character format i.e. '2021-01-01'
   if (is.character(dates)) {
     dates <- as.Date(dates)
   }
+
   dates <- as.Date(dates, origin)
 
   start <- paste0(as.character(dates[1]), "T00:00:00")
@@ -52,7 +55,8 @@ make_timeframe <- function(dates, origin = lubridate::origin) {
   paste(start, end, sep = "/")
 }
 
-# set the timeframe for the query (timeframe)
+# Set the timeframe for the query (timeframe)
+# Used by get_usage_logs()
 make_startDate_endDate <- function(start_date, end_date){
   if(!grepl('-', start_date)) {
     end_date<- as.Date(as.numeric(end_date),origin = "1970-01-01")

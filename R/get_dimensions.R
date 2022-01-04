@@ -24,7 +24,6 @@
 #'
 #' @return A data frame of dimensions and their meta data.
 #'
-#' @import stringr
 #' @export
 aw_get_dimensions <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                               locale = 'en_US',

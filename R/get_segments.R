@@ -73,7 +73,7 @@ aw_get_segments <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   )
 
   urlstructure <- paste('segments', format_URL_parameters(query_params), sep = "?")
-  res <- aw_call_api(req_path = urlstructure[1], debug = debug, company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id)
 
   jsonlite::fromJSON(res)$content
 }

@@ -20,7 +20,6 @@
 #'
 #' @return A data frame of report suites and their meta data.
 #'
-#' @import stringr
 #' @export
 #'
 aw_get_reportsuites <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
