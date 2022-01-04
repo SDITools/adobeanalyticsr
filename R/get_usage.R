@@ -27,43 +27,38 @@
 #' get_usage_logs(startDate = Sys.Date()-91, endDate = Sys.Date()-1, limit = 100, page = 0)
 #' }
 #'
-#' @import stringr
 #' @export
 #'
 get_usage_logs <- function(startDate = Sys.Date()-91,
                       endDate = Sys.Date()-1,
-                      login = NA,
-                      ip = NA ,
-                      rsid = NA,
-                      eventType = NA,
-                      event = NA,
+                      login = NULL,
+                      ip = NULL,
+                      rsid = NULL,
+                      eventType = NULL,
+                      event = NULL,
                       limit = 100,
                       page = 0,
-                      company_id = Sys.getenv("AW_COMPANY_ID")
-                      )
+                      company_id = Sys.getenv("AW_COMPANY_ID"))
 {
-
-  vars <- tibble::tibble(login, ip, rsid, eventType, event, limit, page)
-  #Turn the list into a string to create the query
-  prequery <- list(dplyr::select_if(vars, ~ !any(is.na(.))))
-  #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
-
-  #set the dates
   date_range <- make_startDate_endDate(startDate, endDate)
 
-  #create the url to send with the query
-  urlstructure <- glue::glue('auditlogs/usage?startDate={date_range[[1]]}&endDate={date_range[[2]]}&{query_param}')
+  query_params <- list(
+    login = login,
+    ip = ip,
+    rsid = rsid,
+    eventType = eventType,
+    event = event,
+    limit = limit,
+    page = page,
+    startDate = date_range[[1]],
+    endDate = date_range[[2]]
+  )
 
-  #do the api call
+  urlstructure <- glue::glue("auditlogs/usage", format_URL_parameters(query_params), sep = "?")
+
   res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
-
   res <- jsonlite::fromJSON(res)
 
-  #Just need the content of the returned json
-  res <- res$content
-
-  res
-
+  res$content
 }
 

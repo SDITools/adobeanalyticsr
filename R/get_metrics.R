@@ -41,43 +41,38 @@
 #'
 #' @return A data frame of metrics (excluding calculated metrics) and their meta data.
 #'
-#' @importFrom tibble tibble
-#' @importFrom glue glue
 #' @export
 aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                            locale = 'en_US',
                            segmentable = 'NULL',
-                           expansion = NA,
+                           expansion = NULL,
                            company_id = Sys.getenv("AW_COMPANY_ID"),
                            debug = FALSE,
                            use_oob = TRUE){
+  # Reference: https://adobedocs.github.io/analytics-2.0-apis/#/metrics/getMetrics
+  lifecycle::deprecate_warn("2.1.1", what = "aw_get_metrics(use_oob)")
 
-  #remove spaces from the list of expansion tags
-  if(is.na(paste(expansion,collapse=","))) {
-    vars <- tibble::tibble(locale, segmentable)
-  }
-  if(!is.na(paste(expansion,collapse=","))) {
-    vars <- tibble::tibble(locale, segmentable, expansion = paste(expansion,collapse=","))
-  }
+  assertthat::assert_that(
+    assertthat::is.string(rsid)
+  )
 
-  #Turn the list into a string to create the query
-  prequery <- list(vars %>% dplyr::select_if(~ any(!is.na(.))))
+  query_params <- list(
+    rsid = rsid,
+    locale = locale,
+    segmentable = segmentable,
+    expansion = expansion
+  )
 
-  #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
+  urlstructure <- paste("metrics", format_URL_parameters(query_params), sep = "?")
 
-  #create the url to send with the query
-  urlstructure <- glue::glue('metrics?rsid={rsid}&{query_param}')
-
-  #request the metrics list from the API
   res <- aw_call_api(req_path = urlstructure,
                      debug = debug,
                      company_id = company_id)
 
-  #change the result to a list
   res <- jsonlite::fromJSON(res)
-  # removing "metrics/" from the beginning of the id value
-  res$id <- stringr::str_sub(res$id, 9)
+
+  # The ID values is returned with "metrics/" prepended to it
+  res$id <- gsub("^metrics/", "", res$id)
 
   res
 }
