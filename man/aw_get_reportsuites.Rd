@@ -6,11 +6,11 @@
 \usage{
 aw_get_reportsuites(
   company_id = Sys.getenv("AW_COMPANY_ID"),
-  rsids = "",
-  rsidContains = "",
+  rsids = NULL,
+  rsidContains = NULL,
   limit = 10,
   page = 0,
-  expansion = NA,
+  expansion = NULL,
   debug = FALSE
 )
 }

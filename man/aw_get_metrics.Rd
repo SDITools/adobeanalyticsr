@@ -8,7 +8,7 @@ aw_get_metrics(
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   locale = "en_US",
   segmentable = "NULL",
-  expansion = NA,
+  expansion = NULL,
   company_id = Sys.getenv("AW_COMPANY_ID"),
   debug = FALSE,
   use_oob = TRUE
