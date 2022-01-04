@@ -50,7 +50,7 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                            debug = FALSE,
                            use_oob = TRUE){
   # Reference: https://adobedocs.github.io/analytics-2.0-apis/#/metrics/getMetrics
-  lifecycle::deprecate_warn("2.1.1", what = "aw_get_metrics(use_oob)")
+  lifecycle::deprecate_warn("0.2.2", what = "aw_get_metrics(use_oob)")
 
   assertthat::assert_that(
     assertthat::is.string(rsid)
