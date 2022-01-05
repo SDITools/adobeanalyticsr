@@ -24,6 +24,10 @@
 #' @param dimensions Character vector of the dimensions in the function argument 'dimensions'
 #' @param date_range Character vector of the from and to dates in the function argument 'date_range'
 #'
+#' @return `top` argument fully recycled and expanded according to date
+#' dimension rules. Also returned as a named character vector, with names being
+#' the dimension and the value being the `top` argument for that dimension.
+#'
 #' Other name ideas:
 #' - recalculate_top_arg
 #' - expand_top_zeros
@@ -95,6 +99,8 @@ top_daterange_number <- function(top, dimensions, date_range) {
 
 #' Expand an explicit top argument
 #'
+#' Recycles values of 'top', obeying special rules concerning daterange
+#' dimensions. See details.
 #'
 #' @details
 #' The value of `top` usually must be explicit, but in the case of dates it may
