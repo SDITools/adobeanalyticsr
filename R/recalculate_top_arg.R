@@ -32,7 +32,7 @@
 #' - recalculate_top_arg
 #' - expand_top_zeros
 #'
-top_daterange_number <- function(top, dimensions, date_range) {
+recalculate_top_arg <- function(top, dimensions, date_range) {
   if (!lubridate::is.POSIXt(date_range)) {
     date_range <- as.POSIXct(paste(date_range, c("00:00:00", "23:59:59")),
                              format = "%Y-%m-%d %H:%M:%S")
@@ -121,7 +121,7 @@ top_daterange_number <- function(top, dimensions, date_range) {
 #'
 #' @return Named character vector where the name is the dimension and the
 #' value is the number of items to return
-#'
+#' @noRd
 make_explicit_top <- function(top, dimensions) {
   date_dimensions <- paste0("daterange",
                            c("minute",
@@ -151,5 +151,5 @@ make_explicit_top <- function(top, dimensions) {
     top <- c(0, top)
   }
 
-  setNames(top, dimensions)
+  stats::setNames(top, dimensions)
 }

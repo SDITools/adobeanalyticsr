@@ -122,14 +122,14 @@ test_that("make_explicit_top throws an error with incompatible top/dimension com
 
 
 # These all use the same difftime function, and so can be grouped
-test_that("top_daterange_number replaces zeros with correct number of units (minute, hour, day, week)", {
+test_that("recalculate_top_arg replaces zeros with correct number of units (minute, hour, day, week)", {
   datetimes <- as.POSIXct(c("2022-01-01 00:00:00", "2022-01-01 03:00:00"), format = "%F %T")
   dates <- as.Date(c("2022-01-01", "2022-01-10"))
 
-  minute_res <- top_daterange_number(5, c("daterangeminute", "dim1", "dim2"), datetimes)
-  hour_res <- top_daterange_number(5, c("daterangehour", "dim1", "dim2"), datetimes)
-  day_res <- top_daterange_number(5, c("daterangeday", "dim1", "dim2"), dates)
-  week_res <- top_daterange_number(5, c("daterangeweek", "dim1", "dim2"), dates)
+  minute_res <- recalculate_top_arg(5, c("daterangeminute", "dim1", "dim2"), datetimes)
+  hour_res <- recalculate_top_arg(5, c("daterangehour", "dim1", "dim2"), datetimes)
+  day_res <- recalculate_top_arg(5, c("daterangeday", "dim1", "dim2"), dates)
+  week_res <- recalculate_top_arg(5, c("daterangeweek", "dim1", "dim2"), dates)
 
   expect_equal(
     minute_res,
@@ -151,13 +151,13 @@ test_that("top_daterange_number replaces zeros with correct number of units (min
 
 
 
-test_that("top_daterange_number replaces zeros with correct number of units (month, quarter)", {
+test_that("recalculate_top_arg replaces zeros with correct number of units (month, quarter)", {
   dates <- as.Date(c("2020-05-01", "2021-04-30"))
   dims_month <- c("daterangemonth", "dim1", "dim2")
   dims_quarter <- c("daterangequarter", "dim1", "dim2")
 
-  month_res <- top_daterange_number(c(0, 1, 2), dims_month, dates)
-  quarter_res <- top_daterange_number(c(0, 1, 2), dims_quarter, dates)
+  month_res <- recalculate_top_arg(c(0, 1, 2), dims_month, dates)
+  quarter_res <- recalculate_top_arg(c(0, 1, 2), dims_quarter, dates)
 
   expect_equal(
     month_res,
@@ -170,12 +170,12 @@ test_that("top_daterange_number replaces zeros with correct number of units (mon
 })
 
 
-test_that("top_daterange_number replaces zeros with correct number of units (year)", {
+test_that("recalculate_top_arg replaces zeros with correct number of units (year)", {
   dates <- as.Date(c("2019-01-01", "2022-10-31"))
   dims <- c("daterangeyear", "dim2", "dim3")
 
   expect_equal(
-    top_daterange_number(c(0, 15, 15), dims, dates),
+    recalculate_top_arg(c(0, 15, 15), dims, dates),
     setNames(
       c(4, 15, 15),
       dims
@@ -185,7 +185,7 @@ test_that("top_daterange_number replaces zeros with correct number of units (yea
 
 
 
-test_that("top_daterange_number also replaces 0s in the middle of the dimension list", {
+test_that("recalculate_top_arg also replaces 0s in the middle of the dimension list", {
   # Rotates a vector so I can vary the position of the different values
   roll <- function(x, n) {
     if (n == 0)
@@ -199,7 +199,7 @@ test_that("top_daterange_number also replaces 0s in the middle of the dimension 
 
   # Base case: multiple zeros will be replaced if they satisfy the conditions
   expect_equal(
-    top_daterange_number(top, dims, dates),
+    recalculate_top_arg(top, dims, dates),
     setNames(c(365, 2, 53, 3, 4), dims)
   )
 
@@ -208,8 +208,8 @@ test_that("top_daterange_number also replaces 0s in the middle of the dimension 
     rot_dim <- roll(dims, i)
     rot_top <- roll(top, i)
 
-    res <- top_daterange_number(rot_top, rot_dim, dates)
-    exp_res <- roll(top_daterange_number(top, dims, dates), i)
+    res <- recalculate_top_arg(rot_top, rot_dim, dates)
+    exp_res <- roll(recalculate_top_arg(top, dims, dates), i)
 
     expect_equal(
       res,
@@ -219,13 +219,13 @@ test_that("top_daterange_number also replaces 0s in the middle of the dimension 
 })
 
 
-test_that("top_daterange_number does not replace explicit 'top' date dimension values", {
+test_that("recalculate_top_arg does not replace explicit 'top' date dimension values", {
   dates <- as.Date(c("2020-05-01", "2021-04-30"))
   dims <- c("daterangeday", "dim2", "daterangeweek", "dim4", "dim5")
   top <- c(10, 2, 10, 3, 4)
 
   expect_equal(
-    top_daterange_number(top, dims, dates),
+    recalculate_top_arg(top, dims, dates),
     setNames(top, dims)
   )
 })
@@ -233,10 +233,10 @@ test_that("top_daterange_number does not replace explicit 'top' date dimension v
 
 
 
-# test_that("top_daterange_number ", {
+# test_that("recalculate_top_arg ", {
 # })
 
 
 # Examples
-# top_daterange_number(0, "daterangeday", as.Date(c("2021-01-01", "2021-01-10")))
-# top_daterange_number(0, "daterangeday", c("2021-01-01", "2021-01-10"))
+# recalculate_top_arg(0, "daterangeday", as.Date(c("2021-01-01", "2021-01-10")))
+# recalculate_top_arg(0, "daterangeday", c("2021-01-01", "2021-01-10"))

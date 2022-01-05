@@ -189,7 +189,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   # Set settings
   unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
-  top <- top_daterange_number(top, dimensions, date_range)
+  top <- recalculate_top_arg(top, dimensions, date_range)
   page <- vctrs::vec_recycle(page, size = length(dimensions))
 
   settings <- req_settings(
