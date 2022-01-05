@@ -1,11 +1,32 @@
 #' Automatically calculates date ranges
 #'
-#' If the end user enters '0' into the list of top argument values, the function will inject the correct number of
-#' the date_range values that should be pulled.
+#' If the end user enters '0' into the list of top argument values, the function
+#' will inject the correct number of the date_range values that should be
+#' pulled.
+#'
+#' Values passed to `top` are usually >0. If a daterange dimension corresponds
+#' to a 0 in `top`, this is a special case, and the zero is expanded to the
+#' number of units in `date_range`. This function expands these date values of
+#' `top`.
+#'
+#' If the first dimension is a daterange, this results in an implied value of 0.
+#' In this case, the length of `top` must only consider non-date dimensions,
+#' and `length(top) == length(dimensions) - 1` holds. This feature is for
+#' backwards compatibility with `RSiteCatalyst`. The value of top may also be
+#' explicit.
+#'
+#' A better input data structure would be a pre-processed top argument where
+#' there is no implied first value of top. I'll try to make this change and
+#' then start writing unit tests for both.
+#'
 #' @noRd
 #' @param top Character vector of the top (limit) numbers for the function argument 'top'
 #' @param dimensions Character vector of the dimensions in the function argument 'dimensions'
 #' @param date_range Character vector of the from and to dates in the function argument 'date_range'
+#'
+#' Other name ideas:
+#' - recalculate_top_arg
+#' - expand_top_zeros
 #'
 top_daterange_number <- function(top, dimensions, date_range) {
   if (!lubridate::is.POSIXt(date_range)) {
@@ -13,14 +34,7 @@ top_daterange_number <- function(top, dimensions, date_range) {
                              format = "%Y-%m-%d %H:%M:%S")
   }
 
-  if(length(top) != length(dimensions) & length(top) != 1) {
-    stop('TOP length: The "top" number of values must be equal the length of the "dimensions" list or 1 unless the first dimension is a "daterange" metric in which case the number of "top" items only has to match the length of the non "daterange" items.')
-  } else if(grepl('daterange', dimensions[1]) & length(top) == 1) {
-    top <- rep(top, length(dimensions)-1)
-    top <- c(0, top)
-  } else if(length(top) == 1) {
-    top <- rep(top, length(dimensions))
-  }
+  top <- make_explicit_top(top, dimensions)
 
   # For reference
   date_vars <- paste0("daterange",
@@ -31,13 +45,14 @@ top_daterange_number <- function(top, dimensions, date_range) {
 
   # For each variable, calculate units
   ranges <- vapply(dimensions[datevar_inds], function(gran) {
-    gran <- paste0(gsub("daterange|ute", "", gran), "s")
+    gran <- paste0(gsub("daterange", "", gran), "s")
+    gran <- gsub("minute", "min", gran)
     d1 <- date_range[1]
     d2 <- date_range[2]
 
     .difftime2(d2,
-              d1,
-              units = gran)
+               d1,
+               units = gran)
   }, numeric(1))
 
   top[datevar_inds] <- as.integer(ceiling(ranges))
@@ -77,3 +92,58 @@ top_daterange_number <- function(top, dimensions, date_range) {
   }
 }
 
+
+#' Expand an explicit top argument
+#'
+#'
+#' @details
+#' The value of `top` usually must be explicit, but in the case of dates it may
+#' be implied. There are two cases:
+#'
+#' 1. If a daterange dimension has a corresponding `top` value of 0, then the
+#' value will be expanded to be the number of units in the date range.
+#' 2. If a daterange dimension is the first dimension, it takes an implied value
+#' of 0, in which case `length(top) == length(dimensions) - 1`.
+#'
+#' This function handles the second case, but not the first. `top` also may be
+#' a vector of length 1, in which case it is recycled to match the length of
+#' `dimensions`. If `top` is length 1 and the first dimension is a date
+#' dimension, then a 0 is inserted before recycling, to preserve the implied 0.
+#'
+#' @param top Number of each dimension to return
+#' @param dimensions Dimensions that each value of top pertains to
+#'
+#' @return Named character vector where the name is the dimension and the
+#' value is the number of items to return
+#'
+make_explicit_top <- function(top, dimensions) {
+  date_dimensions <- paste0("daterange",
+                           c("minute",
+                             "hour",
+                             "day",
+                             "week",
+                             "month",
+                             "quarter",
+                             "year"))
+
+  # Recycle 'top', with first-position date dimension rule
+  if (length(top) == 1 & length(dimensions) > 1) {
+    top <- rep(top, times = length(dimensions))
+
+    if (dimensions[1] %in% date_dimensions) top[1] <- 0
+  }
+
+  # Introduce implied 0 when length(top) == length(dimensions) - 1
+  if (length(top) != length(dimensions)) {
+    valid_exception_conditions <- c(
+      length(top) == length(dimensions) - 1,
+      dimensions[1] %in% date_dimensions
+    )
+
+    if (!all(valid_exception_conditions)) stop("Invalid combination of 'top' and 'dimensions'")
+
+    top <- c(0, top)
+  }
+
+  setNames(top, dimensions)
+}
