@@ -121,6 +121,18 @@ test_that("make_explicit_top throws an error with incompatible top/dimension com
 })
 
 
+test_that("make_explicit_top throws an error if any value of 'top' is NA", {
+  expect_error(
+    make_explicit_top(c(NA, 2, 3), c("one", "two", "three")),
+    "Elements 1 of .* are not true"
+  )
+
+  expect_error(
+    make_explicit_top(c(NA, 2, NA), c("daterangeday", "two", "three")),
+    "Elements 1, 3 of .* are not true"
+  )
+})
+
 # These all use the same difftime function, and so can be grouped
 test_that("recalculate_top_arg replaces zeros with correct number of units (minute, hour, day, week)", {
   datetimes <- as.POSIXct(c("2022-01-01 00:00:00", "2022-01-01 03:00:00"), format = "%F %T")
@@ -230,6 +242,8 @@ test_that("recalculate_top_arg does not replace explicit 'top' date dimension va
   )
 })
 
+
+# TODO How are NAs handled by recalculate_top_arg?
 
 
 

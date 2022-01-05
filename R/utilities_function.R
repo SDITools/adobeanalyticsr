@@ -54,11 +54,12 @@ make_timeframe <- function(dates, origin = lubridate::origin) {
   paste(start, end, sep = "/")
 }
 
+
 # Set the timeframe for the query (timeframe)
 # Used by get_usage_logs()
 make_startDate_endDate <- function(start_date, end_date){
   if(!grepl('-', start_date)) {
-    end_date<- as.Date(as.numeric(end_date),origin = "1970-01-01")
+    end_date <- as.Date(as.numeric(end_date), origin = "1970-01-01")
   }
   list(glue::glue('{start_date}T00:00:00.000'), glue::glue('{end_date}T23:59:59.999'))
 }

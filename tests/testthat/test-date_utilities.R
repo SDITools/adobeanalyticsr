@@ -1,19 +1,3 @@
-# Two function: make_timeframe and make_startDate_endDate
-
-# Examples
-# dates_a <- c(29367, 29368)
-# dates_b <- c('2021-01-01', '2021-01-10')
-# dates_c <- as.Date(c("2021-01-01", "2021-01-10"))
-# posix_a <- as.POSIXct(c("2021-01-01T00:00:00", "2021-01-10T23:59:59"), format = "%Y-%m-%dT%H:%M:%S")
-# posix_b <- as.POSIXct(c("2021-01-01T12:00:00", "2021-01-10T15:59:59"), format = "%Y-%m-%dT%H:%M:%S")
-#
-# make_timeframe(dates_a)
-# make_timeframe(dates_b)
-# make_timeframe(dates_c)
-# make_timeframe(posix_a)
-# make_timeframe(posix_b)
-
-
 test_that("make_timeframe works as expected", {
   dates_str <- c("2021-01-01", "2021-01-10")
   dates_date <- as.Date(dates_str)
@@ -55,3 +39,4 @@ test_that("make_timeframe throws an error if length != 2", {
     "is not TRUE"
   )
 })
+

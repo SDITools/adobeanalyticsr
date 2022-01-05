@@ -131,6 +131,7 @@ make_explicit_top <- function(top, dimensions) {
                              "month",
                              "quarter",
                              "year"))
+  assertthat::assert_that(all(!is.na(top)))
 
   # Recycle 'top', with first-position date dimension rule
   if (length(top) == 1 & length(dimensions) > 1) {
