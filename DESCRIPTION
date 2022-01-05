@@ -41,9 +41,10 @@ Imports:
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Suggests:
-    testthat,
+    testthat (>= 3.0.0),
     rmarkdown
 RdMacros: lifecycle
 VignetteBuilder: knitr
 BugReports: https://github.com/benrwoodard/adobeanalyticsr/issues
 URL: https://github.com/benrwoodard/adobeanalyticsr
+Config/testthat/edition: 3
