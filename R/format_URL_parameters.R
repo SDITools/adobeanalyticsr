@@ -34,9 +34,6 @@ format_URL_parameters <- function(elements) {
   names <- utils::URLencode(names(elements), reserved = TRUE)
 
   comma_collapse_elements <- function(x) {
-    # All NAs is considered an error (may be temporary)
-    assertthat::assert_that(!all(is.na(x)))
-
     out <- paste(x, collapse = ",")
 
     if (!inherits(x, "AsIs")) {

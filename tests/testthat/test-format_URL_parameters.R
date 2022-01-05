@@ -118,21 +118,6 @@ test_that("Format URL parameters converts NAs to strings", {
 })
 
 
-test_that("Format URL parameters throws an error for all NAs for some element", {
-  params1 <- list(param1 = "one", param2 = NA)
-  params2 <- list(param1 = "one", param2 = c(NA, NA))
-
-  expect_error(
-    format_URL_parameters(params1),
-    "is not TRUE"
-  )
-
-  expect_error(
-    format_URL_parameters(params2),
-    "is not TRUE"
-  )
-})
-
 test_that("Format URL parameters leaves AsIs alone", {
   params <- list(param1 = I(c("_Special (Symbols).", "Check me 2!")))
 
