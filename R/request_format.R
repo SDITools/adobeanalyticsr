@@ -53,10 +53,11 @@ global_filter_elem <- function(type,
 #' @noRd
 global_filter <- function(segmentId = NULL,
                           dateRange = NULL) {
+  if (length(dateRange) > 1) stop("More than one date range specified")
+
   if (is.null(dateRange)) {
     dates <- NULL
   } else {
-    if (length(dateRange) > 1) stop("More than one date range specified")
     dates <- lapply(dateRange, function(date) {
       global_filter_elem("daterange", dateRange = dateRange)
     })
@@ -107,7 +108,8 @@ req_settings <- function(limit,
 #' Construct a metric element
 #'
 #' Metric elements are lists composed of two mandatory fields and two optional
-#' fields.
+#' fields. "id" and "columnId" are mandatory, and "filters" and "sort" are
+#' optional.
 #'
 #' @param id Metric ID
 #' @param columnId Assigned column, always the same for each metric
@@ -153,10 +155,11 @@ metric_elem <- function(id,
 #' @param id Vector of metric IDs
 #' @param columnId Assigned columns, should be always the same for each metric
 #' @param filter List of metric filters to include in each metric, identified by
-#'   ID given in the `metricFilters` field of metric container
+#'   ID given in the `metricFilters` field of metric container. If a vector is
+#'   passed, the whole vector is recycled (repeated) `length(id)` times
 #' @param sort Sorting directing, typically only applied to one metric
 #'
-#' @return List, one metric element
+#' @return List, one metric element per id
 #' @noRd
 #' @examples
 #' metric_elems(id = c("met1", "met2"),
@@ -167,8 +170,7 @@ metric_elems <- function(id,
                          columnId,
                          filters = NULL,
                          sort = NULL) {
-  # Input: character vector of filters
-  # Output: List of filters, one filter for each element of ID
+  # Recycle the vector of filters for all metrics
   if (!is.null(filters) & length(filters) > 1 & !is.list(filters)) {
     id_len <- length(id)
     filters <- list(filters)[rep(1, id_len)]
@@ -191,8 +193,8 @@ metric_elems <- function(id,
 #' Combines elements into a single metric filter data frame. Automatically
 #' generates an ID column for use with matching to the metric fields.
 #'
-#' @param type Type
-#' @param dimension Dimensions
+#' @param type Type of metric filter, one of "segment", "breakdown", or "dateRange"
+#' @param dimension Dimensions, for breakdown types
 #' @param itemId Item IDs for those dimensions
 #' @param dateRange Date range
 #' @param segmentId segment IDs
@@ -263,7 +265,7 @@ metric_filters <- function(type,
 #' in the response).
 #'
 #' This function also fixes the names of metrics and dimensions, so you can
-#' pass in normal values. You know, for user friendliness.
+#' pass in normal values. You know, for user friendliness and debugging.
 #'
 #' @param metrics Metric names in the order they were requested
 #' @param segmentIds List (or vector) of segment IDs the same length as the
