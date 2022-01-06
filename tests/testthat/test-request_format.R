@@ -1,12 +1,12 @@
 # Global filter ----
 test_that("global_filter_elem has expected output", {
-  filt_1 <- global_filter_elem(type = "daterange",
+  filt_1 <- global_filter_elem(type = "dateRange",
                      dateRange = "really-long-daterange-string")
 
   filt_2 <- global_filter_elem(segmentId = "segid",
                      type = "segment")
 
-  filt_1_exp <- list(type = "daterange", dateRange = "really-long-daterange-string")
+  filt_1_exp <- list(type = "dateRange", dateRange = "really-long-daterange-string")
   filt_2_exp <- list(type = "segment", segmentId = "segid")
 
   expect_identical(filt_1, filt_1_exp)
@@ -17,12 +17,12 @@ test_that("global_filter_elem has expected output", {
 test_that("global_filter has expected output", {
   # Single segment ID
   filt_1 <- global_filter(segmentId = c("segid"), dateRange = "really-long-daterange-string")
-  filt_1_exp_a <- list(type = "daterange", dateRange = "really-long-daterange-string")
+  filt_1_exp_a <- list(type = "dateRange", dateRange = "really-long-daterange-string")
   filt_1_exp_b <- list(type = "segment", segmentId = "segid")
 
   # Multiple segment IDs
   filt_2 <- global_filter(segmentId = c("segid1", "segid2", "segid3"), dateRange = "really-long-daterange-string")
-  filt_2_exp_a <- list(list(type = "daterange", dateRange = "really-long-daterange-string"))
+  filt_2_exp_a <- list(list(type = "dateRange", dateRange = "really-long-daterange-string"))
   filt_2_exp_b <- list(
     list(type = "segment", segmentId = "segid1"),
     list(type = "segment", segmentId = "segid2"),
@@ -38,7 +38,7 @@ test_that("global_filter has expected output", {
 test_that("global_filter handles NULLs", {
   expect_identical(
     global_filter(dateRange = "really-long-daterange-string"),
-    list(list(type = "daterange", dateRange = "really-long-daterange-string"))
+    list(list(type = "dateRange", dateRange = "really-long-daterange-string"))
   )
 
   expect_identical(
@@ -153,4 +153,58 @@ test_that("metric_filters works as expected", {
 
   expect_identical(metfilt_1, exp_1)
   expect_identical(metfilt_2, exp_2)
+})
+
+
+test_that("metric_container converts metric names to be API compatible", {
+  con <- metric_container(
+    metrics = c("met1", "cm_1234"),
+    sort = "asc"
+  )
+
+  expect_equal(
+    con$metrics[[1]]$id,
+    "metrics/met1"
+  )
+
+  expect_equal(
+    con$metrics[[2]]$id,
+    "cm_1234"
+  )
+})
+
+test_that("metric_container formats dimensions to be API compatible", {
+  con <- metric_container(
+    metrics = "met1",
+    sort = "asc",
+    dimensions = "mydimension",
+    itemIds = "xkcd"
+  )
+
+  expect_equal(
+    con$metricFilters$id,
+    "variables/mydimension"
+  )
+})
+
+
+test_that("metric_container automatically generates unique IDs for repeat metrics", {
+  con <- metric_container(
+    metrics = c("met1", "met1", "met1"),
+    sort = "asc",
+    segmentIds = c("seg1", "seg2", "seg3")
+  )
+
+  expect_equal(
+    con$metrics[[1]]$columnId,
+    "met1::1"
+  )
+  expect_equal(
+    con$metrics[[2]]$columnId,
+    "met1::2"
+  )
+  expect_equal(
+    con$metrics[[3]]$columnId,
+    "met1::3"
+  )
 })

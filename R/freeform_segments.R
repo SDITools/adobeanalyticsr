@@ -179,17 +179,13 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   seg_ctrl <- tidyr::expand_grid(
     metrics = metrics,
     segmentIds = segmentIds
-  ) %>%
-    group_by(metrics) %>%
-    mutate(
-      metric_id = paste(metrics, row_number(), sep = "::")
-    ) %>%
-    ungroup()
+  )
+
+  seg_ctrl$metric_id <- create_metric_column_id(seg_ctrl$metrics)
 
   # Generate metric container
   met_cont <- metric_container(
     metrics = seg_ctrl$metrics,
-    metricIds = seg_ctrl$metric_id,
     sort = "desc", # Sort has no effect, since only 1 row returned
     segmentIds = seg_ctrl$segmentIds
   )
@@ -213,6 +209,8 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     name = output_data$columns$columnIds,
     value = output_data$summaryData$totals
   )
+
+  long_metrics$name
 
   output_data <- left_join(seg_ctrl, long_metrics, by = c("metric_id" = "name"))
   output_data <- make_pretty_segments(rsid = rsid,

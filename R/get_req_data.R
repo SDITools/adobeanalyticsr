@@ -45,7 +45,6 @@ get_req_data <- function(current_dim,
 
   mc <- metric_container(
     metrics = metrics,
-    metricIds = metrics,
     sort = sort,
     dimensions = previous_dims,
     itemIds = item_ids,
