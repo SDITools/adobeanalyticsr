@@ -45,7 +45,6 @@ global_filter_elem <- function(type,
 #' value of `segmentId`. Only one value of `dateRange` is allowed.
 #'
 #'
-#' @param type Character, vector of filter types
 #' @param segmentId Character, vector of segment IDs
 #' @param dateRange Character, vector of date ranges
 #'
