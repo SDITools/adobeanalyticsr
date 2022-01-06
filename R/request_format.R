@@ -39,8 +39,10 @@ global_filter_elem <- function(type,
 #' Generate a global filter
 #'
 #' Vectorized global filter generator. Generates one or more global filter
-#' elements with `global_filter_elem`. This might not be as useful as calling
-#' `global_filter_elem` directly.
+#' elements with `global_filter_elem`.
+#'
+#' Multiple segmentIds are concatenated in separate containers, once for each
+#' value of `segmentId`. Only one value of `dateRange` is allowed.
 #'
 #'
 #' @param type Character, vector of filter types
@@ -49,11 +51,26 @@ global_filter_elem <- function(type,
 #'
 #' @return List of global filter elements
 #' @noRd
-global_filter <- function(type,
-                          segmentId = NULL,
+global_filter <- function(segmentId = NULL,
                           dateRange = NULL) {
-  items <- purrr::compact(list(type = type, segmentId = segmentId, dateRange = dateRange))
-  purrr::pmap(items, global_filter_elem)
+  if (is.null(dateRange)) {
+    dates <- NULL
+  } else {
+    if (length(dateRange) > 1) stop("More than one date range specified")
+    dates <- lapply(dateRange, function(date) {
+      global_filter_elem("daterange", dateRange = dateRange)
+    })
+  }
+
+  if (is.null(segmentId)) {
+    segments <- NULL
+  } else {
+    segments <- lapply(segmentId, function(seg) {
+      global_filter_elem("segment", segmentId = seg)
+    })
+  }
+
+  purrr::compact(c(dates, segments))
 }
 
 

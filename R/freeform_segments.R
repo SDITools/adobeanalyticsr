@@ -166,12 +166,9 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   metrics <- unique(metrics)
 
   # Make global filter
-  timeframe <- make_timeframe(date_range)
-
   gf <- global_filter(
-    type = c("dateRange", rep("segment", times = length(globalSegment))),
-    dateRange = c(timeframe, rep(NA, times = length(globalSegment))),
-    segmentId = c(NA, globalSegment)
+    dateRange = make_timeframe(date_range),
+    segmentId = globalSegment
   )
 
   # Define settings
