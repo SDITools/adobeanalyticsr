@@ -156,6 +156,7 @@ test_that("metric_filters works as expected", {
 })
 
 
+# Metric containers ----
 test_that("metric_container converts metric names to be API compatible", {
   con <- metric_container(
     metrics = c("met1", "cm_1234"),
@@ -207,4 +208,23 @@ test_that("metric_container automatically generates unique IDs for repeat metric
     con$metrics[[3]]$columnId,
     "met1::3"
   )
+})
+
+test_that("metric_container has the expected output format", {
+  con <- metric_container(
+    metrics = c("met1", "met1", "met2"),
+    sort = "asc",
+    segmentIds = c("seg1", "seg2", "seg3")
+  )
+
+  # Top level format
+  expect_length(con, 2)
+  expect_named(con, c("metrics", "metricFilters"))
+  expect_type(con, "list")
+
+  # Second level format
+  expect_type(con$metrics, "list")
+  expect_length(con$metrics, 3)
+  expect_null(names(con$metrics))
+  expect_s3_class(con$metricFilters, "data.frame")
 })

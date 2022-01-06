@@ -28,10 +28,6 @@
 #' dimension rules. Also returned as a named character vector, with names being
 #' the dimension and the value being the `top` argument for that dimension.
 #'
-#' Other name ideas:
-#' - recalculate_top_arg
-#' - expand_top_zeros
-#'
 recalculate_top_arg <- function(top, dimensions, date_range) {
   if (!lubridate::is.POSIXt(date_range)) {
     date_range <- as.POSIXct(paste(date_range, c("00:00:00", "23:59:59")),
