@@ -1,28 +1,4 @@
-feature/unittests:
-  - `metric_container` no longer requires you supply a vector of metric IDs.
-  You can generate a unique list of vector IDs with the utility function
-  `create_metric_column_id`. 
-  - I extracted the formatting of the `top` argument into a utility function
-  called `make_explicit_top`. It doesn't replace zeros, but it obeys the rules
-  for making implicit 'top' arguments into explicit values, and recycles 'top'
-  while following the rules. I renamed `top_daterange_number` to
-  `recalculate_top_arg` to better describe what it does. It also now returns a
-  named character vector (pairing dimensions and their respective 'top'
-  values), which is good for debugging but otherwise has no effect on the
-  results.  
-  - I cleaned up the functionality of `global_filter` so that you can pass it
-  arguments more intuitively. Only `segmentId` and `dateRange` are required,
-  so you can focus on which values you want rather than where to put NAs like
-  before. The `type` argument is handled automatically as well, to reduce
-  errors.
-  - I wrote many unit tests for functions mentioned above, and others. In
-  addition to unit tests for functions that don't require an internet
-  connection, I'm planning "acceptance tests" that run a gamut of queries
-  trying to trip up the package.
-    - In particular, unit tests exist to differing extents for: all functions
-    in `request_format.R`, `make_timeframe`, `recalculate_top_arg`, and
-    `make_expicit_top`. 
-  - I refactored all of the `get_*` functions, outsourcing the formatting of
-  the parameter lists to the function `format_URL_parameters` (which I took
-  the basic components of from the `httr` R package). 
-
+hotfix/segment-rsids
+  - There is now a second argument for Report Suite ID for `aw_segment_table`,
+  which allows the user to specify a vector of RSIDs for which to search for
+  the segment IDs when making pretty names. 
