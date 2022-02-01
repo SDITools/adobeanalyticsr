@@ -6,7 +6,7 @@ reference:
       - aw_auth_path
       - aw_auth_name
       - aw_auth_with
-      - aw_token - This is the old aw_token function, which is deprecated in the new version of the package. It will still work, but `aw_auth` is the recommended way to auth now.
+      - aw_token
       - get_me
       - get_users
       - get_usage_logs
@@ -24,6 +24,7 @@ reference:
     desc: "Functions for pulling the data using the API"
   - contents:
       - aw_freeform_table
+      - aw_segment_table
       - aw_workspace_report
       - aw_anomaly_report
 

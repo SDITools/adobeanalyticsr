@@ -27,7 +27,10 @@
 #'
 #'
 #' @param company_id Company ID
-#' @param rsid Reportsuite ID
+#' @param rsid Report suite ID for the data pull
+#' @param segmentRsids Vector of report suite IDs used to discover the
+#'   human-readable segment names. Passed to `aw_get_segments`. If `NULL`, then
+#'   takes the same value as `rsid`.
 #' @param date_range Date range
 #' @param metrics Metrics to request for each segment
 #' @param globalSegment One or more segments to apply globally over all other
@@ -43,6 +46,7 @@
 #' @export
 aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+                             segmentRsids = NULL,
                              date_range = c(Sys.Date()-30, Sys.Date()-1),
                              metrics = c("visits", "visitors"),
                              globalSegment = NULL,
@@ -51,6 +55,8 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   if (length(segmentIds) == 0) {
     stop("At least one segment ID must be given", call. = FALSE)
   }
+
+  segmentRsids <- segmentRsids %||% rsid
   # Generate requests
   # 1 request group for each unique metric
   # Page the segments into groups of 9 or 10
@@ -74,6 +80,7 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                             metrics = met,
                             globalSegment = globalSegment,
                             segmentIds = seg_group,
+                            segmentRsids = segmentRsids,
                             debug = debug)
 
       increment_global_counter()
@@ -162,6 +169,7 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              metrics = c("visits", "visitors"),
                              globalSegment = NULL,
                              segmentIds = NULL,
+                             segmentRsids = NULL,
                              debug = FALSE) {
   metrics <- unique(metrics)
 
@@ -204,7 +212,6 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     settings = settings
   )
 
-
   output_data <- jsonlite::fromJSON(aw_call_data(
     req_path = "reports/ranked",
     body = req,
@@ -218,7 +225,7 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   )
 
   output_data <- left_join(seg_ctrl, long_metrics, by = c("metric_id" = "name"))
-  output_data <- make_pretty_segments(rsid = rsid,
+  output_data <- make_pretty_segments(rsid = segmentRsids,
                        company_id = company_id,
                        df = output_data)
 

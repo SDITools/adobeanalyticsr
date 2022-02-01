@@ -1,6 +1,6 @@
-#' OAuth2 Token for Adobe Analytics
+#' OAuth2 Token for Adobe Analytics (deprecated)
 #'
-#' #' @description
+#' @description
 #' This is the legacy mechanism for retrieving the authorization token using
 #' OAuth. It has been replaced by `aw_auth()`.
 #'

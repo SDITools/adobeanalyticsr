@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get list of users — get_users • adobeanalyticsr</title>
+<title>Get a segment-row freeform table — aw_segment_table • adobeanalyticsr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,12 @@
   
   <script src="../extra.js"></script>
 
-<meta property="og:title" content="Get list of users — get_users" />
-<meta property="og:description" content="Retrieves a list of all users for the company designated by the auth token." />
+<meta property="og:title" content="Get a segment-row freeform table — aw_segment_table" />
+<meta property="og:description" content="This is the equivalent of a freeform table with segments as the row
+components. This type of table offers a few components that aw_freeform_table
+does not. For example, this function does not require (or allow) dimensions
+to be included in the breakdown. Segment IDs are automatically translated
+into their human-readable names." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -143,48 +147,93 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get list of users</h1>
-    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/get_users.R'><code>R/get_users.R</code></a></small>
-    <div class="hidden name"><code>get_users.Rd</code></div>
+    <h1>Get a segment-row freeform table</h1>
+    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/freeform_segments.R'><code>R/freeform_segments.R</code></a></small>
+    <div class="hidden name"><code>aw_segment_table.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieves a list of all users for the company designated by the auth token.</p>
+    <p>This is the equivalent of a freeform table with segments as the row
+components. This type of table offers a few components that <code>aw_freeform_table</code>
+does not. For example, this function does not require (or allow) dimensions
+to be included in the breakdown. Segment IDs are automatically translated
+into their human-readable names.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_users</span><span class='op'>(</span>company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>, limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>aw_segment_table</span><span class='op'>(</span>
+  company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>,
+  rsid <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_REPORTSUITE_ID"</span><span class='op'>)</span>,
+  date_range <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>30</span>, <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span>,
+  metrics <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"visits"</span>, <span class='st'>"visitors"</span><span class='op'>)</span>,
+  globalSegment <span class='op'>=</span> <span class='cn'>NULL</span>,
+  segmentIds <span class='op'>=</span> <span class='cn'>NULL</span>,
+  debug <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>company_id</th>
-      <td><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
-elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
-Use <code><a href='get_me.html'>get_me</a></code> to get a list of available <code>company_id</code> values.</p></td>
+      <td><p>Company ID</p></td>
     </tr>
     <tr>
-      <th>limit</th>
-      <td><p>The number of results to return per page. This argument works in conjunction with the
-<code>page</code> argument. The default is 10.</p></td>
+      <th>rsid</th>
+      <td><p>Reportsuite ID</p></td>
     </tr>
     <tr>
-      <th>page</th>
-      <td><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
-zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></td>
+      <th>date_range</th>
+      <td><p>Date range</p></td>
+    </tr>
+    <tr>
+      <th>metrics</th>
+      <td><p>Metrics to request for each segment</p></td>
+    </tr>
+    <tr>
+      <th>globalSegment</th>
+      <td><p>One or more segments to apply globally over all other
+segments</p></td>
+    </tr>
+    <tr>
+      <th>segmentIds</th>
+      <td><p>One or more segments that will compose the rows of the
+table</p></td>
+    </tr>
+    <tr>
+      <th>debug</th>
+      <td><p>Logical, whether to make verbose requests to the API and view
+the whole exchange</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of users and their meta data.</p>
+    <p><code><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble::tibble()</a></code> of segments and metrics. Rows are returned with
+segments in the order they were requested, not by metric sorting.</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>get_users</span><span class='op'>(</span>limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
-<span class='op'>}</span>
+    <p>This is a specialized function.
+To see segments broken down by dimensions, we recommend making multiple
+requests to <code>aw_freeform_table</code> with different global segments applied, and
+then row-binding them together yourself.</p>
+<p>Unlike <code>aw_freeform_table</code>, this function automatically handles the 10-metric
+restriction imposed by the API.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Efficiency</h3>
 
-</div></pre>
+
+<p>In short, segments are cheap, metrics are expensive. Adding 1 metric is the
+equivalent of adding 10 segments, judging by the number of requests necessary
+to collect the data.</p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Stacking segments</h3>
+
+
+<p>The function does not currently support segment breakdowns, but you can
+stack segments by applying a global segment to your query.</p>
+
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='aw_freeform_table.html'>aw_freeform_table()</a></code></p></div>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>OAuth2 Token for Adobe Analytics — aw_token • adobeanalyticsr</title>
+<title>OAuth2 Token for Adobe Analytics (deprecated) — aw_token • adobeanalyticsr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,10 @@
   
   <script src="../extra.js"></script>
 
-<meta property="og:title" content="OAuth2 Token for Adobe Analytics — aw_token" />
-<meta property="og:description" content="OAuth2 Token for Adobe Analytics" />
+<meta property="og:title" content="OAuth2 Token for Adobe Analytics (deprecated) — aw_token" />
+<meta property="og:description" content="This is the legacy mechanism for retrieving the authorization token using
+OAuth. It has been replaced by aw_auth().
+" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -92,7 +94,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -143,13 +145,15 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>OAuth2 Token for Adobe Analytics</h1>
-    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/auth.R'><code>R/auth.R</code></a></small>
+    <h1>OAuth2 Token for Adobe Analytics (deprecated)</h1>
+    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/token.R'><code>R/token.R</code></a></small>
     <div class="hidden name"><code>aw_token.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>OAuth2 Token for Adobe Analytics</p>
+    <p>This is the legacy mechanism for retrieving the authorization token using
+OAuth. It has been replaced by <code><a href='aw_auth.html'>aw_auth()</a></code>.</p>
+<p><a href='https://lifecycle.r-lib.org/articles/stages.html#deprecated'><img src='figures/lifecycle-deprecated.svg' alt='[Deprecated]' /></a></p>
     </div>
 
     <pre class="usage"><span class='fu'>aw_token</span><span class='op'>(</span>
@@ -177,7 +181,12 @@
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>An authorization token is saved the file name aa.oauth. If the file aa.oauth does not exist then one will be created at the end of the authorization process.</p>
+    <p>An authorization token is saved the file name aa.oauth. If the
+file aa.oauth does not exist then one will be created at the end of the
+authorization process.</p>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
+
+    <div class='dont-index'><p><code><a href='aw_auth.html'>aw_auth()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

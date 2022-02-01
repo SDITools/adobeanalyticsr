@@ -94,7 +94,7 @@ the results as a data frame." />
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.1</span>
       </span>
     </div>
 
@@ -170,7 +170,8 @@ the results as a data frame.</p>
   include_unspecified <span class='op'>=</span> <span class='cn'>TRUE</span>,
   search <span class='op'>=</span> <span class='cn'>NA</span>,
   prettynames <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  debug <span class='op'>=</span> <span class='cn'>FALSE</span>
+  debug <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  check_components <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -180,29 +181,31 @@ the results as a data frame.</p>
       <th>company_id</th>
       <td><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
-Use <code><a href='get_me.html'>get_me</a></code> to get a list of available <code>company_id</code> values.</p></td>
+Use <code><a href='get_me.html'>get_me()</a></code> to get a list of available <code>company_id</code> values.</p></td>
     </tr>
     <tr>
       <th>rsid</th>
       <td><p>Adobe report suite ID (RSID).  If an environment variable called <code>AW_REPORTSUITE_ID</code> exists
 in <code>.Renviron</code> or elsewhere and no <code>rsid</code> argument is provided, then the <code>AW_REPORTSUITE_ID</code> value will
-be used. Use <code><a href='aw_get_reportsuites.html'>aw_get_reportsuites</a></code> to get a list of available <code>rsid</code> values.</p></td>
+be used. Use <code><a href='aw_get_reportsuites.html'>aw_get_reportsuites()</a></code> to get a list of available <code>rsid</code> values.</p></td>
     </tr>
     <tr>
       <th>date_range</th>
-      <td><p>A vector containing the start and end date for the report as <strong>Date</strong> objects.</p></td>
+      <td><p>A length-2 vector with a start date and an end date.
+<code>POSIXt</code> objects are sent as is, for fine control over the date range.
+Numeric values are automatically converted to dates.</p></td>
     </tr>
     <tr>
       <th>dimensions</th>
       <td><p>A character vector of dimensions. There is currently a limit of 20 dimension
 breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 call, so the more dimensions that are included, the longer the function will take to return results.
-This is how the Adobe Analytics API works. Use <code><a href='aw_get_dimensions.html'>aw_get_dimensions</a></code> to get a list of available
+This is how the Adobe Analytics API works. Use <code><a href='aw_get_dimensions.html'>aw_get_dimensions()</a></code> to get a list of available
 <code>dimensions</code> IDs.</p></td>
     </tr>
     <tr>
       <th>metrics</th>
-      <td><p>A character vector of metrics. Use <code><a href='aw_get_metrics.html'>aw_get_metrics</a></code> and <code><a href='aw_get_calculatedmetrics.html'>aw_get_calculatedmetrics</a></code>
+      <td><p>A character vector of metrics. Use <code><a href='aw_get_metrics.html'>aw_get_metrics()</a></code> and <code><a href='aw_get_calculatedmetrics.html'>aw_get_calculatedmetrics()</a></code>
 to get a list of available <code>metrics</code> IDs.</p></td>
     </tr>
     <tr>
@@ -227,7 +230,7 @@ Currently, it defaults to <code>breakdown</code>, and that is the only supported
       <th>segmentId</th>
       <td><p>A single segment ID or a vector of multiple segment IDs to apply to the overall report.
 If multiple <code>segmentId</code> values are included, the segments will be effectived ANDed together, just as if
-multiple segments were added to the header of an Analysis Workspace panel. Use <code><a href='aw_get_segments.html'>aw_get_segments</a></code>
+multiple segments were added to the header of an Analysis Workspace panel. Use <code><a href='aw_get_segments.html'>aw_get_segments()</a></code>
 to get a list of available <code>segmentId</code> values.</p></td>
     </tr>
     <tr>
@@ -247,27 +250,39 @@ the <strong>Details</strong> for more information on constructing values for thi
     </tr>
     <tr>
       <th>prettynames</th>
-      <td><p>A Boolean that determines whether the column names in the results use the API field name
+      <td><p>A logical that determines whether the column names in the results use the API field name
 (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
 "Page Views"). This applies to both dimensions and metrics. The default value is <code>FALSE</code>, which returns the
 API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
-(e.g., "evar2", "prop3", "event15").</p></td>
+(e.g., "evar2", "prop3", "event15"). If <code>TRUE</code>, undoes any efficiency gains
+from setting <code>check_components</code> to <code>FALSE</code>.</p></td>
     </tr>
     <tr>
       <th>debug</th>
       <td><p>Set to <code>TRUE</code> to publish the full JSON request(s) being sent to the API to the console when the
 function is called. The default is <code>FALSE</code>.</p></td>
     </tr>
+    <tr>
+      <th>check_components</th>
+      <td><p>Specifies whether to check the validity of metrics and
+dimensions before running the query. This defaults to <code>TRUE</code>, which triggers
+several additional API calls behind the scenes to retrieve all dimensions and
+metrics from the API. This has a nominal performance impact and may not be
+ideal if you are running many queries. If you have many queries, consider
+implementing validity checking through other means (manually or within the
+code) and then set this value to <code>FALSE</code>.</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame with dimensions and metrics.</p>
+    <p>A data frame with the specified dimensions and metrics.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function is based on the <strong>Freeform Table</strong> visualization in Analysis Workspace. It is accessing
-the same API call type that is used to generate those visualizations.</p>
-<p><strong>Dimension Ordering</strong></p>
+the same API call type that is used to generate those visualizations.</p><h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Dimension Ordering</h3>
+
+
 <p>Adobe Analytics only queries one dimension at a time, even though the results get returned in a single data
 frame (or table in the case of Analysis Workspace). The more dimensions are included in the report--the more
 breakdowns of the data--the more queries are required. As a result, the <em>order</em> of the dimensions <em>can</em>
@@ -284,7 +299,10 @@ the first query would return the 7 <code>mobiledevicetype</code> values, and the
 those <em>7 mobile device type values</em> to return the results for the 30 days within each device type. This would be only <strong>7 API calls</strong>.</p>
 <p>Strategically ordering dimensions--and then wrangling the resulting data set as needed--is one of the best
 ways to improve query performance.</p>
-<p><strong>Date Handling</strong></p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Date Handling</h3>
+
+
 <p>Date handling has several special characteristics that are worth getting familiar with:</p><ul>
 <li><p>The API names for day, week, month, etc. are prepended with <code>daterange</code>, so daily data uses
 <code>daterangeday</code>, weekly data uses <code>daterangeweek</code>, monthly data uses <code>daterangemonth</code>, etc.</p></li>
@@ -304,7 +322,10 @@ all of the date/time values for the specified <code>date_range</code>, the top 3
 same level in the <code>top</code> argument specification will return all of the values for that date/time value.</p></li>
 </ul>
 
-<p><strong>Search/Filtering</strong></p>
+
+<h3 class='hasAnchor' id='arguments'><a class='anchor' href='#arguments'></a>Search/Filtering</h3>
+
+
 <p>There are powerful filtering abilities within the function. However, to support that power requires a
 syntax that can feel a bit cumbersome for simple queries. <strong><em>Note:</em></strong> search filters are case-insensitive.
 This is Adobe Analytics API functionality and can not be specified otherwise in queries.</p>
@@ -319,10 +340,12 @@ including <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>MATCH</code
 <li><p><code>search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")</code> will return results where <code>mobiledevicetype</code> contains "mobile" <em>or</em> "tablet" and, within those results, will only include results where <code>lasttouchchannel</code> exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).</p></li>
 </ul>
 
+
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <div class='dont-index'><p><code><a href='get_me.html'>get_me</a></code>, <code><a href='aw_get_reportsuites.html'>aw_get_reportsuites</a></code>, <code><a href='aw_get_segments.html'>aw_get_segments</a></code>,
-<code><a href='aw_get_dimensions.html'>aw_get_dimensions</a></code>, <code><a href='aw_get_metrics.html'>aw_get_metrics</a></code>, <code><a href='aw_get_calculatedmetrics.html'>aw_get_calculatedmetrics</a></code></p></div>
+    <div class='dont-index'><p><code><a href='get_me.html'>get_me()</a></code>, <code><a href='aw_get_reportsuites.html'>aw_get_reportsuites()</a></code>, <code><a href='aw_get_segments.html'>aw_get_segments()</a></code>,
+<code><a href='aw_get_dimensions.html'>aw_get_dimensions()</a></code>, <code><a href='aw_get_metrics.html'>aw_get_metrics()</a></code>, <code><a href='aw_get_calculatedmetrics.html'>aw_get_calculatedmetrics()</a></code>,
+<code><a href='aw_segment_table.html'>aw_segment_table()</a></code></p></div>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Get list of users — get_users • adobeanalyticsr</title>
+<title>Generate an Access Token for the Adobe Analytics v2.0 API — aw_auth • adobeanalyticsr</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -48,8 +48,9 @@
   
   <script src="../extra.js"></script>
 
-<meta property="og:title" content="Get list of users — get_users" />
-<meta property="og:description" content="Retrieves a list of all users for the company designated by the auth token." />
+<meta property="og:title" content="Generate an Access Token for the Adobe Analytics v2.0 API — aw_auth" />
+<meta property="og:description" content="Note: aw_auth() is the primary function used for authorization. auth_oauth()
+and auth_jwt() should not be called directly, as these do not cache the token." />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -143,48 +144,95 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Get list of users</h1>
-    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/get_users.R'><code>R/get_users.R</code></a></small>
-    <div class="hidden name"><code>get_users.Rd</code></div>
+    <h1>Generate an Access Token for the Adobe Analytics v2.0 API</h1>
+    <small class="dont-index">Source: <a href='https://github.com/benrwoodard/adobeanalyticsr/blob/master/R/auth.R'><code>R/auth.R</code></a></small>
+    <div class="hidden name"><code>aw_auth.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Retrieves a list of all users for the company designated by the auth token.</p>
+    <p><strong>Note:</strong> <code>aw_auth()</code> is the primary function used for authorization. <code>auth_oauth()</code>
+and <code>auth_jwt()</code> should not be called directly, as these do not cache the token.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_users</span><span class='op'>(</span>company_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_COMPANY_ID"</span><span class='op'>)</span>, limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>aw_auth</span><span class='op'>(</span>type <span class='op'>=</span> <span class='fu'><a href='aw_auth_with.html'>aw_auth_with</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='va'>...</span><span class='op'>)</span>
+
+<span class='fu'>auth_jwt</span><span class='op'>(</span>
+  client_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_CLIENT_ID"</span><span class='op'>)</span>,
+  client_secret <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_CLIENT_SECRET"</span><span class='op'>)</span>,
+  private_key <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_PRIVATE_KEY"</span><span class='op'>)</span>,
+  org_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_ORGANIZATION_ID"</span><span class='op'>)</span>,
+  tech_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_TECHNICAL_ID"</span><span class='op'>)</span>,
+  jwt_token <span class='op'>=</span> <span class='cn'>NULL</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span>
+
+<span class='fu'>auth_oauth</span><span class='op'>(</span>
+  client_id <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_CLIENT_ID"</span><span class='op'>)</span>,
+  client_secret <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.getenv.html'>Sys.getenv</a></span><span class='op'>(</span><span class='st'>"AW_CLIENT_SECRET"</span><span class='op'>)</span>,
+  use_oob <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>company_id</th>
-      <td><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
-elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
-Use <code><a href='get_me.html'>get_me</a></code> to get a list of available <code>company_id</code> values.</p></td>
+      <th>type</th>
+      <td><p>Either 'jwt' or 'oauth'. This can be set explicitly, but a best practice is
+to run <code><a href='aw_auth_with.html'>aw_auth_with()</a></code> to set the authorization type as an environment variable before
+running <code>aw_auth()</code></p></td>
     </tr>
     <tr>
-      <th>limit</th>
-      <td><p>The number of results to return per page. This argument works in conjunction with the
-<code>page</code> argument. The default is 10.</p></td>
+      <th>...</th>
+      <td><p>Additional arguments passed to auth functions.</p></td>
     </tr>
     <tr>
-      <th>page</th>
-      <td><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
-zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></td>
+      <th>client_id</th>
+      <td><p>The client ID, defined by a global variable or manually defined</p></td>
+    </tr>
+    <tr>
+      <th>client_secret</th>
+      <td><p>The client secret, defined by a global variable or manually defined</p></td>
+    </tr>
+    <tr>
+      <th>private_key</th>
+      <td><p>The file path to private key for token signature (JWT auth only)</p></td>
+    </tr>
+    <tr>
+      <th>org_id</th>
+      <td><p>Organization ID from integration console (JWT auth only)</p></td>
+    </tr>
+    <tr>
+      <th>tech_id</th>
+      <td><p>Technical account ID from integration console (JWT auth only)</p></td>
+    </tr>
+    <tr>
+      <th>jwt_token</th>
+      <td><p><em>(Optional)</em> A custom, encoded, signed JWT claim. If used,
+only <code>client_id</code> and <code>client_secret</code> are required.</p></td>
+    </tr>
+    <tr>
+      <th>use_oob</th>
+      <td><p>if <code>FALSE</code>, use a local webserver for the OAuth dance.
+Otherwise, provide a URL to the user and prompt for a validation code.
+Defaults to the value of the <code>httr_oob_default</code> default, or TRUE if
+<code>httpuv</code> is not installed.</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame of users and their meta data.</p>
+    <p>The path of the cached token. This is returned invisibly.</p>
+    <h2 class="hasAnchor" id="functions"><a class="anchor" href="#functions"></a>Functions</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='fu'>get_users</span><span class='op'>(</span>limit <span class='op'>=</span> <span class='fl'>10</span>, page <span class='op'>=</span> <span class='fl'>0</span><span class='op'>)</span>
-<span class='op'>}</span>
+    
+<ul>
+<li><p><code>auth_jwt</code>: Authenticate with JWT token</p></li>
+<li><p><code>auth_oauth</code>: Authorize via OAuth 2.0</p></li>
+</ul>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-</div></pre>
+    <div class='dont-index'><p><code><a href='aw_auth_with.html'>aw_auth_with()</a></code></p></div>
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
