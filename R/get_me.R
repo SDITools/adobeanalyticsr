@@ -39,7 +39,7 @@ get_me <- function(req_path = 'discovery/me') {
 
     me <- jsonlite::fromJSON(res)
 
-    return(me$imsOrgs$companies %>%
+    me$imsOrgs$companies %>%
                dplyr::bind_rows() %>%
-               dplyr::select(1:2))
+               dplyr::select(1:2)
 }

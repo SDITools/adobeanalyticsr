@@ -16,32 +16,22 @@
 #' get_users(limit = 10, page = 0)
 #' }
 #'
-#' @import stringr
 #' @export
 #'
 get_users <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                       limit = 10,
                       page = 0)
 {
+  query_params <- list(
+    limit = limit,
+    page = page
+  )
 
-  vars <- tibble::tibble(limit, page)
-  #Turn the list into a string to create the query
-  prequery <- list(vars %>% dplyr::select_if(~ !any(is.na(.))))
-  #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
+  urlstructure <- paste("users", format_URL_parameters(query_params), sep = "?")
 
-  #create the url to send with the query
-  urlstructure <- paste0('users?',query_param)
-
-  #urlstructure <- 'segments?locale=en_US&filterByPublishedSegments=all&limit=1000&page=0&sortDirection=ASC&sortProperty=id&includeType=all'
-  res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
-
+  res <- aw_call_api(req_path = urlstructure, company_id = company_id)
   res <- jsonlite::fromJSON(res)
 
-  #Just need the content of the returned json
-  res <- res$content
-
-  res
-
+  res$content
 }
 
