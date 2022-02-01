@@ -1,0 +1,4 @@
+hotfix/segment-rsids
+  - There is now a second argument for Report Suite ID for `aw_segment_table`,
+  which allows the user to specify a vector of RSIDs for which to search for
+  the segment IDs when making pretty names. 
