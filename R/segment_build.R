@@ -51,7 +51,7 @@ seg_build <- function(name = NULL,
                       conjunction = 'and',
                       sequence = 'in_order',
                       sequence_context = 'hits',
-                      exclude = FALSE, #only used if the 'predicates' argument is used
+                      exclude = FALSE,
                       create_seg = FALSE,
                       debug = FALSE,
                       rsid = Sys.getenv('AW_REPORTSUITE_ID'),
@@ -59,19 +59,19 @@ seg_build <- function(name = NULL,
                       client_id = Sys.getenv("AW_CLIENT_ID"),
                       client_secret = Sys.getenv("AW_CLIENT_SECRET")){
   #validate arguments
-  if(is.null(name) | is.null(description)) {
+  if(is.null(name) || is.null(description)) {
     stop('The arguments `name` and `description` must be included.')
   }
 
-  #define the segment version
-  version <- list(1, 0, 0)
+  #define the new segment version
+  version <- list(0, 1, 0)
 
   #Create the segment list object
-  if (is.null(containers) & !is.null(predicates) & is.null(sequences)) {
+  if (!is.null(predicates) && is.null(containers) && is.null(sequences)) { ## Predicates
     if (exclude == FALSE) {
       if (length(predicates) == 1){
         if (!is.null(predicates[[1]]$val$`allocation-model`)) {
-        if (context == 'visits' & predicates[[1]]$val$`allocation-model`$func == 'allocation-dedupedInstance'){
+        if (context == 'visits' && predicates[[1]]$val$`allocation-model`$func == 'allocation-dedupedInstance'){
           predicates[[1]]$val$`allocation-model`$context = 'sessions'
           }
         }
@@ -156,7 +156,7 @@ seg_build <- function(name = NULL,
         ))
       }
     } #/exclude TRUE
-  } else if (is.null(predicates) & !is.null(containers) & is.null(sequences)){
+  } else if (is.null(predicates) && !is.null(containers) && is.null(sequences)){  #Containers
     if (length(containers) == 1) {
      seg <- structure(list(
        name = name,
@@ -191,14 +191,14 @@ seg_build <- function(name = NULL,
           rsid = rsid
         ))
       }
-  } else if(is.null(predicates) & is.null(containers) & !is.null(sequences)){
+  } else if(is.null(predicates) && is.null(containers) && !is.null(sequences)) {
     sequence_dir <- dplyr::case_when(sequence == 'in_order' ~ 'sequence',
                                      sequence == 'after' ~ 'sequence-prefix',
                                      sequence == 'before' ~ 'sequence-suffix')
 
     ## Add in the necessary 'container' and 'hits' variables to each predicate for the sequence to work
     seq_items <- list()
-    for (i in seq_along(sequences)){
+    for (i in seq_along(sequences)) {
       if (!is.null(sequences[[i]]$stream)) {
         seq_items[[i]] <- list(
           context = sequence_context,
@@ -254,13 +254,13 @@ seg_build <- function(name = NULL,
         rsid = rsid
       ))
     }
-  } else if (is.null(predicates) & is.null(containers) & is.null(sequences)){
+  } else if (is.null(predicates) & is.null(containers) & is.null(sequences)) {
     stop('Either a predicate(s), containers, or sequences must be provided.')
   }
   #defined parts of the post request
-  req_path = 'segments'
+  req_path <- 'segments'
 
-  body = seg
+  body <- seg
 
   if (!create_seg) {
     jsonlite::toJSON(body$definition, auto_unbox = T)
@@ -272,33 +272,4 @@ seg_build <- function(name = NULL,
     req
   }
 
-  #verify that the account has been authorized to make the post request
- #  token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
- #
- #  debug_call <- NULL
- #
- #  if (debug) {
- #    debug_call <- httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE)
- #  }
- #
- #  request_url <- sprintf("https://analytics.adobe.io/api/%s/%s?locale=en_US",
- #                         company_id, req_path)
- #  req <- httr::RETRY("POST",
- #                     url = request_url,
- #                     body = body,
- #                     encode = "json",
- #                     token_config,
- #                     debug_call,
- #                     httr::add_headers(
- #                       `x-api-key` = client_id,
- #                       `x-proxy-global-company-id` = company_id
- #                     ))
- #
- # res <- dplyr::bind_rows(unlist(httr::content(req)))
- #
- # if(names(res)[1] %in% 'errorCode'){
- #   res[, 2]
- # } else {
- #   res
- # }
 }

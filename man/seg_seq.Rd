@@ -7,7 +7,7 @@
 seg_seq(
   context = "visits",
   predicates = NULL,
-  sequence = "in_order",
+  sequence = "before",
   exclude = FALSE,
   exclude_checkpoint = NULL
 )
@@ -50,5 +50,6 @@ subsequent checkpoint.
 
 \strong{More Information}
 
-Sequential segments can be difficult to get right. Referencing this article can help: https://experienceleague.adobe.com/docs/analytics/components/segmentation/segmentation-workflow/seg-sequential-build.html?lang=en
+Sequential segments can be difficult to get right. Referencing this article
+can help: https://experienceleague.adobe.com/docs/analytics/components/segmentation/segmentation-workflow/seg-sequential-build.html?lang=en
 }
