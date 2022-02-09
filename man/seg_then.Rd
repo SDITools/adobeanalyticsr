@@ -4,7 +4,7 @@
 \alias{seg_then}
 \title{Create the segment sequence then object}
 \usage{
-seg_then(limit = "within", count = 1, unit = "week")
+seg_then(limit = "within", count = 1, unit = "year")
 }
 \arguments{
 \item{limit}{The limitation of the restriction. Either \code{within} (default) or \code{after}}
