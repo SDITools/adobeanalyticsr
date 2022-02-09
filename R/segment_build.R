@@ -12,6 +12,7 @@
 #' @param sequence Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events
 #' @param sequence_context Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits
 #' @param exclude Excludes the main container which will include all predicates. Only used when the predicate arguments are used.
+#' @param create_seg Used to determine if the segment should be created in the report suite or if the definition should be returned to be used in a freeform table API call. Default is FALSE
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
 #' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
@@ -51,6 +52,7 @@ seg_build <- function(name = NULL,
                       sequence = 'in_order',
                       sequence_context = 'hits',
                       exclude = FALSE, #only used if the 'predicates' argument is used
+                      create_seg = FALSE,
                       debug = FALSE,
                       rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                       company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -65,11 +67,11 @@ seg_build <- function(name = NULL,
   version <- list(1, 0, 0)
 
   #Create the segment list object
-  if(is.null(containers) & !is.null(predicates) & is.null(sequences)) {
-    if(exclude == FALSE) {
-      if(length(predicates) == 1){
-        if(!is.null(predicates[[1]]$val$`allocation-model`)) {
-        if(context == 'visits' & predicates[[1]]$val$`allocation-model`$func == 'allocation-dedupedInstance'){
+  if (is.null(containers) & !is.null(predicates) & is.null(sequences)) {
+    if (exclude == FALSE) {
+      if (length(predicates) == 1){
+        if (!is.null(predicates[[1]]$val$`allocation-model`)) {
+        if (context == 'visits' & predicates[[1]]$val$`allocation-model`$func == 'allocation-dedupedInstance'){
           predicates[[1]]$val$`allocation-model`$context = 'sessions'
           }
         }
@@ -107,8 +109,8 @@ seg_build <- function(name = NULL,
         ))
       }
     } #/exclude FALSE
-    if(exclude == TRUE) {
-      if(length(predicates) == 1) {
+    if (exclude == TRUE) {
+      if (length(predicates) == 1) {
         seg <-  structure(list(
           name = name,
           description = description,
@@ -154,8 +156,8 @@ seg_build <- function(name = NULL,
         ))
       }
     } #/exclude TRUE
-  } else if(is.null(predicates) & !is.null(containers) & is.null(sequences)){
-    if(length(containers) == 1){
+  } else if (is.null(predicates) & !is.null(containers) & is.null(sequences)){
+    if (length(containers) == 1) {
      seg <- structure(list(
        name = name,
        description = description,
@@ -194,16 +196,16 @@ seg_build <- function(name = NULL,
                                      sequence == 'after' ~ 'sequence-prefix',
                                      sequence == 'before' ~ 'sequence-suffix')
 
-    ## Add in the necessary 'container' and 'hits' variables to each predicate for sequence to work
+    ## Add in the necessary 'container' and 'hits' variables to each predicate for the sequence to work
     seq_items <- list()
-    for(i in seq_along(sequences)){
-      if(!is.null(sequences[[i]]$stream)) {
+    for (i in seq_along(sequences)){
+      if (!is.null(sequences[[i]]$stream)) {
         seq_items[[i]] <- list(
           context = sequence_context,
           func = 'container',
           pred = sequences[[i]]
         )
-      } else if(!is.null(sequences[[i]]$val)) {
+      } else if (!is.null(sequences[[i]]$val)) {
         seq_items[[i]] <- list(
           context = sequence_context,
           func = 'container',
@@ -214,7 +216,7 @@ seg_build <- function(name = NULL,
       }
     }
 
-    seg <- if(sequence_dir == 'sequence') {
+    seg <- if (sequence_dir == 'sequence') {
       structure(list(
         name = name,
         description = description,
@@ -232,7 +234,7 @@ seg_build <- function(name = NULL,
         ),
         rsid = rsid
       ))
-    } else if(sequence_dir %in% c('sequence-prefix', 'sequence-suffix')) {
+    } else if (sequence_dir %in% c('sequence-prefix', 'sequence-suffix')) {
       structure(list(
         name = name,
         description = description,
@@ -252,7 +254,7 @@ seg_build <- function(name = NULL,
         rsid = rsid
       ))
     }
-  } else if(is.null(predicates) & is.null(containers) & is.null(sequences)){
+  } else if (is.null(predicates) & is.null(containers) & is.null(sequences)){
     stop('Either a predicate(s), containers, or sequences must be provided.')
   }
   #defined parts of the post request
@@ -260,33 +262,43 @@ seg_build <- function(name = NULL,
 
   body = seg
 
-  #verify that the account has been authorized to make the post request
-  token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
-
-  debug_call <- NULL
-
-  if (debug) {
-    debug_call <- httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE)
+  if (!create_seg) {
+    jsonlite::toJSON(body$definition, auto_unbox = T)
+  } else if (!create_seg) {
+    req <- aw_call_data(req_path = req_path, body = seg,
+                        company_id = company_id,
+                        client_id = client_id,
+                        client_secret = client_secret)
+    req
   }
 
-  request_url <- sprintf("https://analytics.adobe.io/api/%s/%s?locale=en_US",
-                         company_id, req_path)
-  req <- httr::RETRY("POST",
-                     url = request_url,
-                     body = body,
-                     encode = "json",
-                     token_config,
-                     debug_call,
-                     httr::add_headers(
-                       `x-api-key` = client_id,
-                       `x-proxy-global-company-id` = company_id
-                     ))
-
- res <- dplyr::bind_rows(unlist(httr::content(req)))
-
- if(names(res)[1] %in% 'errorCode'){
-   res[, 2]
- } else {
-   res
- }
+  #verify that the account has been authorized to make the post request
+ #  token_config <- get_token_config(client_id = client_id, client_secret = client_secret)
+ #
+ #  debug_call <- NULL
+ #
+ #  if (debug) {
+ #    debug_call <- httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE)
+ #  }
+ #
+ #  request_url <- sprintf("https://analytics.adobe.io/api/%s/%s?locale=en_US",
+ #                         company_id, req_path)
+ #  req <- httr::RETRY("POST",
+ #                     url = request_url,
+ #                     body = body,
+ #                     encode = "json",
+ #                     token_config,
+ #                     debug_call,
+ #                     httr::add_headers(
+ #                       `x-api-key` = client_id,
+ #                       `x-proxy-global-company-id` = company_id
+ #                     ))
+ #
+ # res <- dplyr::bind_rows(unlist(httr::content(req)))
+ #
+ # if(names(res)[1] %in% 'errorCode'){
+ #   res[, 2]
+ # } else {
+ #   res
+ # }
 }

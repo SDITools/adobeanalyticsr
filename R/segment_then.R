@@ -35,8 +35,8 @@ seg_then <- function(limit = 'within',
 #validation check for the limit argument
   #Check the spelling of the 2 variables
   for (i in 1:length(limit)){
-    if(!is.element(limit[i], c('within', 'after'))){
-      stop("Make sure you have spelled `after` or `within` correctly.")
+    if (!is.element(limit[i], c('within', 'after'))){
+      stop ("Make sure you have spelled `after` or `within` correctly.")
     }
   }
   #check that the count is a numeric

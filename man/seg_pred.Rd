@@ -47,9 +47,11 @@ This function creates the simple predicate of a segment.
 }
 \details{
 \strong{Attribution Models}
-
-Available for dimensions only, these models determine what values in a dimension to segment for. Dimension models are particularly useful in sequential segmentation.
-\emph{repeating} (default): Includes instances and persisted values for the dimension.
-\emph{instance}: Includes instances for the dimension.
-\emph{nonrepeating} instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
+Available for dimensions only, these models determine what values in a dimension to segment for.
+Dimension models are particularly useful in sequential segmentation.
+\itemize{
+\item \emph{repeating} (default): Includes instances and persisted values for the dimension.
+\item \emph{instance}: Includes instances for the dimension.
+\item \emph{nonrepeating} instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
+}
 }

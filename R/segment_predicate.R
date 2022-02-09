@@ -17,14 +17,12 @@
 #' Use [get_me()] to get a list of available `company_id` values.
 #'
 #' @details
-#'
 #' **Attribution Models**
-#'
-#' Available for dimensions only, these models determine what values in a dimension to segment for. Dimension models are particularly useful in sequential segmentation.
-#' *repeating* (default): Includes instances and persisted values for the dimension.
-#' *instance*: Includes instances for the dimension.
-#' *nonrepeating* instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
-#'
+#' Available for dimensions only, these models determine what values in a dimension to segment for.
+#' Dimension models are particularly useful in sequential segmentation.
+#' - *repeating* (default): Includes instances and persisted values for the dimension.
+#' - *instance*: Includes instances for the dimension.
+#' - *nonrepeating* instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
 #'
 #' @return A structured list defining the predicate for a segment
 #'
@@ -33,9 +31,7 @@
 #' @import stringr
 #' @importFrom glue glue
 #' @importFrom memoise memoise
-#'
 #' @export
-#'
 seg_pred <- function(subject = 'page',
                      verb = 'contains',
                      object = 'pagename',
@@ -47,26 +43,15 @@ seg_pred <- function(subject = 'page',
                      company_id = Sys.getenv("AW_COMPANY_ID")){
   ### Define the different elements of a segment
   #########################
-  ## Exists Verbs
-  exists_verbs <- c('exists', 'not-exists', 'event-exists', 'not-event-exists')
-  ## String Verbs
-  str_verbs <- c('contains', 'not-contains', 'starts-with', 'ends-with', 'not-starts-with', 'not-ends-with', 'streq', 'not-streq', 'strlt', 'strgt', 'strle', 'strge')
-  list_verbs <- c('streq-in', 'not-streq-in', 'contains-any-of', 'contains-all-of', 'not-contains-any-of', 'not-contains-all-of')
-  glob_verbs <- c('matches', 'not-match') #uses regex in glob value
-  ## Number Verbs
-  num_verbs <- c('eq', 'not-eq', 'gt', 'lt', 'ge', 'le')
-  numlist_verbs <- c('eq-any-of', 'not-eq-any-of', 'eq-in', 'not-eq-in')
-
+  verbs <- seg_verbs()[, 1:3]
   ##########################
   #assign the element to be either a variable or metric
   #pull the lists of metrics and dimensions if not available
-
   get_mets <- aw_get_metrics
   if (!memoise::is.memoised(get_mets)) {
     get_mets <- memoise::memoise(get_mets)
   }
   aw_metrics <- get_mets(company_id = company_id, rsid = rsid)
-
   get_dims <- aw_get_dimensions
   if (!memoise::is.memoised(get_dims)) {
     get_dims <- memoise::memoise(get_dims)
@@ -97,36 +82,38 @@ seg_pred <- function(subject = 'page',
   #fix equal any list for numbers
 
   # assert that the verb is on the list
-  assertthat::assert_that(verb %in% c(exists_verbs, str_verbs, list_verbs, glob_verbs, num_verbs, numlist_verbs),
+  assertthat::assert_that(verb %in% verbs$verb,
                           msg = "The 'verb' argument is not a valid verb. Use the function `seg_verb()` to see all available verbs or visit Adobe Experience League for more information. https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
-
-  ## define available date_subjects
-  date_subjects <- c('daterangehour', 'daterangeday', 'daterangeweek', 'daterangemonth', 'daterangequarter', 'daterangeyear')
-
-  #if subject is a date the object must be changed in the definition to the correct format
-  if(subject %in% date_subjects){
-    if(subject == 'daterangehour' && !verb %in% exists_verbs){
+  # Change Date Range to correct format
+  # Daterange subjects must have correct format to be referenced properly in the
+  # API calls
+  daterange_change <- function(subject, object, verbs){
+    if(subject == 'daterangehour' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #check if date and hour is included in object
-      assertthat::assert_that(length(object) == 2 & grepl('-', object[[1]]), msg = "Make sure to object is a vector including the date and then time when using the 'daterangehour' subject. ex: c('2021-02-02', '1400')")
+      assertthat::assert_that(length(object) == 2 & grepl('-', object[[1]]), msg = "Make sure to object is a character vector including the date and then time when using the 'daterangehour' subject. ex: c('2021-02-02', '1400')")
       #check the hour to make sure it is the correct format
       assertthat::assert_that(nchar(object[[2]]) == 4 & !is.na(as.numeric(object[[2]])), msg = "Make sure the hour is in military time. ex: '1500' if you wanted to use 3 PM as the hour" )
       minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object[[1]]), '-'))-100)
-      hour <- str_extract(object[[2]], '\\d{2}') #use only the first two numbers for the hour
+      hour <- stringr::str_extract(object[[2]], '\\d{2}') #use only the first two numbers for the hour
       object <- as.numeric(glue::glue("{stringr::str_replace(minus100, '20', '1')}{hour}"))
+      return(object)
     }
-    if(subject == 'daterangeday' && !verb %in% exists_verbs){
+    if(subject == 'daterangeday' && !verb %in% verbs$verb[verbs$class == 'exists']){
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object), '-'))-100)
       object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+      return(object)
     }
-    if(subject == 'daterangemonth' && !verb %in% exists_verbs){
+    if(subject == 'daterangemonth' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
+
       adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'month' )
       minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
       object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+      return(object)
     }
-    if(subject == 'daterangequarter' && !verb %in% exists_verbs){
+    if(subject == 'daterangequarter' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object[[1]], format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object[[1]], format="%Y-%m-%d")) & lubridate::year(as.Date(object[[1]])) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
       ##assert that the fiscal start month is between 1-12
@@ -138,8 +125,9 @@ seg_pred <- function(subject = 'page',
       adjusted_date <- lubridate::quarter(x = as.Date(object), type = "date_first", fiscal_start = as.numeric(fiscalstart))
       minus100 <- as.character(as.numeric(stringr::str_remove_all(adjusted_date, '-'))-100)
       object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+      return(object)
     }
-    if(subject == 'daterangeyear' && !verb %in% exists_verbs){
+    if(subject == 'daterangeyear' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is full date format
       assertthat::assert_that(grepl(object, '-'), msg = "The full date must be supplied. Any valid date within the desired year will work. ex: YYYY-MM-DD")
       #assert that the date is in the correct format
@@ -147,19 +135,36 @@ seg_pred <- function(subject = 'page',
       adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'year')
       minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
       object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+      return(object)
     }
   }
   #/end date formatting
-
-  #Define the val func to be an attr or event
-  if(adj == 'variables/'){
-    val_func = 'attr'
-  } else if(adj == 'metrics/'){
-    val_func = 'event'
+  #if subject is one of 'daterange' the object must be changed in the definition to the correct format
+  if (subject %in% c('daterangehour', 'daterangeday', 'daterangeweek', 'daterangemonth', 'daterangequarter', 'daterangeyear')){
+    object <- daterange_change(subject, object, verbs)
   }
 
-  #This forms the predicate or pred
-prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
+  #Define the val func to be an attr or event
+  define_val_func <- function(adj){
+    if (adj == 'variables/'){
+      'attr'
+    } else {
+      'event'
+    }
+  }
+
+  val_func <- define_val_func(adj)
+
+create_pred <- function(val_func, verbs, is_distinct) {
+  #define reference for verbs
+  exists_verbs <- verbs$verb[verbs$type == 'exists' & verbs$class == 'exists']
+  str_verbs <- verbs$verb[verbs$type == 'string' & verbs$class == 'string']
+  strlist_verbs <- verbs$verb[verbs$type == 'string' & verbs$class == 'list']
+  numlist_verbs <- verbs$verb[verbs$type == 'number' & verbs$class == 'list']
+  num_verbs <- verbs$verb[verbs$type == 'number' & verbs$class == 'number']
+  glob_verbs <- verbs$verb[verbs$type == 'string' & verbs$class == 'glob']
+
+  if (verb %in%  exists_verbs && val_func == 'attr'){
     structure(list(
       func = verb,
       val = list(
@@ -167,7 +172,7 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
         name = glue::glue('{adj}{subject}')
       )
     ))
-  } else if(verb %in%  exists_verbs && val_func == 'event'){
+  } else if (verb %in%  exists_verbs && val_func == 'event'){
     structure(list(
       func = verb,
       evt = list(
@@ -175,7 +180,7 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
         name = glue::glue('{adj}{subject}')
       )
     ))
-  } else if(verb %in% str_verbs){
+  } else if (verb %in% str_verbs){
     structure(list(
       func = verb,
       str = object,
@@ -184,7 +189,7 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
         name = glue::glue('{adj}{subject}')
       )
     ))
-  } else if(verb %in% list_verbs){
+  } else if (verb %in% strlist_verbs){
     structure(list(
       func = verb,
       list = object,
@@ -193,7 +198,7 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
         name = glue::glue('{adj}{subject}')
       )
     ))
-  } else if(verb %in% numlist_verbs){
+  } else if (verb %in% numlist_verbs){
     structure(list(
       func = verb,
       list = object,
@@ -202,7 +207,7 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
         name = glue::glue('{adj}{subject}')
       )
     ))
-  } else if(verb %in% glob_verbs){
+  } else if (verb %in% glob_verbs){
     structure(list(
       func = verb,
       glob = object,
@@ -211,7 +216,7 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
         name = glue::glue('{adj}{subject}')
       )
     ))
-  } else if(verb %in% num_verbs && val_func == 'attr'){
+  } else if (verb %in% num_verbs && val_func == 'attr'){
     if(is_distinct) {
       structure(list(
         func = verb,
@@ -247,6 +252,11 @@ prepred <- if(verb %in%  exists_verbs && val_func == 'attr'){
       )
     ))
   }
+}
+
+#This forms the predicate or pred
+prepred <- create_pred(val_func, verbs, is_distinct)
+
 #add in the description
 if(!is.null(description)){
   prepred$description = description
@@ -266,6 +276,6 @@ if(attribution == 'instance') {
     prepred$val$`allocation-model`$context = attribution_context
     prepred$val$`allocation-model`$func = 'allocation-dedupedInstance'
   }
-  }
-return(prepred)
+}
+prepred
 }

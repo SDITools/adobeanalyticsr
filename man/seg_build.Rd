@@ -15,6 +15,7 @@ seg_build(
   sequence = "in_order",
   sequence_context = "hits",
   exclude = FALSE,
+  create_seg = FALSE,
   debug = FALSE,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -42,6 +43,8 @@ seg_build(
 \item{sequence_context}{Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits}
 
 \item{exclude}{Excludes the main container which will include all predicates. Only used when the predicate arguments are used.}
+
+\item{create_seg}{Used to determine if the segment should be created in the report suite or if the definition should be returned to be used in a freeform table API call. Default is FALSE}
 
 \item{debug}{This enables the api call information to show in the console for help with debugging issues. default is FALSE}
 
