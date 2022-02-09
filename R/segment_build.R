@@ -263,13 +263,13 @@ seg_build <- function(name = NULL,
   body <- seg
 
   if (!create_seg) {
-    jsonlite::toJSON(body, auto_unbox = T)
-  } else if (!create_seg) {
-    req <- aw_call_data(req_path = req_path, body = seg,
+   req <- jsonlite::toJSON(body, auto_unbox = T)
+  } else if (create_seg) {
+    req <- aw_call_data(req_path = req_path,
+                        body = body,
                         company_id = company_id,
                         client_id = client_id,
                         client_secret = client_secret)
-    req
   }
-
+ req
 }
