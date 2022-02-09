@@ -80,7 +80,6 @@ seg_pred <- function(subject = 'page',
     verb <- 'not-eq-in'
   }
   #fix equal any list for numbers
-verb <- 'exists'
   # assert that the verb is on the list
   assertthat::assert_that(verb %in% verbs$verb,
                           msg = "The 'verb' argument is not a valid verb. Use the function `seg_verb()` to see all available verbs or visit Adobe Experience League for more information. https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
