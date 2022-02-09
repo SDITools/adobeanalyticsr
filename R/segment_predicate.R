@@ -34,7 +34,7 @@
 #' @export
 seg_pred <- function(subject = 'page',
                      verb = 'contains',
-                     object = 'pagename',
+                     object = 'home',
                      description = NULL,
                      is_distinct = FALSE,
                      attribution = 'repeating',
@@ -85,6 +85,37 @@ seg_pred <- function(subject = 'page',
   assertthat::assert_that(verb %in% verbs$verb,
                           msg = "The 'verb' argument is not a valid verb. Use the function `seg_verb()` to see all available verbs or visit Adobe Experience League for more information. https://www.adobe.io/apis/experiencecloud/analytics/docs.html#!AdobeDocs/analytics-2.0-apis/master/segments.md")
   # Change Date Range to correct format
+  hour_change <- function(object) {
+    minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object[[1]]), '-'))-100)
+    hour <- stringr::str_extract(object[[2]], '\\d{2}') #use only the first two numbers for the hour
+    object <- as.numeric(glue::glue("{stringr::str_replace(minus100, '20', '1')}{hour}"))
+    object
+  }
+  day_change <- function(object) {
+    minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object), '-'))-100)
+    object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+    object
+  }
+  month_change <- function(object) {
+    adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'month' )
+    minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
+    object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+    object
+  }
+  quarter_change <- function(object) {
+    #Assign the fiscalstart variable which adds the ability to adjust the fiscal floor date to match how it is setup in the Adobe Admin. The default is set to 1 which should cover a majority of situations.
+    fiscalstart <- case_when(length(object) == 1 ~ '1', TRUE ~ object[2])
+    adjusted_date <- lubridate::quarter(x = as.Date(object), type = "date_first", fiscal_start = as.numeric(fiscalstart))
+    minus100 <- as.character(as.numeric(stringr::str_remove_all(adjusted_date, '-'))-100)
+    object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+    object
+  }
+  year_change <- function(object) {
+    adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'year')
+    minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
+    object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
+    object
+  }
   # Daterange subjects must have correct format to be referenced properly in the
   # API calls
   daterange_change <- function(subject, object, verbs){
@@ -93,25 +124,19 @@ seg_pred <- function(subject = 'page',
       assertthat::assert_that(length(object) == 2 & grepl('-', object[[1]]), msg = "Make sure to object is a character vector including the date and then time when using the 'daterangehour' subject. ex: c('2021-02-02', '1400')")
       #check the hour to make sure it is the correct format
       assertthat::assert_that(nchar(object[[2]]) == 4 & !is.na(as.numeric(object[[2]])), msg = "Make sure the hour is in military time. ex: '1500' if you wanted to use 3 PM as the hour" )
-      minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object[[1]]), '-'))-100)
-      hour <- stringr::str_extract(object[[2]], '\\d{2}') #use only the first two numbers for the hour
-      object <- as.numeric(glue::glue("{stringr::str_replace(minus100, '20', '1')}{hour}"))
-      return(object)
+
+      object <- hour_change(object)
     }
     if(subject == 'daterangeday' && !verb %in% verbs$verb[verbs$class == 'exists']){
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
-      minus100 <- as.character(as.numeric(stringr::str_remove_all(as.Date(object), '-'))-100)
-      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
-      return(object)
+
+      object <- day_change(object)
     }
     if(subject == 'daterangemonth' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
 
-      adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'month' )
-      minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
-      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
-      return(object)
+      object <- month_change(object)
     }
     if(subject == 'daterangequarter' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is in the correct format
@@ -120,22 +145,16 @@ seg_pred <- function(subject = 'page',
       if(length(object) == 2){
         assertthat::assert_that(object[[2]] %in% 1:12, msg = "Fiscal start month should be a number between 1-12. note: '1', January fiscal start, is default.")
       }
-      #Assign the fiscalstart variable which adds the ability to adjust the fiscal floor date to match how it is setup in the Adobe Admin. The default is set to 1 which should cover a majority of situations.
-      fiscalstart <- case_when(length(object) == 1 ~ '1', TRUE ~ object[2])
-      adjusted_date <- lubridate::quarter(x = as.Date(object), type = "date_first", fiscal_start = as.numeric(fiscalstart))
-      minus100 <- as.character(as.numeric(stringr::str_remove_all(adjusted_date, '-'))-100)
-      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
-      return(object)
+
+      object <- quarter_change(object)
     }
     if(subject == 'daterangeyear' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is full date format
       assertthat::assert_that(grepl(object, '-'), msg = "The full date must be supplied. Any valid date within the desired year will work. ex: YYYY-MM-DD")
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must be supplied in the YYYY-MM-DD format.")
-      adjusted_date <- lubridate::floor_date(as.Date(object), unit = 'year')
-      minus100 <- as.character(as.numeric(stringr::str_remove_all((adjusted_date), '-'))-100)
-      object <- as.numeric(stringr::str_replace(minus100, '20', '1'))
-      return(object)
+
+      object <- year_change(object)
     }
   }
   #/end date formatting

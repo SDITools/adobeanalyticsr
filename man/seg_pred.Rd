@@ -7,7 +7,7 @@
 seg_pred(
   subject = "page",
   verb = "contains",
-  object = "pagename",
+  object = "home",
   description = NULL,
   is_distinct = FALSE,
   attribution = "repeating",
