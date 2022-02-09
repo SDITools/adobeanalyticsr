@@ -64,7 +64,7 @@ seg_build <- function(name = NULL,
   }
 
   #define the new segment version
-  version <- list(0, 1, 0)
+  version <- list(1, 0, 0)
 
   #Create the segment list object
   if (!is.null(predicates) && is.null(containers) && is.null(sequences)) { ## Predicates
