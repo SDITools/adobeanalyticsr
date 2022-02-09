@@ -40,11 +40,12 @@ seg_verbs <- function(){
      c( "number", 'list', 'eq-any-of', "Equal to any of the values provided"),
      c( "number", 'list', 'not-eq-any-of', "Not equal to any of the values provided"),
      c( "string", 'exists', 'exists', "Tests if an attribute has been set to a value."),
-     c( "string",  'exists','not-exists', "Tests if an attribute has never been set to a value."),
-     c( "number",  'exists','event-exists', "Tests if an attribute has never been set to a number value."),
-     c( "number",  'exists','not-event-exists', "Tests if an attribute has never been set to a number value.")
+     c( "string", 'exists','not-exists', "Tests if an attribute has never been set to a value."),
+     c( "number", 'exists','event-exists', "Tests if an attribute has never been set to a number value."),
+     c( "number", 'exists','not-event-exists', "Tests if an attribute has never been set to a number value.")
      ))
 
    colnames(verbs) <-  c('type', 'class', 'verb', 'description')
-  verbs
+   verbs
+
 }
