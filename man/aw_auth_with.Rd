@@ -4,7 +4,7 @@
 \alias{aw_auth_with}
 \alias{aw_auth_path}
 \alias{aw_auth_name}
-\title{Set authentication options}
+\title{Set authorization options}
 \usage{
 aw_auth_with(type)
 
@@ -13,25 +13,28 @@ aw_auth_path(path)
 aw_auth_name(name)
 }
 \arguments{
-\item{type}{Either "oauth" or "jwt"}
+\item{type}{The authorization type: 'oauth' or 'jwt'}
 
-\item{path}{Location for the auth file. If the location does not exist,
-it will be created the first time a token is cached.}
+\item{path}{The location for the cached authorization token. It should be a
+directory, rather than a filename. If this option is not set, the current
+working directory is used instead. If the location does not exist, it will
+be created the first time a token is cached.}
 
-\item{name}{Filename, such as \code{aw_auth.rds}. The file is stored as an RDS
-file, but there is no requirement for the \code{.rds} file extension. \code{.rds} is
-not appended automatically.}
+\item{name}{The filename, such as \code{aw_auth.rds} for the cached authorization
+token file. The file is stored as an RDS file, but there is no requirement
+for the \code{.rds} file extension. \code{.rds} is not appended automatically.}
 }
 \value{
 The option value, invisibly
 }
 \description{
-If get or set an auth option. If called without an argument, gets the current
-setting for the requested option. Pass \code{NULL} as an argument to clear the
-setting and return to defaults.
+\strong{Get} or \strong{set} various authorization options. If called without an argument, then
+these functions return the current setting for the requested option (which can be
+\code{NULL} if the option has not been set). To clear the setting, pass \code{NULL} as an
+argument.
 
 \code{aw_auth_with} sets the type of authorization for the session. This is used
-as a default when no specific option is given.
+as the default by \code{aw_auth()} when no specific option is given.
 
 \code{aw_auth_path} sets the file path for the cached authorization token. It
 should be a directory, rather than a filename. If this option is not set, the
@@ -39,5 +42,8 @@ current working directory is used instead.
 
 \code{aw_auth_name} sets the file name for the cached authorization token. If this
 option is not set, the default filename is \code{aw_auth.rds}
+}
+\seealso{
+\code{\link[=aw_auth]{aw_auth()}}
 }
 \concept{options}

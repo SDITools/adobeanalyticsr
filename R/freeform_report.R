@@ -71,7 +71,8 @@
 #' - `search = c("(CONTAINS 'mobile') OR (CONTAINS 'tablet')", "(MATCH 'paid search')")` will return results where `mobiledevicetype` contains "mobile" _or_ "tablet" and, within those results, will only include results where `lasttouchchannel` exactly matches "paid search" (but is case-insensitive, so would return "Paid Search" values).
 #'
 #' @seealso [get_me()], [aw_get_reportsuites()], [aw_get_segments()],
-#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()]
+#' [aw_get_dimensions()], [aw_get_metrics()], [aw_get_calculatedmetrics()],
+#' [aw_segment_table()]
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
@@ -116,14 +117,15 @@
 #' from setting `check_components` to `FALSE`.
 #' @param debug Set to `TRUE` to publish the full JSON request(s) being sent to the API to the console when the
 #' function is called. The default is `FALSE`.
-#' @param check_components Logical, whether to check the validity of metrics and
-#' dimensions before running the query. Defaults to `TRUE`, but causes
-#' `aw_freeform_report` to request all dimensions and metrics from the API,
-#' which may be inefficient if you're running many queries. If you have many
-#' queries, it's more efficient to implement validity checking yourself on either
-#' side of your queries.
+#' @param check_components Specifies whether to check the validity of metrics and
+#' dimensions before running the query. This defaults to `TRUE`, which triggers
+#' several additional API calls behind the scenes to retrieve all dimensions and
+#' metrics from the API. This has a nominal performance impact and may not be
+#' ideal if you are running many queries. If you have many queries, consider
+#' implementing validity checking through other means (manually or within the
+#' code) and then set this value to `FALSE`.
 #'
-#' @return A data frame with dimensions and metrics.
+#' @return A data frame with the specified dimensions and metrics.
 #'
 #' @export
 aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -142,12 +144,14 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               debug = FALSE,
                               check_components = TRUE) {
   if (all(is.na(segmentId))) segmentId <- NULL
+
   # Repeated dimensions will cause an infinite loop
   if (length(dimensions) > length(unique(dimensions))) {
     stop("List of dimensions is not unique")
   }
   # No harm in repeated metrics, simply take the unique ones
   metrics <- unique(metrics)
+
 
   # Component lookup checks
   # The component checking is optional, in case speed is a priority
@@ -179,14 +183,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     segmentId = c(NA, segmentId)
   )
 
-  # Check search for at least one instance of a keyword
-  if (!all(is.na(search))) {
-    search_keywords <- c("AND", "OR", "NOT", "MATCH", "CONTAINS", "BEGINS-WITH", "ENDS-WITH")
-    if (sum(grepl(paste(search_keywords, collapse = "|"), search)) == 0) {
-      stop("Search field must contain at least one of: ", paste(search_keywords, collapse = ", "))
-    }
-  }
-
   # Set settings-like settings
   search <- na_fill_vec(search, len = length(dimensions))
   metricSort <- na_fill_vec(metricSort, len = length(metrics))
@@ -206,7 +202,9 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   # Estimate requests and reset global counter
   n_requests <- estimate_requests(top)
   if (n_requests > 20) {
-    initialize_global_counter(top)
+    initialize_global_counter(n_requests)
+  } else {
+    kill_global_counter()
   }
 
 
@@ -220,8 +218,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     rsid = rsid,
     global_filter = gf,
     settings = settings,
-    client_id = Sys.getenv("AW_CLIENT_ID"),
-    client_secret = Sys.getenv("AW_CLIENT_SECRET"),
     company_id = company_id,
     debug = debug,
     sort = metricSort,
@@ -232,13 +228,14 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   message("Done!")
   message(glue::glue("Returning {nrow(output_data)} x {ncol(output_data)} data frame"))
 
+  output_data <- convert_date_columns(output_data)
+
   if (prettynames) {
     output_data <- dplyr::select(output_data,
                                  all_of(pretty_comp_names))
   }
 
-  output_data %>%
-    convert_date_columns()
+  output_data
 }
 
 
@@ -270,11 +267,12 @@ n_queries <- function(top) {
 #' @return Number of requests necessary to complete query
 #' @noRd
 estimate_requests <- function(top) {
-  if (length(top) > 1) {
-    queries <- n_queries(top)
+  queries <- n_queries(top)
 
+  if (length(top) > 1) {
+    # I reckon about 1 second per query
     # sec
-    est_secs <- round((queries-1)*.80, digits = 0)
+    est_secs <- round(queries * 1.1, digits = 0)
     # min
     est_mins <- round(est_secs/60, digits = 0)
     # hour
@@ -289,9 +287,9 @@ estimate_requests <- function(top) {
     }
 
     message('Estimated runtime: ', message_text)
-
-    queries
   }
+
+  queries
 }
 
 
@@ -301,19 +299,29 @@ estimate_requests <- function(top) {
 #'
 #' This is used for generating the progress bar on long queries.
 #'
-#' @param top Top argument, essentially the number of rows returned from each
-#' query
+#' @param n_queries Number of queries to be completed
 #'
 #' @return Query quantiles, invisibly
 #' @noRd
-initialize_global_counter <- function(top) {
-  total_queries <- n_queries(top)
+initialize_global_counter <- function(total_queries) {
   prog_format <- "Progress [:bar] :percent in :elapsed"
 
   .adobeanalytics$prog_bar <- progress::progress_bar$new(total = total_queries,
                                                          format = prog_format,
                                                          clear = FALSE)
   invisible(total_queries)
+}
+
+
+#' Kill global counter
+#'
+#' Tears down the global counter
+#'
+#' @return NULL
+#' @noRd
+kill_global_counter <- function() {
+  .adobeanalytics$prog_bar <- NULL
+  NULL
 }
 
 
@@ -357,3 +365,4 @@ convert_date_columns <- function(dat) {
 
   dat
 }
+

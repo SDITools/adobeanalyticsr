@@ -1,7 +1,11 @@
 reference:
   - title: "Setup"
-    desc: "Functions for pulling basic company and reportsuite information."
+    desc: "Functions for pulling basic company and report suite information."
   - contents:
+      - aw_auth
+      - aw_auth_path
+      - aw_auth_name
+      - aw_auth_with
       - aw_token
       - get_me
       - get_users
@@ -20,6 +24,7 @@ reference:
     desc: "Functions for pulling the data using the API"
   - contents:
       - aw_freeform_table
+      - aw_segment_table
       - aw_workspace_report
       - aw_anomaly_report
 

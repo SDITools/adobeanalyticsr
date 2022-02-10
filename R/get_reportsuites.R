@@ -20,37 +20,35 @@
 #'
 #' @return A data frame of report suites and their meta data.
 #'
-#' @import stringr
 #' @export
 #'
 aw_get_reportsuites <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
-                            rsids = '',
-                            rsidContains = '',
+                            rsids = NULL,
+                            rsidContains = NULL,
                             limit = 10,
                             page = 0,
-                            expansion = NA,
+                            expansion = NULL,
                             debug = FALSE)
   {
+  # Reference: https://adobedocs.github.io/analytics-2.0-apis/#/collections/findAll
+  if (length(rsidContains) > 1) stop("'rsidContains' must be a scalar or NULL", call. = FALSE)
 
-  #remove spaces from the list of expansion tags
-  if(length(rsids) > 1) {rsids = URLencode(paste0(rsids, collapse = ',')) }
-  if(length(rsidContains) > 1) {rsidContains = (paste0(rsidContains, collapse = ',')) }
-  if(length(expansion) > 1) {expansion = paste(expansion, collapse = ',', sep = '') }
+  query_params <- list(
+    rsids = rsids,
+    rsidContains = rsidContains,
+    limit = limit,
+    page = page,
+    expansion = expansion
+  )
 
-  #create the URL to send with the query
-  urlstructure <- sprintf("collections/suites?rsids=%s&rsidContains=%s&limit=%s&page=%s&expansion=%s",
-                 rsids,rsidContains,limit,page,expansion)
+  urlstructure <- paste("collections/suites", format_URL_parameters(query_params), sep = "?")
 
   res <- aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id)
-
   res <- jsonlite::fromJSON(res)
 
   if (res$empty  == TRUE) {
-    warning('No Report Suites weere returned!')
-  } else {
-  #Just need the content of the returned json
-  res <- res$content
-
-  res
+    warning('No Report Suites were returned', call. = FALSE)
   }
+
+  res$content
 }

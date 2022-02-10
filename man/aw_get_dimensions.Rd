@@ -10,7 +10,7 @@ aw_get_dimensions(
   segmentable = FALSE,
   reportable = FALSE,
   classifiable = FALSE,
-  expansion = NA,
+  expansion = NULL,
   debug = FALSE,
   company_id = Sys.getenv("AW_COMPANY_ID")
 )

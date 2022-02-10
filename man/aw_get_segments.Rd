@@ -6,17 +6,17 @@
 \usage{
 aw_get_segments(
   company_id = Sys.getenv("AW_COMPANY_ID"),
-  rsids = NA,
-  segmentFilter = NA,
+  rsids = NULL,
+  segmentFilter = NULL,
   locale = "en_US",
-  name = NA,
-  tagNames = NA,
+  name = NULL,
+  tagNames = NULL,
   filterByPublishedSegments = "all",
   limit = 10,
   page = 0,
   sortDirection = "ASC",
   sortProperty = "id",
-  expansion = NA,
+  expansion = NULL,
   includeType = "all",
   debug = FALSE
 )

@@ -7,8 +7,6 @@
 #' @param rsid Reportsuite ID
 #' @param global_filter Global filter list
 #' @param settings Settings list
-#' @param client_id Client ID
-#' @param client_secret Client secret
 #' @param company_id Company ID
 #' @param debug Whether to debug
 #' @param sort How to sort results
@@ -27,8 +25,6 @@ get_req_data <- function(current_dim,
                          rsid,
                          global_filter,
                          settings,
-                         client_id,
-                         client_secret,
                          company_id,
                          debug,
                          sort,
@@ -43,15 +39,13 @@ get_req_data <- function(current_dim,
   if (length(previous_dims) == 0) {
     previous_dims <- NULL
     dateRange <- global_filter[[1]]$dateRange
-    type <- "dateRange"
   } else {
     dateRange <- NULL
-    type <- "breakdown"
   }
 
   mc <- metric_container(
     metrics = metrics,
-    type = type,
+    metricIds = metrics,
     sort = sort,
     dimensions = previous_dims,
     itemIds = item_ids,
@@ -78,9 +72,7 @@ get_req_data <- function(current_dim,
     req_path = "reports/ranked",
     body = req,
     debug = debug,
-    company_id = company_id,
-    client_id = client_id,
-    client_secret = client_secret
+    company_id = company_id
   ))
 
   # Increment progress bar
@@ -127,13 +119,12 @@ get_req_data <- function(current_dim,
                    rsid = rsid,
                    global_filter = global_filter,
                    settings = settings,
-                   client_id = client_id,
-                   client_secret = client_secret,
                    company_id = company_id,
                    debug = debug,
                    sort = sort,
                    top = top,
-                   page = page) %>%
+                   page = page,
+                   search = search) %>%
         dplyr::mutate(!!recent_dim := value)
     })
   }
@@ -149,6 +140,9 @@ get_req_data <- function(current_dim,
 #' @param metric_names Metric names in the order they appear in the list column
 #'
 #' @return `df` with list column unpacked
+#'
+#' @importFrom purrr flatten_dbl
+#' @importFrom purrr transpose
 #' @noRd
 unpack_metrics <- function(df, metric_names) {
   if (identical(df, data.frame())) {
@@ -158,7 +152,7 @@ unpack_metrics <- function(df, metric_names) {
       data_list <- df$data
       df$data <- NULL
 
-      data_df <- lapply(purrr::transpose(data_list), flatten_dbl) %>%
+      data_df <- lapply(purrr::transpose(data_list), purrr::flatten_dbl) %>%
         stats::setNames(metric_names) %>%
         as.data.frame()
 

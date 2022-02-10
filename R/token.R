@@ -1,12 +1,20 @@
-#' OAuth2 Token for Adobe Analytics
+#' OAuth2 Token for Adobe Analytics (deprecated)
+#'
+#' @description
+#' This is the legacy mechanism for retrieving the authorization token using
+#' OAuth. It has been replaced by `aw_auth()`.
 #'
 #' `r lifecycle::badge("deprecated")`
+#'
+#' @seealso [aw_auth()]
 #'
 #' @param client_id defined by global variable or manually defined
 #' @param client_secret defined by global variable or manually defined
 #' @param use_oob for the purpose of testing. Default is set to TRUE
 #'
-#' @return An authorization token is saved the file name aa.oauth. If the file aa.oauth does not exist then one will be created at the end of the authorization process.
+#' @return An authorization token is saved the file name aa.oauth. If the
+#' file aa.oauth does not exist then one will be created at the end of the
+#' authorization process.
 #'
 #' @export
 #' @import httr

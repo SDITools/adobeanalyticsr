@@ -7,11 +7,11 @@
 get_usage_logs(
   startDate = Sys.Date() - 91,
   endDate = Sys.Date() - 1,
-  login = NA,
-  ip = NA,
-  rsid = NA,
-  eventType = NA,
-  event = NA,
+  login = NULL,
+  ip = NULL,
+  rsid = NULL,
+  eventType = NULL,
+  event = NULL,
   limit = 100,
   page = 0,
   company_id = Sys.getenv("AW_COMPANY_ID")

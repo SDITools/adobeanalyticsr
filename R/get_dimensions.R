@@ -24,38 +24,34 @@
 #'
 #' @return A data frame of dimensions and their meta data.
 #'
-#' @import stringr
 #' @export
 aw_get_dimensions <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                               locale = 'en_US',
                               segmentable = FALSE,
                               reportable = FALSE,
                               classifiable = FALSE,
-                              expansion = NA,
+                              expansion = NULL,
                               debug = FALSE,
                               company_id = Sys.getenv("AW_COMPANY_ID") ){
+  # Reference: https://adobedocs.github.io/analytics-2.0-apis/#/dimensions/dimensions_getDimensions
 
-  #remove spaces from the list of expansion tags
-  if(is.na(paste(expansion,collapse=","))) {
-    vars <- tibble::tibble(locale, segmentable)
-  }
-  if(!is.na(paste(expansion,collapse=","))) {
-    vars <- tibble::tibble(locale, segmentable, reportable, classifiable, expansion = paste(expansion,collapse=","))
-  }
-  #Turn the list into a string to create the query
-  prequery <- list(vars %>% dplyr::select_if(~ any(!is.na(.))))
-  #remove the extra parts of the string and replace it with the query parameter breaks
-  query_param <- stringr::str_remove_all(stringr::str_replace_all(stringr::str_remove_all(paste(prequery, collapse = ''), '\\"'), ', ', '&'), 'list\\(| |\\)')
+  query_params <- list(
+    rsid = rsid,
+    locale = locale,
+    segmentable = segmentable,
+    reportable = reportable,
+    classifiable = classifiable,
+    expansion = expansion
+  )
 
-  #create the url to send with the query
-  urlstructure <-  glue::glue('dimensions?rsid={rsid}&{query_param}')
+  urlstructure <- paste("dimensions", format_URL_parameters(query_params), sep = "?")
 
   res <- aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
 
-  # removing "metrics/" from the beginning of the id value
-  res$id <- stringr::str_sub(res$id, 11)
+  # ID column returned with "variables/" prepended to names
+  res$id <- gsub("^variables/", "", res$id)
 
   res
 }
