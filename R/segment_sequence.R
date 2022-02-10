@@ -46,7 +46,7 @@
 #'
 seg_seq <- function(context = 'visits',
                     predicates = NULL,
-                    sequence = 'before',
+                    sequence = 'in_order',
                     exclude = FALSE,
                     exclude_checkpoint = NULL) {
 

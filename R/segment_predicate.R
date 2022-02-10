@@ -124,18 +124,20 @@ seg_pred <- function(subject = 'page',
       #check the hour to make sure it is the correct format
       assertthat::assert_that(nchar(object[[2]]) == 4 & !is.na(as.numeric(object[[2]])), msg = "Make sure the hour is in military time. ex: '1500' if you wanted to use 3 PM as the hour" )
 
-      object <- hour_change(object)
+      obj <- hour_change(object)
+
     }
     if(subject == 'daterangeday' && !verb %in% verbs$verb[verbs$class == 'exists']){
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
 
-      object <- day_change(object)
+      obj <- day_change(object)
+
     }
     if(subject == 'daterangemonth' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must in YYYY-MM-DD format.")
 
-      object <- month_change(object)
+      obj <- month_change(object)
     }
     if(subject == 'daterangequarter' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is in the correct format
@@ -145,7 +147,7 @@ seg_pred <- function(subject = 'page',
         assertthat::assert_that(object[[2]] %in% 1:12, msg = "Fiscal start month should be a number between 1-12. note: '1', January fiscal start, is default.")
       }
 
-      object <- quarter_change(object)
+      obj <-  quarter_change(object)
     }
     if(subject == 'daterangeyear' && !verb %in% verbs$verb[verbs$class == 'exists']){
       #assert that the date is full date format
@@ -153,8 +155,9 @@ seg_pred <- function(subject = 'page',
       #assert that the date is in the correct format
       assertthat::assert_that(class(as.Date(object, format="%Y-%m-%d")) == 'Date' & !is.na(as.Date(object, format="%Y-%m-%d")) & lubridate::year(as.Date(object)) %in% 1900:2500, msg = "Date must be supplied in the YYYY-MM-DD format.")
 
-      object <- year_change(object)
+      obj <-  year_change(object)
     }
+    obj
   }
   #/end date formatting
   #if subject is one of 'daterange' the object must be changed in the definition to the correct format
@@ -175,7 +178,7 @@ seg_pred <- function(subject = 'page',
 
 create_pred <- function(val_func, verbs, is_distinct) {
   #define reference for verbs
-  exists_verbs <- verbs$verb[verbs$type == 'exists' & verbs$class == 'exists']
+  exists_verbs <- verbs$verb[verbs$class == 'exists']
   str_verbs <- verbs$verb[verbs$type == 'string' & verbs$class == 'string']
   strlist_verbs <- verbs$verb[verbs$type == 'string' & verbs$class == 'list']
   numlist_verbs <- verbs$verb[verbs$type == 'number' & verbs$class == 'list']
