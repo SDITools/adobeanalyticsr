@@ -267,9 +267,7 @@ seg_build <- function(name = NULL,
   } else if (create_seg) {
     req <- aw_call_data(req_path = req_path,
                         body = body,
-                        company_id = company_id,
-                        client_id = client_id,
-                        client_secret = client_secret)
+                        company_id = company_id)
   }
  req
 }
