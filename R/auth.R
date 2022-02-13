@@ -263,31 +263,21 @@ get_env_vars <- function() {
 #' @family auth
 #' @describeIn aw_auth Authenticate with JWT token
 #' @export
-auth_jwt <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
-                     client_secret = Sys.getenv("AW_CLIENT_SECRET"),
-                     private_key = Sys.getenv("AW_PRIVATE_KEY"),
-                     org_id = Sys.getenv("AW_ORGANIZATION_ID"),
-                     tech_id = Sys.getenv("AW_TECHNICAL_ID"),
+auth_jwt <- function(file,
                      jwt_token = NULL,
                      ...) {
-    secrets <- list(
-        client_id = client_id,
-        client_secret = client_secret,
-        private_key = private_key,
-        org_id = org_id,
-        tech_id = tech_id
-    )
+  secrets <- jsonlite::fromJSON(file)
 
-    resp <- auth_jwt_gen(secrets = secrets, jwt_token = jwt_token)
+  resp <- auth_jwt_gen(secrets = secrets, jwt_token = jwt_token)
 
 
-    # If successful
-    message("Successfully authenticated with JWT: access token valid until ",
-                  resp$date + httr::content(resp)$expires_in / 1000)
+  # If successful
+  message("Successfully authenticated with JWT: access token valid until ",
+          resp$date + httr::content(resp)$expires_in / 1000)
 
-    .adobeanalytics$token <- AdobeJwtToken$new(resp, secrets)
-    .adobeanalytics$client_id <- client_id
-    .adobeanalytics$client_secret <- client_secret
+  .adobeanalytics$token <- AdobeJwtToken$new(resp, secrets)
+  .adobeanalytics$client_id <- secrets$CLIENT_ID
+  .adobeanalytics$client_secret <- secrets$CLIENT_SECRET
 }
 
 
@@ -300,28 +290,30 @@ auth_jwt <- function(client_id = Sys.getenv("AW_CLIENT_ID"),
 auth_jwt_gen <- function(secrets,
                          jwt_token = NULL) {
 
-    stopifnot(is.character(secrets$client_id))
-    stopifnot(is.character(secrets$client_secret))
-    stopifnot(is.character(secrets$private_key))
-    stopifnot(is.character(secrets$org_id))
-    stopifnot(is.character(secrets$tech_id))
+    stopifnot(is.character(secrets$CLIENT_ID))
+    stopifnot(is.character(secrets$CLIENT_SECRET))
+    stopifnot(is.character(secrets$PRIVATE_KEY))
+    stopifnot(is.character(secrets$ADOBE_ORG_ID))
+    stopifnot(is.character(secrets$SUBJECT_ACCOUNT))
 
     if (any(c(secrets$client_id, secrets$client_secret) == "")) {
-        stop("Client ID or Client Secret not found. Are your environment variables named `AW_CLIENT_ID` and `AW_CLIENT_SECRET`?")
+        stop("Client ID or Client Secret not found.")
     }
+
+    private_key <- openssl::read_key(file = secrets$PRIVATE_KEY)
 
 
     jwt_token <- get_jwt_token(jwt_token = jwt_token,
-                               client_id = secrets$client_id,
-                               private_key = secrets$private_key,
-                               org_id = secrets$org_id,
-                               tech_id = secrets$tech_id)
+                               client_id = secrets$CLIENT_ID,
+                               private_key = private_key,
+                               org_id = secrets$ADOBE_ORG_ID,
+                               tech_id = secrets$SUBJECT_ACCOUNT)
 
 
     token <- httr::POST(url="https://ims-na1.adobelogin.com/ims/exchange/jwt",
                         body = list(
-                            client_id = secrets$client_id,
-                            client_secret = secrets$client_secret,
+                            client_id = secrets$CLIENT_ID,
+                            client_secret = secrets$CLIENT_SECRET,
                             jwt_token = jwt_token
                         ),
                         encode = 'form')
@@ -335,7 +327,7 @@ auth_jwt_gen <- function(secrets,
 #'
 #' Gets a JWT token
 #'
-#' @param jwt_token Optional, a JWT token (e.g., a cached token)
+#' @param jwt_token Optional, a JWT token
 #' @param client_id Client ID
 #' @param private_key File path to private key for token signature
 #' @param org_id Organization ID from integration console
@@ -397,7 +389,7 @@ AdobeJwtToken <- R6::R6Class("AdobeJwtToken", list(
         self$token <- token
     },
     can_refresh = function() {
-        !all(c(secrets$private_key, secrets$org_id, secrets$tech_id) == "")
+        FALSE
     },
     refresh = function() {
         self$token <- auth_jwt_gen(self$secrets)
