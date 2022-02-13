@@ -8,15 +8,7 @@
 \usage{
 aw_auth(type = aw_auth_with(), ...)
 
-auth_jwt(
-  client_id = Sys.getenv("AW_CLIENT_ID"),
-  client_secret = Sys.getenv("AW_CLIENT_SECRET"),
-  private_key = Sys.getenv("AW_PRIVATE_KEY"),
-  org_id = Sys.getenv("AW_ORGANIZATION_ID"),
-  tech_id = Sys.getenv("AW_TECHNICAL_ID"),
-  jwt_token = NULL,
-  ...
-)
+auth_jwt(file = Sys.getenv("AW_AUTH_FILE"), jwt_token = NULL, ...)
 
 auth_oauth(
   client_id = Sys.getenv("AW_CLIENT_ID"),
@@ -31,18 +23,18 @@ running \code{aw_auth()}}
 
 \item{...}{Additional arguments passed to auth functions.}
 
-\item{client_id}{The client ID, defined by a global variable or manually defined}
-
-\item{client_secret}{The client secret, defined by a global variable or manually defined}
-
-\item{private_key}{The file path to private key for token signature (JWT auth only)}
-
-\item{org_id}{Organization ID from integration console (JWT auth only)}
-
-\item{tech_id}{Technical account ID from integration console (JWT auth only)}
+\item{file}{A JSON file containing service account credentials required for JWT
+authentication. The required fields are \code{CLIENT_ID}, \code{CLIENT_SECRET},
+\code{ADOBE_ORG_ID}, \code{SUBJECT_ACCOUNT}, and \code{PRIVATE_KEY} (JWT only). This
+argument defaults to the environment variable \code{AW_AUTH_FILE}, which should
+contain a filename pointing to the appropriate JSON file.}
 
 \item{jwt_token}{\emph{(Optional)} A custom, encoded, signed JWT claim. If used,
 only \code{client_id} and \code{client_secret} are required.}
+
+\item{client_id}{The client ID, defined by a global variable or manually defined}
+
+\item{client_secret}{The client secret, defined by a global variable or manually defined}
 
 \item{use_oob}{if \code{FALSE}, use a local webserver for the OAuth dance.
 Otherwise, provide a URL to the user and prompt for a validation code.

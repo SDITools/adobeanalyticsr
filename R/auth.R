@@ -11,9 +11,11 @@
 #' @param ... Additional arguments passed to auth functions.
 #' @param client_id The client ID, defined by a global variable or manually defined
 #' @param client_secret The client secret, defined by a global variable or manually defined
-#' @param private_key The file path to private key for token signature (JWT auth only)
-#' @param org_id Organization ID from integration console (JWT auth only)
-#' @param tech_id Technical account ID from integration console (JWT auth only)
+#' @param file A JSON file containing service account credentials required for JWT
+#' authentication. The required fields are `CLIENT_ID`, `CLIENT_SECRET`,
+#' `ADOBE_ORG_ID`, `SUBJECT_ACCOUNT`, and `PRIVATE_KEY` (JWT only). This
+#' argument defaults to the environment variable `AW_AUTH_FILE`, which should
+#' contain a filename pointing to the appropriate JSON file.
 #' @param jwt_token _(Optional)_ A custom, encoded, signed JWT claim. If used,
 #'   only `client_id` and `client_secret` are required.
 #' @param use_oob if `FALSE`, use a local webserver for the OAuth dance.
@@ -263,9 +265,12 @@ get_env_vars <- function() {
 #' @family auth
 #' @describeIn aw_auth Authenticate with JWT token
 #' @export
-auth_jwt <- function(file,
+auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
                      jwt_token = NULL,
                      ...) {
+  if (file == "") {
+    stop("Variable 'AW_AUTH_FILE' not found but required for JWT authentication.\nSee `?aw_auth`")
+  }
   secrets <- jsonlite::fromJSON(file)
 
   resp <- auth_jwt_gen(secrets = secrets, jwt_token = jwt_token)
