@@ -1,8 +1,9 @@
-#' Create a project in Adobe
+#' Edit a project in Adobe
 #'
-#' Creates a new project in Adobe
+#' Edits an existing project in Adobe
 #'
-#' @param body The project json string which include the configuration and definition
+#' @param projectId The project id to be edited
+#' @param body The json string in list format which includes the edits to be made
 #' @param expansion Comma-delimited list of additional project metadata fields to include on response. Available values : reportSuiteName, shares, tags, accessLevel, modified, externalReferences, definition
 #' @param locale Locale Default value : en_US
 #' @param debug Set to `TRUE` to publish the full JSON request(s) being sent to the API to the console when the
@@ -14,18 +15,19 @@
 #' @return A json string
 #' @export
 #'
-proj_build <- function(body = NULL,
-                       expansion = NULL,
-                       locale = 'en_US',
-                       debug = FALSE,
-                       company_id = Sys.getenv("AW_COMPANY_ID")
+proj_update <- function(projectId = NULL,
+                        body = NULL,
+                        expansion = NULL,
+                        locale = 'en_US',
+                        debug = FALSE,
+                        company_id = Sys.getenv("AW_COMPANY_ID")
                             ){
   query_params <- list(
     expansion = expansion,
     locale = locale
   )
 
-  req_path <- glue::glue("projects")
+  req_path <- glue::glue("projects/{projectId}")
   urlstructure <- paste(req_path, format_URL_parameters(query_params), sep = "?")
   res <- aw_call_data(req_path = urlstructure, body = body, debug = debug, company_id = company_id)
 

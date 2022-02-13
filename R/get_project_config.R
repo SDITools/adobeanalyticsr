@@ -15,10 +15,10 @@
 #' @export
 #'
 aw_get_project_config <- function(projectId = NULL,
-                            expansion = NULL,
-                            locale = 'en_US',
-                            debug = FALSE,
-                            company_id = Sys.getenv("AW_COMPANY_ID")
+                                  expansion = NULL,
+                                  locale = 'en_US',
+                                  debug = FALSE,
+                                  company_id = Sys.getenv("AW_COMPANY_ID")
                             ){
   query_params <- list(
     expansion = expansion,
