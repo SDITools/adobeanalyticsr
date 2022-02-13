@@ -12,10 +12,8 @@
 #' @param client_id The client ID, defined by a global variable or manually defined
 #' @param client_secret The client secret, defined by a global variable or manually defined
 #' @param file A JSON file containing service account credentials required for JWT
-#' authentication. The required fields are `CLIENT_ID`, `CLIENT_SECRET`,
-#' `ADOBE_ORG_ID`, `SUBJECT_ACCOUNT`, and `PRIVATE_KEY` (JWT only). This
-#' argument defaults to the environment variable `AW_AUTH_FILE`, which should
-#' contain a filename pointing to the appropriate JSON file.
+#' authentication.
+#' @param private_key Filename of the private key for JWT authentication.
 #' @param jwt_token _(Optional)_ A custom, encoded, signed JWT claim. If used,
 #'   only `client_id` and `client_secret` are required.
 #' @param use_oob if `FALSE`, use a local webserver for the OAuth dance.
@@ -266,6 +264,7 @@ get_env_vars <- function() {
 #' @describeIn aw_auth Authenticate with JWT token
 #' @export
 auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
+                     private_key = Sys.getenv("AW_PRIVATE_KEY"),
                      jwt_token = NULL,
                      ...) {
   if (file == "") {
@@ -273,7 +272,7 @@ auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
   }
   secrets <- jsonlite::fromJSON(file)
 
-  resp <- auth_jwt_gen(secrets = secrets, jwt_token = jwt_token)
+  resp <- auth_jwt_gen(secrets = secrets, private_key = private_key, jwt_token = jwt_token)
 
 
   # If successful
@@ -281,7 +280,7 @@ auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
           resp$date + httr::content(resp)$expires_in / 1000)
 
   .adobeanalytics$token <- AdobeJwtToken$new(resp, secrets)
-  .adobeanalytics$client_id <- secrets$CLIENT_ID
+  .adobeanalytics$client_id <- secrets$API_KEY
   .adobeanalytics$client_secret <- secrets$CLIENT_SECRET
 }
 
@@ -289,35 +288,36 @@ auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
 #' Generate the authorization response object
 #'
 #' @param secrets List of secret values, see `auth_jwt`
+#' @param private_key Filename of the private key file
 #' @param jwt_token Optional, a JWT token (e.g., a cached token)
 #'
 #' @noRd
 auth_jwt_gen <- function(secrets,
+                         private_key,
                          jwt_token = NULL) {
 
-    stopifnot(is.character(secrets$CLIENT_ID))
+    stopifnot(is.character(secrets$API_KEY))
     stopifnot(is.character(secrets$CLIENT_SECRET))
-    stopifnot(is.character(secrets$PRIVATE_KEY))
-    stopifnot(is.character(secrets$ADOBE_ORG_ID))
-    stopifnot(is.character(secrets$SUBJECT_ACCOUNT))
+    stopifnot(is.character(secrets$ORG_ID))
+    stopifnot(is.character(secrets$TECHNICAL_ACCOUNT_ID))
 
-    if (any(c(secrets$client_id, secrets$client_secret) == "")) {
+    if (any(c(secrets$API_KEY, secrets$CLIENT_SECRET) == "")) {
         stop("Client ID or Client Secret not found.")
     }
 
-    private_key <- openssl::read_key(file = secrets$PRIVATE_KEY)
+    private_key <- openssl::read_key(file = private_key)
 
 
     jwt_token <- get_jwt_token(jwt_token = jwt_token,
-                               client_id = secrets$CLIENT_ID,
+                               client_id = secrets$API_KEY,
                                private_key = private_key,
-                               org_id = secrets$ADOBE_ORG_ID,
-                               tech_id = secrets$SUBJECT_ACCOUNT)
+                               org_id = secrets$ORG_ID,
+                               tech_id = secrets$TECHNICAL_ACCOUNT_ID)
 
 
     token <- httr::POST(url="https://ims-na1.adobelogin.com/ims/exchange/jwt",
                         body = list(
-                            client_id = secrets$CLIENT_ID,
+                            client_id = secrets$API_KEY,
                             client_secret = secrets$CLIENT_SECRET,
                             jwt_token = jwt_token
                         ),

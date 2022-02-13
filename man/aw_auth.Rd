@@ -8,7 +8,12 @@
 \usage{
 aw_auth(type = aw_auth_with(), ...)
 
-auth_jwt(file = Sys.getenv("AW_AUTH_FILE"), jwt_token = NULL, ...)
+auth_jwt(
+  file = Sys.getenv("AW_AUTH_FILE"),
+  private_key = Sys.getenv("AW_PRIVATE_KEY"),
+  jwt_token = NULL,
+  ...
+)
 
 auth_oauth(
   client_id = Sys.getenv("AW_CLIENT_ID"),
@@ -24,10 +29,9 @@ running \code{aw_auth()}}
 \item{...}{Additional arguments passed to auth functions.}
 
 \item{file}{A JSON file containing service account credentials required for JWT
-authentication. The required fields are \code{CLIENT_ID}, \code{CLIENT_SECRET},
-\code{ADOBE_ORG_ID}, \code{SUBJECT_ACCOUNT}, and \code{PRIVATE_KEY} (JWT only). This
-argument defaults to the environment variable \code{AW_AUTH_FILE}, which should
-contain a filename pointing to the appropriate JSON file.}
+authentication.}
+
+\item{private_key}{Filename of the private key for JWT authentication.}
 
 \item{jwt_token}{\emph{(Optional)} A custom, encoded, signed JWT claim. If used,
 only \code{client_id} and \code{client_secret} are required.}
