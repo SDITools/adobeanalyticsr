@@ -3,7 +3,7 @@
 #' Generate an Access Token for the Adobe Analytics v2.0 API
 #'
 #' **Note:** `aw_auth()` is the primary function used for authorization. `auth_oauth()`
-#' and `auth_jwt()` should not be called directly, as these do not cache the token.
+#' and `auth_jwt()` should typically not be called directly.
 #'
 #' @param type Either 'jwt' or 'oauth'. This can be set explicitly, but a best practice is
 #' to run `aw_auth_with()` to set the authorization type as an environment variable before
@@ -12,14 +12,18 @@
 #' @param client_id The client ID, defined by a global variable or manually defined
 #' @param client_secret The client secret, defined by a global variable or manually defined
 #' @param file A JSON file containing service account credentials required for JWT
-#' authentication.
+#' authentication. This file can be downloaded directly from the Adobe Console,
+#' and should minimally have the fields `API_KEY`, `CLIENT_SECRET`, `ORG_ID`,
+#' and `TECHNICAL_ACCOUNT_ID`.
 #' @param private_key Filename of the private key for JWT authentication.
 #' @param jwt_token _(Optional)_ A custom, encoded, signed JWT claim. If used,
-#'   only `client_id` and `client_secret` are required.
+#'   `client_id` and `client_secret` are still required.
 #' @param use_oob if `FALSE`, use a local webserver for the OAuth dance.
 #'   Otherwise, provide a URL to the user and prompt for a validation code.
 #'   Defaults to the value of the `httr_oob_default` default, or TRUE if
 #'   `httpuv` is not installed.
+#' @param org_id Deprecated.
+#' @param tech_id Deprecated.
 #'
 #' @seealso [aw_auth_with()]
 #'
@@ -28,15 +32,16 @@
 #' @aliases aw_auth auth_jwt auth_oauth
 #' @export
 aw_auth <- function(type = aw_auth_with(), ...) {
-    if (is.null(type)) {
-        stop("Authentication type missing, please set an auth type with `aw_auth_with`")
-    }
-    type <- match.arg(type, c("jwt", "oauth"))
 
-    switch(type,
-        jwt = auth_jwt(...),
-        oauth = auth_oauth(...)
-    )
+  if (is.null(type)) {
+    stop("Authentication type missing, please set an auth type with `aw_auth_with`")
+  }
+  type <- match.arg(type, c("jwt", "oauth"))
+
+  switch(type,
+         jwt = auth_jwt(...),
+         oauth = auth_oauth(...)
+  )
 }
 
 #' Set authorization options
@@ -268,8 +273,12 @@ auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
                      jwt_token = NULL,
                      ...) {
   if (file == "") {
-    stop("Variable 'AW_AUTH_FILE' not found but required for JWT authentication.\nSee `?aw_auth`")
+    if (Sys.getenv("AW_TECHNICAL_ID") != "" | Sys.getenv("AW_ORGANIZATION_ID") != "") {
+      stop("Using separate environment variables for JWT auth is deprecated.\nUse file-based authentication instead. See `?aw_auth`.")
+    }
+    stop("Variable 'AW_AUTH_FILE' not found but required for default JWT authentication.\nSee `?aw_auth`")
   }
+
   secrets <- jsonlite::fromJSON(file)
 
   resp <- auth_jwt_gen(secrets = secrets, private_key = private_key, jwt_token = jwt_token)

@@ -29,12 +29,14 @@ running \code{aw_auth()}}
 \item{...}{Additional arguments passed to auth functions.}
 
 \item{file}{A JSON file containing service account credentials required for JWT
-authentication.}
+authentication. This file can be downloaded directly from the Adobe Console,
+and should minimally have the fields \code{API_KEY}, \code{CLIENT_SECRET}, \code{ORG_ID},
+and \code{TECHNICAL_ACCOUNT_ID}.}
 
 \item{private_key}{Filename of the private key for JWT authentication.}
 
 \item{jwt_token}{\emph{(Optional)} A custom, encoded, signed JWT claim. If used,
-only \code{client_id} and \code{client_secret} are required.}
+\code{client_id} and \code{client_secret} are still required.}
 
 \item{client_id}{The client ID, defined by a global variable or manually defined}
 
@@ -44,13 +46,17 @@ only \code{client_id} and \code{client_secret} are required.}
 Otherwise, provide a URL to the user and prompt for a validation code.
 Defaults to the value of the \code{httr_oob_default} default, or TRUE if
 \code{httpuv} is not installed.}
+
+\item{org_id}{Deprecated.}
+
+\item{tech_id}{Deprecated.}
 }
 \value{
 The path of the cached token. This is returned invisibly.
 }
 \description{
 \strong{Note:} \code{aw_auth()} is the primary function used for authorization. \code{auth_oauth()}
-and \code{auth_jwt()} should not be called directly, as these do not cache the token.
+and \code{auth_jwt()} should typically not be called directly.
 }
 \section{Functions}{
 \itemize{
