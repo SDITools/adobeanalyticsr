@@ -20,8 +20,6 @@
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' Use [get_me()] to get a list of available `company_id` values.
-#' @param client_id Set in environment args, or pass directly here
-#' @param client_secret Set in environment args, or pass directly here
 #'
 #' @details
 #'
@@ -55,9 +53,7 @@ seg_build <- function(name = NULL,
                       create_seg = FALSE,
                       debug = FALSE,
                       rsid = Sys.getenv('AW_REPORTSUITE_ID'),
-                      company_id = Sys.getenv("AW_COMPANY_ID"),
-                      client_id = Sys.getenv("AW_CLIENT_ID"),
-                      client_secret = Sys.getenv("AW_CLIENT_SECRET")){
+                      company_id = Sys.getenv("AW_COMPANY_ID")){
   #validate arguments
   if(is.null(name) || is.null(description)) {
     stop('The arguments `name` and `description` must be included.')
@@ -75,7 +71,7 @@ seg_build <- function(name = NULL,
           predicates[[1]]$val$`allocation-model`$context = 'sessions'
           }
         }
-        seg <- structure(list(
+        seg <- list(
           name = name,
           description = description,
           definition = list(
@@ -88,9 +84,9 @@ seg_build <- function(name = NULL,
             version = version
           ),
           rsid = rsid
-        ))
+        )
       } else {
-        seg <- structure(list(
+        seg <- list(
           name = name,
           description = description,
           definition = list(
@@ -106,12 +102,12 @@ seg_build <- function(name = NULL,
             version = version
           ),
           rsid = rsid
-        ))
+        )
       }
     } #/exclude FALSE
     if (exclude == TRUE) {
       if (length(predicates) == 1) {
-        seg <-  structure(list(
+        seg <-  list(
           name = name,
           description = description,
           definition = list(
@@ -127,10 +123,9 @@ seg_build <- function(name = NULL,
             version = version
           ),
           rsid = rsid
-        ))
-
+        )
       } else {
-        seg <-  structure(list(
+        seg <-  list(
           name = name,
           description = description,
           definition = list(
@@ -153,12 +148,12 @@ seg_build <- function(name = NULL,
             version = version
           ),
           rsid = rsid
-        ))
+        )
       }
     } #/exclude TRUE
   } else if (is.null(predicates) && !is.null(containers) && is.null(sequences)){  #Containers
     if (length(containers) == 1) {
-     seg <- structure(list(
+     seg <- list(
        name = name,
        description = description,
         definition = list(
@@ -171,9 +166,9 @@ seg_build <- function(name = NULL,
          version = version
          ),
        rsid = rsid
-       ))
+       )
       } else {
-        seg <-  structure(list(
+        seg <-  list(
           name = name,
           description = description,
           definition = list(
@@ -189,7 +184,7 @@ seg_build <- function(name = NULL,
             )
           ),
           rsid = rsid
-        ))
+        )
       }
   } else if(is.null(predicates) && is.null(containers) && !is.null(sequences)) {
     sequence_dir <- dplyr::case_when(sequence == 'in_order' ~ 'sequence',
@@ -217,7 +212,7 @@ seg_build <- function(name = NULL,
     }
 
     seg <- if (sequence_dir == 'sequence') {
-      structure(list(
+      list(
         name = name,
         description = description,
         definition = list(
@@ -233,9 +228,9 @@ seg_build <- function(name = NULL,
           version = version
         ),
         rsid = rsid
-      ))
+      )
     } else if (sequence_dir %in% c('sequence-prefix', 'sequence-suffix')) {
-      structure(list(
+      list(
         name = name,
         description = description,
         definition = list(
@@ -252,7 +247,7 @@ seg_build <- function(name = NULL,
           version = version
         ),
         rsid = rsid
-      ))
+      )
     }
   } else if (is.null(predicates) & is.null(containers) & is.null(sequences)) {
     stop('Either a predicate(s), containers, or sequences must be provided.')

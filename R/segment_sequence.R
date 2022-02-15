@@ -50,63 +50,62 @@ seg_seq <- function(context = 'visits',
                     exclude = FALSE,
                     exclude_checkpoint = NULL) {
 
-# validate 'sequence' argument value
-if (!sequence %in% c("in_order", "after", "before", "and", "or")) {
-  stop("Make sure the `sequence` argument is either 'in_order' (default), 'after', 'before', 'and', or 'or'.")
-}
-# validate 'context' argument value
-if (!context %in% c("hits", "visits", "visitors")) {
-  stop("Make sure the `context` argument is either 'hits', 'visits' (default), or 'visitors'")
-}
-# validate 'exclude' argument value
-if (!is.logical(exclude)) {
-  stop("The argument `exclude` must be either True or False.")
-}
-# validate 'exclude_checkpoint' argument value
-if (!is.null(exclude_checkpoint) & !is.numeric(exclude_checkpoint)) {
-  stop("The argument 'exclude_checkpoint' needs to be NULL, a single number, or a vector of numbers defining the predicates you want to exclude.")
-}
-#define the sequence direction
-f.seq_dir <- function(sequence){
-  dplyr::case_when(sequence == 'in_order' ~ 'sequence',
-                   sequence == 'after' ~ 'sequence-prefix',
-                   sequence == 'before' ~ 'sequence-suffix',
-                   sequence == 'and' ~ 'sequence-and',
-                   sequence == 'or' ~ 'sequence-or')
-}
-sequence_dir <- f.seq_dir(sequence)
-## Append the exclusion list item
-if (!is.null(exclude_checkpoint)) {
-  new_checkpoints <- (exclude_checkpoint-1) + (seq(length(exclude_checkpoint)) - 1)
-  for (i in new_checkpoints) {
-    predicates <- append(predicates,
-                         list(list(func = 'exclude-next-checkpoint')),
-                         after = i)
+  # validate 'sequence' argument value
+  if (!sequence %in% c("in_order", "after", "before", "and", "or")) {
+    stop("Make sure the `sequence` argument is either 'in_order' (default), 'after', 'before', 'and', or 'or'.")
   }
-}
-## Add in the necessary 'container' and 'hits' variables to each predicate for sequence to work
-pred_items <- list()
-for (i in seq_along(predicates)) {
-  if (!is.null(predicates[[i]]$val)) {
-    pred_items <- append(pred_items, list(
-      list(context = 'hits',
-           func = 'container',
-           pred = predicates[[i]])
-    ))
-  } else if (length(predicates[[i]]) == 2) {
-    if (is.list(predicates[[i]][[1]])){
-      for(item in seq(length(predicates[[i]]))) {
-        pred_items <- append(pred_items, predicates[[i]][item])
-      } }
-  } else {
-    pred_items <- append(pred_items, list(predicates[[i]]))
+  # validate 'context' argument value
+  if (!context %in% c("hits", "visits", "visitors")) {
+    stop("Make sure the `context` argument is either 'hits', 'visits' (default), or 'visitors'")
   }
-}
+  # validate 'exclude' argument value
+  if (!is.logical(exclude)) {
+    stop("The argument `exclude` must be either True or False.")
+  }
+  # validate 'exclude_checkpoint' argument value
+  if (!is.null(exclude_checkpoint) & !is.numeric(exclude_checkpoint)) {
+    stop("The argument 'exclude_checkpoint' needs to be NULL, a single number, or a vector of numbers defining the predicates you want to exclude.")
+  }
+  #define the sequence direction
+  f.seq_dir <- function(sequence){
+    dplyr::case_when(sequence == 'in_order' ~ 'sequence',
+                     sequence == 'after' ~ 'sequence-prefix',
+                     sequence == 'before' ~ 'sequence-suffix',
+                     sequence == 'and' ~ 'sequence-and',
+                     sequence == 'or' ~ 'sequence-or')
+  }
+  sequence_dir <- f.seq_dir(sequence)
+  ## Append the exclusion list item
+  if (!is.null(exclude_checkpoint)) {
+    new_checkpoints <- (exclude_checkpoint-1) + (seq(length(exclude_checkpoint)) - 1)
+    for (i in new_checkpoints) {
+      predicates <- append(predicates,
+                           list(list(func = 'exclude-next-checkpoint')),
+                           after = i)
+    }
+  }
+  ## Add in the necessary 'container' and 'hits' variables to each predicate for sequence to work
+  pred_items <- list()
+  for (i in seq_along(predicates)) {
+    if (!is.null(predicates[[i]]$val)) {
+      pred_items <- append(pred_items, list(
+        list(context = 'hits',
+             func = 'container',
+             pred = predicates[[i]])
+      ))
+    } else if (length(predicates[[i]]) == 2) {
+      if (is.list(predicates[[i]][[1]])){
+        for(item in seq(length(predicates[[i]]))) {
+          pred_items <- append(pred_items, predicates[[i]][item])
+        } }
+    } else {
+      pred_items <- append(pred_items, list(predicates[[i]]))
+    }
+  }
 
-##Create the different json strings
-f.sequence <- function(context, sequence_dir, pred_items, exclude) {
-  if (!exclude) {
-    structure(
+  ##Create the different json strings
+  f.sequence <- function(context, sequence_dir, pred_items, exclude) {
+    if (!exclude) {
       list(
         func = 'container',
         context = context,
@@ -115,9 +114,7 @@ f.sequence <- function(context, sequence_dir, pred_items, exclude) {
           stream = pred_items
         )
       )
-    )
-  } else if (exclude) {
-    structure(
+    } else if (exclude) {
       list(
         func = 'container',
         context = context,
@@ -129,12 +126,10 @@ f.sequence <- function(context, sequence_dir, pred_items, exclude) {
           )
         )
       )
-    )
+    }
   }
-}
-f.pref_suff <- function(context, sequence_dir, pred_items, exclude) {
-  if (exclude == FALSE) {
-    structure(
+  f.pref_suff <- function(context, sequence_dir, pred_items, exclude) {
+    if (exclude == FALSE) {
       list(
         func = 'container',
         context = context,
@@ -144,9 +139,7 @@ f.pref_suff <- function(context, sequence_dir, pred_items, exclude) {
           stream = pred_items
         )
       )
-    )
-  } else if (exclude == TRUE) {
-    structure(
+    } else if (exclude == TRUE) {
       list(
         func = 'container',
         context = context,
@@ -159,12 +152,10 @@ f.pref_suff <- function(context, sequence_dir, pred_items, exclude) {
           )
         )
       )
-    )
+    }
   }
-}
-f.and_or <- function(context, sequence_dir, pred_items, exclude) {
-  if (exclude == FALSE) {
-  structure(
+  f.and_or <- function(context, sequence_dir, pred_items, exclude) {
+    if (exclude == FALSE) {
       list(
         func = 'container',
         context = context,
@@ -173,9 +164,7 @@ f.and_or <- function(context, sequence_dir, pred_items, exclude) {
           checkpoints = pred_items
         )
       )
-    )
-  } else if (exclude == TRUE){
-    structure(
+    } else if (exclude == TRUE){
       list(
         func = 'container',
         context = context,
@@ -187,16 +176,15 @@ f.and_or <- function(context, sequence_dir, pred_items, exclude) {
           )
         )
       )
-    )
+    }
   }
-}
-sequence_items <- if (sequence_dir == 'sequence') {
-  f.sequence(context, sequence_dir, pred_items, exclude)
-} else if (sequence_dir %in% c('sequence-prefix', 'sequence-suffix')) {
-  f.pref_suff(context, sequence_dir, pred_items, exclude)
-} else if (sequence_dir %in% c('sequence-and', 'sequence-or')) {
-  f.and_or(context, sequence_dir = pred_items, exclude)
-}
-sequence_items
+  sequence_items <- if (sequence_dir == 'sequence') {
+    f.sequence(context, sequence_dir, pred_items, exclude)
+  } else if (sequence_dir %in% c('sequence-prefix', 'sequence-suffix')) {
+    f.pref_suff(context, sequence_dir, pred_items, exclude)
+  } else if (sequence_dir %in% c('sequence-and', 'sequence-or')) {
+    f.and_or(context, sequence_dir = pred_items, exclude)
+  }
+  sequence_items
 }
 

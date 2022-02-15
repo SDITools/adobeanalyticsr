@@ -28,17 +28,17 @@ seg_con <- function(context = 'hits',
                     conjunction = 'and',
                     predicates = NULL,
                     exclude = FALSE) {
-container <- if (length(unlist(predicates)) > 3 && exclude == FALSE) {
-    structure(list(
+  container <- if (length(unlist(predicates)) > 3 && exclude == FALSE) {
+    list(
       func = 'container',
       context = context,
       pred = list(
         func = conjunction,
         preds = predicates
       )
-    ))
+    )
   } else if (length(unlist(predicates)) > 3 && exclude == TRUE) {
-    structure(list(
+    list(
       func = 'container',
       context = context,
       pred = list(
@@ -46,17 +46,17 @@ container <- if (length(unlist(predicates)) > 3 && exclude == FALSE) {
         pred = list(
           func = conjunction,
           preds = predicates
-          )
         )
-    ))
+      )
+    )
   } else if (length(unlist(predicates)) < 3 && exclude == FALSE) {
-    structure(list(
+    list(
       func = 'container',
       context = context,
       pred =  predicates
-    ))
+    )
   } else if (length(unlist(predicates)) < 3 && exclude == TRUE) {
-    structure(list(
+    list(
       func = 'without',
       pred = list(
         func = 'without',
@@ -66,14 +66,14 @@ container <- if (length(unlist(predicates)) > 3 && exclude == FALSE) {
           pred =  predicates
         )
       )
-    ))
+    )
   }
- ## add in the "sessions" context value if the allocation model is not null
+  ## add in the "sessions" context value if the allocation model is not null
   for (i in length(container$pred$preds)) {
     if (!is.null(container$pred$preds[[i]]$val$`allocation-model`$func) && context == 'visits') {
       container$pred$preds[[i]]$val$`allocation-model`$context = 'sessions'
     }
   }
-container
+  container
 }
 
