@@ -1,5 +1,5 @@
 # This function generates a list of linking verbs that can be used to build segments
-verbs <- data.frame(rbind(
+seg_verbs <- data.frame(rbind(
   c( "string", 'string','streq', "Equals"),
   c( "string", 'string', 'not-streq', "Not Equals"),
   c( "string", 'string', 'strlt', "Less Than"),
@@ -30,11 +30,24 @@ verbs <- data.frame(rbind(
   c( "number", 'list', 'not-eq-any-of', "Not equal to any of the values provided"),
   c( "string", 'exists', 'exists', "Tests if an attribute has been set to a value."),
   c( "string", 'exists','not-exists', "Tests if an attribute has never been set to a value."),
-  c( "number", 'exists','event-exists', "Tests if an attribute has never been set to a number value."),
+  c( "number", 'exists','event-exists', "Tests if an attribute has been set to a number value."),
   c( "number", 'exists','not-event-exists', "Tests if an attribute has never been set to a number value.")
 ))
 
-colnames(verbs) <-  c('type', 'class', 'verb', 'description')
+colnames(seg_verbs) <-  c('type', 'class', 'verb', 'description')
 
-readr::write_csv(verbs, "data-raw/verbs.csv")
-usethis::use_data(verbs, compress = "xz", overwrite = T)
+seg_verbs <- seg_verbs %>%
+  mutate(
+    arg = case_when(
+      class == "exists" ~ NA_character_,
+      class == "string" ~ "str",
+      class == "list" ~ "list",
+      class == "number" ~ "num",
+      class == "glob" ~ "glob",
+      TRUE ~ NA_character_
+    )
+  )
+
+readr::write_csv(seg_verbs, "data-raw/seg_verbs.csv")
+readr::write_csv(seg_verbs, "inst/extdata/seg_verbs.csv")
+usethis::use_data(seg_verbs, compress = "xz", overwrite = T)

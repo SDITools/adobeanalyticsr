@@ -38,7 +38,8 @@ Imports:
     knitr,
     vctrs,
     progress,
-    memoise
+    memoise,
+    utils
 RoxygenNote: 7.1.2
 Roxygen: list(markdown = TRUE)
 Suggests:

@@ -1,0 +1,33 @@
+type,class,verb,description,arg
+string,string,streq,Equals,str
+string,string,not-streq,Not Equals,str
+string,string,strlt,Less Than,str
+string,string,strgt,Greater Than,str
+string,string,strle,Less Than or Equals,str
+string,string,strge,Greater Than or Equals,str
+string,list,streq-in,Match a string to any of the values in the parameter,list
+string,list,not-streq-in,Ensure a string doesn't match any of the values in the parameter,list
+string,string,contains,Ensure a string matches or contains the value in the parameter,str
+string,string,not-contains,Ensure a string doesn't match or contains the value in the parameter,str
+string,list,contains-any-of,Ensure a string contains any of the values in the parameter. Case-insensitive.,list
+string,list,contains-all-of,Ensure a string contains all of the values in the parameter. Case-insensitive.,list
+string,list,not-contains-any-of,Ensure a string doesn't contain at least one of the values in the parameter. Case-insensitive.,list
+string,list,not-contains-all-of,Ensure a string doesn't contain any of the values in the parameter. Case-insensitive.,list
+string,string,starts-with,Ensure a string starts with the value in the parameter. Case-insensitive.,str
+string,string,ends-with,Ensure a string ends with the value in the parameter. Case-insensitive.,str
+string,string,not-starts-with,Ensure a string doesn't start with the value in the parameter. Case-insensitive.,str
+string,string,not-ends-with,Ensure a string doesn't end with the value in the parameter. Case-insensitive.,str
+string,glob,matches,Ensure a string matches the glob parameter. A glob parameter uses a '' character to match any sequence of characters. A literal '' is expressed with '*'.,glob
+string,glob,not-matches,Ensure a string doesn't match the glob parameter. A glob parameter uses a '' character to match any sequence of characters. A literal '' is expressed with '*'.,glob
+number,number,eq,Equals,num
+number,number,not-eq,Not equals,num
+number,number,gt,Greater than,num
+number,number,lt,Less than,num
+number,number,ge,Greater than or equal to,num
+number,number,le,Less than,num
+number,list,eq-any-of,Equal to any of the values provided,list
+number,list,not-eq-any-of,Not equal to any of the values provided,list
+string,exists,exists,Tests if an attribute has been set to a value.,NA
+string,exists,not-exists,Tests if an attribute has never been set to a value.,NA
+number,exists,event-exists,Tests if an attribute has been set to a number value.,NA
+number,exists,not-event-exists,Tests if an attribute has never been set to a number value.,NA

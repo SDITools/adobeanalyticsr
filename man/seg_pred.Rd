@@ -5,21 +5,25 @@
 \title{Create the Segment Predicate}
 \usage{
 seg_pred(
-  subject = "page",
-  verb = "contains",
-  object = "home",
+  dimension = NULL,
+  metric = NULL,
+  verb = NULL,
+  object = NULL,
   description = NULL,
   is_distinct = FALSE,
   attribution = "repeating",
   attribution_context = "visitors",
+  validate = FALSE,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
 }
 \arguments{
-\item{subject}{This is the subject of the predicate. It is the dimension or metric id.}
+\item{dimension}{This is the subject of the predicate. The value should be the dimension id. Only the dimension or metric can be used at a time.}
 
-\item{verb}{Choose from any of the 30 different verbs. Use the \code{seg_verbs()} function to see all available verbs along with the descriptions.}
+\item{metric}{This is the subject of the predicate. The value should be the metric id.  Only the dimension or metric can be used at a time.}
+
+\item{verb}{Choose from any of the 30 different verbs. Use the \code{seg_verbs} package data to see all available verbs along with the descriptions.}
 
 \item{object}{This is the object of the predicate and answers the question \code{what} or \verb{how many}}
 
@@ -30,6 +34,8 @@ seg_pred(
 \item{attribution}{Define the type of attribution. Either \code{repeating} (default), \code{instance}, or \code{nonrepeating}. See Details for more information.}
 
 \item{attribution_context}{When applying a non-repeating instance attribution model to a predicate the context for the attribution must be \code{visitors} (default) or \code{visits}}
+
+\item{validate}{Set to TRUE when metric or dimension validation is preferred. Default is FALSE. Validation will slow down the function response time but ensure a valid predicate result.}
 
 \item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
 in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
