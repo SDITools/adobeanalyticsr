@@ -1,16 +1,16 @@
-#' Create the Segment Predicate
+#' Create the Segment Rule
 #'
-#' This function creates the simple predicate of a segment.
+#' This function creates the simple rule of a segment.
 #'
-#' @param dimension This is the subject of the predicate. The value should be the dimension id. Only the dimension or metric can be used at a time.
-#' @param metric This is the subject of the predicate. The value should be the metric id.  Only the dimension or metric can be used at a time.
+#' @param dimension This is the subject of the rule. The value should be the dimension id. Only the dimension or metric can be used at a time.
+#' @param metric This is the subject of the rule. The value should be the metric id.  Only the dimension or metric can be used at a time.
 #' @param verb Choose from any of the 30 different verbs. Use the `seg_verbs` package data to see all available verbs along with the descriptions.
-#' @param object This is the object of the predicate and answers the question `what` or `how many`
-#' @param description The internal description for the predicate. (optional) This will not show in the UI but could be very helpful when using the API.
+#' @param object This is the object of the rule and answers the question `what` or `how many`
+#' @param description The internal description for the rule. (optional) This will not show in the UI but could be very helpful when using the API.
 #' @param is_distinct This will segment on a distinct count of items within a dimension. Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where more than 5 distinct pages were seen.”
 #' @param attribution Define the type of attribution. Either `repeating` (default), `instance`, or `nonrepeating`. See Details for more information.
-#' @param attribution_context When applying a non-repeating instance attribution model to a predicate the context for the attribution must be `visitors` (default) or `visits`
-#' @param validate Set to TRUE when metric or dimension validation is preferred. Default is FALSE. Validation will slow down the function response time but ensure a valid predicate result.
+#' @param attribution_context When applying a non-repeating instance attribution model to a rule the context for the attribution must be `visitors` (default) or `visits`
+#' @param validate Set to TRUE when metric or dimension validation is preferred. Default is FALSE. Validation will slow down the function response time but ensure a valid rule result.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
 #' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
@@ -26,7 +26,7 @@
 #' - *instance*: Includes instances for the dimension.
 #' - *nonrepeating* instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
 #'
-#' @return A structured list defining the predicate for a segment
+#' @return A structured list defining the rule for a segment
 #'
 #' @import dplyr
 #' @import assertthat
@@ -35,7 +35,7 @@
 #' @importFrom memoise memoise
 #' @importFrom utils read.csv
 #' @export
-seg_pred <- function(dimension = NULL,
+seg_rule <- function(dimension = NULL,
                      metric = NULL,
                      verb = NULL,
                      object = NULL,
@@ -75,7 +75,7 @@ seg_pred <- function(dimension = NULL,
     assertthat::assert_that(!is.na(adj), msg = "The dimension or metric is not a valid element id.")
     ###/ element is valid
   } else {
-    # Define the adj of the predicate subject
+    # Define the adj of the rule subject
     if (!is.null(metric)) {
       adj <-  'metrics/'
     } else {
@@ -210,7 +210,7 @@ seg_pred <- function(dimension = NULL,
     arg_out
   }
 
-  create_pred <- function(verb, subject, object, adj, is_distinct){
+  create_rule <- function(verb, subject, object, adj, is_distinct){
     ## define the base argument of the verb function
     arg <- lookup_verb_arg(verb, verbs)
     ## get the val_func value
@@ -230,55 +230,55 @@ seg_pred <- function(dimension = NULL,
     ## included the first if bucket due to an error with null arg
     if (!is.null(arg)) {
       if (val_func == 'event' && arg == 'num') {
-        pred <- purrr::compact(list(verb, object, list(func = 'total', evt = list(val_func,  glue::glue('{adj}{subject}')))))
+        rule <- purrr::compact(list(verb, object, list(func = 'total', evt = list(val_func,  glue::glue('{adj}{subject}')))))
       } else if (val_func == 'attr' && arg == 'num' && is_distinct) {
-        pred <- purrr::compact(list(verb, object, list(func = 'total-distinct', field = list(val_func,  glue::glue('{adj}{subject}')))))
+        rule <- purrr::compact(list(verb, object, list(func = 'total-distinct', field = list(val_func,  glue::glue('{adj}{subject}')))))
       } else {
-        pred <- purrr::compact(list(verb, object, list(val_func,  glue::glue('{adj}{subject}'))))
+        rule <- purrr::compact(list(verb, object, list(val_func,  glue::glue('{adj}{subject}'))))
       }
     } else {
-      pred <- purrr::compact(list(verb, object, list(val_func,  glue::glue('{adj}{subject}'))))
+      rule <- purrr::compact(list(verb, object, list(val_func,  glue::glue('{adj}{subject}'))))
     }
     ## Name the list values
-    names(pred) <- listnames
+    names(rule) <- listnames
     #name the sublist values
     listsubnames <- c("func", "name")
-    if (!is.null(pred$val$func)) {
-      if (pred$val$func == 'total') {
-        names(pred$val$evt) <- listsubnames
+    if (!is.null(rule$val$func)) {
+      if (rule$val$func == 'total') {
+        names(rule$val$evt) <- listsubnames
       } else {
-        names(pred$val$field) <- listsubnames
+        names(rule$val$field) <- listsubnames
       }
     } else if (is.null(arg) && val_func == 'event') {
-      names(pred[['evt']]) <- listsubnames
+      names(rule[['evt']]) <- listsubnames
     } else {
-      names(pred[['val']]) <- listsubnames
+      names(rule[['val']]) <- listsubnames
     }
-    pred
+    rule
   }
 
-  #This forms the predicate or pred
-  prepred <- create_pred(verb, subject, object, adj, is_distinct)
+  #This forms the rule or rule
+  prerule <- create_rule(verb, subject, object, adj, is_distinct)
 
   #add in the description
   if(!is.null(description)){
-    prepred$description = description
+    prerule$description = description
   }
   #add the context when necessary for proper attribution
   if(attribution == 'instance') {
-    prepred$val$`allocation-model`$func = 'allocation-instance'
+    prerule$val$`allocation-model`$func = 'allocation-instance'
   } else if(attribution == 'nonrepeating'){
     if(attribution_context == 'hits') {
       warning('attribution_context cannot be set to `hits`, changing to default `visitors`')
       attribution_context <- 'visitors'
     }
     if(!is.null(attribution_context) && attribution_context == 'visits'){
-      prepred$val$`allocation-model`$context = 'sessions'
-      prepred$val$`allocation-model`$func = 'allocation-dedupedInstance'
+      prerule$val$`allocation-model`$context = 'sessions'
+      prerule$val$`allocation-model`$func = 'allocation-dedupedInstance'
     } else {
-      prepred$val$`allocation-model`$context = attribution_context
-      prepred$val$`allocation-model`$func = 'allocation-dedupedInstance'
+      prerule$val$`allocation-model`$context = attribution_context
+      prerule$val$`allocation-model`$func = 'allocation-dedupedInstance'
     }
   }
-  prepred
+  prerule
 }
