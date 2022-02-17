@@ -27,9 +27,9 @@ aw_call_data <- function(req_path,
                          company_id,
                          use_oob = TRUE
 ){
-    assert_that(
+    assertthat::assert_that(
         is.string(req_path),
-        is.list(body),
+        assertthat::not_empty(body),
         is.string(company_id)
     )
 

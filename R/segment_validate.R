@@ -10,8 +10,6 @@
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' Use [get_me()] to get a list of available `company_id` values.
-#' @param client_id Set in environment args, or pass directly here
-#' @param client_secret Set in environment args, or pass directly here
 #'
 #' @return A validation True or False response
 #'
@@ -23,9 +21,7 @@
 seg_val <- function(segment_body = NULL,
                     rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                     debug = FALSE,
-                    company_id = Sys.getenv("AW_COMPANY_ID"),
-                    client_id = Sys.getenv("AW_CLIENT_ID"),
-                    client_secret = Sys.getenv("AW_CLIENT_SECRET")){
+                    company_id = Sys.getenv("AW_COMPANY_ID")){
   #validate arguments
   if(is.null(segment_body)) {
     stop('The arguments `segment_body` must be included.')
@@ -34,12 +30,9 @@ seg_val <- function(segment_body = NULL,
   #defined parts of the post request
   req_path <- glue::glue('segments/validate?rsid={rsid}')
 
-  req <- aw_post_attr(req_path = req_path,
+  req <- aw_call_data(req_path = req_path,
                       body = segment_body,
-                      rsid = rsid,
-                      company_id = company_id,
-                      client_id = client_id,
-                      client_secret = client_secret)
+                      company_id = company_id)
 
   if (jsonlite::fromJSON(req)$valid) {
     "The segment is valid."

@@ -8,9 +8,7 @@ seg_val(
   segment_body = NULL,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   debug = FALSE,
-  company_id = Sys.getenv("AW_COMPANY_ID"),
-  client_id = Sys.getenv("AW_CLIENT_ID"),
-  client_secret = Sys.getenv("AW_CLIENT_SECRET")
+  company_id = Sys.getenv("AW_COMPANY_ID")
 )
 }
 \arguments{
@@ -25,10 +23,6 @@ be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a 
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
 elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
 Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
-
-\item{client_id}{Set in environment args, or pass directly here}
-
-\item{client_secret}{Set in environment args, or pass directly here}
 }
 \value{
 A validation True or False response
