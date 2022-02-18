@@ -106,7 +106,7 @@ seg_rule <- function(dimension = NULL,
   #/validating verb is accurate
   #### Correct eq-any-of and not-eq-any-of from documentation
   if (verb == 'eq-any-of') {
-    verb <- 'eq-in-of'
+    verb <- 'eq-in'
   }
   if (verb == 'not-eq-any-of') {
     verb <- 'not-eq-in'
