@@ -93,12 +93,12 @@ seg_rule <- function(dimension = NULL,
   #/event exists verb changed
 
   ##### Correct eq-any-of and not-eq-any-of from documentation
-  if (verb == 'eq-any-of') {
-    verb <- 'eq-in'
-  }
-  if (verb == 'not-eq-any-of') {
-    verb <- 'not-eq-in'
-  }
+  # if (verb == 'eq-any-of') {
+  #   verb <- 'eq-in-of'
+  # }
+  # if (verb == 'not-eq-any-of') {
+  #   verb <- 'not-eq-in'
+  # }
   ## Make sure the verb is valid
   verbs <- read.csv(system.file("extdata", "seg_verbs.csv", package = "adobeanalyticsr"))
 
