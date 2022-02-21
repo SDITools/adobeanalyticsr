@@ -53,8 +53,6 @@ seg_rule <- function(dimension = 'daterangehour',
   } else if (!is.null(dimension) & !is.null(metric)) {
     stop("Only one of 'dimension' or 'metric' may be specified")
   }
-
-  !xor(is.null(dimension), is.null(metric))
   subject <- purrr::compact(c(dimension, metric))
 
   if(validate) {
@@ -81,7 +79,6 @@ seg_rule <- function(dimension = 'daterangehour',
     aw_dimensions <- get_dims(company_id = company_id, rsid = rsid)
 
     #define the variable to be either a metric or dimension and save it as the adjective
-    subject <- purrr::compact(c(dimension, metric))
     adj <- dplyr::case_when(subject %in% aw_metrics ~ 'metrics/',
                             subject %in% aw_dimensions$id ~ 'variables/')
     assertthat::assert_that(!is.na(adj), msg = "The dimension or metric is not a valid element id.")
