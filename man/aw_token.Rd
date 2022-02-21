@@ -23,7 +23,6 @@ file aa.oauth does not exist then one will be created at the end of the
 authorization process.
 }
 \description{
-
 This is the legacy mechanism for retrieving the authorization token using
 OAuth. It has been replaced by \code{aw_auth()}.
 
