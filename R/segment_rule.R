@@ -53,6 +53,8 @@ seg_rule <- function(dimension = 'daterangehour',
   } else if (!is.null(dimension) & !is.null(metric)) {
     stop("Only one of 'dimension' or 'metric' may be specified")
   }
+
+  !xor(is.null(dimension), is.null(metric))
   subject <- purrr::compact(c(dimension, metric))
 
   if(validate) {
@@ -271,7 +273,7 @@ seg_rule <- function(dimension = 'daterangehour',
 
   #add in the description
   if(!is.null(description)){
-    prerule$description = description
+    prerule$description <- description
   }
   #add the context when necessary for proper attribution
   if(attribution == 'instance') {
@@ -282,11 +284,11 @@ seg_rule <- function(dimension = 'daterangehour',
       attribution_context <- 'visitors'
     }
     if(!is.null(attribution_context) && attribution_context == 'visits'){
-      prerule$val$`allocation-model`$context = 'sessions'
-      prerule$val$`allocation-model`$func = 'allocation-dedupedInstance'
+      prerule$val$`allocation-model`$context <- 'sessions'
+      prerule$val$`allocation-model`$func <- 'allocation-dedupedInstance'
     } else {
-      prerule$val$`allocation-model`$context = attribution_context
-      prerule$val$`allocation-model`$func = 'allocation-dedupedInstance'
+      prerule$val$`allocation-model`$context <- attribution_context
+      prerule$val$`allocation-model`$func <- 'allocation-dedupedInstance'
     }
   }
   prerule
