@@ -35,7 +35,7 @@
 #' @importFrom memoise memoise
 #' @importFrom utils read.csv
 #' @export
-seg_rule <- function(dimension = 'daterangehour',
+seg_rule <- function(dimension = NULL,
                      metric = NULL,
                      verb = NULL,
                      object = NULL,
@@ -64,14 +64,6 @@ seg_rule <- function(dimension = 'daterangehour',
     }
     aw_metrics <- get_mets(company_id = company_id, rsid = rsid)
 
-    get_cms <- aw_get_calculatedmetrics
-    if (!memoise::is.memoised(get_cms)) {
-      get_cms <- memoise::memoise(get_cms)
-    }
-    aw_cms <- get_cms(company_id = company_id, rsid = rsid)
-
-    aw_metrics <- c(aw_metrics$id, aw_cms$id)
-
     get_dims <- aw_get_dimensions
     if (!memoise::is.memoised(get_dims)) {
       get_dims <- memoise::memoise(get_dims)
@@ -79,7 +71,7 @@ seg_rule <- function(dimension = 'daterangehour',
     aw_dimensions <- get_dims(company_id = company_id, rsid = rsid)
 
     #define the variable to be either a metric or dimension and save it as the adjective
-    adj <- dplyr::case_when(subject %in% aw_metrics ~ 'metrics/',
+    adj <- dplyr::case_when(subject %in% aw_metrics$id ~ 'metrics/',
                             subject %in% aw_dimensions$id ~ 'variables/')
     assertthat::assert_that(!is.na(adj), msg = "The dimension or metric is not a valid element id.")
     ###/ element is valid

@@ -1,2 +1,15 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^aa\.oauth$
+^LICENSE\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^\.httr-oauth$
+^analytics\.adobe\.io$
+^doc$
+^Meta$
+^cran-comments\.md
+^CRAN-RELEASE$
+^private.key
+data-raw/

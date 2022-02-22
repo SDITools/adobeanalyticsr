@@ -5,7 +5,7 @@
 \title{Create the Segment Rule}
 \usage{
 seg_rule(
-  dimension = "daterangehour",
+  dimension = NULL,
   metric = NULL,
   verb = NULL,
   object = NULL,
