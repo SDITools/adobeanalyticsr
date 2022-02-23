@@ -8,11 +8,11 @@
 #' @param name This is the name of the new segment (required)
 #' @param description  This is the description of the segment (required)
 #' @param containers List of the container(s) that make up the segment. Containers
-#' are list objects created using the `seg_con()` function.
+#' are list objects created using the [`seg_con()`] function.
 #' @param rules List of the rule(s) to create a segment. Rules are list objects
-#' created using the `seg_rule()` function.
+#' created using the [`seg_rule()`] function.
 #' @param sequences List of the rule(s) and sequence container(s) that are combined
-#' to make a segment. Sequence containers are list objects created using the `seg_seq()` function.
+#' to make a segment. Sequence containers are list objects created using the [`seg_seq()`] function.
 #' @param context Defines the level that the segment logic should operate on.
 #' Valid values are visitors, visits, and hits. See Details
 #' @param conjunction This will tell how the different containers and rules should
@@ -58,7 +58,7 @@
 #' that the container only evaluates data at the hit level, (in contrast to visit
 #' or visitor level). The rows in the container are also at the hit level.
 #'
-#' @return If `create_seg` argument is set to FALSE a JSON string definition will be returned.
+#' @return If [`create_seg`] argument is set to FALSE a JSON string definition will be returned.
 #' If the segment validates it will return a data frame of the newly created
 #' segment id along with some other basic meta data. If it returns an error then the error
 #' response will be returned to help understand what needs to be corrected.

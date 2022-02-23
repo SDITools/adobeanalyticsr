@@ -19,31 +19,44 @@ seg_rule(
 )
 }
 \arguments{
-\item{dimension}{This is the subject of the rule. The value should be the dimension id. Only the dimension or metric can be used at a time.}
+\item{dimension}{This is the subject of the rule. The value should be the dimension
+id. Only the dimension or metric can be used at a time.}
 
-\item{metric}{This is the subject of the rule. The value should be the metric id.  Only the dimension or metric can be used at a time.}
+\item{metric}{This is the subject of the rule. The value should be the metric id.
+Only the dimension or metric can be used at a time.}
 
-\item{verb}{Choose from any of the 30 different verbs. Use the \code{seg_verbs} package data to see all available verbs along with the descriptions.}
+\item{verb}{Choose from any of the 30 different verbs. Use the \code{\link{seg_verbs}}
+package data to see all available verbs along with the descriptions.}
 
 \item{object}{This is the object of the rule and answers the question \code{what} or \verb{how many}}
 
-\item{description}{The internal description for the rule. (optional) This will not show in the UI but could be very helpful when using the API.}
+\item{description}{The internal description for the rule. (optional) This will
+not show in the UI but could be very helpful when using the API.}
 
-\item{is_distinct}{This will segment on a distinct count of items within a dimension. Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where more than 5 distinct pages were seen.”}
+\item{is_distinct}{This will segment on a distinct count of items within a dimension.
+Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where
+more than 5 distinct pages were seen.”}
 
-\item{attribution}{Define the type of attribution. Either \code{repeating} (default), \code{instance}, or \code{nonrepeating}. See Details for more information.}
+\item{attribution}{Define the type of attribution. Either \code{repeating} (default),
+\code{instance}, or \code{nonrepeating}. See Details for more information.}
 
-\item{attribution_context}{When applying a non-repeating instance attribution model to a rule the context for the attribution must be \code{visitors} (default) or \code{visits}}
+\item{attribution_context}{When applying a non-repeating instance attribution
+model to a rule the context for the attribution must be \code{visitors} (default) or \code{visits}}
 
-\item{validate}{Set to TRUE when metric or dimension validation is preferred. Default is FALSE. Validation will slow down the function response time but ensure a valid rule result.}
+\item{validate}{Set to TRUE when metric or dimension validation is preferred.
+Default is FALSE. Validation will slow down the function response time but
+ensure a valid rule result.}
 
-\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called \code{AW_REPORTSUITE_ID} exists
-in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID} value will
+\item{rsid}{Adobe report suite ID (RSID).  If an environment variable called
+\code{AW_REPORTSUITE_ID} exists
+in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID}
+value will
 be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a list of available \code{rsid} values.}
 
-\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.
-Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
+\item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID}
+exists in \code{.Renviron} or
+elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID}
+value will be used. Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
 }
 \value{
 A structured list defining the rule for a segment
@@ -58,6 +71,7 @@ Dimension models are particularly useful in sequential segmentation.
 \itemize{
 \item \emph{repeating} (default): Includes instances and persisted values for the dimension.
 \item \emph{instance}: Includes instances for the dimension.
-\item \emph{nonrepeating} instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
+\item \emph{nonrepeating} instance: Includes unique instances (non-repeating) for the dimension.
+This is the model applied in Flow when repeat instances are excluded.
 }
 }

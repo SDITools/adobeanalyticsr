@@ -7,11 +7,14 @@
 seg_con(context = "hits", conjunction = "and", rules = NULL, exclude = FALSE)
 }
 \arguments{
-\item{context}{Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details}
+\item{context}{Defines the level that the segment logic should operate on.
+Valid values are visitors, visits, and hits. See Details}
 
-\item{conjunction}{This defines the relationship of the rules.  \code{And} (default) and \code{or} are the two options.}
+\item{conjunction}{This defines the relationship of the rules.  \code{And} (default)
+and \code{or} are the two options.}
 
-\item{rules}{List of rules and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.}
+\item{rules}{List of rules and/or containers. Must be wrapped in a list()
+function. Adding a container list item will nest it within a containers.}
 
 \item{exclude}{Exclude the entire container}
 }

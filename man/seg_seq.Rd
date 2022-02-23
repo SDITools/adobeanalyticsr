@@ -16,7 +16,7 @@ seg_seq(
 \item{context}{Defines the level that the segment logic should operate on.
 Valid values for sequential segments is visitors and visits. See Details}
 
-\item{rules}{List of rules created using \code{seg_rule()} function. Must be wrapped
+\item{rules}{List of rules created using \code{\link[=seg_rule]{seg_rule()}} function. Must be wrapped
 in a list() function.}
 
 \item{sequence}{How should the sequence of items be considered.

@@ -4,7 +4,7 @@
 #'
 #' @param context Defines the level that the segment logic should operate on.
 #' Valid values for sequential segments is visitors and visits. See Details
-#' @param rules List of rules created using `seg_rule()` function. Must be wrapped
+#' @param rules List of rules created using [`seg_rule()`] function. Must be wrapped
 #' in a list() function.
 #' @param sequence  How should the sequence of items be considered.
 #' Options: `in_order` (default), `before`, `after`, `and`, `or`

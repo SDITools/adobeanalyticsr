@@ -2,21 +2,34 @@
 #'
 #' This function creates the simple rule of a segment.
 #'
-#' @param dimension This is the subject of the rule. The value should be the dimension id. Only the dimension or metric can be used at a time.
-#' @param metric This is the subject of the rule. The value should be the metric id.  Only the dimension or metric can be used at a time.
-#' @param verb Choose from any of the 30 different verbs. Use the `seg_verbs` package data to see all available verbs along with the descriptions.
+#' @param dimension This is the subject of the rule. The value should be the dimension
+#' id. Only the dimension or metric can be used at a time.
+#' @param metric This is the subject of the rule. The value should be the metric id.
+#' Only the dimension or metric can be used at a time.
+#' @param verb Choose from any of the 30 different verbs. Use the [`seg_verbs`]
+#' package data to see all available verbs along with the descriptions.
 #' @param object This is the object of the rule and answers the question `what` or `how many`
-#' @param description The internal description for the rule. (optional) This will not show in the UI but could be very helpful when using the API.
-#' @param is_distinct This will segment on a distinct count of items within a dimension. Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where more than 5 distinct pages were seen.”
-#' @param attribution Define the type of attribution. Either `repeating` (default), `instance`, or `nonrepeating`. See Details for more information.
-#' @param attribution_context When applying a non-repeating instance attribution model to a rule the context for the attribution must be `visitors` (default) or `visits`
-#' @param validate Set to TRUE when metric or dimension validation is preferred. Default is FALSE. Validation will slow down the function response time but ensure a valid rule result.
-#' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
-#' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
+#' @param description The internal description for the rule. (optional) This will
+#' not show in the UI but could be very helpful when using the API.
+#' @param is_distinct This will segment on a distinct count of items within a dimension.
+#' Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where
+#' more than 5 distinct pages were seen.”
+#' @param attribution Define the type of attribution. Either `repeating` (default),
+#' `instance`, or `nonrepeating`. See Details for more information.
+#' @param attribution_context When applying a non-repeating instance attribution
+#' model to a rule the context for the attribution must be `visitors` (default) or `visits`
+#' @param validate Set to TRUE when metric or dimension validation is preferred.
+#' Default is FALSE. Validation will slow down the function response time but
+#' ensure a valid rule result.
+#' @param rsid Adobe report suite ID (RSID).  If an environment variable called
+#' `AW_REPORTSUITE_ID` exists
+#' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID`
+#' value will
 #' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
-#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
-#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
-#' Use [get_me()] to get a list of available `company_id` values.
+#' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID`
+#' exists in `.Renviron` or
+#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID`
+#' value will be used. Use [get_me()] to get a list of available `company_id` values.
 #'
 #' @details
 #' **Attribution Models**
@@ -24,7 +37,8 @@
 #' Dimension models are particularly useful in sequential segmentation.
 #' - *repeating* (default): Includes instances and persisted values for the dimension.
 #' - *instance*: Includes instances for the dimension.
-#' - *nonrepeating* instance: Includes unique instances (non-repeating) for the dimension. This is the model applied in Flow when repeat instances are excluded.
+#' - *nonrepeating* instance: Includes unique instances (non-repeating) for the dimension.
+#' This is the model applied in Flow when repeat instances are excluded.
 #'
 #' @return A structured list defining the rule for a segment
 #'

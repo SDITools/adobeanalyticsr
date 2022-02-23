@@ -2,9 +2,12 @@
 #'
 #' This function combines rules into a container.
 #'
-#' @param context Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details
-#' @param conjunction  This defines the relationship of the rules.  `And` (default) and `or` are the two options.
-#' @param rules List of rules and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.
+#' @param context Defines the level that the segment logic should operate on.
+#' Valid values are visitors, visits, and hits. See Details
+#' @param conjunction  This defines the relationship of the rules.  `And` (default)
+#' and `or` are the two options.
+#' @param rules List of rules and/or containers. Must be wrapped in a list()
+#' function. Adding a container list item will nest it within a containers.
 #' @param exclude Exclude the entire container
 #'
 #' @details

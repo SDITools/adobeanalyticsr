@@ -27,13 +27,13 @@ seg_build(
 \item{description}{This is the description of the segment (required)}
 
 \item{containers}{List of the container(s) that make up the segment. Containers
-are list objects created using the \code{seg_con()} function.}
+are list objects created using the \code{\link[=seg_con]{seg_con()}} function.}
 
 \item{rules}{List of the rule(s) to create a segment. Rules are list objects
-created using the \code{seg_rule()} function.}
+created using the \code{\link[=seg_rule]{seg_rule()}} function.}
 
 \item{sequences}{List of the rule(s) and sequence container(s) that are combined
-to make a segment. Sequence containers are list objects created using the \code{seg_seq()} function.}
+to make a segment. Sequence containers are list objects created using the \code{\link[=seg_seq]{seg_seq()}} function.}
 
 \item{context}{Defines the level that the segment logic should operate on.
 Valid values are visitors, visits, and hits. See Details}
@@ -69,7 +69,7 @@ then the \code{AW_COMPANY_ID} value will be used. Use \code{\link[=get_me]{get_m
 available \code{company_id} values.}
 }
 \value{
-If \code{create_seg} argument is set to FALSE a JSON string definition will be returned.
+If \code{\link{create_seg}} argument is set to FALSE a JSON string definition will be returned.
 If the segment validates it will return a data frame of the newly created
 segment id along with some other basic meta data. If it returns an error then the error
 response will be returned to help understand what needs to be corrected.
