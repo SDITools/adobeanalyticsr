@@ -1,17 +1,17 @@
 #' Build the segment in Adobe Analytics
 #'
-#' This function combines predicates and/or containers and then makes the post call to create the segment in Adobe Analytics.
+#' This function combines rules and/or containers and then makes the post call to create the segment in Adobe Analytics.
 #'
 #' @param name This is the name of the new segment (required)
 #' @param description  This is the description of the segment (required)
 #' @param containers List of the container(s) that make up the segment. Containers are list objects created using the `seg_con()` function.
-#' @param predicates List of the predicate(s) to create a segment. Predicates are list objects created using the `seg_pred()` function.
-#' @param sequences List of the predicate(s) and sequence container(s) that are combined to make a segment. Sequence containers are list objects created using the `seg_seq()` function.
+#' @param rules List of the rule(s) to create a segment. Rules are list objects created using the `seg_pred()` function.
+#' @param sequences List of the rule(s) and sequence container(s) that are combined to make a segment. Sequence containers are list objects created using the `seg_seq()` function.
 #' @param context Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details
-#' @param conjunction This will tell how the different containers and predicates should be compared. Use either 'and' or 'or'.
+#' @param conjunction This will tell how the different containers and rules should be compared. Use either 'and' or 'or'.
 #' @param sequence Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events
 #' @param sequence_context Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits
-#' @param exclude Excludes the main container which will include all predicates. Only used when the predicate arguments are used.
+#' @param exclude Excludes the main container which will include all rules. Only used when the rule arguments are used.
 #' @param create_seg Used to determine if the segment should be created in the report suite or if the definition should be returned to be used in a freeform table API call. Default is FALSE
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
 #' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID` value will
@@ -43,7 +43,7 @@
 seg_build <- function(name = NULL,
                       description = NULL,
                       containers = NULL,
-                      predicates = NULL,
+                      rules = NULL,
                       sequences = NULL,
                       context = 'hits',
                       conjunction = 'and',
@@ -63,12 +63,12 @@ seg_build <- function(name = NULL,
   version <- list(1, 0, 0)
 
   #Create the segment list object
-  if (!is.null(predicates) && is.null(containers) && is.null(sequences)) { ## Predicates
+  if (!is.null(rules) && is.null(containers) && is.null(sequences)) { ## Rules
     if (exclude == FALSE) {
-      if (length(predicates) == 1){
-        if (!is.null(predicates[[1]]$val$`allocation-model`)) {
-        if (context == 'visits' && predicates[[1]]$val$`allocation-model`$func == 'allocation-dedupedInstance'){
-          predicates[[1]]$val$`allocation-model`$context = 'sessions'
+      if (length(rules) == 1){
+        if (!is.null(rules[[1]]$val$`allocation-model`)) {
+        if (context == 'visits' && rules[[1]]$val$`allocation-model`$func == 'allocation-dedupedInstance'){
+          rules[[1]]$val$`allocation-model`$context = 'sessions'
           }
         }
         seg <- list(
@@ -78,7 +78,7 @@ seg_build <- function(name = NULL,
             container = list(
               func = 'container',
               context = context,
-              pred = predicates[[1]]
+              pred = rules[[1]]
             ),
             func = 'segment',
             version = version
@@ -95,7 +95,7 @@ seg_build <- function(name = NULL,
               context = context,
               pred = list(
                 func = conjunction,
-                preds = predicates
+                preds = rules
               )
             ),
             func = 'segment',
@@ -106,7 +106,7 @@ seg_build <- function(name = NULL,
       }
     } #/exclude FALSE
     if (exclude == TRUE) {
-      if (length(predicates) == 1) {
+      if (length(rules) == 1) {
         seg <-  list(
           name = name,
           description = description,
@@ -116,7 +116,7 @@ seg_build <- function(name = NULL,
               context = context,
               pred = list(
                 func = 'without',
-                pred = predicates[[1]]
+                pred = rules[[1]]
                 )
             ),
             func = 'segment',
@@ -139,7 +139,7 @@ seg_build <- function(name = NULL,
                   context = context,
                   pred = list(
                     func = conjunction,
-                    preds = predicates
+                    preds = rules
                   )
                 )
               )
@@ -151,7 +151,7 @@ seg_build <- function(name = NULL,
         )
       }
     } #/exclude TRUE
-  } else if (is.null(predicates) && !is.null(containers) && is.null(sequences)){  #Containers
+  } else if (is.null(rules) && !is.null(containers) && is.null(sequences)){  #Containers
     if (length(containers) == 1) {
      seg <- list(
        name = name,
@@ -186,12 +186,12 @@ seg_build <- function(name = NULL,
           rsid = rsid
         )
       }
-  } else if(is.null(predicates) && is.null(containers) && !is.null(sequences)) {
+  } else if(is.null(rules) && is.null(containers) && !is.null(sequences)) {
     sequence_dir <- dplyr::case_when(sequence == 'in_order' ~ 'sequence',
                                      sequence == 'after' ~ 'sequence-prefix',
                                      sequence == 'before' ~ 'sequence-suffix')
 
-    ## Add in the necessary 'container' and 'hits' variables to each predicate for the sequence to work
+    ## Add in the necessary 'container' and 'hits' variables to each rule for the sequence to work
     seq_items <- list()
     for (i in seq_along(sequences)) {
       if (!is.null(sequences[[i]]$stream)) {
@@ -249,8 +249,8 @@ seg_build <- function(name = NULL,
         rsid = rsid
       )
     }
-  } else if (is.null(predicates) & is.null(containers) & is.null(sequences)) {
-    stop('Either a predicate(s), containers, or sequences must be provided.')
+  } else if (is.null(rules) & is.null(containers) & is.null(sequences)) {
+    stop('Either a rule(s), containers, or sequences must be provided.')
   }
   #defined parts of the post request
   req_path <- 'segments'

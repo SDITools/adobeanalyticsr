@@ -8,7 +8,7 @@ seg_build(
   name = NULL,
   description = NULL,
   containers = NULL,
-  predicates = NULL,
+  rules = NULL,
   sequences = NULL,
   context = "hits",
   conjunction = "and",
@@ -28,19 +28,19 @@ seg_build(
 
 \item{containers}{List of the container(s) that make up the segment. Containers are list objects created using the \code{seg_con()} function.}
 
-\item{predicates}{List of the predicate(s) to create a segment. Predicates are list objects created using the \code{seg_pred()} function.}
+\item{rules}{List of the rule(s) to create a segment. Rules are list objects created using the \code{seg_pred()} function.}
 
-\item{sequences}{List of the predicate(s) and sequence container(s) that are combined to make a segment. Sequence containers are list objects created using the \code{seg_seq()} function.}
+\item{sequences}{List of the rule(s) and sequence container(s) that are combined to make a segment. Sequence containers are list objects created using the \code{seg_seq()} function.}
 
 \item{context}{Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details}
 
-\item{conjunction}{This will tell how the different containers and predicates should be compared. Use either 'and' or 'or'.}
+\item{conjunction}{This will tell how the different containers and rules should be compared. Use either 'and' or 'or'.}
 
 \item{sequence}{Used to define if the segment should be 'in_order' (default), 'after', or 'before' the sequence of events}
 
 \item{sequence_context}{Used to define the sequential items context which should be below the container context. ex. if container context is visitors then the sequence_context should be visits or hits}
 
-\item{exclude}{Excludes the main container which will include all predicates. Only used when the predicate arguments are used.}
+\item{exclude}{Excludes the main container which will include all rules. Only used when the rule arguments are used.}
 
 \item{create_seg}{Used to determine if the segment should be created in the report suite or if the definition should be returned to be used in a freeform table API call. Default is FALSE}
 
@@ -59,7 +59,7 @@ If the segment validates it will return a data frame of the newly created segmen
 response will be returned to help understand what needs to be corrected.
 }
 \description{
-This function combines predicates and/or containers and then makes the post call to create the segment in Adobe Analytics.
+This function combines rules and/or containers and then makes the post call to create the segment in Adobe Analytics.
 }
 \details{
 \strong{Context}
