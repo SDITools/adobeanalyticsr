@@ -6,7 +6,7 @@
 \usage{
 seg_seq(
   context = "visits",
-  predicates = NULL,
+  rules = NULL,
   sequence = "in_order",
   exclude = FALSE,
   exclude_checkpoint = NULL
@@ -15,19 +15,19 @@ seg_seq(
 \arguments{
 \item{context}{Defines the level that the segment logic should operate on. Valid values for sequential segments is visitors and visits. See Details}
 
-\item{predicates}{List of predicates created using \code{seg_pred()} function. Must wrapped in a list() function.}
+\item{rules}{List of rules created using \code{seg_rule()} function. Must wrapped in a list() function.}
 
 \item{sequence}{How should the sequence of items be considered. Options: \code{in_order} (default), \code{before}, \code{after}, \code{and}, \code{or}}
 
-\item{exclude}{Excludes the entire sequence container which will include all predicates.}
+\item{exclude}{Excludes the entire sequence container which will include all rules.}
 
-\item{exclude_checkpoint}{Which checkpoints (predicates) should be excluded. Example \code{c(1, 4)}. See Details}
+\item{exclude_checkpoint}{Which checkpoints (rules) should be excluded. Example \code{c(1, 4)}. See Details}
 }
 \value{
 a structured list of containers to be used to build the segment
 }
 \description{
-This function combines predicates into a sequence container.
+This function combines rules into a sequence container.
 }
 \details{
 \strong{Context}

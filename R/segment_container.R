@@ -1,10 +1,10 @@
 #' Create the Segment Container
 #'
-#' This function combines predicates into a container.
+#' This function combines rules into a container.
 #'
 #' @param context Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details
-#' @param conjunction  This defines the relationship of the predicates.  `And` (default) and `or` are the two options.
-#' @param predicates List of predicates and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.
+#' @param conjunction  This defines the relationship of the rules.  `And` (default) and `or` are the two options.
+#' @param rules List of rules and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.
 #' @param exclude Exclude the entire container
 #'
 #' @details
@@ -26,18 +26,18 @@
 #'
 seg_con <- function(context = 'hits',
                     conjunction = 'and',
-                    predicates = NULL,
+                    rules = NULL,
                     exclude = FALSE) {
-  container <- if (length(unlist(predicates)) > 3 && exclude == FALSE) {
+  container <- if (length(unlist(rules)) > 3 && exclude == FALSE) {
     list(
       func = 'container',
       context = context,
       pred = list(
         func = conjunction,
-        preds = predicates
+        preds = rules
       )
     )
-  } else if (length(unlist(predicates)) > 3 && exclude == TRUE) {
+  } else if (length(unlist(rules)) > 3 && exclude == TRUE) {
     list(
       func = 'container',
       context = context,
@@ -45,17 +45,17 @@ seg_con <- function(context = 'hits',
         func = 'without',
         pred = list(
           func = conjunction,
-          preds = predicates
+          preds = rules
         )
       )
     )
-  } else if (length(unlist(predicates)) < 3 && exclude == FALSE) {
+  } else if (length(unlist(rules)) < 3 && exclude == FALSE) {
     list(
       func = 'container',
       context = context,
-      pred =  predicates
+      pred =  rules
     )
-  } else if (length(unlist(predicates)) < 3 && exclude == TRUE) {
+  } else if (length(unlist(rules)) < 3 && exclude == TRUE) {
     list(
       func = 'without',
       pred = list(
@@ -63,7 +63,7 @@ seg_con <- function(context = 'hits',
         pred = list(
           func = 'container',
           context = context,
-          pred =  predicates
+          pred =  rules
         )
       )
     )

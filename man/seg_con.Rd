@@ -4,19 +4,14 @@
 \alias{seg_con}
 \title{Create the Segment Container}
 \usage{
-seg_con(
-  context = "hits",
-  conjunction = "and",
-  predicates = NULL,
-  exclude = FALSE
-)
+seg_con(context = "hits", conjunction = "and", rules = NULL, exclude = FALSE)
 }
 \arguments{
 \item{context}{Defines the level that the segment logic should operate on. Valid values are visitors, visits, and hits. See Details}
 
-\item{conjunction}{This defines the relationship of the predicates.  \code{And} (default) and \code{or} are the two options.}
+\item{conjunction}{This defines the relationship of the rules.  \code{And} (default) and \code{or} are the two options.}
 
-\item{predicates}{List of predicates and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.}
+\item{rules}{List of rules and/or containers. Must be wrapped in a list() function. Adding a container list item will nest it within a containers.}
 
 \item{exclude}{Exclude the entire container}
 }
@@ -24,7 +19,7 @@ seg_con(
 a structured list of containers to be used to build the segment
 }
 \description{
-This function combines predicates into a container.
+This function combines rules into a container.
 }
 \details{
 \strong{Context}

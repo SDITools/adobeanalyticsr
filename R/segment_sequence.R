@@ -1,12 +1,12 @@
 #' Create the Segment Sequence Container
 #'
-#' This function combines predicates into a sequence container.
+#' This function combines rules into a sequence container.
 #'
 #' @param context Defines the level that the segment logic should operate on. Valid values for sequential segments is visitors and visits. See Details
-#' @param predicates List of predicates created using `seg_pred()` function. Must wrapped in a list() function.
+#' @param rules List of rules created using `seg_rule()` function. Must wrapped in a list() function.
 #' @param sequence  How should the sequence of items be considered. Options: `in_order` (default), `before`, `after`, `and`, `or`
-#' @param exclude Excludes the entire sequence container which will include all predicates.
-#' @param exclude_checkpoint Which checkpoints (predicates) should be excluded. Example `c(1, 4)`. See Details
+#' @param exclude Excludes the entire sequence container which will include all rules.
+#' @param exclude_checkpoint Which checkpoints (rules) should be excluded. Example `c(1, 4)`. See Details
 #'
 #' @details
 #'
@@ -35,7 +35,7 @@
 #'
 #' @example
 #' \donotrun
-#' sequenceitem <- seg_seq(context = 'visits', predicates = list(pred1, pred2), sequence = 'in_order', exclude = FALSE)
+#' sequenceitem <- seg_seq(context = 'visits', rules = list(pred1, pred2), sequence = 'in_order', exclude = FALSE)
 #'
 #' @return a structured list of containers to be used to build the segment
 #'
@@ -45,7 +45,7 @@
 #'
 #'
 seg_seq <- function(context = 'visits',
-                    predicates = NULL,
+                    rules = NULL,
                     sequence = 'in_order',
                     exclude = FALSE,
                     exclude_checkpoint = NULL) {
@@ -64,7 +64,7 @@ seg_seq <- function(context = 'visits',
   }
   # validate 'exclude_checkpoint' argument value
   if (!is.null(exclude_checkpoint) & !is.numeric(exclude_checkpoint)) {
-    stop("The argument 'exclude_checkpoint' needs to be NULL, a single number, or a vector of numbers defining the predicates you want to exclude.")
+    stop("The argument 'exclude_checkpoint' needs to be NULL, a single number, or a vector of numbers defining the rules you want to exclude.")
   }
   #define the sequence direction
   f.seq_dir <- function(sequence){
@@ -79,27 +79,27 @@ seg_seq <- function(context = 'visits',
   if (!is.null(exclude_checkpoint)) {
     new_checkpoints <- (exclude_checkpoint-1) + (seq(length(exclude_checkpoint)) - 1)
     for (i in new_checkpoints) {
-      predicates <- append(predicates,
+      rules <- append(rules,
                            list(list(func = 'exclude-next-checkpoint')),
                            after = i)
     }
   }
-  ## Add in the necessary 'container' and 'hits' variables to each predicate for sequence to work
+  ## Add in the necessary 'container' and 'hits' variables to each rule for sequence to work
   pred_items <- list()
-  for (i in seq_along(predicates)) {
-    if (!is.null(predicates[[i]]$val)) {
+  for (i in seq_along(rules)) {
+    if (!is.null(rules[[i]]$val)) {
       pred_items <- append(pred_items, list(
         list(context = 'hits',
              func = 'container',
-             pred = predicates[[i]])
+             pred = rules[[i]])
       ))
-    } else if (length(predicates[[i]]) == 2) {
-      if (is.list(predicates[[i]][[1]])){
-        for(item in seq(length(predicates[[i]]))) {
-          pred_items <- append(pred_items, predicates[[i]][item])
+    } else if (length(rules[[i]]) == 2) {
+      if (is.list(rules[[i]][[1]])){
+        for(item in seq(length(rules[[i]]))) {
+          pred_items <- append(pred_items, rules[[i]][item])
         } }
     } else {
-      pred_items <- append(pred_items, list(predicates[[i]]))
+      pred_items <- append(pred_items, list(rules[[i]]))
     }
   }
 
