@@ -2,22 +2,37 @@
 #'
 #' This function combines rules into a sequence container.
 #'
-#' @param context Defines the level that the segment logic should operate on. Valid values for sequential segments is visitors and visits. See Details
-#' @param rules List of rules created using `seg_rule()` function. Must wrapped in a list() function.
-#' @param sequence  How should the sequence of items be considered. Options: `in_order` (default), `before`, `after`, `and`, `or`
+#' @param context Defines the level that the segment logic should operate on.
+#' Valid values for sequential segments is visitors and visits. See Details
+#' @param rules List of rules created using `seg_rule()` function. Must be wrapped
+#' in a list() function.
+#' @param sequence  How should the sequence of items be considered.
+#' Options: `in_order` (default), `before`, `after`, `and`, `or`
 #' @param exclude Excludes the entire sequence container which will include all rules.
-#' @param exclude_checkpoint Which checkpoints (rules) should be excluded. Example `c(1, 4)`. See Details
+#' @param exclude_checkpoint Which checkpoints (rules) should be excluded.
+#' Example `c(1, 4)`. See Details
 #'
 #' @details
 #'
 #' **Context**
 #'
-#' The rules in a segment have a context that specify the level of operation. The context can be visitors, visits or hits.
-#' As an example, let's build a segment rule where revenue is greater than 0 (meaning a purchase took place) and change the context to see how things change.
-#' If the context is set to visitors, the segment includes all hits from visitors that have a purchase of some kind during a visit. This is useful in analyzing customer behavior in visits leading up to a purchase and possibly behavior after a purchase.
-#' the context is set to visits, the segment includes all hits from visits where a purchase occurred. This is useful for seeing the behavior of a visitor in immediate page views leading up to the purchase.
-#' If the context is set to hit, the segment only includes hits where a purchase occurred, and no other hits. This is useful in seeing which products were most popular.
-#' In the above example, the context for the container listed is hits. This means that the container only evaluates data at the hit level, (in contrast to visit or visitor level). The rows in the container are also at the hit level.
+#' The rules in a segment have a context that specify the level of operation.
+#' The context can be visitors, visits or hits.
+#' As an example, let's build a segment rule where revenue is greater than 0
+#' (meaning a purchase took place) and change the context to see how things change.
+#' If the context is set to visitors, the segment includes all hits from visitors
+#' that have a purchase of some kind during a visit. This is useful in analyzing
+#' customer behavior in visits leading up to a purchase and possibly behavior
+#' after a purchase.
+#' If the context is set to visits, the segment includes all hits from visits where
+#' a purchase occurred. This is useful for seeing the behavior of a visitor in
+#' immediate page views leading up to the purchase.
+#' If the context is set to hit, the segment only includes hits where a purchase
+#' occurred, and no other hits. This is useful in seeing which products were most
+#' popular.
+#' In the above example, the context for the container listed is hits. This means
+#' that the container only evaluates data at the hit level, (in contrast to visit
+#' or visitor level). The rows in the container are also at the hit level.
 #'
 #' **Exclude checkpoint**
 #'
@@ -32,10 +47,6 @@
 #'
 #' Sequential segments can be difficult to get right. Referencing this article
 #' can help: https://experienceleague.adobe.com/docs/analytics/components/segmentation/segmentation-workflow/seg-sequential-build.html?lang=en
-#'
-#' @example
-#' \donotrun
-#' sequenceitem <- seg_seq(context = 'visits', rules = list(pred1, pred2), sequence = 'in_order', exclude = FALSE)
 #'
 #' @return a structured list of containers to be used to build the segment
 #'

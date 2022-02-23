@@ -2,7 +2,7 @@
 % Please edit documentation in R/segment_validate.R
 \name{seg_val}
 \alias{seg_val}
-\title{Validate a segment in Adobe Analytics}
+\title{Validate a Segment in Adobe Analytics}
 \usage{
 seg_val(
   segment_body = NULL,
@@ -25,8 +25,9 @@ elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPA
 Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
 }
 \value{
-A validation True or False response
+If the segment is valid a message saying the segment validates is returned.
+If the segment doesn't validate the errors are returned in a data frame.
 }
 \description{
-Returns a segment validation for a segment contained in a json string object.
+Returns a segment validation response for a segment contained in a json string object.
 }

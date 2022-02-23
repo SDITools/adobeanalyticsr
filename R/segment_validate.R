@@ -1,6 +1,6 @@
-#' Validate a segment in Adobe Analytics
+#' Validate a Segment in Adobe Analytics
 #'
-#' Returns a segment validation for a segment contained in a json string object.
+#' Returns a segment validation response for a segment contained in a json string object.
 #'
 #' @param segment_body The json string of the segment that is being validated (required)
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called `AW_REPORTSUITE_ID` exists
@@ -11,7 +11,8 @@
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' Use [get_me()] to get a list of available `company_id` values.
 #'
-#' @return A validation True or False response
+#' @return If the segment is valid a message saying the segment validates is returned.
+#' If the segment doesn't validate the errors are returned in a data frame.
 #'
 #' @import dplyr
 #' @import assertthat

@@ -13,15 +13,19 @@ seg_seq(
 )
 }
 \arguments{
-\item{context}{Defines the level that the segment logic should operate on. Valid values for sequential segments is visitors and visits. See Details}
+\item{context}{Defines the level that the segment logic should operate on.
+Valid values for sequential segments is visitors and visits. See Details}
 
-\item{rules}{List of rules created using \code{seg_rule()} function. Must wrapped in a list() function.}
+\item{rules}{List of rules created using \code{seg_rule()} function. Must be wrapped
+in a list() function.}
 
-\item{sequence}{How should the sequence of items be considered. Options: \code{in_order} (default), \code{before}, \code{after}, \code{and}, \code{or}}
+\item{sequence}{How should the sequence of items be considered.
+Options: \code{in_order} (default), \code{before}, \code{after}, \code{and}, \code{or}}
 
 \item{exclude}{Excludes the entire sequence container which will include all rules.}
 
-\item{exclude_checkpoint}{Which checkpoints (rules) should be excluded. Example \code{c(1, 4)}. See Details}
+\item{exclude_checkpoint}{Which checkpoints (rules) should be excluded.
+Example \code{c(1, 4)}. See Details}
 }
 \value{
 a structured list of containers to be used to build the segment
@@ -32,12 +36,23 @@ This function combines rules into a sequence container.
 \details{
 \strong{Context}
 
-The rules in a segment have a context that specify the level of operation. The context can be visitors, visits or hits.
-As an example, let's build a segment rule where revenue is greater than 0 (meaning a purchase took place) and change the context to see how things change.
-If the context is set to visitors, the segment includes all hits from visitors that have a purchase of some kind during a visit. This is useful in analyzing customer behavior in visits leading up to a purchase and possibly behavior after a purchase.
-the context is set to visits, the segment includes all hits from visits where a purchase occurred. This is useful for seeing the behavior of a visitor in immediate page views leading up to the purchase.
-If the context is set to hit, the segment only includes hits where a purchase occurred, and no other hits. This is useful in seeing which products were most popular.
-In the above example, the context for the container listed is hits. This means that the container only evaluates data at the hit level, (in contrast to visit or visitor level). The rows in the container are also at the hit level.
+The rules in a segment have a context that specify the level of operation.
+The context can be visitors, visits or hits.
+As an example, let's build a segment rule where revenue is greater than 0
+(meaning a purchase took place) and change the context to see how things change.
+If the context is set to visitors, the segment includes all hits from visitors
+that have a purchase of some kind during a visit. This is useful in analyzing
+customer behavior in visits leading up to a purchase and possibly behavior
+after a purchase.
+If the context is set to visits, the segment includes all hits from visits where
+a purchase occurred. This is useful for seeing the behavior of a visitor in
+immediate page views leading up to the purchase.
+If the context is set to hit, the segment only includes hits where a purchase
+occurred, and no other hits. This is useful in seeing which products were most
+popular.
+In the above example, the context for the container listed is hits. This means
+that the container only evaluates data at the hit level, (in contrast to visit
+or visitor level). The rows in the container are also at the hit level.
 
 \strong{Exclude checkpoint}
 
