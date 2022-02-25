@@ -46,10 +46,6 @@ and \code{TECHNICAL_ACCOUNT_ID}.}
 Otherwise, provide a URL to the user and prompt for a validation code.
 Defaults to the value of the \code{httr_oob_default} default, or TRUE if
 \code{httpuv} is not installed.}
-
-\item{org_id}{Deprecated.}
-
-\item{tech_id}{Deprecated.}
 }
 \value{
 The path of the cached token. This is returned invisibly.

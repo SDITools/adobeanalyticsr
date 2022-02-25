@@ -7,9 +7,6 @@
 #' @param req_path The endpoint for that particular report
 #' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
 #' @param company_id Set in environment args, or pass directly here
-#' @param client_id Set in environment args, or pass directly here
-#' @param client_secret Set in environment args, or pass directly here
-#' @param use_oob Always set to TRUE. Needed for tests
 #'
 #' @examples
 #'
