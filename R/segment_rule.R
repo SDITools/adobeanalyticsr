@@ -22,14 +22,13 @@
 #' Default is FALSE. Validation will slow down the function response time but
 #' ensure a valid rule result.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called
-#' `AW_REPORTSUITE_ID` exists
-#' in `.Renviron` or elsewhere and no `rsid` argument is provided, then the `AW_REPORTSUITE_ID`
-#' value will
-#' be used. Use [aw_get_reportsuites()] to get a list of available `rsid` values.
+#' `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument
+#' is provided, then the `AW_REPORTSUITE_ID` value will be used. Use [aw_get_reportsuites()]
+#' to get a list of available `rsid` values.
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID`
-#' exists in `.Renviron` or
-#' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID`
-#' value will be used. Use [get_me()] to get a list of available `company_id` values.
+#' exists in `.Renviron` or elsewhere and no `company_id` argument is provided,
+#' then the `AW_COMPANY_ID` value will be used. Use [get_me()] to get a list of
+#' available `company_id` values.
 #'
 #' @details
 #' **Attribution Models**

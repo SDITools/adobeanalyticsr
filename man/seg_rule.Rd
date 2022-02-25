@@ -48,15 +48,14 @@ Default is FALSE. Validation will slow down the function response time but
 ensure a valid rule result.}
 
 \item{rsid}{Adobe report suite ID (RSID).  If an environment variable called
-\code{AW_REPORTSUITE_ID} exists
-in \code{.Renviron} or elsewhere and no \code{rsid} argument is provided, then the \code{AW_REPORTSUITE_ID}
-value will
-be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}} to get a list of available \code{rsid} values.}
+\code{AW_REPORTSUITE_ID} exists in \code{.Renviron} or elsewhere and no \code{rsid} argument
+is provided, then the \code{AW_REPORTSUITE_ID} value will be used. Use \code{\link[=aw_get_reportsuites]{aw_get_reportsuites()}}
+to get a list of available \code{rsid} values.}
 
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID}
-exists in \code{.Renviron} or
-elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID}
-value will be used. Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
+exists in \code{.Renviron} or elsewhere and no \code{company_id} argument is provided,
+then the \code{AW_COMPANY_ID} value will be used. Use \code{\link[=get_me]{get_me()}} to get a list of
+available \code{company_id} values.}
 }
 \value{
 A structured list defining the rule for a segment
