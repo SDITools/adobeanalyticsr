@@ -3,7 +3,7 @@
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-<img src="man/figures/adobeanalyticsr_logo-01.png" align="right" width = "200"/>
+<img src="man/figures/logo.png" align="right" width = "200"/>
 
 ## R Client for Adobe Analytics API 2.0
 
