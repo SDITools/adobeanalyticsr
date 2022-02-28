@@ -28,6 +28,17 @@ reference:
       - aw_workspace_report
       - aw_anomaly_report
 
+  - title: "Create Segments"
+    desc: "Functions for creating segments"
+  - contents:
+      - seg_verbs
+      - seg_rule
+      - seg_con
+      - seg_seq
+      - seg_then
+      - seg_build
+      - seg_val
+
 development:
   mode: auto
 

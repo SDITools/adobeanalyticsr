@@ -1,4 +1,4 @@
-#' Create the Segment Rule
+#' Create the segment rule
 #'
 #' This function creates the simple rule of a segment.
 #'

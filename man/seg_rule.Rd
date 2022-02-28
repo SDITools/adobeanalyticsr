@@ -2,7 +2,7 @@
 % Please edit documentation in R/segment_rule.R
 \name{seg_rule}
 \alias{seg_rule}
-\title{Create the Segment Rule}
+\title{Create the segment rule}
 \usage{
 seg_rule(
   dimension = NULL,

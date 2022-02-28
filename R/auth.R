@@ -22,8 +22,6 @@
 #'   Otherwise, provide a URL to the user and prompt for a validation code.
 #'   Defaults to the value of the `httr_oob_default` default, or TRUE if
 #'   `httpuv` is not installed.
-#' @param org_id Deprecated.
-#' @param tech_id Deprecated.
 #'
 #' @seealso [aw_auth_with()]
 #'

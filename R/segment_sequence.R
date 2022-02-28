@@ -1,4 +1,4 @@
-#' Create the Segment Sequence Container
+#' Create the segment sequence container
 #'
 #' This function combines rules into a sequence container.
 #'
@@ -17,17 +17,17 @@
 #' **Context**
 #'
 #' The rules in a segment have a context that specify the level of operation.
-#' The context can be visitors, visits or hits.
+#' The context can be "visitors", "visits" or "hits."
 #' As an example, let's build a segment rule where revenue is greater than 0
 #' (meaning a purchase took place) and change the context to see how things change.
-#' If the context is set to visitors, the segment includes all hits from visitors
+#' If the context is set to "visitors", the segment includes all hits from visitors
 #' that have a purchase of some kind during a visit. This is useful in analyzing
 #' customer behavior in visits leading up to a purchase and possibly behavior
 #' after a purchase.
-#' If the context is set to visits, the segment includes all hits from visits where
+#' If the context is set to "visits", the segment includes all hits from visits where
 #' a purchase occurred. This is useful for seeing the behavior of a visitor in
 #' immediate page views leading up to the purchase.
-#' If the context is set to hit, the segment only includes hits where a purchase
+#' If the context is set to "hits", the segment only includes hits where a purchase
 #' occurred, and no other hits. This is useful in seeing which products were most
 #' popular.
 #' In the above example, the context for the container listed is hits. This means

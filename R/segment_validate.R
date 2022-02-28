@@ -1,4 +1,4 @@
-#' Validate a Segment in Adobe Analytics
+#' Validate a segment in adobe analytics
 #'
 #' Returns a segment validation response for a segment contained in a json string object.
 #'
