@@ -7,6 +7,7 @@
 #' repeatable, timely analysis.
 #'
 #' @importFrom rlang :=
+#' @noRd
 #'
 "_PACKAGE"
 

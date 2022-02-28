@@ -13,3 +13,4 @@
 ^CRAN-RELEASE$
 ^private.key
 data-raw/
+testdocs/

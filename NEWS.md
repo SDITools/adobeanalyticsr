@@ -1,3 +1,20 @@
+# adobeanalyticsr 0.3.0
+
+* Changed from using a litany of environment variables to auth with JWT to 
+a simpler JSON file-based approach.
+* There is now a second argument for Report Suite ID for `aw_segment_table`,
+which allows the user to specify a vector of RSIDs for which to search for
+the segment IDs when making pretty names.
+* Added functions to build segments, validate, and create them in Adobe 
+Analytics.
+  * `seg_verbs`
+  * `seg_rule()`
+  * `seg_con()`
+  * `seg_seq()`
+  * `seg_then()`
+  * `seg_build()`
+  * `seg_val()`
+
 # adobeanalyticsr 0.2.1
 
 * Added support for JWT Authentication
