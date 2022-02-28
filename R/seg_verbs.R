@@ -1,6 +1,6 @@
-#' Verbs available in segment predicates or rules.
+#' Verbs available in segment rules.
 #'
-#' A dataset containing the list of available verbs for segments to use.
+#' A dataset containing the list of available verbs to be used in segment rules.
 #'
 #' @format A data frame with 34 rows and 5 variables:
 #' \describe{
