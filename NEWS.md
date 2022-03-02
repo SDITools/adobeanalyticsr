@@ -1,3 +1,5 @@
+# adobeanalyticsr (development version)
+
 # adobeanalyticsr 0.3.0
 
 * Changed from using a litany of environment variables to authorize with JWT to 
