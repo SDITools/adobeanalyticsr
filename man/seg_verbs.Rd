@@ -3,7 +3,7 @@
 \docType{data}
 \name{seg_verbs}
 \alias{seg_verbs}
-\title{Verbs available in segment predicates or rules.}
+\title{Verbs available in segment rules.}
 \format{
 A data frame with 34 rows and 5 variables:
 \describe{
@@ -23,6 +23,6 @@ string, list, glob, number, or exists}
 seg_verbs
 }
 \description{
-A dataset containing the list of available verbs for segments to use.
+A dataset containing the list of available verbs to be used in segment rules.
 }
 \keyword{datasets}
