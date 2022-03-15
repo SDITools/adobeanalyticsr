@@ -221,7 +221,8 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   long_metrics <- data.frame(
     name = output_data$columns$columnIds,
-    value = output_data$summaryData$totals
+    value = output_data$summaryData$totals,
+    stringsAsFactors = FALSE
   )
 
   output_data <- left_join(seg_ctrl, long_metrics, by = c("metric_id" = "name"))
