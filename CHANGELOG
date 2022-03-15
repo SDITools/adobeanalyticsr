@@ -1,3 +1,7 @@
+hotfix/data-frame
+  - Added the `data.frame()` argument `stringsAsFactors = FALSE` explicitly
+  for compatibility with R <4.0.0. 
+
 feature/jwt-file
   - Changed from using a litany of environment variables to auth with JWT to
   a simpler JSON file-based approach.
