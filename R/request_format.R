@@ -216,20 +216,23 @@ metric_filters <- function(type,
   dr <- data.frame(
     id = type[type == "dateRange"],
     type = type[type == "dateRange"],
-    dateRange = dateRange
+    dateRange = dateRange,
+    stringsAsFactors = FALSE
   )
 
   dims <- data.frame(
     id = dimension,
     type = type[type == "breakdown"],
     dimension = dimension,
-    itemId = itemId
+    itemId = itemId,
+    stringsAsFactors = FALSE
   )
 
   segs <- data.frame(
     id = segmentId,
     type = type[type == "segment"],
-    segmentId = segmentId
+    segmentId = segmentId,
+    stringsAsFactors = FALSE
   )
 
   dplyr::bind_rows(dr, dims, segs)
