@@ -210,7 +210,7 @@ test_that("metric_container automatically generates unique IDs for repeat metric
   )
 })
 
-test_that("metric_container has the expected output format", {
+test_that("metric_container has the expected output", {
   con <- metric_container(
     metrics = c("met1", "met1", "met2"),
     sort = "asc",
