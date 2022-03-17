@@ -20,7 +20,7 @@
 <script src="pkgdown.js"></script><script src="extra.js"></script><meta property="og:title" content="R Client for Adobe Analytics API 2.0">
 <meta property="og:description" content="Connect to the Adobe Analytics API v2.0 &lt;https://github.com/AdobeDocs/analytics-2.0-apis&gt;
              which powers Analysis Workspace. The package was developed
-             with the analyst in  mind, and it will continue to be
+             with the analyst in mind, and it will continue to be
              developed with the guiding principles of iterative,
              repeatable, timely analysis.">
 <meta property="og:image" content="/logo.png">
@@ -36,6 +36,8 @@
 </script>
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -48,18 +50,12 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.5</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -81,7 +77,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/benrwoodard/adobeanalyticsr/">
+  <a href="https://github.com/benrwoodard/adobeanalyticsr/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -98,132 +94,176 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="adobeanalyticsr" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#adobeanalyticsr" class="anchor"></a>adobeanalyticsr</h1></div>
+<div class="section level1">
+<div class="page-header"><h1 id="adobeanalyticsr">adobeanalyticsr<a class="anchor" aria-label="anchor" href="#adobeanalyticsr"></a>
+</h1></div>
 <!-- badges: start -->
 
 <p><img src="reference/figures/logo.png" align="right" width="200"></p>
-<div id="r-client-for-adobe-analytics-api-20" class="section level2">
-<h2 class="hasAnchor">
-<a href="#r-client-for-adobe-analytics-api-20" class="anchor"></a>R Client for Adobe Analytics API 2.0</h2>
-<p>Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as <a href="https://github.com/benrwoodard/adobeanalyticsr/issues">issues in this Github repository</a>.</p>
-<div id="a-note-about-20-vs-14" class="section level3">
-<h3 class="hasAnchor">
-<a href="#a-note-about-20-vs-14" class="anchor"></a>A Note about 2.0 vs. 1.4</h3>
-<p>The Adobe Analytics v1.4 API, while on its way out, still has some functionality that is not (yet?) available in the v2.0 API. As such, the <a href="https://randyzwitch.com/rsitecatalyst/">RSiteCatalyst</a> package created by Randy Zwitch remains a useful package. While this is not a comprehensive list, some of the features that are available through RSiteCatalyst that are not available through the v2.0 API (and, by extension, are not available through this package) are:</p>
+<div class="section level2">
+<h2 id="r-client-for-adobe-analytics-api-20">R Client for Adobe Analytics API 2.0<a class="anchor" aria-label="anchor" href="#r-client-for-adobe-analytics-api-20"></a>
+</h2>
+<p>Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed, and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as <a href="https://github.com/benrwoodard/adobeanalyticsr/issues" class="external-link">issues in this Github repository</a>.</p>
+<p>A special thanks to our company, <a href="https://www.searchdiscovery.com" class="external-link">Search Discovery</a>, for giving us the time, encouragement, and support to build out this package. There is no way this would have been possible without the opportunity to learn from and work with some of the most amazing people in the analytics industry.</p>
+<div class="section level3">
+<h3 id="a-note-about-20-vs-14">A Note about 2.0 vs. 1.4<a class="anchor" aria-label="anchor" href="#a-note-about-20-vs-14"></a>
+</h3>
+<p>The Adobe Analytics v1.4 API, while on its way out, still has some functionality that is not (yet?) available in the v2.0 API. As such, the <a href="https://randyzwitch.com/rsitecatalyst/" class="external-link">RSiteCatalyst</a> package created by Randy Zwitch remains a useful package. While this is not a comprehensive list, some of the features that are available through RSiteCatalyst that are not available through the v2.0 API (and, by extension, are not available through this package) are:</p>
 <ul>
 <li>Data Warehouse queries</li>
 <li>Marketing Channel configuration and processing rules</li>
+<li>Some configuration details for variables (eVar, prop, events)</li>
 <li>Data Feed details</li>
 </ul>
-<p>The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does <em>not</em> require that an Adobe Console API project be created, which <em>is</em> something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does <em>not</em> need web services access set up on an account-by-account basis to pull data using the package.</p>
+<p>The v1.4 API also allows the user to pull data once they have web services access set up for their account and the client ID and client secret that comes along with that. In other words, it does <em>not</em> require that an Adobe Console API project be created, which <em>is</em> something that is required to use the v2.0 API. The benefit of getting an Adobe Console API project set up, though, is that the user then does <em>not</em> need web services access set up on an account-by-account basis to pull data using the package if using the OAUTH authentication. If using the JWT authentication method with v2.0 API, then a project <em>does</em> need to be created for each company account.</p>
 <p>As a purely editorial side note, the creators and maintainers of this package would like to express their eternal gratitude to Randy for the work he put in to creating and maintaining <code>RSiteCatalyst</code>. His work brought the power of R combined with data pulled directly via the Adobe Analytics API to a global audience, and we can only hope (for ourselves and the analyst community writ large) that <code>adobeanalyticsr</code> can live up to the high standard he set with his work.</p>
 </div>
-<div id="install-the-package-recommended" class="section level3">
-<h3 class="hasAnchor">
-<a href="#install-the-package-recommended" class="anchor"></a>Install the package (recommended)</h3>
-<pre><code><a href="https://rdrr.io/r/utils/install.packages.html"># Install from CRAN
-install.packages('adobeanalyticsr')
+<div class="section level3">
+<h3 id="install-the-package-recommended">Install the package (recommended)<a class="anchor" aria-label="anchor" href="#install-the-package-recommended"></a>
+</h3>
+<pre><code><span class="co"># Install from CRAN</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'adobeanalyticsr'</span><span class="op">)</span>
 
-# Load the package
-library(adobeanalyticsr) </a></code></pre>
+<span class="co"># Load the package</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">adobeanalyticsr</a></span><span class="op">)</span></code></pre>
 </div>
-<div id="install-the-development-version-of-the-package" class="section level3">
-<h3 class="hasAnchor">
-<a href="#install-the-development-version-of-the-package" class="anchor"></a>Install the development version of the package</h3>
-<pre><code><a href="https://rdrr.io/r/utils/install.packages.html"># Install devtools from CRAN
-install.packages("devtools")
+<div class="section level3">
+<h3 id="install-the-development-version-of-the-package">Install the development version of the package<a class="anchor" aria-label="anchor" href="#install-the-development-version-of-the-package"></a>
+</h3>
+<pre><code><span class="co"># Install devtools from CRAN</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span>
 
-# Install adobeanayticsr from github
-devtools::install_github('benrwoodard/adobeanalyticsr') 
+<span class="co"># Install adobeanayticsr from github</span>
+<span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://devtools.r-lib.org/reference/remote-reexports.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">'benrwoodard/adobeanalyticsr'</span><span class="op">)</span> 
 
-# Load the package
-library(adobeanalyticsr) </a></code></pre>
+<span class="co"># Load the package</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">adobeanalyticsr</a></span><span class="op">)</span></code></pre>
 </div>
-<div id="current-setup-process-overview" class="section level3">
-<h3 class="hasAnchor">
-<a href="#current-setup-process-overview" class="anchor"></a>Current setup process overview</h3>
+<div class="section level3">
+<h3 id="current-setup-process-overview">Current setup process overview<a class="anchor" aria-label="anchor" href="#current-setup-process-overview"></a>
+</h3>
 <p>There are four setup steps required to start accessing your Adobe Analytics data. The following steps are each outlined in greater detail in the following sections:</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li>Create an Adobe Console API Project</li>
-<li>Create and add the OAuth arguments to your <code>.Renviron</code> file.</li>
-<li>Get your authorization token by using the function <code><a href="reference/aw_token.html">aw_token()</a></code>.</li>
+<li>Create and add the OAuth/JWT arguments to your <code>.Renviron</code> file.</li>
+<li>Set the type of authorization being used by calling <code>aw_auth_with(type = "")</code>. The <code>type</code> value should be <strong>jwt</strong> or <strong>oauth</strong>
+</li>
+<li>Get your authorization token using <code><a href="reference/aw_auth.html">aw_auth()</a></code>. Once the authorization type has been set (the previous step), this will look for <code>.Renviron</code> variables and complete the authorization.</li>
 <li>Get your <code>company_id</code> by using the function <code><a href="reference/get_me.html">get_me()</a></code>.</li>
 </ol>
-<div id="1-create-an-adobe-console-api-project" class="section level4">
-<h4 class="hasAnchor">
-<a href="#1-create-an-adobe-console-api-project" class="anchor"></a>1. Create an Adobe Console API Project</h4>
-<p>Regardless of how many different Adobe Analytics accounts you will be accessing, you only need a single Adobe Console API project (you will still need to have working user credentials for each account you want to access, but the Adobe Console API project is just the way you then get access to authenticate using those user credentials; yes…confusing!):</p>
-<ol>
-<li>Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="uri">https://console.adobe.io/integrations</a>.</li>
-<li>Click the <strong>Create New Project</strong> button.</li>
+<div class="section level4">
+<h4 id="1-create-an-adobe-console-api-project">1. Create an Adobe Console API Project<a class="anchor" aria-label="anchor" href="#1-create-an-adobe-console-api-project"></a>
+</h4>
+<p>If you are using the OAuth authorization, regardless of how many different Adobe Analytics accounts you will be accessing, you only need a single Adobe Console API project (you will still need to have working user credentials for each account you want to access, but the Adobe Console API project is just the way you then get access to authenticate using those user credentials; yes…confusing!) If you are using the JWT authorization then you will need an Adobe Console API project created for each company you will be accessing. The following steps will get you setup on either of the different authorizations:</p>
+<ol style="list-style-type: decimal">
+<li>Navigate to the following URL: <a href="https://console.adobe.io/integrations" class="external-link uri">https://console.adobe.io/integrations</a>.</li>
+<li>Click the <strong>Create New Project</strong> button and select <strong>Empty Project</strong>
+</li>
 <li>Click the <strong>Add API</strong> button.</li>
 <li>Select the Experience Cloud product icon and then choose <strong>Adobe Analytics</strong> and click <strong>Next</strong>.</li>
+<li>The next series of steps depends on your choice of authorization.</li>
+</ol>
+<ul>
+<li>
+<em>OAuth</em>
+<ol style="list-style-type: decimal">
 <li>Select the OAuth option and then click <strong>Next</strong>.</li>
 <li>Select <strong>Web</strong> as the platform where you want the integration.</li>
-<li>Add Default redirect URI <code><a href="https://adobeanalyticsr.com/token_result.html" class="uri">https://adobeanalyticsr.com/token_result.html</a></code>*</li>
-<li>Add Redirect URI pattern <code><a href="https://adobeanalyticsr%5C.com/token_result%5C.html" class="uri">https://adobeanalyticsr\.com/token_result\.html</a></code>*</li>
+<li>Add Default redirect URI <code><a href="https://adobeanalyticsr.com/token_result.html" class="external-link uri">https://adobeanalyticsr.com/token_result.html</a></code>*.</li>
+<li>Add Redirect URI pattern <code><a href="https://adobeanalyticsr%5C.com/token_result%5C.html" class="external-link uri">https://adobeanalyticsr\.com/token_result\.html</a></code>*.</li>
 </ol>
-<p>* This is simply a helper site I’ve set up in order to make it easier to generate a token. The site does not store any information.</p>
-<p><em>If you are knowledgeable of the ins and outs of this auth process and feel you have a better way to explain and/or set this up, please <a href="https://github.com/benrwoodard/adobeanalyticsr/issues">submit an issue</a> or create a pull request with your recommendation!</em></p>
+</li>
+<li>
+<em>JWT</em>
+<ol style="list-style-type: decimal">
+<li>Select the <strong>Service Account (JWT)</strong> options and then click <strong>Next</strong>.</li>
+<li>Click on the <strong>Generate a Key Pair</strong> button. A config file will download onto your desktop.</li>
+<li>Select the product profiles to be included in the access and click <strong>Save configured API</strong>.</li>
+</ol>
+</li>
+</ul>
+<p>* This is simply a helper site we’ve set up in order to make it easier to generate a token. The site does not store any information.</p>
 <p><strong>Creating an Adobe Console API Project in under 60 seconds</strong> <img src="reference/figures/createoauthproject.gif" align="center"></p>
 </div>
-<div id="2-set-up-the-renviron-file" class="section level4">
-<h4 class="hasAnchor">
-<a href="#2-set-up-the-renviron-file" class="anchor"></a>2. Set up the .Renviron file</h4>
+<div class="section level4">
+<h4 id="2-set-up-the-renviron-file">2. Set up the .Renviron file<a class="anchor" aria-label="anchor" href="#2-set-up-the-renviron-file"></a>
+</h4>
 <p>This file is essential to keeping your information secure. It also speeds up analysis by limiting the number of arguments you need to add to every function call.</p>
-<ol>
+<ol style="list-style-type: decimal">
 <li><p>If you do not have an <code>.Renviron</code> file (if you have never heard of this file you almost certainly don’t have one!), then create a new file and save it with the name <code>.Renviron</code>. You can do this from within the RStudio environment and save the file either in your <code>Home</code> directory (which is recommended; click on the <strong>Home</strong> button in the file navigator in RStudio and save it to that location) <em>or</em> within your project’s working directory.</p></li>
 <li>
 <p>Get the following variables from the OAuth project and add them to the file* (see <em>Creating an Adobe Console API Project</em> above):</p>
 <ul>
-<li>
-<code>AW_CLIENT_ID</code> - OAuth client id found in the Adobe Developer Console</li>
-<li>
-<code>AW_CLIENT_SECRET</code> - OAuth client secret key found in the Adobe Developer Console</li>
+<li>(OAuth) <code>AW_CLIENT_ID</code> – the client id found in the Adobe Developer Console</li>
+<li>(OAuth) <code>AW_CLIENT_SECRET</code> – the client secret key found in the Adobe Developer Console</li>
+<li>(JWT) <code>AW_PRIVATE_KEY</code> – unzip the downloaded <strong>config.zip</strong> file and move the <strong>.key</strong> file to a convenient location. An example file name is <code>~/aa_20_api/private.key</code>. This variable, <code>AW_PRIVATE_KEY</code>, should reference the accurate path for the file.</li>
+<li>(JWT) <code>AW_AUTH_FILE</code> – The path of a JSON file containing fields with JWT authentication data. This file may be found packaged in the <code>config.zip</code> file, or you may create it yourself. See below.</li>
 </ul>
 </li>
 <li><p>(Optional) Add <code>AW_COMPANY_ID</code> and <code>AW_REPORTSUITE_ID</code> variables once you know them (how to find available values for these two variables is described in step 4 below).</p></li>
 </ol>
-<p>After adding these 2-4 variables to the <code>.Renviron</code> file and saving it, restart your R session (<strong>Session &gt; Restart R</strong> in RStudio) and reload <code>adobeanalyticsr</code> (<code><a href="https://github.com/benrwoodard/adobeanalyticsr">library(adobeanalyticsr)</a></code>).</p>
+<p>After adding these variables to the <code>.Renviron</code> file and saving it, restart your R session (<strong>Session &gt; Restart R</strong> in RStudio) and reload <code>adobeanalyticsr</code> (<code><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">library(adobeanalyticsr)</a></code>).</p>
 <p>* The format of variables in the <code>.Renviron</code> file is straightforward. If you add all four of the variables above, they would simply each be their own line in the file:</p>
-<pre><code>AW_CLIENT_ID = "[OAuth client ID]"
-AW_CLIENT_SECRET = "[OAuth client secret]"
-AW_COMPANY_ID = "[Company ID]"
-AW_REPORTSUITE_ID = "[RSID]"</code></pre>
+<pre><code><span class="co">## If using OAuth </span>
+<span class="va">AW_CLIENT_ID</span> <span class="op">=</span> <span class="st">"[OAuth client ID]"</span>
+<span class="va">AW_CLIENT_SECRET</span> <span class="op">=</span> <span class="st">"[OAuth client secret]"</span>
+<span class="va">AW_COMPANY_ID</span> <span class="op">=</span> <span class="st">"[Company ID]"</span>
+<span class="va">AW_REPORTSUITE_ID</span> <span class="op">=</span> <span class="st">"[RSID]"</span>
+
+<span class="co">## If using JWT </span>
+<span class="va">AW_AUTH_FILE</span> <span class="op">=</span> <span class="st">"[auth_file.json]"</span>
+<span class="va">AW_PRIVATE_KEY</span> <span class="op">=</span> <span class="st">"[private.key]"</span>
+<span class="va">AW_COMPANY_ID</span> <span class="op">=</span> <span class="st">"[Company ID]"</span>
+<span class="va">AW_REPORTSUITE_ID</span> <span class="op">=</span> <span class="st">"[RSID]"</span></code></pre>
+<p>An example authentication JSON file contains the following at a minimum:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"API_KEY"</span><span class="fu">:</span><span class="st">"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"CLIENT_SECRET"</span><span class="fu">:</span><span class="st">"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"</span><span class="fu">,</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"ORG_ID"</span><span class="fu">:</span><span class="st">"xxxxxxxxxxxxxxxxxxxxxxxx@AdobeOrg"</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"TECHNICAL_ACCOUNT_ID"</span><span class="fu">:</span><span class="st">"xxxxxxxxxxxxxxxxxxxxxxxx@techacct.adobe.com"</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p>Other fields are simply ignored. <strong>Note:</strong> <code>API_KEY</code> means the same thing as <code>CLIENT_ID</code>.</p>
 </div>
-<div id="3-get-your-authorization-token" class="section level4">
-<h4 class="hasAnchor">
-<a href="#3-get-your-authorization-token" class="anchor"></a>3. Get your authorization token</h4>
+<div class="section level4">
+<h4 id="3-get-your-authorization-token">3. Get your authorization token<a class="anchor" aria-label="anchor" href="#3-get-your-authorization-token"></a>
+</h4>
 <p>The token is actually a lonnnnng alphanumeric string that is the what ultimately enables you to access your data:</p>
-<ol>
-<li>In the console, enter <code><a href="reference/aw_token.html">aw_token()</a></code> and press <em><enter></enter></em>.</li>
+<p><strong>OAuth process</strong> OAuth requires an interactive environment (see step 3 below), and the authentication token expires after 24 hours, which then requires repeating steps 2-9 below:</p>
+<ol style="list-style-type: decimal">
+<li>In the console, enter <code>aw_auth_with('oauth')</code> and press <strong>Enter</strong>.</li>
+<li>Enter <code><a href="reference/aw_auth.html">aw_auth()</a></code> and press <strong>Enter</strong>.</li>
 <li>A browser window should appear that prompts you to log in to your Adobe Marketing Cloud account.</li>
 <li>Log in.</li>
 <li>You will then be redirected to <code>adobeanalyticsr.com</code>* and a screen that displays your token.*</li>
 <li>Copy the token (only).</li>
 <li>Return to the R console. You should see a prompt to <strong>Enter authorization code:</strong>
 </li>
-<li>Paste the token you copied and press <em><enter></enter></em>.</li>
+<li>Paste the token you copied and press <strong>Enter</strong>.</li>
+<li>You should see the confirmation message: “Successfully authenticated with OAuth”</li>
 </ol>
-<p>This token will expire every 24 hours, so you will have to periodically repeat this step.</p>
+<p>As noted above, this token will expire every 24 hours, so you will have to periodically repeat this step.</p>
 <p>* Again, this is simply a helper site I’ve set up in order to make it easier to generate a token. The site does not store any information.</p>
-</div>
-<div id="4-confirm-the-process-worked-and-get-available-company_id-and-reports" class="section level4">
-<h4 class="hasAnchor">
-<a href="#4-confirm-the-process-worked-and-get-available-company_id-and-reports" class="anchor"></a>4. Confirm the process worked and get available company_id and reports</h4>
-<p>The last step is to get your <code>company_id</code> (or, if you have access to multiple accounts, get the <code>company_id</code> you want to work with). This is also an excellent way to confirm that everything is set up correctly:</p>
-<ol>
-<li>In the console, type <code><a href="reference/get_me.html">get_me()</a></code> and press <em><enter></enter></em>.</li>
-<li>You should then see a list of all of the companies you have access to. The <strong>globalCompanyId</strong> value is what you will use to specify the company that you want to access. If you are working solely (or primarily) with one company, then consider adding the <code>company_id</code> as <code>AW_COMPANY_ID</code> in your <code>.Renviron</code> file as described in step 2 above. Otherwise, you can specify it within each function call that requires it.</li>
-<li>If you will be working solely (or primarily) with a single report suite, then consider adding the report suite ID (RSID) as <code>AW_REPORTSUITE_ID</code> in your file as described in step 2 above. You can retrieve all of the report suite IDs for a given <code>company_id</code> using the function <code><a href="reference/aw_get_reportsuites.html">aw_get_reportsuites(company_id = '[the company ID for account of interest]')</a></code>.</li>
+<p><strong>JWT process</strong> JWT does <em>not</em> require an interactive environment and does not require a token refresh every 24 hours, but it does require a bit more work to set up initially (as described above). To authenticate using JWT:</p>
+<ol style="list-style-type: decimal">
+<li>In the console, enter <code>aw_auth_with('jwt')</code> and press <em>Enter</em>.</li>
+<li>Enter <code><a href="reference/aw_auth.html">aw_auth()</a></code> and press <strong>Enter</strong>.</li>
+<li>You should see the confirmation message: “Successfully authenticated with JWT: access token valid until…”</li>
 </ol>
-<p>If you added any values to your <code>.Renviron</code> file (and then saved it!), then restart your R session (<strong>Session &gt; Restart R</strong> in RStudio) and reload <code>adobeanalyticsr</code> (<code><a href="https://github.com/benrwoodard/adobeanalyticsr">library(adobeanalyticsr)</a></code>).</p>
 </div>
-<div id="5-pull-some-data" class="section level4">
-<h4 class="hasAnchor">
-<a href="#5-pull-some-data" class="anchor"></a>5. Pull some data!</h4>
+<div class="section level4">
+<h4 id="4-confirm-the-process-worked-and-get-available-company_id-and-reports">4. Confirm the process worked and get available company_id and reports<a class="anchor" aria-label="anchor" href="#4-confirm-the-process-worked-and-get-available-company_id-and-reports"></a>
+</h4>
+<p>The last step is to get your <code>company_id</code> (or, if you have access to multiple accounts, get the <code>company_id</code> you want to work with). This is also an excellent way to confirm that everything is set up correctly:</p>
+<ol style="list-style-type: decimal">
+<li>In the console, type <code><a href="reference/get_me.html">get_me()</a></code> and press <em>Enter</em>.</li>
+<li>You should then see a list of all of the companies you have access to. The <strong>globalCompanyId</strong> value is what you will use to specify the company that you want to access. If you are working solely (or primarily) with one company, then consider adding the <code>company_id</code> as <code>AW_COMPANY_ID</code> in your <code>.Renviron</code> file as described in step 2 above. Otherwise, you can specify it within each function call that requires it.</li>
+<li>If you will be working solely (or primarily) with a single report suite, then consider adding the report suite ID (RSID) as <code>AW_REPORTSUITE_ID</code> in your file as described in step 2 above. You can retrieve all of the report suite IDs for a given <code>company_id</code> using the function <code>aw_get_reportsuites(company_id = '[the company ID for account of interest]')</code>.</li>
+</ol>
+<p>If you added any values to your <code>.Renviron</code> file (and then saved it!), then restart your R session (<strong>Session &gt; Restart R</strong> in RStudio) and reload <code>adobeanalyticsr</code> (<code><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">library(adobeanalyticsr)</a></code>).</p>
+</div>
+<div class="section level4">
+<h4 id="5-pull-some-data">5. Pull some data!<a class="anchor" aria-label="anchor" href="#5-pull-some-data"></a>
+</h4>
 <p>You now should be set to start pulling data, typically starting with <code><a href="reference/aw_get_metrics.html">aw_get_metrics()</a></code> and <code><a href="reference/aw_get_dimensions.html">aw_get_dimensions()</a></code> to get a list of available dimension and metric IDs, and then <code><a href="reference/aw_freeform_table.html">aw_freeform_table()</a></code> to pull some data!</p>
 </div>
 </div>
@@ -233,50 +273,60 @@ AW_REPORTSUITE_ID = "[RSID]"</code></pre>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=adobeanalyticsr">https://​cloud.r-project.org/​package=adobeanalyticsr</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/benrwoodard/adobeanalyticsr/">https://​github.com/​benrwoodard/​adobeanalyticsr/​</a>
-</li>
-<li>Report a bug at <br><a href="https://github.com/benrwoodard/adobeanalyticsr/issues">https://​github.com/​benrwoodard/​adobeanalyticsr/​issues</a>
-</li>
-</ul>
-</div>
-<div class="license">
-<h2>License</h2>
-<ul class="list-unstyled">
-<li>
-<a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
-</li>
-</ul>
-</div>
-<div class="developers">
-<h2>Developers</h2>
-<ul class="list-unstyled">
-<li>
-<a href="http://github.com/benrwoodard">Ben Woodard</a> <br><small class="roles"> Author, maintainer </small>  </li>
-<li>Tim Wilson <br><small class="roles"> Author, contributor </small>  </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="https://cloud.r-project.org/package=adobeanalyticsr" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/benrwoodard/adobeanalyticsr/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/benrwoodard/adobeanalyticsr/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="license">
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
-<li><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li>
+<a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a>
+</li>
 </ul>
 </div>
+
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
+<ul class="list-unstyled">
+<li><a href="authors.html#citation">Citing adobeanalyticsr</a></li>
+</ul>
 </div>
+
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
+<ul class="list-unstyled">
+<li>
+<a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a> <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Tim Wilson <br><small class="roles"> Author, contributor </small>  </li>
+<li><a href="authors.html">More about authors...</a></li>
+</ul>
+</div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+</ul>
+</div>
+
+  </div>
 </div>
 
 
       <footer><div class="copyright">
-  <p>Developed by <a href="http://github.com/benrwoodard">Ben Woodard</a>, Tim Wilson.</p>
+  <p></p>
+<p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/">pkgdown</a> 1.6.1.</p>
+  <p></p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
       </footer>
@@ -284,6 +334,8 @@ AW_REPORTSUITE_ID = "[RSID]"</code></pre>
 
   
 
+
+  
 
   </body>
 </html>

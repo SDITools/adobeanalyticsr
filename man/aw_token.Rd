@@ -2,7 +2,7 @@
 % Please edit documentation in R/token.R
 \name{aw_token}
 \alias{aw_token}
-\title{OAuth2 Token for Adobe Analytics}
+\title{OAuth2 Token for Adobe Analytics (deprecated)}
 \usage{
 aw_token(
   client_id = Sys.getenv("AW_CLIENT_ID"),
@@ -23,11 +23,9 @@ file aa.oauth does not exist then one will be created at the end of the
 authorization process.
 }
 \description{
-#' @description
 This is the legacy mechanism for retrieving the authorization token using
 OAuth. It has been replaced by \code{aw_auth()}.
-}
-\details{
+
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
 }
 \seealso{

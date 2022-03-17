@@ -89,15 +89,16 @@ This file is essential to keeping your information secure. It also speeds up ana
   
   2. Get the following variables from the OAuth project and add them to the file* (see _Creating an Adobe Console API Project_ above):
 
-      * (OAuth & JWT) `AW_CLIENT_ID` -- the client id found in the Adobe Developer Console
-      * (OAuth & JWT) `AW_CLIENT_SECRET` -- the client secret key found in the Adobe Developer Console
-      * (JWT Only) `AW_PRIVATE_KEY` -- unzip the downloaded **config.zip** file and move the **.key** file to your working directory. An example file name is **private.key**. This variable should reference the accurate path for the **.key** file.
-      * (JWT Only) `AW_ORGANIZATION_ID` -- the organization id found in the Adobe Developer Console 
-      * (JWT Only) `AW_TECHNICAL_ID` -- the technical id found in the Adobe Developer Console
+      * (OAuth) `AW_CLIENT_ID` -- the client id found in the Adobe Developer Console
+      * (OAuth) `AW_CLIENT_SECRET` -- the client secret key found in the Adobe Developer Console
+      * (JWT) `AW_PRIVATE_KEY` -- unzip the downloaded **config.zip** file and move the **.key** file to a convenient location. An example file name is `~/aa_20_api/private.key`. This variable, `AW_PRIVATE_KEY`, should reference the accurate path for the file.
+      * (JWT) `AW_AUTH_FILE` -- The path of a JSON file containing fields with
+        JWT authentication data. This file may be found packaged in the
+        `config.zip` file, or you may create it yourself. See below.
 
   3. (Optional) Add `AW_COMPANY_ID` and `AW_REPORTSUITE_ID` variables once you know them (how to find available values for these two variables is described in step 4 below).
       
-After adding these 2-7 variables to the `.Renviron` file and saving it, restart your R session (**Session > Restart R** in RStudio) and reload `adobeanalyticsr` (`library(adobeanalyticsr)`). 
+After adding these variables to the `.Renviron` file and saving it, restart your R session (**Session > Restart R** in RStudio) and reload `adobeanalyticsr` (`library(adobeanalyticsr)`). 
 
 \* The format of variables in the `.Renviron` file is straightforward. If you add all four of the variables above, they would simply each be their own line in the file: 
 
@@ -109,14 +110,25 @@ AW_COMPANY_ID = "[Company ID]"
 AW_REPORTSUITE_ID = "[RSID]"
 
 ## If using JWT 
-AW_CLIENT_ID = "[OAuth client ID]"
-AW_CLIENT_SECRET = "[OAuth client secret]"
+AW_AUTH_FILE = "[auth_file.json]"
 AW_PRIVATE_KEY = "[private.key]"
-AW_ORGANIZATION_ID = "[xxxxxxxxxxxxxx@AdobeOrg]"
-AW_TECHNICAL_ID = "[xxxxxxxxxxxxx@techacct.adobe.com]"
 AW_COMPANY_ID = "[Company ID]"
 AW_REPORTSUITE_ID = "[RSID]"
 ```
+
+An example authentication JSON file contains the following at a minimum:
+
+```json
+{
+	"API_KEY":"xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+	"CLIENT_SECRET":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx",
+	"ORG_ID":"xxxxxxxxxxxxxxxxxxxxxxxx@AdobeOrg",
+	"TECHNICAL_ACCOUNT_ID":"xxxxxxxxxxxxxxxxxxxxxxxx@techacct.adobe.com"
+}
+```
+
+Other fields are simply ignored. **Note:** `API_KEY` means the same thing as
+`CLIENT_ID`. 
 
 #### 3. Get your authorization token
 

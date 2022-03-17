@@ -12,3 +12,5 @@
 ^cran-comments\.md
 ^CRAN-RELEASE$
 ^private.key
+data-raw/
+testdocs/

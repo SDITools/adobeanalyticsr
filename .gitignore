@@ -41,11 +41,12 @@ rsconnect/
 gitignore/
 .DS_Store
 
-#defined environ variable ssuch as passwords
+#defined environ variables such as passwords
 .Renviron
 inst/doc
 doc
 Meta
+testdocs/
 
 #CRAN comments
 cran-comments.md
