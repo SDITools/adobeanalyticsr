@@ -11,7 +11,7 @@ aw_get_metrics(
   expansion = NULL,
   company_id = Sys.getenv("AW_COMPANY_ID"),
   debug = FALSE,
-  use_oob = TRUE
+  use_oob
 )
 }
 \arguments{

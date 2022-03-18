@@ -48,7 +48,7 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                            expansion = NULL,
                            company_id = Sys.getenv("AW_COMPANY_ID"),
                            debug = FALSE,
-                           use_oob = TRUE){
+                           use_oob){
   # Reference: https://adobedocs.github.io/analytics-2.0-apis/#/metrics/getMetrics
   lifecycle::deprecate_warn("0.2.2", what = "aw_get_metrics(use_oob)")
 

@@ -39,21 +39,38 @@ global_filter_elem <- function(type,
 #' Generate a global filter
 #'
 #' Vectorized global filter generator. Generates one or more global filter
-#' elements with `global_filter_elem`. This might not be as useful as calling
-#' `global_filter_elem` directly.
+#' elements with `global_filter_elem`.
+#'
+#' Multiple segmentIds are concatenated in separate containers, once for each
+#' value of `segmentId`. Only one value of `dateRange` is allowed.
 #'
 #'
-#' @param type Character, vector of filter types
 #' @param segmentId Character, vector of segment IDs
 #' @param dateRange Character, vector of date ranges
 #'
 #' @return List of global filter elements
 #' @noRd
-global_filter <- function(type,
-                          segmentId = NULL,
+global_filter <- function(segmentId = NULL,
                           dateRange = NULL) {
-  items <- purrr::compact(list(type = type, segmentId = segmentId, dateRange = dateRange))
-  purrr::pmap(items, global_filter_elem)
+  if (length(dateRange) > 1) stop("More than one date range specified")
+
+  if (is.null(dateRange)) {
+    dates <- NULL
+  } else {
+    dates <- lapply(dateRange, function(date) {
+      global_filter_elem("dateRange", dateRange = dateRange)
+    })
+  }
+
+  if (is.null(segmentId)) {
+    segments <- NULL
+  } else {
+    segments <- lapply(segmentId, function(seg) {
+      global_filter_elem("segment", segmentId = seg)
+    })
+  }
+
+  purrr::compact(c(dates, segments))
 }
 
 
@@ -90,7 +107,8 @@ req_settings <- function(limit,
 #' Construct a metric element
 #'
 #' Metric elements are lists composed of two mandatory fields and two optional
-#' fields.
+#' fields. "id" and "columnId" are mandatory, and "filters" and "sort" are
+#' optional.
 #'
 #' @param id Metric ID
 #' @param columnId Assigned column, always the same for each metric
@@ -136,10 +154,11 @@ metric_elem <- function(id,
 #' @param id Vector of metric IDs
 #' @param columnId Assigned columns, should be always the same for each metric
 #' @param filter List of metric filters to include in each metric, identified by
-#'   ID given in the `metricFilters` field of metric container
+#'   ID given in the `metricFilters` field of metric container. If a vector is
+#'   passed, the whole vector is recycled (repeated) `length(id)` times
 #' @param sort Sorting directing, typically only applied to one metric
 #'
-#' @return List, one metric element
+#' @return List, one metric element per id
 #' @noRd
 #' @examples
 #' metric_elems(id = c("met1", "met2"),
@@ -150,8 +169,7 @@ metric_elems <- function(id,
                          columnId,
                          filters = NULL,
                          sort = NULL) {
-  # Input: character vector of filters
-  # Output: List of filters, one filter for each element of ID
+  # Recycle the vector of filters for all metrics
   if (!is.null(filters) & length(filters) > 1 & !is.list(filters)) {
     id_len <- length(id)
     filters <- list(filters)[rep(1, id_len)]
@@ -174,8 +192,8 @@ metric_elems <- function(id,
 #' Combines elements into a single metric filter data frame. Automatically
 #' generates an ID column for use with matching to the metric fields.
 #'
-#' @param type Type
-#' @param dimension Dimensions
+#' @param type Type of metric filter, one of "segment", "breakdown", or "dateRange"
+#' @param dimension Dimensions, for breakdown types
 #' @param itemId Item IDs for those dimensions
 #' @param dateRange Date range
 #' @param segmentId segment IDs
@@ -248,15 +266,30 @@ metric_filters <- function(type,
 #' filter ID, since it is not needed outside the query (i.e., it's not returned
 #' in the response).
 #'
-#' This function also fixes the names of metrics and dimensions, so you can
-#' pass in normal values. You know, for user friendliness.
+#' @details
+#' Metrics are paired with filters by linking them with a key (the filter ID).
+#' So, the same filter can be applied to one or more metrics. In this function,
+#' dimension filters are applied to all metrics. Segment filters may (in fact
+#' must) be applied to specific metrics. The reason behind this is that segment
+#' tables (see `aw_segment_table`) are formed by combining the same metrics
+#' with different segments. See examples.
+#'
+#' You can also blame `aw_segment_table` for being required to include metric
+#' IDs directly, instead of having this function generate them automatically.
+#' I'm aiming to make this automatic in an update, I just have to figure out
+#' why I didn't do it before.
+#'
 #'
 #' @param metrics Metric names in the order they were requested
+#' @param metricIds Column IDs for the metrics. If all metrics appear only once
+#' the best thing to do here is to use the metric name. But sometimes metrics
+#' appear multiple times (e.g., segment tables) and you have to handle the
+#' metric IDs by naming them incrementally.
 #' @param segmentIds List (or vector) of segment IDs the same length as the
 #' metrics. These will be added to metrics as appropriate.
 #' @param sort Direction to sort in, one of "asc", "desc". Applied only to first
 #'   metric.
-#' @param dimensions Dimensions to apply as filters. Must be same length as IDs.
+#' @param dimensions Dimensions to apply as filters. Must be same length as `itemIds`.
 #' @param itemIds Dimension item IDs. Must be same length as dimensions.
 #' @param dateRange If type is dateRange, the dateRange to use.
 #'
@@ -264,10 +297,8 @@ metric_filters <- function(type,
 #' @noRd
 #'
 #' @examples
-#'
 #' metric_container(
 #'   metrics = c("met1", "met2"),
-#'   type = c("breakdown", "dateRange"),
 #'   sort = c("asc", NA),
 #'   dimensions = c("evar45"),
 #'   itemIds = c("1234"),
@@ -282,13 +313,16 @@ metric_filters <- function(type,
 #'   segmentIds = list(NA, c("s1234_5555", "s1234_9999"))
 #' )
 metric_container <- function(metrics,
-                             metricIds,
                              sort,
                              dimensions = NULL,
                              itemIds = NULL,
                              segmentIds = NULL,
                              dateRange = NULL) {
   sort <- na_fill_vec(sort, len = length(metrics))
+
+  # Generate metric column ID
+  metricIds <- create_metric_column_id(metrics)
+
 
   # Format metrics for API request
   metrics[!is_calculated_metric(metrics)] <- paste("metrics",
@@ -332,6 +366,7 @@ metric_container <- function(metrics,
     filter_ids <- list(met_filters$id)
   }
 
+
   mets <- metric_elems(id = metrics,
                        columnId = metricIds,
                        filters = filter_ids,
@@ -342,6 +377,26 @@ metric_container <- function(metrics,
     metricFilters = met_filters
   )
 }
+
+
+#' Generate a metric column ID
+#'
+#' @param metrics Metrics to generate column IDs for
+#'
+#' @return Unique list of metric IDs
+#' @noRd
+#' @examples
+#' mets <- c("met1", "met1", "met1", "met2", "met3", "met3", "met3")
+#' create_metric_column_id(mets)
+create_metric_column_id <- function(metrics) {
+  met_rle <- rle(metrics)
+  out <- purrr::map2(met_rle$lengths, met_rle$values, function(len, val) {
+    paste(val, seq_len(len), sep = "::")
+  })
+
+  unlist(out)
+}
+
 
 
 #' Create requests for item IDs

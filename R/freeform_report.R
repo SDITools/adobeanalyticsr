@@ -175,12 +175,9 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
 
   # Make global filter
-  timeframe <- make_timeframe(date_range)
-
   gf <- global_filter(
-    type = c("dateRange", rep("segment", times = length(segmentId))),
-    dateRange = c(timeframe, rep(NA, times = length(segmentId))),
-    segmentId = c(NA, segmentId)
+    dateRange = make_timeframe(date_range),
+    segmentId = segmentId
   )
 
   # Set settings-like settings
@@ -189,7 +186,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   # Set settings
   unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
-  top <- top_daterange_number(top, dimensions, date_range)
+  top <- recalculate_top_arg(top, dimensions, date_range)
   page <- vctrs::vec_recycle(page, size = length(dimensions))
 
   settings <- req_settings(

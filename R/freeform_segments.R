@@ -174,12 +174,9 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   metrics <- unique(metrics)
 
   # Make global filter
-  timeframe <- make_timeframe(date_range)
-
   gf <- global_filter(
-    type = c("dateRange", rep("segment", times = length(globalSegment))),
-    dateRange = c(timeframe, rep(NA, times = length(globalSegment))),
-    segmentId = c(NA, globalSegment)
+    dateRange = make_timeframe(date_range),
+    segmentId = globalSegment
   )
 
   # Define settings
@@ -190,17 +187,13 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   seg_ctrl <- tidyr::expand_grid(
     metrics = metrics,
     segmentIds = segmentIds
-  ) %>%
-    group_by(metrics) %>%
-    mutate(
-      metric_id = paste(metrics, row_number(), sep = "::")
-    ) %>%
-    ungroup()
+  )
+
+  seg_ctrl$metric_id <- create_metric_column_id(seg_ctrl$metrics)
 
   # Generate metric container
   met_cont <- metric_container(
     metrics = seg_ctrl$metrics,
-    metricIds = seg_ctrl$metric_id,
     sort = "desc", # Sort has no effect, since only 1 row returned
     segmentIds = seg_ctrl$segmentIds
   )
