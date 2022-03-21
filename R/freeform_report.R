@@ -143,6 +143,9 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               prettynames = FALSE,
                               debug = FALSE,
                               check_components = TRUE) {
+  if (company_id == "") stop("'company_id' is blank")
+  if (rsid == "") stop("'rsid' is blank")
+
   if (all(is.na(segmentId))) segmentId <- NULL
 
   # Repeated dimensions will cause an infinite loop
