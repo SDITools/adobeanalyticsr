@@ -302,6 +302,17 @@ auth_jwt <- function(file = Sys.getenv("AW_AUTH_FILE"),
 auth_jwt_gen <- function(secrets,
                          private_key,
                          jwt_token = NULL) {
+    # Look for missing elements of secrets
+    required_but_missing <- setdiff(c("API_KEY", 
+                                      "CLIENT_SECRET", 
+                                      "ORG_ID",
+                                      "TECHNICAL_ACCOUNT_ID"),
+                                    names(secrets))
+
+    if (length(required_but_missing) != 0) {
+        stop("Did not find required variables in auth file: ", 
+             paste(required_but_missing, collapse = ", "))
+    }
 
     stopifnot(is.character(secrets$API_KEY))
     stopifnot(is.character(secrets$CLIENT_SECRET))
