@@ -56,6 +56,17 @@ test_that("global_filter throws an error with more than one daterange filter", {
 })
 
 
+test_that("global_filter throws out names of either the dates or segmentIds", {
+  filt <- global_filter(segmentId = c("My Segment" = "segid"),
+                        dateRange = c("My Date" = "really-long-daterange-string"))
+
+  filt_exp_a <- list(type = "dateRange", dateRange = "really-long-daterange-string")
+  filt_exp_b <- list(type = "segment", segmentId = "segid")
+
+  expect_identical(filt, list(filt_exp_a, filt_exp_b))
+})
+
+
 # Metric elements ----
 test_that("metric_elem works as expected", {
   elem1 <- metric_elem(id = 'theID', columnId = "colID", filters = "filt1", sort = "asc")

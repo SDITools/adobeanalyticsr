@@ -57,6 +57,8 @@ global_filter <- function(segmentId = NULL,
   if (is.null(dateRange)) {
     dates <- NULL
   } else {
+    # unname() is necessary because lapply picks up names
+    dateRange <- unname(dateRange)
     dates <- lapply(dateRange, function(date) {
       global_filter_elem("dateRange", dateRange = dateRange)
     })
@@ -65,6 +67,8 @@ global_filter <- function(segmentId = NULL,
   if (is.null(segmentId)) {
     segments <- NULL
   } else {
+    # unname() is necessary because lapply picks up names
+    segmentId <- unname(segmentId)
     segments <- lapply(segmentId, function(seg) {
       global_filter_elem("segment", segmentId = seg)
     })
