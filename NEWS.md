@@ -1,4 +1,7 @@
-# adobeanalyticsr (development version)
+# adobeanalyticsr 0.3.1
+
+* Bug fix for R <v4.0
+* Initial set of unit tests
 
 # adobeanalyticsr 0.3.0
 
