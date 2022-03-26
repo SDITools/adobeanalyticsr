@@ -17,7 +17,6 @@
 #'
 #' }
 #'
-#' @import assertthat httr
 aw_call_api <- function(req_path,
                         debug = FALSE,
                         company_id) {
