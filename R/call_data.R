@@ -8,7 +8,6 @@
 #' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
 #' @param body An R list that will be parsed to JSON
 #' @param company_id Set in environment args, or pass directly here
-#' @param use_oob Always set to TRUE. Needed for tests
 #'
 #' @examples
 #'
@@ -19,18 +18,14 @@
 #'             company_id = "blah")
 #'
 #' }
-#' @import assertthat httr purrr
-#'
 aw_call_data <- function(req_path,
                          body = NULL,
                          debug = FALSE,
-                         company_id,
-                         use_oob = TRUE
-){
+                         company_id) {
     assertthat::assert_that(
-        is.string(req_path),
+        assertthat::is.string(req_path),
         assertthat::not_empty(body),
-        is.string(company_id)
+        assertthat::is.string(company_id)
     )
 
     env_vars <- get_env_vars()
@@ -57,14 +52,14 @@ aw_call_data <- function(req_path,
                            `x-proxy-global-company-id` = company_id
                        ))
 
-    stop_for_status(req)
+    httr::stop_for_status(req)
 
-    req_errors <- content(req)$columns$columnErrors[[1]]
+    req_errors <- httr::content(req)$columns$columnErrors[[1]]
 
-    if(status_code(req) == 206  & length(req_errors) != 0) {
+    if (httr::status_code(req) == 206  & length(req_errors) != 0) {
         stop(paste0('The error code is ', req_errors$errorCode, ' - ', req_errors$errorDescription))
-    } else if(status_code(req) == 206) {
-        stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
+    } else if (status_code(req) == 206) {
+        stop('Please check the metrics your requested. A 206 error was returned.')
     }
 
     httr::content(req, as = "text",encoding = "UTF-8")
