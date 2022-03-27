@@ -54,8 +54,9 @@ aw_call_api <- function(req_path,
                            `x-proxy-global-company-id` = company_id
                        ))
 
-    httr::stop_for_status(req)
     handle_api_errors(resp = req, body = body)
+    # As a fall-through, for errors that fall through handle_api_errors
+    httr::stop_for_status(req)
 
     httr::content(req, as = "text", encoding = "UTF-8")
 }
