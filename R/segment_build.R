@@ -291,7 +291,7 @@ seg_build <- function(name = NULL,
   if (!create_seg) {
    req <- jsonlite::toJSON(body, auto_unbox = T)
   } else if (create_seg) {
-    req <- aw_call_data(req_path = req_path,
+    req <- aw_call_api(req_path = req_path,
                         body = body,
                         company_id = company_id)
   }

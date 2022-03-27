@@ -31,7 +31,7 @@ seg_val <- function(segment_body = NULL,
   #defined parts of the post request
   req_path <- glue::glue('segments/validate?rsid={rsid}')
 
-  req <- aw_call_data(req_path = req_path,
+  req <- aw_call_api(req_path = req_path,
                       body = segment_body,
                       company_id = company_id)
 
