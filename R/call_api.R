@@ -5,6 +5,7 @@
 #' @noRd
 #'
 #' @param req_path The endpoint for that particular report
+#' @param body Optional, list data structure to use as the body of the request
 #' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
 #' @param company_id Set in environment args, or pass directly here
 #'
@@ -12,15 +13,15 @@
 #'
 #' \dontrun{
 #'
-#' aa_call_api("reports/ranked",
-#'             company_id = "blah")
+#' aa_call_api(req_path = "reports/ranked",
+#'             company_id = "mycompanyid")
 #'
 #' }
 #'
 aw_call_api <- function(req_path,
+                        body = NULL,
                         debug = FALSE,
                         company_id) {
-
     assertthat::assert_that(
         assertthat::is.string(req_path),
         assertthat::is.string(company_id)
@@ -40,10 +41,10 @@ aw_call_api <- function(req_path,
       debug_call <- NULL
     }
 
-    req <- httr::RETRY("GET",
+    req <- httr::RETRY(verb = ifelse(is.null(body), "GET", "POST"),
                        url = request_url,
                        encode = "json",
-                       body = FALSE,
+                       body = body %||% FALSE,
                        token_config,
                        debug_call,
                        httr::add_headers(
@@ -53,6 +54,16 @@ aw_call_api <- function(req_path,
 
     httr::stop_for_status(req)
 
-    httr::content(req, as = "text",encoding = "UTF-8")
+
+    # From api_call_data -- does this work generally? 
+    # req_errors <- httr::content(req)$columns$columnErrors[[1]]
+
+    # if (httr::status_code(req) == 206  & length(req_errors) != 0) {
+    #     stop(paste0('The error code is ', req_errors$errorCode, ' - ', req_errors$errorDescription))
+    # } else if (status_code(req) == 206) {
+    #     stop('Please check the metrics your requested. A 206 error was returned.')
+    # }
+
+    httr::content(req, as = "text", encoding = "UTF-8")
 }
 
