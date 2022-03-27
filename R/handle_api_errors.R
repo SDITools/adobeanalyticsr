@@ -18,7 +18,7 @@ handle_api_errors <- function(resp, body) {
   if (status == 206) {
     req_errors <- httr::content(resp)$columns$columnErrors
 
-    msgs <- map_chr(req_errors, function(e) {
+    msgs <- purrr::map_chr(req_errors, function(e) {
       col_info <- get_by_column_id(body, e$columnId)
       msg <- paste0(e$errorCode, ": ", e$errorDescription)
 

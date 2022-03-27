@@ -73,7 +73,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
   #Create the global filters (gf)
   gf <- s_dr()
 
-  meta <- map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
+  meta <- purrr::map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
 
   req_body <- structure(list(rsid = rsid,
                              globalFilters =
