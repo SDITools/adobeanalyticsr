@@ -1,6 +1,8 @@
 #' Gets the data from Adobe Analytics API v2
 #'
-#' This gives a raw call to the API, but it is intended other functions call this one
+#' This gives a raw call to the API, but it is intended other functions call
+#' this one. Decides whether the request is a GET or a POST based on whether
+#' the `body` argument is `NULL` or not.
 #'
 #' @noRd
 #'
@@ -53,16 +55,7 @@ aw_call_api <- function(req_path,
                        ))
 
     httr::stop_for_status(req)
-
-
-    # From api_call_data -- does this work generally? 
-    # req_errors <- httr::content(req)$columns$columnErrors[[1]]
-
-    # if (httr::status_code(req) == 206  & length(req_errors) != 0) {
-    #     stop(paste0('The error code is ', req_errors$errorCode, ' - ', req_errors$errorDescription))
-    # } else if (status_code(req) == 206) {
-    #     stop('Please check the metrics your requested. A 206 error was returned.')
-    # }
+    handle_api_errors(resp = req, body = body)
 
     httr::content(req, as = "text", encoding = "UTF-8")
 }
