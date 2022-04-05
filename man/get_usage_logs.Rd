@@ -14,6 +14,7 @@ get_usage_logs(
   event = NULL,
   limit = 100,
   page = 0,
+  debug = FALSE,
   company_id = Sys.getenv("AW_COMPANY_ID")
 )
 }
@@ -39,6 +40,8 @@ for a complete list of event types.}
 
 \item{page}{The "page" of results to display. This works in conjunction with the \code{limit} argument and is
 zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results returned would be 21 through 40.}
+
+\item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 
 \item{company_id}{Company ID. If an environment variable called \code{AW_COMPANY_ID} exists in \code{.Renviron} or
 elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPANY_ID} value will be used.

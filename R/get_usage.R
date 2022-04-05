@@ -17,6 +17,7 @@
 #' `page` argument. The default is 10.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
 #' zero-based. For instance, if `limit = 20` and `page = 1`, the results returned would be 21 through 40.
+#' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' Use \code{\link{get_me}} to get a list of available `company_id` values.
@@ -38,6 +39,7 @@ get_usage_logs <- function(startDate = Sys.Date()-91,
                       event = NULL,
                       limit = 100,
                       page = 0,
+                      debug = FALSE,
                       company_id = Sys.getenv("AW_COMPANY_ID"))
 {
   date_range <- make_startDate_endDate(startDate, endDate)
@@ -54,9 +56,12 @@ get_usage_logs <- function(startDate = Sys.Date()-91,
     endDate = date_range[[2]]
   )
 
-  urlstructure <- glue::glue("auditlogs/usage", format_URL_parameters(query_params), sep = "?")
+  urlstructure <- paste("auditlogs/usage", format_URL_parameters(query_params), sep = "?")
 
-  res <- aw_call_api(req_path = urlstructure[1], company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure[1],
+                     debug = debug,
+                     company_id = company_id)
+
   res <- jsonlite::fromJSON(res)
 
   res$content
