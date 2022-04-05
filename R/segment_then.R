@@ -54,7 +54,7 @@ seg_then <- function(limit = 'within',
         stop("The unit argument must be either: 'hit', 'visit', 'minute', 'hour', 'day', 'week', 'month', 'quarter', 'year'")
       } else { glue::glue("unit '{x}' is good")}
   }
-  map(unit, unit_name_test)
+  purrr::map(unit, unit_name_test)
 
   if (length(limit) == 2 && which(limit == 'within') == 2) {
     limit <- rev(limit)

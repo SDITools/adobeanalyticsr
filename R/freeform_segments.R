@@ -205,7 +205,7 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     settings = settings
   )
 
-  output_data <- jsonlite::fromJSON(aw_call_data(
+  output_data <- jsonlite::fromJSON(aw_call_api(
     req_path = "reports/ranked",
     body = req,
     debug = debug,

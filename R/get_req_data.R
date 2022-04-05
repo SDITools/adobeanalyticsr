@@ -67,7 +67,7 @@ get_req_data <- function(current_dim,
   )
 
 
-  data <- jsonlite::fromJSON(aw_call_data(
+  data <- jsonlite::fromJSON(aw_call_api(
     req_path = "reports/ranked",
     body = req,
     debug = debug,
