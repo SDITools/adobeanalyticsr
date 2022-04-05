@@ -1,3 +1,9 @@
+# adobeanalyticsr 0.3.2
+
+* Refactored aw_call_data and aw_call_api into a single function
+* added internal function handle_api_errors() which is a more useful error handler for 206 and 400 type errors
+* Bug fix for 'get_usage_logs()` function
+
 # adobeanalyticsr 0.3.1
 
 * Bug fix for R <v4.0
