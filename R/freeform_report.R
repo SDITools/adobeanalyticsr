@@ -177,23 +177,6 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
 
-  # Make global filter
-  gf <- global_filter(
-    dateRange = make_timeframe(date_range),
-    segmentId = segmentId
-  )
-
-  # Set settings-like settings
-  search <- na_fill_vec(search, len = length(dimensions))
-  metricSort <- na_fill_vec(metricSort, len = length(metrics))
-
-  # Set settings
-  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
-  top <- recalculate_top_arg(top, dimensions, date_range)
-  page <- vctrs::vec_recycle(page, size = length(dimensions))
-
-
-
   # Estimate requests and reset global counter
   n_requests <- estimate_requests(top)
   if (n_requests > 20) {
@@ -208,10 +191,11 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     company_id = company_id,
     dimensions = dimensions,
     metrics = metrics,
-    global_filter = gf,
+    date_range = date_range,
+    segment_id = segmentId,
     limit = top,
     page = page,
-    nonesBehavior = unspecified,
+    include_unspecified = include_unspecified,
     dimensionSort = "asc",
     search = search,
     sort = metricSort

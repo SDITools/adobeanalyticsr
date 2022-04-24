@@ -9,24 +9,44 @@
 #' either all items or a range of items. This is simple indexing -- you can use
 #' a range or get a single item, or no items.
 #'
+#' A final note is that this function is also responsible for standardizing its
+#' inputs. Basically, this function serializes the arguments to `aw_freeform_table`
+#' for later consumption.
+#'
 #' @noRd
 make_query_spec <- function(
   rsid,
   company_id,
   dimensions,
   metrics,
-  global_filter,
+  date_range,
+  segment_id,
   limit,
   page,
   search,
   sort,
-  nonesBehavior,
+  include_unspecified,
   dimensionSort
 ) {
+  # Make global filter
+  gf <- global_filter(
+    dateRange = make_timeframe(date_range),
+    segmentId = segment_id
+  )
+
+  # search and metricSort are NA filled to the length of dimensions
+  search <- na_fill_vec(search, len = length(dimensions))
+  metricSort <- na_fill_vec(sort, len = length(metrics))
+
+  # Set settings
+  nonesBehavior <- ifelse(include_unspecified, "return-nones", "exclude-nones")
+  top <- recalculate_top_arg(limit, dimensions, date_range)
+  page <- vctrs::vec_recycle(page, size = length(dimensions))
+
   list(
     rsid = rsid,
     company_id = company_id,
-    global_filter = global_filter,
+    global_filter = gf,
     settings = list(
       top = limit,
       page = page,
