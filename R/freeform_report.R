@@ -192,12 +192,7 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   top <- recalculate_top_arg(top, dimensions, date_range)
   page <- vctrs::vec_recycle(page, size = length(dimensions))
 
-  settings <- req_settings(
-    limit = 0,    # Placeholder, limit set during query
-    page = 0,     # Placeholder, page set during query
-    nonesBehavior = unspecified,
-    dimensionSort = "asc"
-  )
+
 
   # Estimate requests and reset global counter
   n_requests <- estimate_requests(top)
@@ -207,23 +202,28 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     kill_global_counter()
   }
 
+  # Define the query with a query spec
+  query_spec <- make_query_spec(
+    rsid = rsid,
+    company_id = company_id,
+    dimensions = dimensions,
+    metrics = metrics,
+    global_filter = gf,
+    limit = top,
+    page = page,
+    nonesBehavior = unspecified,
+    dimensionSort = "asc",
+    search = search,
+    sort = metricSort
+  )
 
   # Make requests
   message("Requesting data...", appendLF = TRUE)
   output_data <- get_req_data(
-    current_dim = dimensions[1],
-    dimensions = dimensions,
+    qs = query_spec,
+    index = 1,
     item_ids = NULL,
-    metrics = metrics,
-    rsid = rsid,
-    global_filter = gf,
-    settings = settings,
-    company_id = company_id,
-    debug = debug,
-    sort = metricSort,
-    top = top,
-    page = page,
-    search = search
+    debug = debug
   )
   message("Done!")
   message(glue::glue("Returning {nrow(output_data)} x {ncol(output_data)} data frame"))
