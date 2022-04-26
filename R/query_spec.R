@@ -48,10 +48,10 @@ make_query_spec <- function(
     company_id = company_id,
     global_filter = gf,
     settings = list(
-      top = limit,
+      top = top,
       page = page,
       nonesBehavior = nonesBehavior,
-      dimensionSort = "asc"
+      dimensionSort = dimensionSort
     ),
     search = search,
     dimensions = dimensions,
