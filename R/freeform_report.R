@@ -177,15 +177,8 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
 
-  # Estimate requests and reset global counter
-  n_requests <- estimate_requests(top)
-  if (n_requests > 20) {
-    initialize_global_counter(n_requests)
-  } else {
-    kill_global_counter()
-  }
-
   # Define the query with a query spec
+  # This also standardizes arguments (recycling, etc.)
   query_spec <- make_query_spec(
     rsid = rsid,
     company_id = company_id,
@@ -200,6 +193,15 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     search = search,
     sort = metricSort
   )
+
+
+  # Estimate requests and reset global counter
+  n_requests <- estimate_requests(qs_top(query_spec))
+  if (n_requests > 20) {
+    initialize_global_counter(n_requests)
+  } else {
+    kill_global_counter()
+  }
 
   # Make requests
   message("Requesting data...", appendLF = TRUE)

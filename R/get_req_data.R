@@ -63,6 +63,7 @@ get_req_data <- function(
                                        n_metrics = length(qs_metrics(qs)))
 
     output_data <- output_data %>%
+      # Rename column with current dimension name
       dplyr::rename(!!qs_dimensions(qs, index) := value) %>%
       unpack_metrics(qs_metrics(qs))
   }
