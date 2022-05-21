@@ -278,17 +278,8 @@ metric_filters <- function(type,
 #' tables (see `aw_segment_table`) are formed by combining the same metrics
 #' with different segments. See examples.
 #'
-#' You can also blame `aw_segment_table` for being required to include metric
-#' IDs directly, instead of having this function generate them automatically.
-#' I'm aiming to make this automatic in an update, I just have to figure out
-#' why I didn't do it before.
-#'
 #'
 #' @param metrics Metric names in the order they were requested
-#' @param metricIds Column IDs for the metrics. If all metrics appear only once
-#' the best thing to do here is to use the metric name. But sometimes metrics
-#' appear multiple times (e.g., segment tables) and you have to handle the
-#' metric IDs by naming them incrementally.
 #' @param segmentIds List (or vector) of segment IDs the same length as the
 #' metrics. These will be added to metrics as appropriate.
 #' @param sort Direction to sort in, one of "asc", "desc". Applied only to first
