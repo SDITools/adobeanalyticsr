@@ -8,7 +8,6 @@
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
 #' @param company_id define globally or manually
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
-#' @param use_oob Always set to TRUE. Needed for tests
 #'
 #' @details
 #' This function is commonly used to get the correct ID for a specific metric or metrics that will be used in

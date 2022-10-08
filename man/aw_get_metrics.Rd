@@ -34,8 +34,6 @@ elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPA
 Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
-
-\item{use_oob}{Always set to TRUE. Needed for tests}
 }
 \value{
 A data frame of metrics (excluding calculated metrics) and their meta data.
