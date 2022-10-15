@@ -35,7 +35,6 @@ Imports:
     openssl,
     lifecycle,
     glue,
-    tibble,
     vctrs,
     progress,
     memoise,
