@@ -1,3 +1,7 @@
+# adobeanalyticsr 0.3.3
+
+* Update to utilities make_timeframe function test
+
 # adobeanalyticsr 0.3.2
 
 * Refactored aw_call_data and aw_call_api into a single function
