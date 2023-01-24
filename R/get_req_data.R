@@ -120,7 +120,7 @@ unpack_metrics <- function(df, metric_names) {
     return(df)
   } else {
     if (is.list(df$data)) {
-      data_list <- df$data
+      data_list <- data_list <- lapply(df$data, as.numeric)
       df$data <- NULL
 
       data_df <- lapply(purrr::transpose(data_list), purrr::flatten_dbl) %>%
