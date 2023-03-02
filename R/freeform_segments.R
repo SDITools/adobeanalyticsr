@@ -28,9 +28,6 @@
 #'
 #' @param company_id Company ID
 #' @param rsid Report suite ID for the data pull
-#' @param segmentRsids Vector of report suite IDs used to discover the
-#'   human-readable segment names. Passed to `aw_get_segments`. If `NULL`, then
-#'   takes the same value as `rsid`.
 #' @param date_range Date range
 #' @param metrics Metrics to request for each segment
 #' @param globalSegment One or more segments to apply globally over all other
@@ -39,6 +36,7 @@
 #'   table
 #' @param debug Logical, whether to make verbose requests to the API and view
 #' the whole exchange
+#' @param segmentRsids Deprecated.
 #'
 #' @return [tibble::tibble()] of segments and metrics. Rows are returned with
 #' segments in the order they were requested, not by metric sorting.
@@ -46,7 +44,7 @@
 #' @export
 aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-                             segmentRsids = NULL,
+                             segmentRsids,
                              date_range = c(Sys.Date()-30, Sys.Date()-1),
                              metrics = c("visits", "visitors"),
                              globalSegment = NULL,
@@ -56,7 +54,10 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     stop("At least one segment ID must be given", call. = FALSE)
   }
 
-  segmentRsids <- segmentRsids %||% rsid
+  if (!missing(segmentRsids)) {
+    lifecycle::deprecate_warn(when = "0.3.4", what = "aw_segment_table(segmentRsids)")
+  }
+
   # Generate requests
   # 1 request group for each unique metric
   # Page the segments into groups of 9 or 10
@@ -80,7 +81,7 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                             metrics = met,
                             globalSegment = globalSegment,
                             segmentIds = seg_group,
-                            segmentRsids = segmentRsids,
+                            segmentRsids = NULL,
                             debug = debug)
 
       increment_global_counter()

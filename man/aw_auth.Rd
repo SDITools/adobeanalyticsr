@@ -56,11 +56,11 @@ and \code{auth_jwt()} should typically not be called directly.
 }
 \section{Functions}{
 \itemize{
-\item \code{auth_jwt}: Authenticate with JWT token
+\item \code{auth_jwt()}: Authenticate with JWT token
 
-\item \code{auth_oauth}: Authorize via OAuth 2.0
+\item \code{auth_oauth()}: Authorize via OAuth 2.0
+
 }}
-
 \seealso{
 \code{\link[=aw_auth_with]{aw_auth_with()}}
 }

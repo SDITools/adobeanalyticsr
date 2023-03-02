@@ -7,7 +7,7 @@
 aw_segment_table(
   company_id = Sys.getenv("AW_COMPANY_ID"),
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-  segmentRsids = NULL,
+  segmentRsids,
   date_range = c(Sys.Date() - 30, Sys.Date() - 1),
   metrics = c("visits", "visitors"),
   globalSegment = NULL,
@@ -20,9 +20,7 @@ aw_segment_table(
 
 \item{rsid}{Report suite ID for the data pull}
 
-\item{segmentRsids}{Vector of report suite IDs used to discover the
-human-readable segment names. Passed to \code{aw_get_segments}. If \code{NULL}, then
-takes the same value as \code{rsid}.}
+\item{segmentRsids}{Deprecated.}
 
 \item{date_range}{Date range}
 
