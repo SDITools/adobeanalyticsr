@@ -43,7 +43,7 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     rmarkdown
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 RdMacros: lifecycle
 VignetteBuilder: knitr

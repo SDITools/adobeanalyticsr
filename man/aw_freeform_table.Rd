@@ -107,7 +107,7 @@ breakdowns of the data--the more queries are required. As a result, the \emph{or
 have a dramatic impact on the total query time, even if the resulting data is essentially identical.
 
 One way to understand this is to consider how much dragging and dropping would be required to return the
-data in Analysis Workspace \emph{if you were not able to <Shift>-<click> to highlight multiple values before
+data in Analysis Workspace \emph{if you were not able to \if{html}{\out{<Shift>}}-\if{html}{\out{<click>}} to highlight multiple values before
 dragging a new dimension to break down existing values}.
 
 Consider a scenario where you are pulling metrics for the last 30 days (\code{daterangeday}) for \strong{Mobile Device Type}
