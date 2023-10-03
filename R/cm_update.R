@@ -27,6 +27,9 @@ cm_update <- function(id = NULL,
                       locale = 'en_US',
                       debug = FALSE,
                       company_id = Sys.getenv("AW_COMPANY_ID")){
+
+  ## need to update the aw_call_api function to include the argument "update" that
+  # will conditionally change the verb to PUT vs GET or POST
   aw_put_api <- function(req_path,
                          body = NULL,
                          update = FALSE,
