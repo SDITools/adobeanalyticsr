@@ -6,6 +6,7 @@
 #' @param name This is the name of the new calculated metric (required)
 #' @param description  This is the description of the segment (optional)
 #' @param formula Formulas are list objects created using the [`cm_formula()`] function.
+#' @param seg_filter A segment filter to be added to a metric in the formula
 #' @param polarity Also known as 'Show Upward Trend As' in the UI. Options include 'positive' (default) or 'negative'.
 #' This metric polarity setting shows whether Analytics should consider an upward trend in the metric as good (green) or bad (red).
 #' As a result, the report’s graph will show as green or red when it’s going up.
@@ -45,7 +46,7 @@
 cm_build <- function(name = NULL,
                      description = NULL,
                      formula = NULL,
-                     #seg_filter = NULL,
+                     seg_filter = NULL,
                      polarity = 'positive',
                      precision = 0,
                      type = 'decimal',
@@ -59,18 +60,17 @@ cm_build <- function(name = NULL,
   if(is.null(name) || is.null(formula) || is.null(rsid)) {
     stop('The arguments `name`, `formula`, and `rsid` must be provided')
   }
-  # if(!is.null(seg_filter)) {
-  # filters <- list(func = 'segment-ref',
-  #                 description = 'segment description',
-  #                 id = 's300003965_61fe5a305685431047363472')
-  # }
+  if(!is.null(seg_filter)) {
+  filters <- list(func = 'segment-ref',
+                  id = seg_filter)
+  }
 
   definition <- list(rsid = rsid,
                      name = name,
                      description = description,
                      definition = list(
                        formula = formula,
-                       #filer = seg_filter,
+                       filters = list(filters),
                        version = list(1, 0, 0),
                        func = 'calc-metric'),
                      polarity = polarity,

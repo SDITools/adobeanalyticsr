@@ -16,7 +16,9 @@ cm_function(
 \arguments{
 \item{func}{Calculated function id. Only Basic single metric functions are able to be used.}
 
-\item{metric}{The one or two metrics in a formula calculation}
+\item{metric}{The metric to be used in the functional metric calculation. Default is \code{visits}}
+
+\item{dimension}{The dimension to be used in the functional metric calculation. Default is \code{NULL}}
 
 \item{seg_filter}{A segment filter to be added to a metric in the formula}
 

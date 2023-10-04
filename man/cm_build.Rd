@@ -8,6 +8,7 @@ cm_build(
   name = NULL,
   description = NULL,
   formula = NULL,
+  seg_filter = NULL,
   polarity = "positive",
   precision = 0,
   type = "decimal",
@@ -23,6 +24,8 @@ cm_build(
 \item{description}{This is the description of the segment (optional)}
 
 \item{formula}{Formulas are list objects created using the \code{\link[=cm_formula]{cm_formula()}} function.}
+
+\item{seg_filter}{A segment filter to be added to a metric in the formula}
 
 \item{polarity}{Also known as 'Show Upward Trend As' in the UI. Options include 'positive' (default) or 'negative'.
 This metric polarity setting shows whether Analytics should consider an upward trend in the metric as good (green) or bad (red).

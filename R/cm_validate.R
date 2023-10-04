@@ -51,5 +51,9 @@ cm_validate <- function(definition = NULL,
                           content_type = 'application/json',
                           company_id = company_id)
 
-  req
+  if(jsonlite::fromJSON(req)$valid) {
+    "The calculated metric definition IS VALID"
+  } else {
+    "The calculated metric definition IS NOT VALID"
+  }
 }

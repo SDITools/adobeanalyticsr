@@ -3,7 +3,8 @@
 #' Returns a JSON string defining a function to be used to build a calculated (derived) metric.
 #'
 #' @param func Calculated function id. Only Basic single metric functions are able to be used.
-#' @param metric The one or two metrics in a formula calculation
+#' @param metric The metric to be used in the functional metric calculation. Default is `visits`
+#' @param dimension The dimension to be used in the functional metric calculation. Default is `NULL`
 #' @param seg_filter A segment filter to be added to a metric in the formula
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called
 #' `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument

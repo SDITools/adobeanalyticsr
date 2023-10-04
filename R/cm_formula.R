@@ -4,7 +4,7 @@
 #'
 #' @param operator Formula operators are divide (default), multiply, subtract, or add.
 #' @param metrics The one or two metrics in a formula calculation
-#' @param seg_filter A segment filter to be added to a metric in the formula
+#' @param seg_filters A vector of segment filters to be added to a metric in the formula
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called
 #' `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument
 #' is provided, then the `AW_REPORTSUITE_ID` value will be used. Use [aw_get_reportsuites()]
@@ -26,16 +26,6 @@ cm_formula <- function(operator = c('divide', 'multiply', 'subtract', 'add'),
                        seg_filters = NA,
                        rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                        company_id = Sys.getenv("AW_COMPANY_ID")){
-
-  # operator = c('divide', 'multiply', 'subtract', 'add')
-  # # metrics = c('visits', 'singlepagevisits')
-  # metrics <- list(fm1, 'visits') ##checking
-  # seg_filters = NA
-  # operator = 'divide'
-  # metrics =  list(func_obj, 'visitors')
-  # seg_filters = c('', segid)
-  # rsid = Sys.getenv("AW_REPORTSUITE_ID")
-  # company_id = Sys.getenv("AW_COMPANY_ID")
 
   if(length(operator) > 1) {
     op <- operator[[1]]

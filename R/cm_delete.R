@@ -20,6 +20,7 @@
 #' @importFrom glue glue
 #' @importFrom purrr map
 #' @importFrom purrr map2
+#' @importFrom utils menu
 #' @export
 #'
 cm_delete <- function(cm_id = NULL,
@@ -31,10 +32,41 @@ cm_delete <- function(cm_id = NULL,
 
   #assert that the 2 key arguments have values
   assertthat::assert_that(assertthat::not_empty(cm_id), msg = 'Argument "cm_id" cannot be empty')
+  if(warn){
+    if (utils::menu(c("Yes", "No"),
+             title= "Are you sure you want to delete this Calculated Metric") == "1") {
 
-  if (menu(c("Yes", "No"),
-           title= "Are you sure you want to delete this Calculated Metric") == "1") {
+      env_vars <- get_env_vars()
+      token_config <- get_token_config(client_id = env_vars$client_id,
+                                       client_secret = env_vars$client_secret)
 
+      if (debug) {
+        debug_call <- httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE)
+      } else {
+        debug_call <- NULL
+      }
+
+      req_path <- glue::glue('calculatedmetrics/{cm_id}?locale={locale}')
+
+      request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
+                             company_id, req_path)
+
+      req <- httr::RETRY(verb = 'DELETE',
+                         url = request_url,
+                         encode = "json",
+                         token_config,
+                         debug_call,
+                         httr::add_headers(
+                           `x-api-key` = env_vars$client_id,
+                           `x-proxy-global-company-id` = company_id
+                         ))
+
+      handle_api_errors(resp = req, body = body)
+      # As a fall-through, for errors that fall through handle_api_errors
+      httr::stop_for_status(req)
+      message(glue::glue('{httr::content(req)$result}: {cm_id} has been deleted'))
+    } else { message("Ok, it will not be deleted.")}
+  } else {
     env_vars <- get_env_vars()
     token_config <- get_token_config(client_id = env_vars$client_id,
                                      client_secret = env_vars$client_secret)
@@ -63,5 +95,7 @@ cm_delete <- function(cm_id = NULL,
     handle_api_errors(resp = req, body = body)
     # As a fall-through, for errors that fall through handle_api_errors
     httr::stop_for_status(req)
-  } else { message("Ok, it will not be deleted.")}
+    message(glue::glue('{httr::content(req)$result}: {cm_id} has been deleted'))
+  }
+
 }
