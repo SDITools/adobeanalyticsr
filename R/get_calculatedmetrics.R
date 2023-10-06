@@ -120,7 +120,7 @@ aw_get_calculatedmetrics <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     sortDirection = 'DESC',
     sortProperty = sortProperty,
     expansion = expansion,
-    includeType = 'all'
+    includeType = includeType
   )
 
   urlstructure <- paste('calculatedmetrics', format_URL_parameters(query_param), sep = "?")
