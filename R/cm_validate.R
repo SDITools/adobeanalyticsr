@@ -54,6 +54,6 @@ cm_validate <- function(definition = NULL,
   if(jsonlite::fromJSON(req)$valid) {
     "The calculated metric definition IS VALID"
   } else {
-    "The calculated metric definition IS NOT VALID"
+    glue::glue("The calculated metric definition IS NOT VALID \n {jsonlite::fromJSON(val)$message}")
   }
 }

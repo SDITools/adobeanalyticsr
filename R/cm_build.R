@@ -61,21 +61,36 @@ cm_build <- function(name = NULL,
     stop('The arguments `name`, `formula`, and `rsid` must be provided')
   }
   if(!is.null(seg_filter)) {
-  filters <- list(func = 'segment-ref',
+  filter <- list(func = 'segment-ref',
                   id = seg_filter)
+  } else if(is.null(seg_filter)) {
+    filter <- NULL
   }
 
-  definition <- list(rsid = rsid,
-                     name = name,
-                     description = description,
-                     definition = list(
-                       formula = formula,
-                       filters = list(filters),
-                       version = list(1, 0, 0),
-                       func = 'calc-metric'),
-                     polarity = polarity,
-                     precision = precision,
-                     type = type)
+  definition <- if(is.null(filter)) {
+    list(rsid = rsid,
+         name = name,
+         description = description,
+         definition = list(
+           formula = formula,
+           version = list(1, 0, 0),
+           func = 'calc-metric'),
+         polarity = polarity,
+         precision = precision,
+         type = type)
+  } else {
+    list(rsid = rsid,
+         name = name,
+         description = description,
+         definition = list(
+           formula = formula,
+           filters = list(filter),
+           version = list(1, 0, 0),
+           func = 'calc-metric'),
+         polarity = polarity,
+         precision = precision,
+         type = type)
+  }
 
   #defined parts of the post request
   req_path <- 'calculatedmetrics'
