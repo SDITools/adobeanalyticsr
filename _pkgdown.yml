@@ -39,6 +39,17 @@ reference:
       - seg_build
       - seg_val
 
+  - title: "Manage Calculated Metrics"
+    desc: "Functions for creating and managing calculated metrics"
+  - contents:
+      - get_cm_functions
+      - cm_function
+      - cm_formula
+      - cm_build
+      - cm_val
+      - cm_update
+      - cm_delete
+
 development:
   mode: auto
 

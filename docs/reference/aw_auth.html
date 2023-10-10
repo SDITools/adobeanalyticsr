@@ -24,7 +24,7 @@ and auth_jwt() should typically not be called directly."><meta property="og:imag
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -40,6 +40,9 @@ and auth_jwt() should typically not be called directly."><meta property="og:imag
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -71,20 +74,20 @@ and <code>auth_jwt()</code> should typically not be called directly.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_auth</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="aw_auth_with.html">aw_auth_with</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span>
-
-<span class="fu">auth_jwt</span><span class="op">(</span>
-  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_AUTH_FILE"</span><span class="op">)</span>,
-  private_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_PRIVATE_KEY"</span><span class="op">)</span>,
-  jwt_token <span class="op">=</span> <span class="cn">NULL</span>,
-  <span class="va">...</span>
-<span class="op">)</span>
-
-<span class="fu">auth_oauth</span><span class="op">(</span>
-  client_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_ID"</span><span class="op">)</span>,
-  client_secret <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_SECRET"</span><span class="op">)</span>,
-  use_oob <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_auth</span><span class="op">(</span>type <span class="op">=</span> <span class="fu"><a href="aw_auth_with.html">aw_auth_with</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">...</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">auth_jwt</span><span class="op">(</span></span>
+<span>  file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_AUTH_FILE"</span><span class="op">)</span>,</span>
+<span>  private_key <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_PRIVATE_KEY"</span><span class="op">)</span>,</span>
+<span>  jwt_token <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">auth_oauth</span><span class="op">(</span></span>
+<span>  client_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_ID"</span><span class="op">)</span>,</span>
+<span>  client_secret <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_SECRET"</span><span class="op">)</span>,</span>
+<span>  use_oob <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -93,37 +96,54 @@ and <code>auth_jwt()</code> should typically not be called directly.</p>
 <dd><p>Either 'jwt' or 'oauth'. This can be set explicitly, but a best practice is
 to run <code><a href="aw_auth_with.html">aw_auth_with()</a></code> to set the authorization type as an environment variable before
 running <code>aw_auth()</code></p></dd>
+
+
 <dt>...</dt>
 <dd><p>Additional arguments passed to auth functions.</p></dd>
+
+
 <dt>file</dt>
 <dd><p>A JSON file containing service account credentials required for JWT
 authentication. This file can be downloaded directly from the Adobe Console,
 and should minimally have the fields <code>API_KEY</code>, <code>CLIENT_SECRET</code>, <code>ORG_ID</code>,
 and <code>TECHNICAL_ACCOUNT_ID</code>.</p></dd>
+
+
 <dt>private_key</dt>
 <dd><p>Filename of the private key for JWT authentication.</p></dd>
+
+
 <dt>jwt_token</dt>
 <dd><p><em>(Optional)</em> A custom, encoded, signed JWT claim. If used,
 <code>client_id</code> and <code>client_secret</code> are still required.</p></dd>
+
+
 <dt>client_id</dt>
 <dd><p>The client ID, defined by a global variable or manually defined</p></dd>
+
+
 <dt>client_secret</dt>
 <dd><p>The client secret, defined by a global variable or manually defined</p></dd>
+
+
 <dt>use_oob</dt>
 <dd><p>if <code>FALSE</code>, use a local webserver for the OAuth dance.
 Otherwise, provide a URL to the user and prompt for a validation code.
 Defaults to the value of the <code>httr_oob_default</code> default, or TRUE if
 <code>httpuv</code> is not installed.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The path of the cached token. This is returned invisibly.</p>
+    
+
+<p>The path of the cached token. This is returned invisibly.</p>
     </div>
     <div id="functions">
     <h2>Functions</h2>
     
-<ul><li><p><code>auth_jwt</code>: Authenticate with JWT token</p></li>
-<li><p><code>auth_oauth</code>: Authorize via OAuth 2.0</p></li>
+<ul><li><p><code>auth_jwt()</code>: Authenticate with JWT token</p></li>
+<li><p><code>auth_oauth()</code>: Authorize via OAuth 2.0</p></li>
 </ul></div>
     <div id="see-also">
     <h2>See also</h2>
@@ -138,13 +158,11 @@ Defaults to the value of the <code>httr_oob_default</code> default, or TRUE if
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

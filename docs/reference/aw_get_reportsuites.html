@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,15 +72,15 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_get_reportsuites</span><span class="op">(</span>
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,
-  rsids <span class="op">=</span> <span class="cn">NULL</span>,
-  rsidContains <span class="op">=</span> <span class="cn">NULL</span>,
-  limit <span class="op">=</span> <span class="fl">10</span>,
-  page <span class="op">=</span> <span class="fl">0</span>,
-  expansion <span class="op">=</span> <span class="cn">NULL</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_get_reportsuites</span><span class="op">(</span></span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,</span>
+<span>  rsids <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rsidContains <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  limit <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  page <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  expansion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,28 +89,43 @@
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
+
 <dt>rsids</dt>
 <dd><p>Filter the results to include one or more specific report suites. Specify multiple RSIDs as
 a vector (i.e., "<code>rsids = c("rsid_1", rsid_2",...rsid_n")</code>").</p></dd>
+
+
 <dt>rsidContains</dt>
 <dd><p>Filter the results list to only include suites that contain the specified string
 within the RSID. This is case-insensitive and is a simple, single string match.</p></dd>
+
+
 <dt>limit</dt>
 <dd><p>The number of results to return per page. This argument works in conjunction with the
 <code>page</code> argument. The default is 10.</p></dd>
+
+
 <dt>page</dt>
 <dd><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
 zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></dd>
+
+
 <dt>expansion</dt>
 <dd><p>Additional segment metadata fields to include in the results: <code>name</code>, <code>parentRsid</code>,
 <code>currency</code>, <code>calendarType</code>, <code>timezoneZoneinfo</code>. This argument takes a single value (e.g., <code>expansion = "name"</code>)
 or a vector of values (e.g., <code>expansion = c("name", "currency")</code>).</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>Include the output and input of the api call in the console for debugging. Default is FALSE</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of report suites and their meta data.</p>
+    
+
+<p>A data frame of report suites and their meta data.</p>
     </div>
 
   </div>
@@ -118,13 +136,11 @@ or a vector of values (e.g., <code>expansion = c("name", "currency")</code>).</p
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

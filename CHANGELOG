@@ -1,16 +1,14 @@
-feature/all-rows
-  - Refactored `aw_freeform_table` and `get_req_data` to make use of a query
-  spec data structure. 
+feature/added calculated metrics management functions
+  * get_cm_functions
+  * cm_function
+  * cm_formula
+  * cm_build
+  * cm_delete
+  * cm_update
+  * cm_val
 
-hotfix/data-frame
-  - Added the `data.frame()` argument `stringsAsFactors = FALSE` explicitly
-  for compatibility with R <4.0.0. 
+feature/aw_call_api
+  * now handles `Content-type` in the head of the api call
 
-feature/jwt-file
-  - Changed from using a litany of environment variables to auth with JWT to
-  a simpler JSON file-based approach.
-
-hotfix/segment-rsids
-  - There is now a second argument for Report Suite ID for `aw_segment_table`,
-  which allows the user to specify a vector of RSIDs for which to search for
-  the segment IDs when making pretty names.
+bug/get_calculatedmetrics
+  * function now recognizes filters due to an `includeType` argument bug fix

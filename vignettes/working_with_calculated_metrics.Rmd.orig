@@ -1,0 +1,209 @@
+---
+title: "Analysis Workflows And Calculated Metrics"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analysis Workflows And Calculated Metrics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## A little housekeeping
+
+We will be using the Adobe Analytics University Student Access account in this tutorial on working with calculated metrics. If you do not have access to the account, you can easily get it by going to the free LinkedIn Learning course, ["Adobe Analytics Essential training"](https://www.linkedin.com/learning/adobe-analytics-essential-training/solving-business-challenges-with-adobe-analytics).  
+
+If you haven't yet taken the course, it is well worth your time. Eric Matisoff does a great job walking through all the different amazing parts of Adobe Analytics, especially Analysis Workspace.  The more you know about the user interface of Adobe Analytics, the more adobeanalyticsr is going to make sense.
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+## Load the packages needed
+library(adobeanalyticsr)
+library(tidyverse)
+```
+
+## Setup 
+
+I'm not going into the aspects of how to authenticate in this article so we will get right into it.
+
+```{r setup}
+library(adobeanalyticsr)
+aw_auth('oauth')
+
+##Check to make sure you have been logged into the correct account profile
+get_me()
+
+company_id <- 'adobea8cf'
+rsid <- 'igeo1xxpnwcidadobepm'
+
+
+```
+
+## Calculated Metric Functions
+
+Calculated Metrics are comprised of several different mathematical functions that work on available metrics for a given report suite.
+
+### Get all functions
+
+Returns a full list of calculated metric functions that the user can access.
+```{r}
+all_functions <- aw_get_cm_functions(company_id = company_id)
+
+head(all_functions)
+```
+## Retrieve multiple calculated metrics
+
+The following example shows a calculated metrics request for a response localized in US English, limited to the first page, and with the size of ten responses per page.
+
+```{r}
+cms <- aw_get_calculatedmetrics(includeType = 'all', 
+                                rsids = rsid, 
+                                company_id = company_id)
+cms
+```
+
+## Retrieving a single calculated metric
+
+To retrieve a single calculated metric, include its id in the request.
+
+```{r}
+cm <- aw_get_calculatedmetrics(filterByIds = cms$id[[1]], #add the calculated metric
+                               company_id = company_id,
+                               rsids = rsid, 
+                               expansion = 'definition' #use the expansion argument to see the definition
+                               )
+cm
+```
+
+
+## Create a calculated metric
+
+The process of creating a calculated metric has been designed in a modular way to enable the systematic approach to building and maintaining complex calculated metrics in the most efficient way. The goal is to enhance analysis and data science workflows.  The essential elements of a calculated metric are: function, formula, build.  The following code chunks will illustrate the basics of interacting with each element. 
+
+### Create a function object
+
+```{r}
+?cm_function
+
+cm_func <- cm_function(
+  func = "col-sum",
+  metric = "visits",
+  seg_filter = NULL,
+  rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AW_COMPANY_ID")
+)
+
+jsonlite::toJSON(cm_func, pretty = T, auto_unbox = T)
+```
+### Create a formula object
+
+```{r}
+?cm_formula
+
+cm_form <- cm_formula(
+  operator = 'divide',
+  metrics = list(cm_func, "singlepagevisits"),
+  seg_filters = NA, #add segment filters for each metric if needed
+  rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AW_COMPANY_ID")
+)
+
+jsonlite::toJSON(cm_form, pretty = T, auto_unbox = T)
+```
+
+### Create a calculated metric
+
+```{r}
+?cm_build
+
+cm_obj <- cm_build(
+  name = 'Test Calculated Metric',
+  description = 'Test cm description',
+  formula = cm_form,
+  seg_filter = NULL,
+  polarity = "positive",
+  precision = 0,
+  type = "decimal",
+  create_cm = FALSE, #should this be created in the UI
+  debug = FALSE,
+  rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AW_COMPANY_ID")
+)
+
+cm_obj
+```
+
+### Validate
+
+Because report suites can have different configurations, dimensions, or metrics, a calculated metric that is valid in one report suite may not be valid in another. To determine which calculated metric to use in different report suites, and why it may or may not be available, you can use the cm_validate. This endpoint allows you to POST a definition along with a target report suite id. The validate endpoint responds with compatibility information on the calculated metric.
+
+```{r}
+?cm_validate
+
+cm <- cm_validate(cm_obj)
+
+cm
+
+```
+
+
+Once we validated that the new calculated metric is good, we can create the new calculated metric in the UI by setting the argument `create_cm = TRUE`.
+```{r}
+#create the calculated metric in the UI
+cm_obj <- cm_build(
+  name = 'Test Calculated Metric',
+  description = 'Test cm description',
+  formula = cm_form,
+  seg_filter = NULL, #include an overall segment filter
+  polarity = "positive",
+  precision = 0,
+  type = "decimal",
+  create_cm = TRUE, #should this be created in the UI
+  debug = FALSE,
+  rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AW_COMPANY_ID")
+)
+
+cm_var <- aw_get_calculatedmetrics(filterByIds = jsonlite::fromJSON(cm_obj)$id)
+
+cm_var
+```
+## Update calculated metrics
+
+```{r}
+?cm_update
+
+cm_updated <- cm_update(
+  id = cm_var$id,
+  updates = list(name = "new name",
+              description = "this is a new description"),
+  locale = "en_US",
+  debug = FALSE,
+  company_id = Sys.getenv("AW_COMPANY_ID")
+)
+# Name Change
+c(`old name` = cm_var$name,`new name` = cm_updated$name)
+
+# Description Change
+c(`old description` = cm_var$description,`new description` = cm_updated$description)
+```
+
+
+## Delete calculated metrics
+```{r}
+?cm_delete
+
+deleted <- cm_delete(
+  cm_id = cm_var$id,
+  warn = FALSE,
+  locale = "en_US",
+  debug = FALSE,
+  rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+  company_id = Sys.getenv("AW_COMPANY_ID")
+)
+```
+
+## Conclusion
+
+The set of calculated metric functions are setup to enable the end user to easily incorporate calculated metrics into the analysis and data science workflows without needing to interact with the UI. At the same time, the application of integrating the API in workflows enables a broader set of analytics users to incorporate the results and ongoing analysis in the powerful and versatile Analysis Workspace.  Make sure to add an issue in Github or add a pull request if you find additional opportunities of development that would enhance the ability to analyze and communicate the results using calculated metrics in your workflows. 

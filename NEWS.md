@@ -1,3 +1,18 @@
+# adobeanalyticsr 0.4.0
+
+* added calculated metrics management functions
+  - get_cm_functions
+  - cm_function
+  - cm_formula
+  - cm_build
+  - cm_delete
+  - cm_update
+  - cm_val
+* Updated supporting functions
+  - aw_call_api now handles `Content-type` in the head of the api call
+* Bug fix 
+  - get_calculatedmetrics function now recognizes filters due to an `includeType` argument bug fix
+
 # adobeanalyticsr 0.3.3
 
 * Update to utilities make_timeframe function test

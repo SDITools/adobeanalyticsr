@@ -18,7 +18,7 @@
 #' @importFrom glue glue
 #' @export
 #'
-aw_get_cm_functions <- function(id = NULL,
+get_cm_functions <- function(id = NULL,
                                 debug = FALSE,
                                 company_id = Sys.getenv("AW_COMPANY_ID")){
 

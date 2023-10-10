@@ -32,7 +32,7 @@
 #' @importFrom glue glue
 #' @export
 #'
-cm_validate <- function(definition = NULL,
+cm_val <- function(definition = NULL,
                         locale = 'en_US',
                         migrating = FALSE,
                         debug = FALSE,

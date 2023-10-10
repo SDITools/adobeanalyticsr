@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,16 +72,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_get_dimensions</span><span class="op">(</span>
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  locale <span class="op">=</span> <span class="st">"en_US"</span>,
-  segmentable <span class="op">=</span> <span class="cn">FALSE</span>,
-  reportable <span class="op">=</span> <span class="cn">FALSE</span>,
-  classifiable <span class="op">=</span> <span class="cn">FALSE</span>,
-  expansion <span class="op">=</span> <span class="cn">NULL</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_get_dimensions</span><span class="op">(</span></span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  locale <span class="op">=</span> <span class="st">"en_US"</span>,</span>
+<span>  segmentable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  reportable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  classifiable <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  expansion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -87,33 +90,50 @@
 <dd><p>Adobe report suite ID (RSID).  If an environment variable called <code>AW_REPORTSUITE_ID</code> exists
 in <code>.Renviron</code> or elsewhere and no <code>rsid</code> argument is provided, then the <code>AW_REPORTSUITE_ID</code> value will
 be used. Use <code><a href="aw_get_reportsuites.html">aw_get_reportsuites</a></code> to get a list of available <code>rsid</code> values.</p></dd>
+
+
 <dt>locale</dt>
 <dd><p>The locale that dimension details should be returned in. The default is <code>en_US</code>.</p></dd>
+
+
 <dt>segmentable</dt>
 <dd><p>Boolean that determines whether or not to include dimensions that can be used in
 segments. <code>FALSE</code> (the default) returns <em>all</em> dimensions (<em>not</em> just the non-segmentable ones).
 Examples of dimensions that cannot be used in segments are <code>clickmapaction</code>, <code>codeversion</code>, <code>newvisit</code>,
 and <code>pageurl</code>.</p></dd>
+
+
 <dt>reportable</dt>
 <dd><p>Boolean that determines whether or not to include dimensions that can be used in
 reports <code>FALSE</code> (the default) returns <em>all</em> dimensions (<em>not</em> just the non-segmentable ones).</p></dd>
+
+
 <dt>classifiable</dt>
 <dd><p>Boolean that determines whether or not to include dimensions that can be used in
 classifications <code>FALSE</code> (the default) returns <em>all</em> dimensions (<em>not</em> just the non-segmentable ones).</p></dd>
+
+
 <dt>expansion</dt>
 <dd><p>Additional dimension metadata to include in the results: <code>tags</code>, <code>allowedForReporting</code>,
 and <code>categories</code>. This argument takes a single value (e.g., <code>expansion = "tags"</code>) or a vector  of
 values (e.g., <code>expansion = c("tags", "categories")</code>).</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>Include the output and input of the api call in the console for debugging. Default is FALSE</p></dd>
+
+
 <dt>company_id</dt>
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of dimensions and their meta data.</p>
+    
+
+<p>A data frame of dimensions and their meta data.</p>
     </div>
 
   </div>
@@ -124,13 +144,11 @@ Use <code><a href="get_me.html">get_me</a></code> to get a list of available <co
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

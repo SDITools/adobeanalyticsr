@@ -42,7 +42,7 @@ cm_function <- function(func = 'col-sum',
   assertthat::assert_that(assertthat::not_empty(func), msg = 'Argument "func" cannot be empty')
 
   #collect the calculated metric function information
-  functioninfo <- aw_get_cm_functions(func, company_id = company_id)
+  functioninfo <- get_cm_functions(func, company_id = company_id)
 
   #assign the element to be either a variable or metric
   #pull the lists of metrics and dimensions if not available
@@ -83,13 +83,13 @@ cm_function <- function(func = 'col-sum',
   if(func == 'count-distinct-metric') {
     function_object <- c(
       func = func,
-      description = aw_get_cm_functions(id = func)$name,
+      description = get_cm_functions(id = func)$name,
       field = ifelse(!is.null(seg_filter), list(filtered_object), list(metricobject))
     )
   } else {
     function_object <- c(
       func = func,
-      description = aw_get_cm_functions(id = func)$name,
+      description = get_cm_functions(id = func)$name,
       col = ifelse(!is.null(seg_filter), list(filtered_object), list(metricobject))
     )
   }

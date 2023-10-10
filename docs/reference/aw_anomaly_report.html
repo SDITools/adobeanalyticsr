@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,46 +72,67 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_anomaly_report</span><span class="op">(</span>
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">31</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,
-  <span class="va">metrics</span>,
-  granularity <span class="op">=</span> <span class="st">"day"</span>,
-  segmentId <span class="op">=</span> <span class="cn">NA</span>,
-  quickView <span class="op">=</span> <span class="cn">FALSE</span>,
-  anomalyDetection <span class="op">=</span> <span class="cn">TRUE</span>,
-  countRepeatInstances <span class="op">=</span> <span class="cn">TRUE</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_anomaly_report</span><span class="op">(</span></span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">31</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  <span class="va">metrics</span>,</span>
+<span>  granularity <span class="op">=</span> <span class="st">"day"</span>,</span>
+<span>  segmentId <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  quickView <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  anomalyDetection <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  countRepeatInstances <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>company_id</dt>
 <dd><p>Company Id.  Taken from the global environment by default if not provided.</p></dd>
+
+
 <dt>rsid</dt>
 <dd><p>Adobe report number</p></dd>
+
+
 <dt>date_range</dt>
 <dd><p>A two length vector of start and end Date objects (default set to show last 30 days)</p></dd>
+
+
 <dt>metrics</dt>
 <dd><p>Metric to request the anomaly detection. If multiple metrics, each metric and date will have it's own row.</p></dd>
+
+
 <dt>granularity</dt>
 <dd><p>Use either hour, day (default), week, or month</p></dd>
+
+
 <dt>segmentId</dt>
 <dd><p>Use segments to globally filter the results. Use 1 or many.</p></dd>
+
+
 <dt>quickView</dt>
 <dd><p>Return a list of 3 lists per metric. 1. All Data 2. Data filtered to include only anomalous rows 3. Interactive ggplot line graph</p></dd>
+
+
 <dt>anomalyDetection</dt>
 <dd><p>logical statement for including anomaly. Default is TRUE</p></dd>
+
+
 <dt>countRepeatInstances</dt>
 <dd><p>Should the data include repeat instances</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>default is FALSE but set to TRUE to see the json request being sent to the Adobe API</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If quickView = 'FALSE' (default) then a data frame including the day, metric, data, dataExpected, dataUpperBound, dataLowerBound, and
+    
+
+<p>If quickView = 'FALSE' (default) then a data frame including the day, metric, data, dataExpected, dataUpperBound, dataLowerBound, and
 dataAnomalyDetected will be returned.  If quickView = 'TRUE' then a list of three lists will be returned. The first list will be a data frame including
 all the default columns. The second list item will be a filtered data frame that includes rows where dataAnomalyDetected = 'TRUE'.  The third list
 item is a visual made using 'ggplot2'  with the error band and points where the dataAnomalyDetected = 'TRUE'. If more than one metric is in the request
@@ -123,13 +147,11 @@ and quickView is set to TRUE then the lists will be split by each metric request
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
