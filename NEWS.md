@@ -8,10 +8,11 @@
   - cm_delete
   - cm_update
   - cm_val
+  - cm_copy
 * Updated supporting functions
   - aw_call_api now handles `Content-type` in the head of the api call
 * Bug fix 
-  - get_calculatedmetrics function now recognizes filters due to an `includeType` argument bug fix
+  - aw_get_calculatedmetrics function now recognizes filters due to an `includeType` argument bug fix
 
 # adobeanalyticsr 0.3.3
 

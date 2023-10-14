@@ -41,8 +41,6 @@ get_me()
 
 company_id <- 'adobea8cf'
 rsid <- 'igeo1xxpnwcidadobepm'
-
-
 ```
 ## Retrieve multiple calculated metrics
 
@@ -194,6 +192,25 @@ c(`old name` = cm_var$name,`new name` = cm_updated$name)
 
 # Description Change
 c(`old description` = cm_var$description,`new description` = cm_updated$description)
+```
+
+### Copy a Calculated Metric
+```{r}
+cm_var <- aw_get_calculatedmetrics(filterByIds = jsonlite::fromJSON(cm_obj)$id, 
+                                   expansion = 'definition')
+
+jsonlite::toJSON(cm_var)
+
+copy_res <- cm_copy(cm_id = cm_var$id, 
+                    name = 'Here I copy the cm', 
+                    description = 'I want to add a new description', 
+                    polarity = 'negative', 
+                    precision = 2, 
+                    type = 'percent',
+                    create_cm = T)
+copy_res
+
+cm_val(copy_res)
 ```
 
 

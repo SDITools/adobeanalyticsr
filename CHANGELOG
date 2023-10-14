@@ -6,9 +6,10 @@ feature/added calculated metrics management functions
   * cm_delete
   * cm_update
   * cm_val
+  * cm_copy
 
 feature/aw_call_api
   * now handles `Content-type` in the head of the api call
 
-bug/get_calculatedmetrics
+bug/aw_get_calculatedmetrics
   * function now recognizes filters due to an `includeType` argument bug fix
