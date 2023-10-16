@@ -107,35 +107,37 @@
 <div class="section level2">
 <h2 id="a-little-housekeeping">A little housekeeping<a class="anchor" aria-label="anchor" href="#a-little-housekeeping"></a>
 </h2>
-<p>We will be using the Adobe Analytics University Student Access
-account in this tutorial on working with calculated metrics. If you do
-not have access to the account, you can easily get it by going to the
-free LinkedIn Learning course, <a href="https://www.linkedin.com/learning/adobe-analytics-essential-training/solving-business-challenges-with-adobe-analytics" class="external-link">“Adobe
-Analytics Essential training”</a>.</p>
+<p>This vignette uses the Adobe Analytics University Student Access
+account to show how to work with calculated metrics using R and the API.
+If you do not have access to the account, you can easily get it by going
+to the free LinkedIn Learning course, <a href="https://www.linkedin.com/learning/adobe-analytics-essential-training/solving-business-challenges-with-adobe-analytics" class="external-link">“Adobe
+Analytics Essential training”</a>, and registering for access.</p>
 <p>If you haven’t yet taken the course, it is well worth your time. Eric
 Matisoff does a great job walking through all the different amazing
-parts of Adobe Analytics, especially Analysis Workspace. The more you
-know about the user interface of Adobe Analytics, the more
-adobeanalyticsr is going to make sense.</p>
+parts of Adobe Analytics, especially Analysis Workspace. Specifically,
+check out the third section of the first chapter to see a quick overview
+of the calculated metrics builder user interface in action.</p>
 </div>
 <div class="section level2">
 <h2 id="setup">Setup<a class="anchor" aria-label="anchor" href="#setup"></a>
 </h2>
+<p>I won’t be going into the any detail around authenticate in this
+article so if you are needing more help with that, make sure to check
+out the “Getting Started” vignette. With all that being said, the</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Load the packages needed</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">adobeanalyticsr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span></span></code></pre></div>
-<p>I’m not going into the aspects of how to authenticate in this article
-so we will get right into it.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/aw_auth.html">aw_auth</a></span><span class="op">(</span><span class="st">'oauth'</span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span> <span class="co">## needed for some of the data wrangling</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/jsonlite" class="external-link">jsonlite</a></span><span class="op">)</span> <span class="co">## Will help in visualizing calculated metris definitions</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/aw_auth.html">aw_auth</a></span><span class="op">(</span><span class="st">'oauth'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Successfully authenticated with OAuth</span></span></code></pre>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">##Check to make sure you have been logged into the correct account profile</span></span>
 <span><span class="fu"><a href="../reference/get_me.html">get_me</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   globalCompanyId                               companyName</span></span>
 <span><span class="co">## 1       adobea8cf Adobe Analytics University Student Access</span></span></code></pre>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">company_id</span> <span class="op">&lt;-</span> <span class="st">'adobea8cf'</span></span>
 <span><span class="va">rsid</span> <span class="op">&lt;-</span> <span class="st">'igeo1xxpnwcidadobepm'</span></span></code></pre></div>
 </div>
@@ -145,7 +147,7 @@ so we will get right into it.</p>
 <p>The following example shows a calculated metrics request for a
 response localized in US English, limited to the first page, and with
 the size of ten responses per page.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cms</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>includeType <span class="op">=</span> <span class="st">'all'</span>, </span>
 <span>                                rsids <span class="op">=</span> <span class="va">rsid</span>, </span>
 <span>                                company_id <span class="op">=</span> <span class="va">company_id</span><span class="op">)</span></span>
@@ -240,7 +242,7 @@ the size of ten responses per page.</p>
 </h2>
 <p>To retrieve a single calculated metric, include its id in the
 request.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="va">cms</span><span class="op">$</span><span class="va">id</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>, <span class="co">#add the calculated metric</span></span>
 <span>                               company_id <span class="op">=</span> <span class="va">company_id</span>,</span>
 <span>                               rsids <span class="op">=</span> <span class="va">rsid</span>, </span>
@@ -296,7 +298,7 @@ functions that work on available metrics for a given report suite.</p>
 </h3>
 <p>Returns a full list of calculated metric functions that the user can
 access.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_functions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cm_functions.html">get_cm_functions</a></span><span class="op">(</span>company_id <span class="op">=</span> <span class="va">company_id</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">all_functions</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
@@ -373,10 +375,9 @@ a.</td>
 </tbody>
 </table>
 </div>
-</div>
-<div class="section level2">
-<h2 id="create-a-calculated-metric">Create a calculated metric<a class="anchor" aria-label="anchor" href="#create-a-calculated-metric"></a>
-</h2>
+<div class="section level3">
+<h3 id="create-a-calculated-metric">Create a calculated metric<a class="anchor" aria-label="anchor" href="#create-a-calculated-metric"></a>
+</h3>
 <p>The process of creating a calculated metric has been designed in a
 modular way to enable the systematic approach to building and
 maintaining complex calculated metrics in the most efficient way. The
@@ -384,10 +385,35 @@ goal is to enhance analysis and data science workflows. The essential
 elements of a calculated metric are: function, formula, build. The
 following code chunks will illustrate the basics of interacting with
 each element.</p>
-<div class="section level3">
-<h3 id="create-a-function-object">Create a function object<a class="anchor" aria-label="anchor" href="#create-a-function-object"></a>
-</h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="section level4">
+<h4 id="create-a-function-object">Create a function object<a class="anchor" aria-label="anchor" href="#create-a-function-object"></a>
+</h4>
+<p>Calculated Metrics are comprised of several different mathematical
+functions that work on available metrics for a given report suite. See
+the <a href="https://experienceleague.adobe.com/docs/analytics/components/calculated-metrics/calcmetrics-reference/cm-functions.html?lang=en" class="external-link">functions
+documentation</a> for more information on available functions.</p>
+<p>Currently the package only supports 2 types of functions:</p>
+<ol style="list-style-type: decimal">
+<li>Any function that take a single metric</li>
+</ol>
+<ul>
+<li>Examples of these functions include
+<code>Absolute Value (Row)</code> and <code>Column Maximum</code>. Both
+of which apply a function on a single metric. For a full list make sure
+to see the <a href="https://experienceleague.adobe.com/docs/analytics/components/calculated-metrics/calcmetrics-reference/cm-functions.html?lang=en" class="external-link">functions
+documentation</a>.</li>
+</ul>
+<ol start="2" style="list-style-type: decimal">
+<li>The <code>Approximate Count Distinct (dimension)</code>
+function</li>
+</ol>
+<ul>
+<li>Returns the approximated distinct count of dimension items for the
+selected dimension. The function uses the HyperLogLog (HLL) method of
+approximating distinct counts. It is configured to guarantee the value
+is within 5% of the actual value 95% of the time.</li>
+</ul>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_function</span></span>
 <span></span>
 <span><span class="va">cm_func</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_function.html">cm_function</a></span><span class="op">(</span></span>
@@ -409,10 +435,15 @@ each element.</p>
 <span><span class="co">##   }</span></span>
 <span><span class="co">## }</span></span></code></pre>
 </div>
-<div class="section level3">
-<h3 id="create-a-formula-object">Create a formula object<a class="anchor" aria-label="anchor" href="#create-a-formula-object"></a>
-</h3>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="section level4">
+<h4 id="create-a-formula-object">Create a formula object<a class="anchor" aria-label="anchor" href="#create-a-formula-object"></a>
+</h4>
+<p>A calculated metric formula takes to metric objects and applies an
+operator on them. You can nest formula or function objects within
+formulas to create complex operational containers. Keep in mind, unlike
+segment containers, these containers function like a math expression and
+determine the order of operations.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_formula</span></span>
 <span></span>
 <span><span class="va">cm_form</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_formula.html">cm_formula</a></span><span class="op">(</span></span>
@@ -442,10 +473,16 @@ each element.</p>
 <span><span class="co">##   }</span></span>
 <span><span class="co">## }</span></span></code></pre>
 </div>
-<div class="section level3">
-<h3 id="create-a-calculated-metric-object">Create a calculated metric object<a class="anchor" aria-label="anchor" href="#create-a-calculated-metric-object"></a>
-</h3>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="section level4">
+<h4 id="create-a-calculated-metric-object">Create a calculated metric object<a class="anchor" aria-label="anchor" href="#create-a-calculated-metric-object"></a>
+</h4>
+<p>Using the <code>cm_build</code> function gives the ability to create
+and validate simple and complex calculated metrics. If you are familiar
+with the calculated metrics user interface you should be able to quickly
+recognize what each aspect of the function arguments refer to but fo
+those who are less familiar the <a href="https://experienceleague.adobe.com/docs/analytics/components/calculated-metrics/calcmetric-workflow/cm-build-metrics.html?lang=en#areas-of-the-calculated-metrics-builder" class="external-link">calculated
+metrics builder documentation</a> may be of great use.</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_build</span></span>
 <span></span>
 <span><span class="va">cm_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_build.html">cm_build</a></span><span class="op">(</span></span>
@@ -466,9 +503,9 @@ each element.</p>
 <pre><code><span><span class="co">## {"rsid":"igeo1xxpnwcidadobepm","name":"Test Calculated Metric","description":"Test cm description","definition":{"formula":{"func":"divide","col1":{"func":"col-sum","description":"Column Sum","col":{"func":"metric","name":"metrics/visits","description":"Visits"}},"col2":{"func":"metric","name":"metrics/singlepagevisits","description":"Single Page Visits"}},"version":[1,0,0],"func":"calc-metric"},"polarity":"positive","precision":0,"type":"decimal"}</span></span></code></pre>
 </div>
 </div>
-<div class="section level2">
-<h2 id="validate-a-calculated-metric-object">Validate a calculated metric object<a class="anchor" aria-label="anchor" href="#validate-a-calculated-metric-object"></a>
-</h2>
+<div class="section level3">
+<h3 id="validate-a-calculated-metric-object">Validate a calculated metric object<a class="anchor" aria-label="anchor" href="#validate-a-calculated-metric-object"></a>
+</h3>
 <p>Because report suites can have different configurations, dimensions,
 or metrics, a calculated metric that is valid in one report suite may
 not be valid in another. To determine which calculated metric to use in
@@ -476,17 +513,16 @@ different report suites, and why it may or may not be available, you can
 use the cm_validate. This endpoint allows you to POST a definition along
 with a target report suite id. The validate endpoint responds with
 compatibility information on the calculated metric.</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_val</span></span>
 <span></span>
 <span><span class="va">cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_val.html">cm_val</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">cm</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "The calculated metric definition IS VALID"</span></span></code></pre>
-<p>Once we validated that the new calculated metric is good, we can
-create the new calculated metric in the UI by setting the argument
-<code>create_cm = TRUE</code>.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<p>Once yo determine make we can create the new calculated metric in the
+UI by setting the argument <code>create_cm = TRUE</code>.</p>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#create the calculated metric in the UI</span></span>
 <span><span class="va">cm_obj</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_build.html">cm_build</a></span><span class="op">(</span></span>
 <span>  name <span class="op">=</span> <span class="st">'Test Calculated Metric'</span>,</span>
@@ -528,7 +564,7 @@ create the new calculated metric in the UI by setting the argument
 </tr></thead>
 <tbody><tr class="odd">
 <td align="left">igeo1xxpnwcidadobepm</td>
-<td align="left">cm300010142_6525465659b14b3f8aec14ef</td>
+<td align="left">cm300010142_652d78a3de0e706af61565ed</td>
 <td align="left">Test Calculated Metric</td>
 <td align="left">Test cm description</td>
 <td align="left">200654087</td>
@@ -538,10 +574,12 @@ create the new calculated metric in the UI by setting the argument
 </tr></tbody>
 </table>
 </div>
-<div class="section level2">
-<h2 id="update-a-calculated-metric">Update a calculated metric<a class="anchor" aria-label="anchor" href="#update-a-calculated-metric"></a>
-</h2>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="update-a-calculated-metric">Update a calculated metric<a class="anchor" aria-label="anchor" href="#update-a-calculated-metric"></a>
+</h3>
+<p>To update the name or description it is as simple as adding them
+within a list function of the <code>updates</code> argument.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_update</span></span>
 <span></span>
 <span><span class="va">cm_updated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_update.html">cm_update</a></span><span class="op">(</span></span>
@@ -556,16 +594,62 @@ create the new calculated metric in the UI by setting the argument
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`old name` <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">name</span>,`new name` <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 old name                 new name </span></span>
 <span><span class="co">## "Test Calculated Metric"               "new name"</span></span></code></pre>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Description Change</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`old description` <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">description</span>,`new description` <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##             old description             new description </span></span>
 <span><span class="co">##       "Test cm description" "this is a new description"</span></span></code></pre>
+<p>For updating an existing calculated metrics within the definition
+there is a more complex solution that needs to be done.</p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cm_updated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">id</span>, expansion <span class="op">=</span> <span class="st">'definition'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#change the col1 values to reflect a new function `col-sum`</span></span>
+<span><span class="va">cm_updated</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">func</span> <span class="op">&lt;-</span> <span class="st">'mean'</span></span>
+<span><span class="va">cm_updated</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">description</span> <span class="op">&lt;-</span> <span class="st">'Mean'</span></span>
+<span><span class="va">cm_updated</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">`include-zeros`</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span></span>
+<span></span>
+<span><span class="va">cm_update_complete</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_update.html">cm_update</a></span><span class="op">(</span></span>
+<span>  id <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">id</span>,</span>
+<span>  updates <span class="op">=</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/unbox.html" class="external-link">unbox</a></span><span class="op">(</span><span class="va">cm_updated</span><span class="op">)</span>,</span>
+<span>  locale <span class="op">=</span> <span class="st">"en_US"</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cm_update_complete</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">func</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "mean"</span></span></code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cm_update_complete</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">description</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "Mean"</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="delete-calculated-metrics">Delete calculated metrics<a class="anchor" aria-label="anchor" href="#delete-calculated-metrics"></a>
-</h2>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="section level3">
+<h3 id="copy-a-calculated-metric">Copy a Calculated Metric<a class="anchor" aria-label="anchor" href="#copy-a-calculated-metric"></a>
+</h3>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cm_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span><span class="op">$</span><span class="va">id</span>, </span>
+<span>                                   expansion <span class="op">=</span> <span class="st">'definition'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">cm_var</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [{"rsid":"igeo1xxpnwcidadobepm","id":"cm300010142_652d78a3de0e706af61565ed","name":"new name","description":"this is a new description","owner":{"id":200654087},"polarity":"positive","precision":0,"type":"decimal","definition":{"formula":{"func":"divide","col1":{"func":"mean","description":"Mean","col":{"func":"metric","name":"metrics/visits","description":"Visits"},"include-zeros":false},"col2":{"func":"metric","name":"metrics/singlepagevisits","description":"Single Page Visits"}},"func":"calc-metric","version":[1,0,0]}}]</span></span></code></pre>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">copy_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_copy.html">cm_copy</a></span><span class="op">(</span>cm_id <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">id</span>, </span>
+<span>                    name <span class="op">=</span> <span class="st">'Here I copy the cm'</span>, </span>
+<span>                    description <span class="op">=</span> <span class="st">'I want to add a new description'</span>, </span>
+<span>                    polarity <span class="op">=</span> <span class="st">'negative'</span>, </span>
+<span>                    precision <span class="op">=</span> <span class="fl">2</span>, </span>
+<span>                    type <span class="op">=</span> <span class="st">'percent'</span>,</span>
+<span>                    create_cm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">copy_res</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "{\"rsid\":\"igeo1xxpnwcidadobepm\",\"id\":\"cm300010142_652d78a7ac32410bb14ad76d\",\"name\":\"Here I copy the cm\",\"description\":\"I want to add a new description\",\"isDeleted\":false,\"migratedIds\":[],\"internal\":false,\"owner\":{\"id\":200654087},\"hidden\":false,\"componentType\":\"calculatedMetric\",\"polarity\":\"negative\",\"precision\":2,\"type\":\"percent\",\"definition\":{\"formula\":{\"func\":\"divide\",\"col1\":{\"func\":\"mean\",\"description\":\"Mean\",\"col\":{\"func\":\"metric\",\"name\":\"metrics/visits\",\"description\":\"Visits\"},\"include-zeros\":false},\"col2\":{\"func\":\"metric\",\"name\":\"metrics/singlepagevisits\",\"description\":\"Single Page Visits\"}},\"func\":\"calc-metric\",\"version\":[1,0,0]},\"compatibility\":{\"identityMetrics\":[{\"identity\":\"metrics/visits\"},{\"identity\":\"metrics/singlepagevisits\"}],\"functions\":[\"mean\",\"divide\"],\"validator_version\":\"1.0.0\",\"supported_products\":[\"oberon\"],\"supported_schema\":[\"schema_oberon\",\"schema_frag\"]},\"legacyId\":\"\",\"categories\":[\"Calculated Metrics\"],\"modified\":\"2023-10-16T17:53:43Z\"}"</span></span></code></pre>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/cm_val.html">cm_val</a></span><span class="op">(</span><span class="va">copy_res</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "The calculated metric definition IS VALID"</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="delete-calculated-metrics">Delete calculated metrics<a class="anchor" aria-label="anchor" href="#delete-calculated-metrics"></a>
+</h3>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_delete</span></span>
 <span></span>
 <span><span class="va">deleted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_delete.html">cm_delete</a></span><span class="op">(</span></span>
@@ -576,7 +660,8 @@ create the new calculated metric in the UI by setting the argument
 <span>  rsid <span class="op">=</span> <span class="va">rsid</span>,</span>
 <span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## success: cm300010142_6525465659b14b3f8aec14ef has been deleted</span></span></code></pre>
+<pre><code><span><span class="co">## success: cm300010142_652d78a3de0e706af61565ed has been deleted</span></span></code></pre>
+</div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>

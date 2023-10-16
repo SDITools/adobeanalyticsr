@@ -48,6 +48,7 @@ reference:
       - cm_build
       - cm_val
       - cm_update
+      - cm_copy
       - cm_delete
 
 development:
