@@ -5,9 +5,11 @@
 #' dates are given in local time by default. This function converts dates
 #' to a generic ISO 8601 format for the API. POSIX times are left unchanged.
 #'
-#' Numeric values are ambiguous (they could be dates or datetimes). They are
-#' converted automatically to dates with an origin of [lubridate::origin]
-#' with a warning.
+#'
+#' @details
+#' Strings and numerics are converted to dates. Numeric values are ambiguous
+#' (they could be dates or datetimes). They are converted automatically to dates
+#' with an origin of [lubridate::origin] with a warning.
 #'
 #' @param dates Vector of dates, of class numeric, Date, or POSIXt
 #' @param origin Origin to use for numeric values
@@ -16,16 +18,13 @@
 #' @noRd
 #'
 #' @examples
-#' dates <- c(29367, 29368)
-#' dates <- c('2021-01-01', '2021-01-10')
-#' dates <- c(Sys.Date()-31, Sys.Date()-1)
-#' dates <- as.Date(c("2021-01-01", "2021-01-10"))
-#' posixs <- as.POSIXct(c("2021-01-01T00:00:00", "2021-01-10T23:59:59"), format = "%Y-%m-%dT%H:%M:%S")
-#' posixs2 <- as.POSIXct(c("2021-01-01T12:00:00", "2021-01-10T15:59:59"), format = "%Y-%m-%dT%H:%M:%S")
+#' dates_str <- c('2021-01-01', '2021-01-10')
+#' dates_date <- as.Date(c("2021-01-01", "2021-01-10"))
+#' posix <- as.POSIXct(c("2021-01-01T12:00:00", "2021-01-10T15:59:59"), format = "%Y-%m-%dT%H:%M:%S")
 #'
-#' make_timeframe(dates)
+#' make_timeframe(dates_str)
+#' make_timeframe(dates_date)
 #' make_timeframe(posixs)
-#' make_timeframe(posixs2)
 make_timeframe <- function(dates, origin = lubridate::origin) {
   stopifnot(length(dates) == 2)
 
@@ -55,11 +54,12 @@ make_timeframe <- function(dates, origin = lubridate::origin) {
   paste(start, end, sep = "/")
 }
 
+
 # Set the timeframe for the query (timeframe)
 # Used by get_usage_logs()
 make_startDate_endDate <- function(start_date, end_date){
   if(!grepl('-', start_date)) {
-    end_date<- as.Date(as.numeric(end_date),origin = "1970-01-01")
+    end_date <- as.Date(as.numeric(end_date), origin = "1970-01-01")
   }
   list(glue::glue('{start_date}T00:00:00.000'), glue::glue('{end_date}T23:59:59.999'))
 }

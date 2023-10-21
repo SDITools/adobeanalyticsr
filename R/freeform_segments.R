@@ -28,9 +28,6 @@
 #'
 #' @param company_id Company ID
 #' @param rsid Report suite ID for the data pull
-#' @param segmentRsids Vector of report suite IDs used to discover the
-#'   human-readable segment names. Passed to `aw_get_segments`. If `NULL`, then
-#'   takes the same value as `rsid`.
 #' @param date_range Date range
 #' @param metrics Metrics to request for each segment
 #' @param globalSegment One or more segments to apply globally over all other
@@ -39,6 +36,7 @@
 #'   table
 #' @param debug Logical, whether to make verbose requests to the API and view
 #' the whole exchange
+#' @param segmentRsids Deprecated.
 #'
 #' @return [tibble::tibble()] of segments and metrics. Rows are returned with
 #' segments in the order they were requested, not by metric sorting.
@@ -46,7 +44,7 @@
 #' @export
 aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                              rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-                             segmentRsids = NULL,
+                             segmentRsids,
                              date_range = c(Sys.Date()-30, Sys.Date()-1),
                              metrics = c("visits", "visitors"),
                              globalSegment = NULL,
@@ -56,7 +54,10 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     stop("At least one segment ID must be given", call. = FALSE)
   }
 
-  segmentRsids <- segmentRsids %||% rsid
+  if (!missing(segmentRsids)) {
+    lifecycle::deprecate_warn(when = "0.3.4", what = "aw_segment_table(segmentRsids)")
+  }
+
   # Generate requests
   # 1 request group for each unique metric
   # Page the segments into groups of 9 or 10
@@ -80,7 +81,7 @@ aw_segment_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                             metrics = met,
                             globalSegment = globalSegment,
                             segmentIds = seg_group,
-                            segmentRsids = segmentRsids,
+                            segmentRsids = NULL,
                             debug = debug)
 
       increment_global_counter()
@@ -174,12 +175,9 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   metrics <- unique(metrics)
 
   # Make global filter
-  timeframe <- make_timeframe(date_range)
-
   gf <- global_filter(
-    type = c("dateRange", rep("segment", times = length(globalSegment))),
-    dateRange = c(timeframe, rep(NA, times = length(globalSegment))),
-    segmentId = c(NA, globalSegment)
+    dateRange = make_timeframe(date_range),
+    segmentId = globalSegment
   )
 
   # Define settings
@@ -190,17 +188,13 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   seg_ctrl <- tidyr::expand_grid(
     metrics = metrics,
     segmentIds = segmentIds
-  ) %>%
-    group_by(metrics) %>%
-    mutate(
-      metric_id = paste(metrics, row_number(), sep = "::")
-    ) %>%
-    ungroup()
+  )
+
+  seg_ctrl$metric_id <- create_metric_column_id(seg_ctrl$metrics)
 
   # Generate metric container
   met_cont <- metric_container(
     metrics = seg_ctrl$metrics,
-    metricIds = seg_ctrl$metric_id,
     sort = "desc", # Sort has no effect, since only 1 row returned
     segmentIds = seg_ctrl$segmentIds
   )
@@ -212,7 +206,7 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     settings = settings
   )
 
-  output_data <- jsonlite::fromJSON(aw_call_data(
+  output_data <- jsonlite::fromJSON(aw_call_api(
     req_path = "reports/ranked",
     body = req,
     debug = debug,
@@ -221,7 +215,8 @@ aw_segment_table_page <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
 
   long_metrics <- data.frame(
     name = output_data$columns$columnIds,
-    value = output_data$summaryData$totals
+    value = output_data$summaryData$totals,
+    stringsAsFactors = FALSE
   )
 
   output_data <- left_join(seg_ctrl, long_metrics, by = c("metric_id" = "name"))

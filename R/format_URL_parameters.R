@@ -20,7 +20,7 @@
 #' @return String, `x` formatted as a parameter list
 #' @noRd
 format_URL_parameters <- function(elements) {
-  if (length(elements) == 0) {
+  if (length(elements) == 0 | purrr::every(elements, is.null)) {
     return("")
   }
 
@@ -30,25 +30,21 @@ format_URL_parameters <- function(elements) {
     stop("All components of query must be named", call. = FALSE)
   }
 
-  # Remove NULL elements
   elements <- purrr::compact(elements)
   names <- utils::URLencode(names(elements), reserved = TRUE)
 
-  # Handle NAs and collapse vectors into single strings
-  elements <- lapply(elements, function(elem) {
-    assertthat::assert_that(is.null(elem) | !all(is.na(elem)))
-    paste(elem, collapse = ",")
-  })
+  comma_collapse_elements <- function(x) {
+    out <- paste(x, collapse = ",")
+
+    if (!inherits(x, "AsIs")) {
+      out <- utils::URLencode(out, reserved = TRUE)
+    }
+
+    out
+  }
 
 
-  values <- vapply(
-    elements,
-    function(x) {
-      if (inherits(x, "AsIs"))
-        return(x)
-      utils::URLencode(as.character(x), reserved = TRUE)
-    },
-    character(1))
+  values <- vapply(elements, comma_collapse_elements, character(1))
 
   paste0(names, "=", values, collapse = "&")
 }

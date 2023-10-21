@@ -8,7 +8,6 @@
 #' @param expansion options  c('tags', 'allowedForReporting', 'categories'))
 #' @param company_id define globally or manually
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
-#' @param use_oob Always set to TRUE. Needed for tests
 #'
 #' @details
 #' This function is commonly used to get the correct ID for a specific metric or metrics that will be used in
@@ -47,10 +46,8 @@ aw_get_metrics <- function(rsid = Sys.getenv("AW_REPORTSUITE_ID"),
                            segmentable = 'NULL',
                            expansion = NULL,
                            company_id = Sys.getenv("AW_COMPANY_ID"),
-                           debug = FALSE,
-                           use_oob = TRUE){
+                           debug = FALSE){
   # Reference: https://adobedocs.github.io/analytics-2.0-apis/#/metrics/getMetrics
-  lifecycle::deprecate_warn("0.2.2", what = "aw_get_metrics(use_oob)")
 
   assertthat::assert_that(
     assertthat::is.string(rsid)

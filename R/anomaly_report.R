@@ -73,7 +73,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
   #Create the global filters (gf)
   gf <- s_dr()
 
-  meta <- map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
+  meta <- purrr::map2(metrics, seq_along(metrics)-1, addtimeseriesmetrics)
 
   req_body <- structure(list(rsid = rsid,
                              globalFilters =
@@ -95,7 +95,7 @@ aw_anomaly_report <- function(company_id = Sys.getenv('AW_COMPANY_ID'),
                                includeAnomalyDetection = anomalyDetection
                              ) ) )
 
-  res <- aw_call_data("reports/ranked", body = req_body,  debug = debug, company_id = company_id)
+  res <- aw_call_api("reports/ranked", body = req_body,  debug = debug, company_id = company_id)
 
   res <- jsonlite::fromJSON(res)
 

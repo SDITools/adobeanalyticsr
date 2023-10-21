@@ -143,6 +143,9 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
                               prettynames = FALSE,
                               debug = FALSE,
                               check_components = TRUE) {
+  if (company_id == "") stop("'company_id' is blank")
+  if (rsid == "") stop("'rsid' is blank")
+
   if (all(is.na(segmentId))) segmentId <- NULL
 
   # Repeated dimensions will cause an infinite loop
@@ -174,56 +177,39 @@ aw_freeform_table <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   }
 
 
-  # Make global filter
-  timeframe <- make_timeframe(date_range)
-
-  gf <- global_filter(
-    type = c("dateRange", rep("segment", times = length(segmentId))),
-    dateRange = c(timeframe, rep(NA, times = length(segmentId))),
-    segmentId = c(NA, segmentId)
+  # Define the query with a query spec
+  # This also standardizes arguments (recycling, etc.)
+  query_spec <- make_query_spec(
+    rsid = rsid,
+    company_id = company_id,
+    dimensions = dimensions,
+    metrics = metrics,
+    date_range = date_range,
+    segment_id = segmentId,
+    limit = top,
+    page = page,
+    include_unspecified = include_unspecified,
+    dimensionSort = "asc",
+    search = search,
+    sort = metricSort
   )
 
-  # Set settings-like settings
-  search <- na_fill_vec(search, len = length(dimensions))
-  metricSort <- na_fill_vec(metricSort, len = length(metrics))
-
-  # Set settings
-  unspecified <- ifelse(include_unspecified, "return-nones", "exclude-nones")
-  top <- top_daterange_number(top, dimensions, date_range)
-  page <- vctrs::vec_recycle(page, size = length(dimensions))
-
-  settings <- req_settings(
-    limit = 0,    # Placeholder, limit set during query
-    page = 0,     # Placeholder, page set during query
-    nonesBehavior = unspecified,
-    dimensionSort = "asc"
-  )
 
   # Estimate requests and reset global counter
-  n_requests <- estimate_requests(top)
+  n_requests <- estimate_requests(qs_top(query_spec))
   if (n_requests > 20) {
     initialize_global_counter(n_requests)
   } else {
     kill_global_counter()
   }
 
-
   # Make requests
   message("Requesting data...", appendLF = TRUE)
   output_data <- get_req_data(
-    current_dim = dimensions[1],
-    dimensions = dimensions,
+    qs = query_spec,
+    index = 1,
     item_ids = NULL,
-    metrics = metrics,
-    rsid = rsid,
-    global_filter = gf,
-    settings = settings,
-    company_id = company_id,
-    debug = debug,
-    sort = metricSort,
-    top = top,
-    page = page,
-    search = search
+    debug = debug
   )
   message("Done!")
   message(glue::glue("Returning {nrow(output_data)} x {ncol(output_data)} data frame"))

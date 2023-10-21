@@ -1,3 +1,36 @@
+# adobeanalyticsr 0.3.3
+
+* Update to utilities make_timeframe function test
+
+# adobeanalyticsr 0.3.2
+
+* Refactored aw_call_data and aw_call_api into a single function
+* added internal function handle_api_errors() which is a more useful error handler for 206 and 400 type errors
+* Bug fix for 'get_usage_logs()` function
+
+# adobeanalyticsr 0.3.1
+
+* Bug fix for R <v4.0
+* Initial set of unit tests
+
+# adobeanalyticsr 0.3.0
+
+* Changed from using a litany of environment variables to authorize with JWT to 
+a simpler JSON file-based approach. Instead of listing out each variable in the 
+.Renviron file a JSON file is used.
+* There is now a second argument for Report Suite ID for `aw_segment_table`,
+which allows the user to specify a vector of RSIDs for which to search for
+the segment IDs when making pretty names.
+* Added functions to build segments, validate, and create them in Adobe 
+Analytics.
+  * `seg_verbs`
+  * `seg_rule()`
+  * `seg_con()`
+  * `seg_seq()`
+  * `seg_then()`
+  * `seg_build()`
+  * `seg_val()`
+
 # adobeanalyticsr 0.2.1
 
 * Added support for JWT Authentication

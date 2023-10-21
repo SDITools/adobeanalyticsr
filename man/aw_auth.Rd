@@ -9,11 +9,8 @@
 aw_auth(type = aw_auth_with(), ...)
 
 auth_jwt(
-  client_id = Sys.getenv("AW_CLIENT_ID"),
-  client_secret = Sys.getenv("AW_CLIENT_SECRET"),
+  file = Sys.getenv("AW_AUTH_FILE"),
   private_key = Sys.getenv("AW_PRIVATE_KEY"),
-  org_id = Sys.getenv("AW_ORGANIZATION_ID"),
-  tech_id = Sys.getenv("AW_TECHNICAL_ID"),
   jwt_token = NULL,
   ...
 )
@@ -31,18 +28,19 @@ running \code{aw_auth()}}
 
 \item{...}{Additional arguments passed to auth functions.}
 
+\item{file}{A JSON file containing service account credentials required for JWT
+authentication. This file can be downloaded directly from the Adobe Console,
+and should minimally have the fields \code{API_KEY}, \code{CLIENT_SECRET}, \code{ORG_ID},
+and \code{TECHNICAL_ACCOUNT_ID}.}
+
+\item{private_key}{Filename of the private key for JWT authentication.}
+
+\item{jwt_token}{\emph{(Optional)} A custom, encoded, signed JWT claim. If used,
+\code{client_id} and \code{client_secret} are still required.}
+
 \item{client_id}{The client ID, defined by a global variable or manually defined}
 
 \item{client_secret}{The client secret, defined by a global variable or manually defined}
-
-\item{private_key}{The file path to private key for token signature (JWT auth only)}
-
-\item{org_id}{Organization ID from integration console (JWT auth only)}
-
-\item{tech_id}{Technical account ID from integration console (JWT auth only)}
-
-\item{jwt_token}{\emph{(Optional)} A custom, encoded, signed JWT claim. If used,
-only \code{client_id} and \code{client_secret} are required.}
 
 \item{use_oob}{if \code{FALSE}, use a local webserver for the OAuth dance.
 Otherwise, provide a URL to the user and prompt for a validation code.
@@ -54,15 +52,15 @@ The path of the cached token. This is returned invisibly.
 }
 \description{
 \strong{Note:} \code{aw_auth()} is the primary function used for authorization. \code{auth_oauth()}
-and \code{auth_jwt()} should not be called directly, as these do not cache the token.
+and \code{auth_jwt()} should typically not be called directly.
 }
 \section{Functions}{
 \itemize{
-\item \code{auth_jwt}: Authenticate with JWT token
+\item \code{auth_jwt()}: Authenticate with JWT token
 
-\item \code{auth_oauth}: Authorize via OAuth 2.0
+\item \code{auth_oauth()}: Authorize via OAuth 2.0
+
 }}
-
 \seealso{
 \code{\link[=aw_auth_with]{aw_auth_with()}}
 }
