@@ -28,51 +28,6 @@ cm_update <- function(id = NULL,
                       debug = FALSE,
                       company_id = Sys.getenv("AW_COMPANY_ID")){
 
-  ## need to update the aw_call_api function to include the argument "update" that
-  # will conditionally change the verb to PUT vs GET or POST
-  aw_put_api <- function(req_path,
-                         body = NULL,
-                         update = FALSE,
-                         debug = FALSE,
-                         company_id) {
-    assertthat::assert_that(
-      assertthat::is.string(req_path),
-      assertthat::is.string(company_id)
-    )
-
-
-    env_vars <- get_env_vars()
-    token_config <- get_token_config(client_id = env_vars$client_id,
-                                     client_secret = env_vars$client_secret)
-
-    request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
-                           company_id, req_path)
-
-    if (debug) {
-      debug_call <- httr::verbose(data_out = TRUE, data_in = TRUE, info = TRUE)
-    } else {
-      debug_call <- NULL
-    }
-
-    req <- httr::RETRY(verb = dplyr::case_when(is.null(body) ~ "GET",
-                                               update ~ "PUT",
-                                               TRUE ~ "POST"),
-                       url = request_url,
-                       encode = "json",
-                       body = body %||% FALSE,
-                       token_config,
-                       debug_call,
-                       httr::add_headers(
-                         `x-api-key` = env_vars$client_id,
-                         `x-proxy-global-company-id` = company_id
-                       ))
-
-    handle_api_errors(resp = req, body = body)
-    # As a fall-through, for errors that fall through handle_api_errors
-    httr::stop_for_status(req)
-
-    httr::content(req, as = "text", encoding = "UTF-8")
-  }
   #defined parts of the post request
   if(is.null(id)) {
     stop('The argument "id" value must be provided')
@@ -80,11 +35,10 @@ cm_update <- function(id = NULL,
     req_path <- glue::glue('calculatedmetrics/{id}')
 
 
-  req <- aw_put_api(req_path = req_path,
-                    body = updates,
-                    debug = debug,
-                    update = TRUE,
-                    company_id = company_id)
+    req <- aw_put_data(req_path = req_path,
+                       body = updates,
+                       debug = debug,
+                       company_id = company_id)
 
   jsonlite::fromJSON(req)
 }
