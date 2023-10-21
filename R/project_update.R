@@ -29,7 +29,12 @@ proj_update <- function(projectId = NULL,
 
   req_path <- glue::glue("projects/{projectId}")
   urlstructure <- paste(req_path, format_URL_parameters(query_params), sep = "?")
-  res <- aw_call_data(req_path = urlstructure, body = body, debug = debug, company_id = company_id)
+
+  res <- aw_put_data(req_path = urlstructure,
+                     body = body,
+                     content_type = 'application/json',
+                     debug = debug,
+                     company_id = company_id)
 
   jsonlite::fromJSON(res)
 }

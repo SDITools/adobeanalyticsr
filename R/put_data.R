@@ -5,8 +5,9 @@
 #' @noRd
 #'
 #' @param req_path The endpoint for that particular report
-#' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
 #' @param body An R list that will be parsed to JSON
+#' @param content_type The cotent type of the PUT request body
+#' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
 #' @param company_id Set in environment args, or pass directly here
 #' @param use_oob Always set to TRUE. Needed for tests
 #'
@@ -23,6 +24,7 @@
 #'
 aw_put_data <- function(req_path,
                         body = NULL,
+                        content_type = 'application/json',
                         debug = FALSE,
                         company_id,
                         use_oob = TRUE
@@ -51,6 +53,7 @@ aw_put_data <- function(req_path,
                        body = body,
                        encode = "json",
                        token_config,
+                       `Content-Type` = content_type,
                        debug_call,
                        httr::add_headers(
                            `x-api-key` = env_vars$client_id,
