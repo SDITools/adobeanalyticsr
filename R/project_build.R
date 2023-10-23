@@ -27,7 +27,7 @@ proj_build <- function(body = NULL,
 
   req_path <- glue::glue("projects")
   urlstructure <- paste(req_path, format_URL_parameters(query_params), sep = "?")
-  res <- aw_call_data(req_path = urlstructure, body = body, debug = debug, company_id = company_id)
+  res <- aw_call_api(req_path = urlstructure, body = body, debug = debug, company_id = company_id)
 
   jsonlite::fromJSON(res)
 }
