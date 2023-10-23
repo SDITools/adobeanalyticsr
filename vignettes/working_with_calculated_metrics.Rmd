@@ -27,7 +27,6 @@ knitr::opts_chunk$set(
 I won't be going into the any detail around authenticate in this article so if you are needing more help with that, make sure to check out the "Getting Started" vignette.  With all that being said, the
 
 ```{r}
-
 ## Load the packages needed
 library(adobeanalyticsr)
 library(tidyr) ## needed for some of the data wrangling
@@ -41,6 +40,18 @@ get_me()
 
 company_id <- 'adobea8cf'
 rsid <- 'igeo1xxpnwcidadobepm'
+
+## Create a segment to be used farther down in the demo
+#create the segment rule
+segment_rule <- seg_rule(dimension = 'mobiledevicename',
+                         verb = 'exists')
+
+#build the segment and capture the segment id
+seginfo <- seg_build(name = 'NON Desktop traffic', 
+                     description = 'This is a segment that filters out everything that is not associated with an identified mobile device', 
+                     rules = list(segment_rule), 
+                     create_seg = T)
+segid <- jsonlite::fromJSON(seginfo)$id
 ```
 ## Retrieve multiple calculated metrics
 
@@ -165,7 +176,6 @@ cm <- cm_val(cm_obj)
 cm
 ```
 
-
 Once yo determine make we can create the new calculated metric in the UI by setting the argument `create_cm = TRUE`.
 ```{r}
 #create the calculated metric in the UI
@@ -183,9 +193,52 @@ cm_obj <- cm_build(
   company_id = company_id
 )
 
-cm_var <- aw_get_calculatedmetrics(filterByIds = jsonlite::fromJSON(cm_obj)$id)
+knitr::kable(cm_obj)
+```
 
-knitr::kable(cm_var)
+### Adding a segment filter 
+
+On every level of a calculated metric, function, formula, and object, you can add an additional level of control by inserting a segment filter.  
+```{r}
+
+# use the new segment id to create a segment
+cm_obj_seg_filter <- cm_build(
+  name = 'Test Segment Filtered Calculated Metric',
+  description = 'Test cm description that includes a segment id',
+  formula = cm_form,
+  seg_filter = segid, #adding the segment here
+  create_cm = FALSE,
+  rsid = rsid,
+  company_id = company_id
+)
+
+cm_val(cm_obj_seg_filter)
+```
+
+Now that we know it is a valid segment, let's create it and pull the data along with the previous segment to see the difference in the data.
+
+```{r}
+# use the new segment id to create a segment
+cm_obj_seg_filter <- cm_build(
+  name = 'Test Segment Filtered Calculated Metric',
+  description = 'Test cm description that includes a segment id',
+  formula = cm_form,
+  seg_filter = segid, #adding the segment here
+  create_cm = TRUE,
+  rsid = rsid,
+  company_id = company_id
+)
+
+cm_seg_filter <- jsonlite::fromJSON(cm_obj_seg_filter)$id
+
+cm_no_seg_filter <- jsonlite::fromJSON(cm_obj)$id
+
+df_cm <- aw_freeform_table(company_id = company_id, 
+                           rsid = rsid, 
+                           metrics = c(cm_no_seg_filter, cm_seg_filter),
+                           dimensions = 'daterangeday', 
+                           prettynames = T)
+knitr::kable(df_cm)
 ```
 
 ### Update a calculated metric
@@ -195,7 +248,7 @@ To update the name or description it is as simple as adding them within a list f
 ?cm_update
 
 cm_updated <- cm_update(
-  id = cm_var$id,
+  id = cm_no_seg_filter,
   updates = list(name = "new name",
                  description = "this is a new description"),
   locale = "en_US",
@@ -203,10 +256,10 @@ cm_updated <- cm_update(
   company_id = company_id
 )
 # Name Change
-c(`old name` = cm_var$name,`new name` = cm_updated$name)
+c(`old name` =  jsonlite::fromJSON(cm_obj)$name,`new name` = cm_updated$name)
 
 # Description Change
-c(`old description` = cm_var$description,`new description` = cm_updated$description)
+c(`old description` =  jsonlite::fromJSON(cm_obj)$description,`new description` = cm_updated$description)
 ```
 
 For updating an existing calculated metrics within the definition there is a more complex solution that needs to be done. 
@@ -261,8 +314,8 @@ cm_val(copy_res)
 ?cm_delete
 
 deleted <- cm_delete(
-  cm_id = cm_var$id,
-  warn = TRUE,
+  cm_id = cm_no_seg_filter,
+  warn = FALSE,
   locale = "en_US",
   debug = FALSE,
   rsid = rsid,
