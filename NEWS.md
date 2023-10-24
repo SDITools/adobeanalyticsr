@@ -9,6 +9,11 @@
   - cm_update
   - cm_val
   - cm_copy
+* added project management functions
+  - aw_get_project_config
+  - aw_get_projects
+  - proj_build
+  - proj_update
 * Updated supporting functions
   - aw_call_api now handles `Content-type` in the head of the api call
 * Bug fix 

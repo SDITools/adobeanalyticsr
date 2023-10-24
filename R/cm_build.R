@@ -41,6 +41,7 @@
 #' @import assertthat
 #' @import stringr
 #' @importFrom glue glue
+#' @importFrom jsonlite toJSON
 #' @export
 #'
 cm_build <- function(name = NULL,

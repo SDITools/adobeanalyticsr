@@ -30,6 +30,7 @@
 #' @import assertthat
 #' @import stringr
 #' @importFrom glue glue
+#' @importFrom jsonlite fromJSON
 #' @export
 #'
 cm_val <- function(definition = NULL,

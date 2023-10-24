@@ -28,7 +28,7 @@ reference:
       - aw_workspace_report
       - aw_anomaly_report
 
-  - title: "Create Segments"
+  - title: "Manage Segments"
     desc: "Functions for creating segments"
   - contents:
       - seg_verbs
@@ -50,6 +50,14 @@ reference:
       - cm_update
       - cm_copy
       - cm_delete
+
+  - title: "Manage Projects"
+    desc: "Functions for creating and managing workspace projects"
+  - contents:
+      - aw_get_project_config
+      - aw_get_projects
+      - proj_build
+      - proj_update
 
 development:
   mode: auto

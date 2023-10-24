@@ -128,7 +128,7 @@ out the “Getting Started” vignette. With all that being said, the</p>
 <code class="sourceCode R"><span><span class="co">## Load the packages needed</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">adobeanalyticsr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org" class="external-link">tidyr</a></span><span class="op">)</span> <span class="co">## needed for some of the data wrangling</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/jsonlite" class="external-link">jsonlite</a></span><span class="op">)</span> <span class="co">## Will help in visualizing calculated metris definitions</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jeroen.r-universe.dev/jsonlite" class="external-link">jsonlite</a></span><span class="op">)</span> <span class="co">## Will help in visualizing calculated metrics definitions</span></span>
 <span></span>
 <span><span class="fu"><a href="../reference/aw_auth.html">aw_auth</a></span><span class="op">(</span><span class="st">'oauth'</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Successfully authenticated with OAuth</span></span></code></pre>
@@ -139,7 +139,19 @@ out the “Getting Started” vignette. With all that being said, the</p>
 <span><span class="co">## 1       adobea8cf Adobe Analytics University Student Access</span></span></code></pre>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">company_id</span> <span class="op">&lt;-</span> <span class="st">'adobea8cf'</span></span>
-<span><span class="va">rsid</span> <span class="op">&lt;-</span> <span class="st">'igeo1xxpnwcidadobepm'</span></span></code></pre></div>
+<span><span class="va">rsid</span> <span class="op">&lt;-</span> <span class="st">'igeo1xxpnwcidadobepm'</span></span>
+<span></span>
+<span><span class="co">## Create a segment to be used farther down in the demo</span></span>
+<span><span class="co">#create the segment rule</span></span>
+<span><span class="va">segment_rule</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seg_rule.html">seg_rule</a></span><span class="op">(</span>dimension <span class="op">=</span> <span class="st">'mobiledevicename'</span>,</span>
+<span>                         verb <span class="op">=</span> <span class="st">'exists'</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co">#build the segment and capture the segment id</span></span>
+<span><span class="va">seginfo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/seg_build.html">seg_build</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">'NON Desktop traffic'</span>, </span>
+<span>                     description <span class="op">=</span> <span class="st">'This is a segment that filters out everything that is not associated with an identified mobile device'</span>, </span>
+<span>                     rules <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="va">segment_rule</span><span class="op">)</span>, </span>
+<span>                     create_seg <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span><span class="va">segid</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">seginfo</span><span class="op">)</span><span class="op">$</span><span class="va">id</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="retrieve-multiple-calculated-metrics">Retrieve multiple calculated metrics<a class="anchor" aria-label="anchor" href="#retrieve-multiple-calculated-metrics"></a>
@@ -297,7 +309,8 @@ functions that work on available metrics for a given report suite.</p>
 <h3 id="get-all-functions">Get all functions<a class="anchor" aria-label="anchor" href="#get-all-functions"></a>
 </h3>
 <p>Returns a full list of calculated metric functions that the user can
-access.</p>
+access. See the <a href="https://experienceleague.adobe.com/docs/analytics/components/calculated-metrics/calcmetrics-reference/cm-functions.html?lang=en" class="external-link">functions
+documentation</a> for more information on available functions.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">all_functions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_cm_functions.html">get_cm_functions</a></span><span class="op">(</span>company_id <span class="op">=</span> <span class="va">company_id</span><span class="op">)</span></span>
 <span></span>
@@ -538,40 +551,110 @@ UI by setting the argument <code>create_cm = TRUE</code>.</p>
 <span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">cm_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span><span class="op">$</span><span class="va">id</span><span class="op">)</span></span>
-<span></span>
-<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">cm_var</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<colgroup>
-<col width="15%">
-<col width="26%">
-<col width="16%">
-<col width="14%">
-<col width="7%">
-<col width="6%">
-<col width="7%">
-<col width="5%">
-</colgroup>
+<colgroup><col width="100%"></colgroup>
 <thead><tr class="header">
-<th align="left">rsid</th>
-<th align="left">id</th>
-<th align="left">name</th>
-<th align="left">description</th>
-<th align="left">owner</th>
-<th align="left">polarity</th>
-<th align="right">precision</th>
-<th align="left">type</th>
+<th align="left">x</th>
 </tr></thead>
 <tbody><tr class="odd">
-<td align="left">igeo1xxpnwcidadobepm</td>
-<td align="left">cm300010142_652d78a3de0e706af61565ed</td>
-<td align="left">Test Calculated Metric</td>
-<td align="left">Test cm description</td>
-<td align="left">200654087</td>
-<td align="left">positive</td>
-<td align="right">0</td>
-<td align="left">decimal</td>
+<td align="left">{“rsid”:“igeo1xxpnwcidadobepm”,“id”:“cm300010142_6537dce50640320831cdd20e”,“name”:“Test
+Calculated Metric”,“description”:“Test cm
+description”,“isDeleted”:false,“migratedIds”:[],“internal”:false,“owner”:{“id”:200654087},“hidden”:false,“componentType”:“calculatedMetric”,“polarity”:“positive”,“precision”:0,“type”:“decimal”,“definition”:{“formula”:{“func”:“divide”,“col1”:{“func”:“col-sum”,“description”:“Column
+Sum”,“col”:{“func”:“metric”,“name”:“metrics/visits”,“description”:“Visits”}},“col2”:{“func”:“metric”,“name”:“metrics/singlepagevisits”,“description”:“Single
+Page
+Visits”}},“func”:“calc-metric”,“version”:[1,0,0]},“compatibility”:{“identityMetrics”:[{“identity”:“metrics/visits”},{“identity”:“metrics/singlepagevisits”}],“functions”:[“col-sum”,“divide”],“validator_version”:“1.0.0”,“supported_products”:[“oberon”],“supported_schema”:[“schema_oberon”,“schema_frag”]},“legacyId”:““,”categories”:[“Calculated
+Metrics”],“modified”:“2023-10-24T15:04:05Z”}</td>
 </tr></tbody>
+</table>
+</div>
+<div class="section level3">
+<h3 id="adding-a-segment-filter">Adding a segment filter<a class="anchor" aria-label="anchor" href="#adding-a-segment-filter"></a>
+</h3>
+<p>On every level of a calculated metric, function, formula, and object,
+you can add an additional level of control by inserting a segment
+filter.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># use the new segment id to create a segment</span></span>
+<span><span class="va">cm_obj_seg_filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_build.html">cm_build</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">'Test Segment Filtered Calculated Metric'</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">'Test cm description that includes a segment id'</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">cm_form</span>,</span>
+<span>  seg_filter <span class="op">=</span> <span class="va">segid</span>, <span class="co">#adding the segment here</span></span>
+<span>  create_cm <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="va">rsid</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/cm_val.html">cm_val</a></span><span class="op">(</span><span class="va">cm_obj_seg_filter</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "The calculated metric definition IS VALID"</span></span></code></pre>
+<p>Now that we know it is a valid segment, let’s create it and pull the
+data along with the previous segment to see the difference in the
+data.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># use the new segment id to create a segment</span></span>
+<span><span class="va">cm_obj_seg_filter</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_build.html">cm_build</a></span><span class="op">(</span></span>
+<span>  name <span class="op">=</span> <span class="st">'Test Segment Filtered Calculated Metric'</span>,</span>
+<span>  description <span class="op">=</span> <span class="st">'Test cm description that includes a segment id'</span>,</span>
+<span>  formula <span class="op">=</span> <span class="va">cm_form</span>,</span>
+<span>  seg_filter <span class="op">=</span> <span class="va">segid</span>, <span class="co">#adding the segment here</span></span>
+<span>  create_cm <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="va">rsid</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">cm_seg_filter</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj_seg_filter</span><span class="op">)</span><span class="op">$</span><span class="va">id</span></span>
+<span></span>
+<span><span class="va">cm_no_seg_filter</span> <span class="op">&lt;-</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span><span class="op">$</span><span class="va">id</span></span>
+<span></span>
+<span><span class="va">df_cm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>company_id <span class="op">=</span> <span class="va">company_id</span>, </span>
+<span>                           rsid <span class="op">=</span> <span class="va">rsid</span>, </span>
+<span>                           metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">cm_no_seg_filter</span>, <span class="va">cm_seg_filter</span><span class="op">)</span>,</span>
+<span>                           dimensions <span class="op">=</span> <span class="st">'daterangeday'</span>, </span>
+<span>                           prettynames <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Requesting data...</span></span></code></pre>
+<pre><code><span><span class="co">## Done!</span></span></code></pre>
+<pre><code><span><span class="co">## Returning 5 x 3 data frame</span></span></code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">df_cm</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="14%">
+<col width="31%">
+<col width="54%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Day</th>
+<th align="right">Test Calculated Metric</th>
+<th align="right">Test Segment Filtered Calculated Metric</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">2023-09-26</td>
+<td align="right">3707.0726</td>
+<td align="right">Inf</td>
+</tr>
+<tr class="even">
+<td align="left">2023-09-25</td>
+<td align="right">460.1371</td>
+<td align="right">465.8842</td>
+</tr>
+<tr class="odd">
+<td align="left">2023-09-27</td>
+<td align="right">401.8156</td>
+<td align="right">406.0459</td>
+</tr>
+<tr class="even">
+<td align="left">2023-10-20</td>
+<td align="right">383.0642</td>
+<td align="right">348.4961</td>
+</tr>
+<tr class="odd">
+<td align="left">2023-10-14</td>
+<td align="right">373.7211</td>
+<td align="right">348.4961</td>
+</tr>
+</tbody>
 </table>
 </div>
 <div class="section level3">
@@ -579,11 +662,11 @@ UI by setting the argument <code>create_cm = TRUE</code>.</p>
 </h3>
 <p>To update the name or description it is as simple as adding them
 within a list function of the <code>updates</code> argument.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_update</span></span>
 <span></span>
 <span><span class="va">cm_updated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_update.html">cm_update</a></span><span class="op">(</span></span>
-<span>  id <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">id</span>,</span>
+<span>  id <span class="op">=</span> <span class="va">cm_no_seg_filter</span>,</span>
 <span>  updates <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"new name"</span>,</span>
 <span>                 description <span class="op">=</span> <span class="st">"this is a new description"</span><span class="op">)</span>,</span>
 <span>  locale <span class="op">=</span> <span class="st">"en_US"</span>,</span>
@@ -591,18 +674,19 @@ within a list function of the <code>updates</code> argument.</p>
 <span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
 <span><span class="op">)</span></span>
 <span><span class="co"># Name Change</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`old name` <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">name</span>,`new name` <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`old name` <span class="op">=</span>  <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span><span class="op">$</span><span class="va">name</span>,`new name` <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">name</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 old name                 new name </span></span>
 <span><span class="co">## "Test Calculated Metric"               "new name"</span></span></code></pre>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Description Change</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`old description` <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">description</span>,`new description` <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>`old description` <span class="op">=</span>  <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span><span class="op">$</span><span class="va">description</span>,`new description` <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">description</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##             old description             new description </span></span>
 <span><span class="co">##       "Test cm description" "this is a new description"</span></span></code></pre>
 <p>For updating an existing calculated metrics within the definition
 there is a more complex solution that needs to be done.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cm_updated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">id</span>, expansion <span class="op">=</span> <span class="st">'definition'</span><span class="op">)</span></span>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cm_updated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="va">cm_updated</span><span class="op">$</span><span class="va">id</span>, </span>
+<span>                                       expansion <span class="op">=</span> <span class="st">'definition'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">#change the col1 values to reflect a new function `col-sum`</span></span>
 <span><span class="va">cm_updated</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">func</span> <span class="op">&lt;-</span> <span class="st">'mean'</span></span>
@@ -619,20 +703,20 @@ there is a more complex solution that needs to be done.</p>
 <span></span>
 <span><span class="va">cm_update_complete</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">func</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "mean"</span></span></code></pre>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm_update_complete</span><span class="op">$</span><span class="va">definition</span><span class="op">$</span><span class="va">formula</span><span class="op">$</span><span class="va">col1</span><span class="op">$</span><span class="va">description</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Mean"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="copy-a-calculated-metric">Copy a Calculated Metric<a class="anchor" aria-label="anchor" href="#copy-a-calculated-metric"></a>
 </h3>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cm_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span>filterByIds <span class="op">=</span> <span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">fromJSON</a></span><span class="op">(</span><span class="va">cm_obj</span><span class="op">)</span><span class="op">$</span><span class="va">id</span>, </span>
 <span>                                   expansion <span class="op">=</span> <span class="st">'definition'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">jsonlite</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/jsonlite/man/fromJSON.html" class="external-link">toJSON</a></span><span class="op">(</span><span class="va">cm_var</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [{"rsid":"igeo1xxpnwcidadobepm","id":"cm300010142_652d78a3de0e706af61565ed","name":"new name","description":"this is a new description","owner":{"id":200654087},"polarity":"positive","precision":0,"type":"decimal","definition":{"formula":{"func":"divide","col1":{"func":"mean","description":"Mean","col":{"func":"metric","name":"metrics/visits","description":"Visits"},"include-zeros":false},"col2":{"func":"metric","name":"metrics/singlepagevisits","description":"Single Page Visits"}},"func":"calc-metric","version":[1,0,0]}}]</span></span></code></pre>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## [{"rsid":"igeo1xxpnwcidadobepm","id":"cm300010142_6537dce50640320831cdd20e","name":"new name","description":"this is a new description","owner":{"id":200654087},"polarity":"positive","precision":0,"type":"decimal","definition":{"formula":{"func":"divide","col1":{"func":"mean","description":"Mean","col":{"func":"metric","name":"metrics/visits","description":"Visits"},"include-zeros":false},"col2":{"func":"metric","name":"metrics/singlepagevisits","description":"Single Page Visits"}},"func":"calc-metric","version":[1,0,0]}}]</span></span></code></pre>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">copy_res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_copy.html">cm_copy</a></span><span class="op">(</span>cm_id <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">id</span>, </span>
 <span>                    name <span class="op">=</span> <span class="st">'Here I copy the cm'</span>, </span>
 <span>                    description <span class="op">=</span> <span class="st">'I want to add a new description'</span>, </span>
@@ -641,26 +725,26 @@ there is a more complex solution that needs to be done.</p>
 <span>                    type <span class="op">=</span> <span class="st">'percent'</span>,</span>
 <span>                    create_cm <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
 <span><span class="va">copy_res</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "{\"rsid\":\"igeo1xxpnwcidadobepm\",\"id\":\"cm300010142_652d78a7ac32410bb14ad76d\",\"name\":\"Here I copy the cm\",\"description\":\"I want to add a new description\",\"isDeleted\":false,\"migratedIds\":[],\"internal\":false,\"owner\":{\"id\":200654087},\"hidden\":false,\"componentType\":\"calculatedMetric\",\"polarity\":\"negative\",\"precision\":2,\"type\":\"percent\",\"definition\":{\"formula\":{\"func\":\"divide\",\"col1\":{\"func\":\"mean\",\"description\":\"Mean\",\"col\":{\"func\":\"metric\",\"name\":\"metrics/visits\",\"description\":\"Visits\"},\"include-zeros\":false},\"col2\":{\"func\":\"metric\",\"name\":\"metrics/singlepagevisits\",\"description\":\"Single Page Visits\"}},\"func\":\"calc-metric\",\"version\":[1,0,0]},\"compatibility\":{\"identityMetrics\":[{\"identity\":\"metrics/visits\"},{\"identity\":\"metrics/singlepagevisits\"}],\"functions\":[\"mean\",\"divide\"],\"validator_version\":\"1.0.0\",\"supported_products\":[\"oberon\"],\"supported_schema\":[\"schema_oberon\",\"schema_frag\"]},\"legacyId\":\"\",\"categories\":[\"Calculated Metrics\"],\"modified\":\"2023-10-16T17:53:43Z\"}"</span></span></code></pre>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## [1] "{\"rsid\":\"igeo1xxpnwcidadobepm\",\"id\":\"cm300010142_6537dcee81f97f5e8301b03b\",\"name\":\"Here I copy the cm\",\"description\":\"I want to add a new description\",\"isDeleted\":false,\"migratedIds\":[],\"internal\":false,\"owner\":{\"id\":200654087},\"hidden\":false,\"componentType\":\"calculatedMetric\",\"polarity\":\"negative\",\"precision\":2,\"type\":\"percent\",\"definition\":{\"formula\":{\"func\":\"divide\",\"col1\":{\"func\":\"mean\",\"description\":\"Mean\",\"col\":{\"func\":\"metric\",\"name\":\"metrics/visits\",\"description\":\"Visits\"},\"include-zeros\":false},\"col2\":{\"func\":\"metric\",\"name\":\"metrics/singlepagevisits\",\"description\":\"Single Page Visits\"}},\"func\":\"calc-metric\",\"version\":[1,0,0]},\"compatibility\":{\"identityMetrics\":[{\"identity\":\"metrics/visits\"},{\"identity\":\"metrics/singlepagevisits\"}],\"functions\":[\"mean\",\"divide\"],\"validator_version\":\"1.0.0\",\"supported_products\":[\"oberon\"],\"supported_schema\":[\"schema_oberon\",\"schema_frag\"]},\"legacyId\":\"\",\"categories\":[\"Calculated Metrics\"],\"modified\":\"2023-10-24T15:04:14Z\"}"</span></span></code></pre>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/cm_val.html">cm_val</a></span><span class="op">(</span><span class="va">copy_res</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "The calculated metric definition IS VALID"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="delete-calculated-metrics">Delete calculated metrics<a class="anchor" aria-label="anchor" href="#delete-calculated-metrics"></a>
 </h3>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="op">?</span><span class="va">cm_delete</span></span>
 <span></span>
 <span><span class="va">deleted</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/cm_delete.html">cm_delete</a></span><span class="op">(</span></span>
-<span>  cm_id <span class="op">=</span> <span class="va">cm_var</span><span class="op">$</span><span class="va">id</span>,</span>
+<span>  cm_id <span class="op">=</span> <span class="va">cm_no_seg_filter</span>,</span>
 <span>  warn <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  locale <span class="op">=</span> <span class="st">"en_US"</span>,</span>
 <span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  rsid <span class="op">=</span> <span class="va">rsid</span>,</span>
 <span>  company_id <span class="op">=</span> <span class="va">company_id</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## success: cm300010142_652d78a3de0e706af61565ed has been deleted</span></span></code></pre>
+<pre><code><span><span class="co">## success: cm300010142_6537dce50640320831cdd20e has been deleted</span></span></code></pre>
 </div>
 </div>
 <div class="section level2">

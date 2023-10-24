@@ -14,13 +14,13 @@
 #'
 #' @import dplyr
 #' @import assertthat
-#' @import jsonlite
+#' @importFrom jsonlite fromJSON
 #' @importFrom glue glue
 #' @export
 #'
 get_cm_functions <- function(id = NULL,
-                                debug = FALSE,
-                                company_id = Sys.getenv("AW_COMPANY_ID")){
+                             debug = FALSE,
+                             company_id = Sys.getenv("AW_COMPANY_ID")){
 
   #defined parts of the post request
   if(!is.null(id)) {

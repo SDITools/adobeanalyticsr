@@ -41,7 +41,8 @@
 #' @import dplyr
 #' @import assertthat
 #' @import stringr
-#' @import jsonlite
+#' @importFrom jsonlite unbox
+#' @importFrom jsonlite toJSON
 #' @importFrom glue glue
 #' @export
 #'

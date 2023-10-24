@@ -18,7 +18,7 @@
 #'
 #' @import dplyr
 #' @import assertthat
-#' @import jsonlite
+#' @importFrom jsonlite fromJSON
 #' @importFrom glue glue
 #' @export
 #'

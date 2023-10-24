@@ -8,6 +8,12 @@ feature/added calculated metrics management functions
   * cm_val
   * cm_copy
 
+feature/added project management functions
+  * aw_get_project_config
+  * aw_get_projects
+  * proj_build
+  * proj_update
+
 feature/aw_call_api
   * now handles `Content-type` in the head of the api call
 

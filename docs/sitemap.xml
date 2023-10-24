@@ -94,6 +94,12 @@
     <loc>/reference/aw_get_metrics.html</loc>
   </url>
   <url>
+    <loc>/reference/aw_get_project_config.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aw_get_projects.html</loc>
+  </url>
+  <url>
     <loc>/reference/aw_get_reportsuites.html</loc>
   </url>
   <url>
@@ -152,6 +158,12 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/proj_build.html</loc>
+  </url>
+  <url>
+    <loc>/reference/proj_update.html</loc>
   </url>
   <url>
     <loc>/reference/retrieve_aw_token.html</loc>
