@@ -16,6 +16,9 @@
     <loc>/articles/index.html</loc>
   </url>
   <url>
+    <loc>/articles/working_with_calculated_metrics.html</loc>
+  </url>
+  <url>
     <loc>/authors.html</loc>
   </url>
   <url>
@@ -82,10 +85,19 @@
     <loc>/reference/aw_get_calculatedmetrics.html</loc>
   </url>
   <url>
+    <loc>/reference/aw_get_cm_functions.html</loc>
+  </url>
+  <url>
     <loc>/reference/aw_get_dimensions.html</loc>
   </url>
   <url>
     <loc>/reference/aw_get_metrics.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aw_get_project_config.html</loc>
+  </url>
+  <url>
+    <loc>/reference/aw_get_projects.html</loc>
   </url>
   <url>
     <loc>/reference/aw_get_reportsuites.html</loc>
@@ -106,6 +118,33 @@
     <loc>/reference/aw_workspace_report.html</loc>
   </url>
   <url>
+    <loc>/reference/cm_build.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_copy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_delete.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_formula.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_function.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_update.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_val.html</loc>
+  </url>
+  <url>
+    <loc>/reference/cm_validate.html</loc>
+  </url>
+  <url>
+    <loc>/reference/get_cm_functions.html</loc>
+  </url>
+  <url>
     <loc>/reference/get_me.html</loc>
   </url>
   <url>
@@ -119,6 +158,12 @@
   </url>
   <url>
     <loc>/reference/index.html</loc>
+  </url>
+  <url>
+    <loc>/reference/proj_build.html</loc>
+  </url>
+  <url>
+    <loc>/reference/proj_update.html</loc>
   </url>
   <url>
     <loc>/reference/retrieve_aw_token.html</loc>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,13 +72,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">seg_seq</span><span class="op">(</span>
-  context <span class="op">=</span> <span class="st">"visits"</span>,
-  rules <span class="op">=</span> <span class="cn">NULL</span>,
-  sequence <span class="op">=</span> <span class="st">"in_order"</span>,
-  exclude <span class="op">=</span> <span class="cn">FALSE</span>,
-  exclude_checkpoint <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">seg_seq</span><span class="op">(</span></span>
+<span>  context <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>  rules <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sequence <span class="op">=</span> <span class="st">"in_order"</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  exclude_checkpoint <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -83,21 +86,32 @@
     <dl><dt>context</dt>
 <dd><p>Defines the level that the segment logic should operate on.
 Valid values for sequential segments is visitors and visits. See Details</p></dd>
+
+
 <dt>rules</dt>
 <dd><p>List of rules created using <code><a href="seg_rule.html">seg_rule()</a></code> function. Must be wrapped
 in a list() function.</p></dd>
+
+
 <dt>sequence</dt>
 <dd><p>How should the sequence of items be considered.
 Options: <code>in_order</code> (default), <code>before</code>, <code>after</code>, <code>and</code>, <code>or</code></p></dd>
+
+
 <dt>exclude</dt>
 <dd><p>Excludes the entire sequence container which will include all rules.</p></dd>
+
+
 <dt>exclude_checkpoint</dt>
 <dd><p>Which checkpoints (rules) should be excluded.
 Example <code>c(1, 4)</code>. See Details</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a structured list of containers to be used to build the segment</p>
+    
+
+<p>a structured list of containers to be used to build the segment</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -139,13 +153,11 @@ can help: https://experienceleague.adobe.com/docs/analytics/components/segmentat
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

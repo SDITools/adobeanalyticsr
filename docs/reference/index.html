@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -135,7 +138,7 @@
         </td>
         <td><p>Anomaly Report</p></td>
       </tr></tbody><tbody><tr><th colspan="2">
-          <h2 id="create-segments">Create Segments <a href="#create-segments" class="anchor" aria-hidden="true"></a></h2>
+          <h2 id="manage-segments">Manage Segments <a href="#manage-segments" class="anchor" aria-hidden="true"></a></h2>
           <p class="section-desc"></p><p>Functions for creating segments</p>
         </th>
       </tr></tbody><tbody><tr><td>
@@ -166,6 +169,62 @@
           <p><code><a href="seg_val.html">seg_val()</a></code> </p>
         </td>
         <td><p>Validate a segment in adobe analytics</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="manage-calculated-metrics">Manage Calculated Metrics <a href="#manage-calculated-metrics" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Functions for creating and managing calculated metrics</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="get_cm_functions.html">get_cm_functions()</a></code> </p>
+        </td>
+        <td><p>Get Calculated Metric Functions</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_function.html">cm_function()</a></code> </p>
+        </td>
+        <td><p>Create A Calculated Metric Function</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_formula.html">cm_formula()</a></code> </p>
+        </td>
+        <td><p>Create A Calculated Metric Formula</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_build.html">cm_build()</a></code> </p>
+        </td>
+        <td><p>Build a Calculated Metric in Adobe Analytics</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_val.html">cm_val()</a></code> </p>
+        </td>
+        <td><p>Validate the difinition of a Calculated Metric in Adobe Analytics</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_update.html">cm_update()</a></code> </p>
+        </td>
+        <td><p>Update Calculated Metric Functions</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_copy.html">cm_copy()</a></code> </p>
+        </td>
+        <td><p>Copy a Calculated Metric in Adobe Analytics</p></td>
+      </tr><tr><td>
+          <p><code><a href="cm_delete.html">cm_delete()</a></code> </p>
+        </td>
+        <td><p>Create A Calculated Metric Function</p></td>
+      </tr></tbody><tbody><tr><th colspan="2">
+          <h2 id="manage-projects">Manage Projects <a href="#manage-projects" class="anchor" aria-hidden="true"></a></h2>
+          <p class="section-desc"></p><p>Functions for creating and managing workspace projects</p>
+        </th>
+      </tr></tbody><tbody><tr><td>
+          <p><code><a href="aw_get_project_config.html">aw_get_project_config()</a></code> </p>
+        </td>
+        <td><p>Pull a project configuration</p></td>
+      </tr><tr><td>
+          <p><code><a href="aw_get_projects.html">aw_get_projects()</a></code> </p>
+        </td>
+        <td><p>Pull a list of projects</p></td>
+      </tr><tr><td>
+          <p><code><a href="proj_build.html">proj_build()</a></code> </p>
+        </td>
+        <td><p>Create a project in Adobe</p></td>
+      </tr><tr><td>
+          <p><code><a href="proj_update.html">proj_update()</a></code> </p>
+        </td>
+        <td><p>Edit a project in Adobe</p></td>
       </tr></tbody></table></div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -175,13 +234,11 @@
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

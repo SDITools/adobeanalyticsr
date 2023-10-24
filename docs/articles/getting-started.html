@@ -46,7 +46,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -64,6 +64,9 @@
   <ul class="dropdown-menu" role="menu">
 <li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul>
 </li>
@@ -170,10 +173,10 @@ redirect you to a web page that displays a lengthy token that you can
 copy and paste back into an <strong>Enter your authorization
 code:</strong> prompt in the R console.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>            <span class="co"># Light cleanup of output</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span>            <span class="co"># Cleaner data tables</span>
-<span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">adobeanalyticsr</a></span><span class="op">)</span>
-<span class="fu"><a href="../reference/aw_token.html">aw_token</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span>            <span class="co"># Light cleanup of output</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span>            <span class="co"># Cleaner data tables</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/benrwoodard/adobeanalyticsr" class="external-link">adobeanalyticsr</a></span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/aw_token.html">aw_token</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The token will look something like this (with different letters and
 numbers and characters):</p>
 <pre><code>eyJ4NXUiOiJpbXNfbmExLWtleS0xLmNlciIsImFsZyI6IlJTMjU2In0.eyJpZCI6IjE2MTI3MTEyMjM5MzNfNGE2ZmVlM2-tYzdkOS00M2QyLWI5ODUtYzAzMDk2NDA2MGFjX3VlMSIsImNsaWVudF9pZCI6IjA2MTU0ZDgzMjl-OTQxZjViMGUzM2EwZGM2M2U3NmQxIiwidXNlcl9pZCI6IkY2MUJBOTU0NUE3QjMyM0QwQTQ5NUQ2Q0BBZG9iZUlEI-wic3RhdGUiOiIiLCJKeXBlIjoiYXV0aG9yaXphdGlvbl9jb2RlIiwiYXMiOiJpbXMtbmExIiwiZmciO-JWRlFSUkhCTVhMTzU2SDRDRTZSTFJZZUE0TT09PT09PSIsInNpZCI6IjE2MTI3MTEyMjM5MzNfMWE2ZDc4ZTUtNT-zZi00OWFkLWFmZTktYTk0MTJkZmYwMzA0X3VlMSIsIm90byI3InRydWUiLCJleHBpcmVzX2luIjoiMT-wMDAwMCIsImNyZWF0ZWRfYXQiOiIxNjEyNzExMjIzOTMzIiwic2NvcGUiOiJvcGVuaWQsQWRvYmVJRCxyZWFkX-9yZ2FuaXphdGlvbnMsYWRkaXRpb25hbF9pbmZvLnByb2plY3RlZFByb2R1Y3RDb250ZXh0LGFkZGl0aW9uY-xfaW5mby5qb2JfZnVuY3Rpb24ifQ.EvoihD7IPXkew_yFQuzjZGfiU_Q8-vlUkmytwfB_Y46DKePINPn7URq8bit0dXoO-tUdMUKVNOHEBbqww6ydDGBPHSCbOH1GgNsILoN96tjHTtA-jDxN8jrAnQ0PuCssA-GePnqryxCxOH9WyZIl2fog00ib8iZ3ZFAJLDrvthWwWHUw-ivu-K-F3UAtU7A4ma_7pe07D1rW5MhTcZOSr0pri68bjFA86cJqH5DHyMdp4F2d7QgZcYPMdrvVfXTwWXv9s5r6huvDcqv6nny-WOKZbKmoP6zwMzn5xa343wrQ5oXFbRxYem-tC154_dc7ekrC8YUX0pY5up9a-OUy0w</code></pre>
@@ -201,17 +204,17 @@ values for these three types of variables.</p>
 <h3 id="get-available-dimensions">Get Available Dimensions<a class="anchor" aria-label="anchor" href="#get-available-dimensions"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dims_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_dimensions.html">aw_get_dimensions</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co">#&gt; Auto-refreshing stale OAuth token.</span>
-<span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span>
-<span class="co">#&gt; Request failed [401]. Retrying in 1 seconds...</span>
-<span class="co">#&gt; Auto-refreshing stale OAuth token.</span>
-<span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span>
-<span class="co">#&gt; Request failed [401]. Retrying in 1 seconds...</span>
-<span class="co">#&gt; Auto-refreshing stale OAuth token.</span>
-<span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span>
-<span class="co">#&gt; Error in aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id): Unauthorized (HTTP 401).</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dims_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span>, <span class="va">category</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dims_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_dimensions.html">aw_get_dimensions</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Auto-refreshing stale OAuth token.</span></span>
+<span><span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span></span>
+<span><span class="co">#&gt; Request failed [401]. Retrying in 1 seconds...</span></span>
+<span><span class="co">#&gt; Auto-refreshing stale OAuth token.</span></span>
+<span><span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span></span>
+<span><span class="co">#&gt; Request failed [401]. Retrying in 1 seconds...</span></span>
+<span><span class="co">#&gt; Auto-refreshing stale OAuth token.</span></span>
+<span><span class="co">#&gt; Warning: Unable to refresh token: unauthorized_client</span></span>
+<span><span class="co">#&gt; Error in aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id): Unauthorized (HTTP 401).</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">dims_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span>, <span class="va">category</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="27%">
@@ -307,8 +310,8 @@ dimensions for use in subsequent data calls.</p>
 <h3 id="get-available-metrics">Get Available Metrics<a class="anchor" aria-label="anchor" href="#get-available-metrics"></a>
 </h3>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">metrics_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_metrics.html">aw_get_metrics</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">metrics_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span>, <span class="va">category</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">metrics_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_metrics.html">aw_get_metrics</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">metrics_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span>, <span class="va">category</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="27%">
@@ -393,8 +396,8 @@ dimensions for use in subsequent data calls.</p>
 <p><code><a href="../reference/aw_get_metrics.html">aw_get_metrics()</a></code> does <em>not</em> return <em>calculated
 metrics</em>, so those require a separate function call.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">calc_metrics_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">calc_metrics_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">calc_metrics_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_calculatedmetrics.html">aw_get_calculatedmetrics</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">calc_metrics_df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span>, <span class="va">type</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
 <col width="47%">
@@ -472,9 +475,9 @@ specific metrics for use in subsequent data calls.</p>
 number of segments you have, the limit value can be increased to return
 a complete list of segments.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">segments_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_segments.html">aw_get_segments</a></span><span class="op">(</span>limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">segments_df</span><span class="op">)</span>
-<span class="co">#&gt; [1] "name"        "description" "id"          "owner"       "migratedIds" "rsid"</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">segments_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_get_segments.html">aw_get_segments</a></span><span class="op">(</span>limit <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">segments_df</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] "name"        "description" "id"          "owner"       "migratedIds" "rsid"</span></span></code></pre></div>
 <p>Similar to the dimensions and metrics, <code><a href="../reference/aw_get_segments.html">aw_get_segments()</a></code>
 returns a data frame of available segments that can be searched and
 filtered to identify the specific <code>id</code> values to use in
@@ -494,18 +497,18 @@ this vignette.</p>
 last 30 full days for the report suite that is specified in the
 <code>AW_REPORTSUITE_ID</code> environment variable.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Specify a start date and end date. These can be specified as Date</span>
-<span class="co"># objects or as string objects in YYYY-MM-DD format.</span>
-<span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span>
-<span class="va">end_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>
-
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span><span class="op">)</span>
-<span class="co">#&gt; A total of 3 rows have been pulled.</span>
-
-<span class="co"># Output the results as a formatted table</span>
-<span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Specify a start date and end date. These can be specified as Date</span></span>
+<span><span class="co"># objects or as string objects in YYYY-MM-DD format.</span></span>
+<span><span class="va">start_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span></span>
+<span><span class="va">end_date</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A total of 3 rows have been pulled.</span></span>
+<span></span>
+<span><span class="co"># Output the results as a formatted table</span></span>
+<span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">mobiledevicetype</th>
@@ -537,13 +540,13 @@ value.</p>
 <p>Getting multiple metrics is simply a matter of passing a vector to
 the <code>metrics</code> argument rather than a single string:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
-                        metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"pageviews"</span>, <span class="st">"visitors"</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; A total of 3 rows have been pulled.</span>
-
-<span class="co"># Output the results as a formatted table</span>
-<span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"pageviews"</span>, <span class="st">"visitors"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A total of 3 rows have been pulled.</span></span>
+<span></span>
+<span><span class="co"># Output the results as a formatted table</span></span>
+<span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">mobiledevicetype</th>
@@ -580,14 +583,14 @@ vector of metrics as needed.</p>
 the “pretty names” can be returned instead by setting the
 <code>prettynames</code> argument to <code>TRUE</code>:</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
-                        metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"pageviews"</span>, <span class="st">"visitors"</span><span class="op">)</span>,
-                        prettynames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="co">#&gt; A total of 3 rows have been pulled.</span>
-
-<span class="co"># Output the results as a formatted table</span>
-<span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"pageviews"</span>, <span class="st">"visitors"</span><span class="op">)</span>,</span>
+<span>                        prettynames <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A total of 3 rows have been pulled.</span></span>
+<span></span>
+<span><span class="co"># Output the results as a formatted table</span></span>
+<span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">Mobile Device Type</th>
@@ -635,9 +638,9 @@ just a dimension that gets some special treatment in this package.</p>
 <p>The first thing to note is that the <code>id</code> values for time
 values are all prepended with <code>daterange</code>.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dims_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"^daterange.*"</span>, <span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">dims_df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"^daterange.*"</span>, <span class="va">id</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">name</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">id</th>
@@ -685,14 +688,14 @@ to return the results ordered by the date value (it will sort them by
 the first metric or whatever is specified in the <code>metricSort</code>
 argument), so we’ll need to do that sorting with the results:</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="st">"daterangeday"</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">daterangeday</span><span class="op">)</span>
-<span class="co">#&gt; A total of 30 rows have been pulled.</span>
-
-<span class="co"># Output the results as a formatted table</span>
-<span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="st">"daterangeday"</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">daterangeday</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A total of 30 rows have been pulled.</span></span>
+<span></span>
+<span><span class="co"># Output the results as a formatted table</span></span>
+<span><span class="va">df</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">daterangeday</th>
@@ -829,18 +832,18 @@ for that dimension while also returning all of the date values, use
 Type</strong>, but only includes the top 2 values for each
 breakdown:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"daterangeday"</span>, <span class="st">"mobiledevicetype"</span><span class="op">)</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span>,
-                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">daterangeday</span><span class="op">)</span>
-<span class="co">#&gt; Estimated runtime: 24.8sec./0.41min.</span>
-<span class="co">#&gt; 1 of 31 possible data requests complete. Starting the next 30 requests.</span>
-<span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span>
-<span class="co">#&gt; A total of 60 rows have been pulled.</span>
-
-<span class="co"># Output the first few rows as a formatted table</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"daterangeday"</span>, <span class="st">"mobiledevicetype"</span><span class="op">)</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">2</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">daterangeday</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Estimated runtime: 24.8sec./0.41min.</span></span>
+<span><span class="co">#&gt; 1 of 31 possible data requests complete. Starting the next 30 requests.</span></span>
+<span><span class="co">#&gt; Request failed [429]. Retrying in 6 seconds...</span></span>
+<span><span class="co">#&gt; A total of 60 rows have been pulled.</span></span>
+<span></span>
+<span><span class="co"># Output the first few rows as a formatted table</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span>, <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">daterangeday</th>
@@ -905,17 +908,17 @@ breakdown:</p>
 discussed in the next section), the <code>0</code> can simply be
 re-located:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mobiledevicetype"</span>, <span class="st">"daterangeday"</span><span class="op">)</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span>,
-                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> 
-  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mobiledevicetype</span>, <span class="va">daterangeday</span><span class="op">)</span>
-<span class="co">#&gt; Estimated runtime: 2.4sec./0.04min.</span>
-<span class="co">#&gt; 1 of 3 possible data requests complete. Starting the next 2 requests.</span>
-<span class="co">#&gt; A total of 60 rows have been pulled.</span>
-
-<span class="co"># Output the first few rows as a formatted table</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mobiledevicetype"</span>, <span class="st">"daterangeday"</span><span class="op">)</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="va">mobiledevicetype</span>, <span class="va">daterangeday</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Estimated runtime: 2.4sec./0.04min.</span></span>
+<span><span class="co">#&gt; 1 of 3 possible data requests complete. Starting the next 2 requests.</span></span>
+<span><span class="co">#&gt; A total of 60 rows have been pulled.</span></span>
+<span></span>
+<span><span class="co"># Output the first few rows as a formatted table</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <thead><tr class="header">
 <th align="left">mobiledevicetype</th>
@@ -1085,21 +1088,21 @@ many unique dimension values we’re dealing with. This isn’t something
 that is required, but we’re going to do a little math to illustrate the
 differences that dimension order can make.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">device_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span>,
-                        <span class="co"># The default of 5 is probably going to get all of them,</span>
-                        <span class="co"># but set a higher cutoff just in case.</span>
-                        top <span class="op">=</span> <span class="fl">10</span><span class="op">)</span>
-<span class="co">#&gt; A total of 3 rows have been pulled.</span>
-
-<span class="va">browsers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="st">"browser"</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span>,
-                        <span class="co"># We want to get all of the browsers, so set top as a high </span>
-                        <span class="co"># value rather than the default of "5"</span>
-                        top <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span>
-<span class="co">#&gt; A total of 113 rows have been pulled.</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">device_types</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="st">"mobiledevicetype"</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>                        <span class="co"># The default of 5 is probably going to get all of them,</span></span>
+<span>                        <span class="co"># but set a higher cutoff just in case.</span></span>
+<span>                        top <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A total of 3 rows have been pulled.</span></span>
+<span></span>
+<span><span class="va">browsers</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="st">"browser"</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>                        <span class="co"># We want to get all of the browsers, so set top as a high </span></span>
+<span>                        <span class="co"># value rather than the default of "5"</span></span>
+<span>                        top <span class="op">=</span> <span class="fl">1000</span><span class="op">)</span></span>
+<span><span class="co">#&gt; A total of 113 rows have been pulled.</span></span></code></pre></div>
 <p>When making our actual call to get both dimensions at once, we have
 two options for the <code>dimensions</code> argument value:</p>
 <ul>
@@ -1124,31 +1127,31 @@ values to get each value broken down by <code>browser</code>.</li>
 <p>Let’s try it out, including logging how long the function takes to
 run.</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mobiledevicetype"</span>, <span class="st">"browser"</span><span class="op">)</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span>,
-                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Estimated runtime: 8.8sec./0.15min.</span>
-<span class="co">#&gt; 1 of 11 possible data requests complete. Starting the next 3 requests.</span>
-<span class="co">#&gt; A total of 125 rows have been pulled.</span>
-
-<span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Show the summary for the resulting df for comparison to the next approach.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
-<span class="co">#&gt;  mobiledevicetype     browser              visits       </span>
-<span class="co">#&gt;  Length:125         Length:125         Min.   :   1.00  </span>
-<span class="co">#&gt;  Class :character   Class :character   1st Qu.:   1.00  </span>
-<span class="co">#&gt;  Mode  :character   Mode  :character   Median :   3.00  </span>
-<span class="co">#&gt;                                        Mean   :  56.66  </span>
-<span class="co">#&gt;                                        3rd Qu.:  11.00  </span>
-<span class="co">#&gt;                                        Max.   :3488.00</span>
-
-<span class="co"># Output how long it took to run the query</span>
-<span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span>
-<span class="co">#&gt; Time difference of 4.994079 secs</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mobiledevicetype"</span>, <span class="st">"browser"</span><span class="op">)</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">1000</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Estimated runtime: 8.8sec./0.15min.</span></span>
+<span><span class="co">#&gt; 1 of 11 possible data requests complete. Starting the next 3 requests.</span></span>
+<span><span class="co">#&gt; A total of 125 rows have been pulled.</span></span>
+<span></span>
+<span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Show the summary for the resulting df for comparison to the next approach.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  mobiledevicetype     browser              visits       </span></span>
+<span><span class="co">#&gt;  Length:125         Length:125         Min.   :   1.00  </span></span>
+<span><span class="co">#&gt;  Class :character   Class :character   1st Qu.:   1.00  </span></span>
+<span><span class="co">#&gt;  Mode  :character   Mode  :character   Median :   3.00  </span></span>
+<span><span class="co">#&gt;                                        Mean   :  56.66  </span></span>
+<span><span class="co">#&gt;                                        3rd Qu.:  11.00  </span></span>
+<span><span class="co">#&gt;                                        Max.   :3488.00</span></span>
+<span></span>
+<span><span class="co"># Output how long it took to run the query</span></span>
+<span><span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
+<span><span class="co">#&gt; Time difference of 4.994079 secs</span></span></code></pre></div>
 <p>Now, instead, let’s consider what happens if we swap the order of our
 dimensions and, instead, use
 <strong><code>dimensions = c("browser", "mobiledevicetype")</code></strong>.
@@ -1161,31 +1164,31 @@ to get each value broken down by <code>mobiledevicetype</code>.</li>
 <p>This will result in a total of <strong>114 API calls!!!</strong></p>
 <p>Let’s try it out:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,
-                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"browser"</span>, <span class="st">"mobiledevicetype"</span><span class="op">)</span>,
-                        metrics <span class="op">=</span> <span class="st">"visits"</span>,
-                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span>
-<span class="co">#&gt; Estimated runtime: 800.8sec./13.35min.</span>
-<span class="co">#&gt; 1 of 1001 possible data requests complete. Starting the next 113 requests.</span>
-<span class="co">#&gt; A total of 125 rows have been pulled.</span>
-
-<span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span>
-
-<span class="co"># Show the summary for the resulting df for comparison to the next approach.</span>
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span>
-<span class="co">#&gt;    browser          mobiledevicetype       visits       </span>
-<span class="co">#&gt;  Length:125         Length:125         Min.   :   1.00  </span>
-<span class="co">#&gt;  Class :character   Class :character   1st Qu.:   1.00  </span>
-<span class="co">#&gt;  Mode  :character   Mode  :character   Median :   3.00  </span>
-<span class="co">#&gt;                                        Mean   :  56.66  </span>
-<span class="co">#&gt;                                        3rd Qu.:  11.00  </span>
-<span class="co">#&gt;                                        Max.   :3488.00</span>
-
-<span class="co"># Output how long it took to run the query</span>
-<span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span>
-<span class="co">#&gt; Time difference of 1.615242 mins</span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">start_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">df</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/aw_freeform_table.html">aw_freeform_table</a></span><span class="op">(</span>date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">start_date</span>, <span class="va">end_date</span><span class="op">)</span>,</span>
+<span>                        dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"browser"</span>, <span class="st">"mobiledevicetype"</span><span class="op">)</span>,</span>
+<span>                        metrics <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>                        top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1000</span>, <span class="fl">10</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; Estimated runtime: 800.8sec./13.35min.</span></span>
+<span><span class="co">#&gt; 1 of 1001 possible data requests complete. Starting the next 113 requests.</span></span>
+<span><span class="co">#&gt; A total of 125 rows have been pulled.</span></span>
+<span></span>
+<span><span class="va">end_time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Show the summary for the resulting df for comparison to the next approach.</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span></span>
+<span><span class="co">#&gt;    browser          mobiledevicetype       visits       </span></span>
+<span><span class="co">#&gt;  Length:125         Length:125         Min.   :   1.00  </span></span>
+<span><span class="co">#&gt;  Class :character   Class :character   1st Qu.:   1.00  </span></span>
+<span><span class="co">#&gt;  Mode  :character   Mode  :character   Median :   3.00  </span></span>
+<span><span class="co">#&gt;                                        Mean   :  56.66  </span></span>
+<span><span class="co">#&gt;                                        3rd Qu.:  11.00  </span></span>
+<span><span class="co">#&gt;                                        Max.   :3488.00</span></span>
+<span></span>
+<span><span class="co"># Output how long it took to run the query</span></span>
+<span><span class="va">end_time</span> <span class="op">-</span> <span class="va">start_time</span></span>
+<span><span class="co">#&gt; Time difference of 1.615242 mins</span></span></code></pre></div>
 <p>This is a <em>BIG</em> difference in run-time even though, aside from
 the column order being slightly different, the resulting data is
 identical.</p>
@@ -1219,14 +1222,12 @@ for the results to be returned.</p>
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+<p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
   <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer>

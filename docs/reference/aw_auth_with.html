@@ -33,7 +33,7 @@ option is not set, the default filename is aw_auth.rds"><meta property="og:image
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -49,6 +49,9 @@ option is not set, the default filename is aw_auth.rds"><meta property="og:image
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -89,30 +92,37 @@ option is not set, the default filename is <code>aw_auth.rds</code></p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_auth_with</span><span class="op">(</span><span class="va">type</span><span class="op">)</span>
-
-<span class="fu">aw_auth_path</span><span class="op">(</span><span class="va">path</span><span class="op">)</span>
-
-<span class="fu">aw_auth_name</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_auth_with</span><span class="op">(</span><span class="va">type</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">aw_auth_path</span><span class="op">(</span><span class="va">path</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">aw_auth_name</span><span class="op">(</span><span class="va">name</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>type</dt>
 <dd><p>The authorization type: 'oauth' or 'jwt'</p></dd>
+
+
 <dt>path</dt>
 <dd><p>The location for the cached authorization token. It should be a
 directory, rather than a filename. If this option is not set, the current
 working directory is used instead. If the location does not exist, it will
 be created the first time a token is cached.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>The filename, such as <code>aw_auth.rds</code> for the cached authorization
 token file. The file is stored as an RDS file, but there is no requirement
 for the <code>.rds</code> file extension. <code>.rds</code> is not appended automatically.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The option value, invisibly</p>
+    
+
+<p>The option value, invisibly</p>
     </div>
     <div id="see-also">
     <h2>See also</h2>
@@ -127,13 +137,11 @@ for the <code>.rds</code> file extension. <code>.rds</code> is not appended auto
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,32 +72,41 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">seg_val</span><span class="op">(</span>
-  segment_body <span class="op">=</span> <span class="cn">NULL</span>,
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">seg_val</span><span class="op">(</span></span>
+<span>  segment_body <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>segment_body</dt>
 <dd><p>The json string of the segment that is being validated (required)</p></dd>
+
+
 <dt>rsid</dt>
 <dd><p>Adobe report suite ID (RSID).  If an environment variable called <code>AW_REPORTSUITE_ID</code> exists
 in <code>.Renviron</code> or elsewhere and no <code>rsid</code> argument is provided, then the <code>AW_REPORTSUITE_ID</code> value will
 be used. Use <code><a href="aw_get_reportsuites.html">aw_get_reportsuites()</a></code> to get a list of available <code>rsid</code> values.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>This enables the api call information to show in the console for help with debugging issues. default is FALSE</p></dd>
+
+
 <dt>company_id</dt>
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me()</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>If the segment is valid a message saying the segment validates is returned.
+    
+
+<p>If the segment is valid a message saying the segment validates is returned.
 If the segment doesn't validate the errors are returned in a data frame.</p>
     </div>
 
@@ -106,13 +118,11 @@ If the segment doesn't validate the errors are returned in a data frame.</p>
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

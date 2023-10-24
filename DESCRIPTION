@@ -1,6 +1,6 @@
 Package: adobeanalyticsr
 Type: Package
-Version: 0.3.4
+Version: 0.4.0
 Title: R Client for 'Adobe Analytics' API 2.0
 Description: Connect to the 'Adobe Analytics' API v2.0 <https://github.com/AdobeDocs/analytics-2.0-apis>
              which powers 'Analysis Workspace'. The package was developed
@@ -43,7 +43,7 @@ Suggests:
     knitr,
     testthat (>= 3.0.0),
     rmarkdown
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 RdMacros: lifecycle
 VignetteBuilder: knitr

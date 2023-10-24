@@ -22,13 +22,13 @@
 #'
 aw_call_api <- function(req_path,
                         body = NULL,
+                        content_type = NULL,
                         debug = FALSE,
                         company_id) {
     assertthat::assert_that(
         assertthat::is.string(req_path),
         assertthat::is.string(company_id)
     )
-
 
     env_vars <- get_env_vars()
     token_config <- get_token_config(client_id = env_vars$client_id,
@@ -50,6 +50,7 @@ aw_call_api <- function(req_path,
                        token_config,
                        debug_call,
                        httr::add_headers(
+                          `Content-type` = content_type,
                            `x-api-key` = env_vars$client_id,
                            `x-proxy-global-company-id` = company_id
                        ))

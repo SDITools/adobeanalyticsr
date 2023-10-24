@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -39,6 +39,9 @@
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,22 +72,22 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_get_segments</span><span class="op">(</span>
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,
-  rsids <span class="op">=</span> <span class="cn">NULL</span>,
-  segmentFilter <span class="op">=</span> <span class="cn">NULL</span>,
-  locale <span class="op">=</span> <span class="st">"en_US"</span>,
-  name <span class="op">=</span> <span class="cn">NULL</span>,
-  tagNames <span class="op">=</span> <span class="cn">NULL</span>,
-  filterByPublishedSegments <span class="op">=</span> <span class="st">"all"</span>,
-  limit <span class="op">=</span> <span class="fl">10</span>,
-  page <span class="op">=</span> <span class="fl">0</span>,
-  sortDirection <span class="op">=</span> <span class="st">"ASC"</span>,
-  sortProperty <span class="op">=</span> <span class="st">"id"</span>,
-  expansion <span class="op">=</span> <span class="cn">NULL</span>,
-  includeType <span class="op">=</span> <span class="st">"all"</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_get_segments</span><span class="op">(</span></span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,</span>
+<span>  rsids <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  segmentFilter <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  locale <span class="op">=</span> <span class="st">"en_US"</span>,</span>
+<span>  name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  tagNames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  filterByPublishedSegments <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  limit <span class="op">=</span> <span class="fl">10</span>,</span>
+<span>  page <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  sortDirection <span class="op">=</span> <span class="st">"ASC"</span>,</span>
+<span>  sortProperty <span class="op">=</span> <span class="st">"id"</span>,</span>
+<span>  expansion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  includeType <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -93,51 +96,80 @@
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
+
 <dt>rsids</dt>
 <dd><p>Filter the list to only include segments tied to a specified RSID or
 list of RSIDs. Specify multiple RSIDs as a vector (i.e., "<code>rsids = c("rsid_1", rsid_2",...rsid_n")</code>").
 Use <code><a href="aw_get_reportsuites.html">aw_get_reportsuites</a></code> to get a list of available <code>rsid</code> values.</p></dd>
+
+
 <dt>segmentFilter</dt>
 <dd><p>Filter list to only include suites in this list of segment IDs (comma-delimited)</p></dd>
+
+
 <dt>locale</dt>
 <dd><p>The locale that segment details should be returned in. The default is <code>en_US</code>.</p></dd>
+
+
 <dt>name</dt>
 <dd><p>Filter the list to only include segments that contain the specified <strong>name</strong>.
 This is case-insensitive and is a simple, single string match.</p></dd>
+
+
 <dt>tagNames</dt>
 <dd><p>Filter the list to only include segments that contain one of the tags.</p></dd>
+
+
 <dt>filterByPublishedSegments</dt>
 <dd><p>Filter the list to only include segments where the published field is set to one of the allowable values:
 <code>all</code> (the default), <code>TRUE</code>, or <code>FALSE</code>.</p></dd>
+
+
 <dt>limit</dt>
 <dd><p>The number of results to return per page. This argument works in conjunction with the
 <code>page</code> argument. The default is 10.</p></dd>
+
+
 <dt>page</dt>
 <dd><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
 zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></dd>
+
+
 <dt>sortDirection</dt>
 <dd><p>The sort direction for the results: <code>ASC</code> (default) for ascending or <code>DESC</code> for
 descending. (This is case insensitive, so <code>asc</code> and <code>desc</code> work as well.)</p></dd>
+
+
 <dt>sortProperty</dt>
 <dd><p>The property to sort the results by. Currently available values are <code>id</code> (default), <code>name</code>,
 and <code>modified_date</code>. Note that setting <code>expansion = modified</code> returns results with a column added called
 <code>modified</code>, which is the last date the calculated metric was modified. When using this value for <code>sortProperty</code>,
 though, the name of the argument is <code>modified_date</code>, because why would we expect locked-in consistency
 from Adobe?</p></dd>
+
+
 <dt>expansion</dt>
 <dd><p>Additional segment metadata fields to include in the results: <code>reportSuiteName</code>,
 <code>ownerFullName</code>, <code>modified</code>, <code>tags</code>, <code>compatibility</code>, <code>definition</code>, <code>publishingStatus</code>, <code>definitionLastModified</code>,
 and <code>categories</code>. This argument takes a single value (e.g., <code>expansion = "modified"</code>)
 or a vector of values (e.g., <code>expansion = c("modified", "ownerFullName")</code>).</p></dd>
+
+
 <dt>includeType</dt>
 <dd><p>Include additional segments not owned by the user. Available values are <code>all</code> (default),
 <code>shared</code>, and <code>templates</code>. The <code>all</code> option takes precedence over "shared".</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>Include the output and input of the api call in the console for debugging. Default is FALSE</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of segments and their meta data.</p>
+    
+
+<p>A data frame of segments and their meta data.</p>
     </div>
 
   </div>
@@ -148,13 +180,11 @@ or a vector of values (e.g., <code>expansion = c("modified", "ownerFullName")</c
 
 
       <footer><div class="copyright">
-  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>,
-Tim Wilson.</p>
+  <p></p><p>Developed by <a href="http://github.com/benrwoodard" class="external-link">Ben Woodard</a>, Tim Wilson.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a>
-2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
