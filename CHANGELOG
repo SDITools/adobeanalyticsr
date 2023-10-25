@@ -19,3 +19,6 @@ feature/aw_call_api
 
 bug/aw_get_calculatedmetrics
   * function now recognizes filters due to an `includeType` argument bug fix
+
+bug/aw_get_reportsuites
+  * fixed an issue where all requests would return an error
