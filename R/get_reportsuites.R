@@ -44,11 +44,6 @@ aw_get_reportsuites <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
   urlstructure <- paste("collections/suites", format_URL_parameters(query_params), sep = "?")
 
   res <- aw_call_api(req_path = urlstructure, debug = debug, company_id = company_id)
-  res <- jsonlite::fromJSON(res)
+  res <- jsonlite::fromJSON(res)$content
 
-  if (res$empty  == TRUE) {
-    warning('No Report Suites were returned', call. = FALSE)
-  }
-
-  res$content
 }
