@@ -210,8 +210,7 @@ frame (or table in the case of Analysis Workspace). The more dimensions are incl
 breakdowns of the data--the more queries are required. As a result, the <em>order</em> of the dimensions <em>can</em>
 have a dramatic impact on the total query time, even if the resulting data is essentially identical.</p>
 <p>One way to understand this is to consider how much dragging and dropping would be required to return the
-data in Analysis Workspace <em>if you were not able to <shift>-<click> to highlight multiple values before
-dragging a new dimension to break down existing values</click></shift></em>.</p>
+data in Analysis Workspace.</p>
 <p>Consider a scenario where you are pulling metrics for the last 30 days (<code>daterangeday</code>) for <strong>Mobile Device Type</strong>
 (<code>mobiledevicetype</code>), which has 7 unique values. Setting <code>dimensions = c("daterangeday", "mobiledevicetype")</code>
 would make one query to get the values of the 30 days included. The query would then run a separate query

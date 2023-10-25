@@ -17,8 +17,7 @@
 #' have a dramatic impact on the total query time, even if the resulting data is essentially identical.
 #'
 #' One way to understand this is to consider how much dragging and dropping would be required to return the
-#' data in Analysis Workspace _if you were not able to <Shift>-<click> to highlight multiple values before
-#' dragging a new dimension to break down existing values_.
+#' data in Analysis Workspace.
 #'
 #' Consider a scenario where you are pulling metrics for the last 30 days (`daterangeday`) for **Mobile Device Type**
 #' (`mobiledevicetype`), which has 7 unique values. Setting `dimensions = c("daterangeday", "mobiledevicetype")`
