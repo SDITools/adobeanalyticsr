@@ -9,6 +9,9 @@
   - cm_update
   - cm_val
   - cm_copy
+* added segment management functions
+  - seg_copy
+  - seg_delete
 * added project management functions
   - aw_get_project_config
   - aw_get_projects

@@ -14,7 +14,7 @@
 #' then the `AW_COMPANY_ID` value will be used. Use [get_me()] to get a list of
 #' available `company_id` values.
 #'
-#' @return Returns a full list of calculated metric functions or a speicified function that the user can access.
+#' @return A JSON string formula to be used in a calculated metric
 #'
 #' @importFrom glue glue
 #' @importFrom purrr map

@@ -38,6 +38,8 @@ reference:
       - seg_then
       - seg_build
       - seg_val
+      - seg_copy
+      - seg_delete
 
   - title: "Manage Calculated Metrics"
     desc: "Functions for creating and managing calculated metrics"

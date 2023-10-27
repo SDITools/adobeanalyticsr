@@ -1,4 +1,4 @@
-#' Validate the difinition of a Calculated Metric in Adobe Analytics
+#' Validate the definition of a Calculated Metric in Adobe Analytics
 #'
 #' This function checks if a calculated metric is valid
 #'
@@ -20,11 +20,7 @@
 #' @details
 #' See more information [here](https://experienceleague.adobe.com/docs/analytics/components/calculated-metrics/calcmetric-workflow/cm-build-metrics.html?lang=en)
 #'
-#' @return If the "create_cm" argument is set to FALSE a list object definition
-#' will be returned. If the "create_cm" argument is set to TRUE and the calculated metric
-#' is valid it will return a data frame of the newly created calculated metric id along
-#' with some other basic meta data. If it returns an error then the error
-#' response will be returned to help understand what needs to be corrected.
+#' @return A string confirming the calculated metric is valid or is not valid.
 #'
 #' @import dplyr
 #' @import assertthat
