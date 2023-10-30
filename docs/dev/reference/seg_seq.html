@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -32,13 +32,16 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,13 +72,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">seg_seq</span><span class="op">(</span>
-  context <span class="op">=</span> <span class="st">"visits"</span>,
-  rules <span class="op">=</span> <span class="cn">NULL</span>,
-  sequence <span class="op">=</span> <span class="st">"in_order"</span>,
-  exclude <span class="op">=</span> <span class="cn">FALSE</span>,
-  exclude_checkpoint <span class="op">=</span> <span class="cn">NULL</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">seg_seq</span><span class="op">(</span></span>
+<span>  context <span class="op">=</span> <span class="st">"visits"</span>,</span>
+<span>  rules <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  sequence <span class="op">=</span> <span class="st">"in_order"</span>,</span>
+<span>  exclude <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  exclude_checkpoint <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -83,37 +86,48 @@
     <dl><dt>context</dt>
 <dd><p>Defines the level that the segment logic should operate on.
 Valid values for sequential segments is visitors and visits. See Details</p></dd>
+
+
 <dt>rules</dt>
 <dd><p>List of rules created using <code><a href="seg_rule.html">seg_rule()</a></code> function. Must be wrapped
 in a list() function.</p></dd>
+
+
 <dt>sequence</dt>
 <dd><p>How should the sequence of items be considered.
 Options: <code>in_order</code> (default), <code>before</code>, <code>after</code>, <code>and</code>, <code>or</code></p></dd>
+
+
 <dt>exclude</dt>
 <dd><p>Excludes the entire sequence container which will include all rules.</p></dd>
+
+
 <dt>exclude_checkpoint</dt>
 <dd><p>Which checkpoints (rules) should be excluded.
 Example <code>c(1, 4)</code>. See Details</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>a structured list of containers to be used to build the segment</p>
+    
+
+<p>a structured list of containers to be used to build the segment</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p><strong>Context</strong></p>
 <p>The rules in a segment have a context that specify the level of operation.
-The context can be visitors, visits or hits.
+The context can be "visitors", "visits" or "hits."
 As an example, let's build a segment rule where revenue is greater than 0
 (meaning a purchase took place) and change the context to see how things change.
-If the context is set to visitors, the segment includes all hits from visitors
+If the context is set to "visitors", the segment includes all hits from visitors
 that have a purchase of some kind during a visit. This is useful in analyzing
 customer behavior in visits leading up to a purchase and possibly behavior
 after a purchase.
-If the context is set to visits, the segment includes all hits from visits where
+If the context is set to "visits", the segment includes all hits from visits where
 a purchase occurred. This is useful for seeing the behavior of a visitor in
 immediate page views leading up to the purchase.
-If the context is set to hit, the segment only includes hits where a purchase
+If the context is set to "hits", the segment only includes hits where a purchase
 occurred, and no other hits. This is useful in seeing which products were most
 popular.
 In the above example, the context for the container listed is hits. This means
@@ -143,7 +157,7 @@ can help: https://experienceleague.adobe.com/docs/analytics/components/segmentat
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

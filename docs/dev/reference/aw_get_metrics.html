@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -32,13 +32,16 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,15 +72,14 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_get_metrics</span><span class="op">(</span>
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  locale <span class="op">=</span> <span class="st">"en_US"</span>,
-  segmentable <span class="op">=</span> <span class="st">"NULL"</span>,
-  expansion <span class="op">=</span> <span class="cn">NULL</span>,
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  use_oob <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_get_metrics</span><span class="op">(</span></span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  locale <span class="op">=</span> <span class="st">"en_US"</span>,</span>
+<span>  segmentable <span class="op">=</span> <span class="st">"NULL"</span>,</span>
+<span>  expansion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -86,29 +88,40 @@
 <dd><p>Adobe report suite ID (RSID).  If an environment variable called <code>AW_REPORTSUITE_ID</code> exists
 in <code>.Renviron</code> or elsewhere and no <code>rsid</code> argument is provided, then the <code>AW_REPORTSUITE_ID</code> value will
 be used. Use <code><a href="aw_get_reportsuites.html">aw_get_reportsuites</a></code> to get a list of available <code>rsid</code> values.</p></dd>
+
+
 <dt>locale</dt>
 <dd><p>The locale that system-named metrics should be returned in. Non-localized values will
 be returned for title, name, description, etc. if a localized value is not available.</p></dd>
+
+
 <dt>segmentable</dt>
 <dd><p>Boolean that determines whether or not to include metrics that can be used in
 segments. <code>NULL</code> (the default) and <code>FALSE</code> return <em>all</em> metrics (<em>not</em> just the non-segmentable ones).
 Examples of metrics that cannot be used in segments are <code>bounces</code>, <code>bounce rate</code>, <code>entries</code>, and <code>visitors</code>.</p></dd>
+
+
 <dt>expansion</dt>
 <dd><p>Additional metrics metadata to include in the results: <code>tags</code>, <code>allowedForReporting</code>,
 and <code>categories</code>. This argument takes a single value (e.g., <code>expansion = "tags"</code>) or a vector  of
 values (e.g., <code>expansion = c("tags", "categories")</code>).</p></dd>
+
+
 <dt>company_id</dt>
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>Include the output and input of the api call in the console for debugging. Default is FALSE</p></dd>
-<dt>use_oob</dt>
-<dd><p>Always set to TRUE. Needed for tests</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of metrics (excluding calculated metrics) and their meta data.</p>
+    
+
+<p>A data frame of metrics (excluding calculated metrics) and their meta data.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -135,7 +148,7 @@ other function calls. The results returned are:</p><ul><li><p>All of the "out of
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

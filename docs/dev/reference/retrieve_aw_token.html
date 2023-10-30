@@ -25,7 +25,7 @@ new token. The default type may be set for the session with aw_auth_with()."><me
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -34,13 +34,16 @@ new token. The default type may be set for the session with aw_auth_with()."><me
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -73,17 +76,20 @@ new token. The default type may be set for the session with <code><a href="aw_au
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">retrieve_aw_token</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">retrieve_aw_token</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>...</dt>
 <dd><p>Further arguments passed to auth functions</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A token object of type <code>response</code> (JWT) or <code>Token2.0</code> (OAuth)</p>
+    
+
+<p>A token object of type <code>response</code> (JWT) or <code>Token2.0</code> (OAuth)</p>
     </div>
 
   </div>
@@ -98,7 +104,7 @@ new token. The default type may be set for the session with <code><a href="aw_au
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

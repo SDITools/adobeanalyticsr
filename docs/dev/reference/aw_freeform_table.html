@@ -25,7 +25,7 @@ the results as a data frame."><meta property="og:image" content="/logo.png"><met
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -34,13 +34,16 @@ the results as a data frame."><meta property="og:image" content="/logo.png"><met
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -73,23 +76,23 @@ the results as a data frame.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_freeform_table</span><span class="op">(</span>
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,
-  dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"page"</span>, <span class="st">"lasttouchchannel"</span>, <span class="st">"mobiledevicetype"</span><span class="op">)</span>,
-  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"visitors"</span><span class="op">)</span>,
-  top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>,
-  page <span class="op">=</span> <span class="fl">0</span>,
-  filterType <span class="op">=</span> <span class="st">"breakdown"</span>,
-  segmentId <span class="op">=</span> <span class="cn">NA</span>,
-  metricSort <span class="op">=</span> <span class="st">"desc"</span>,
-  include_unspecified <span class="op">=</span> <span class="cn">TRUE</span>,
-  search <span class="op">=</span> <span class="cn">NA</span>,
-  prettynames <span class="op">=</span> <span class="cn">FALSE</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>,
-  check_components <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_freeform_table</span><span class="op">(</span></span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  dimensions <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"page"</span>, <span class="st">"lasttouchchannel"</span>, <span class="st">"mobiledevicetype"</span><span class="op">)</span>,</span>
+<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"visitors"</span><span class="op">)</span>,</span>
+<span>  top <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span>,</span>
+<span>  page <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  filterType <span class="op">=</span> <span class="st">"breakdown"</span>,</span>
+<span>  segmentId <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  metricSort <span class="op">=</span> <span class="st">"desc"</span>,</span>
+<span>  include_unspecified <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  search <span class="op">=</span> <span class="cn">NA</span>,</span>
+<span>  prettynames <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  check_components <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -98,49 +101,73 @@ the results as a data frame.</p>
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me()</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
+
 <dt>rsid</dt>
 <dd><p>Adobe report suite ID (RSID).  If an environment variable called <code>AW_REPORTSUITE_ID</code> exists
 in <code>.Renviron</code> or elsewhere and no <code>rsid</code> argument is provided, then the <code>AW_REPORTSUITE_ID</code> value will
 be used. Use <code><a href="aw_get_reportsuites.html">aw_get_reportsuites()</a></code> to get a list of available <code>rsid</code> values.</p></dd>
+
+
 <dt>date_range</dt>
 <dd><p>A length-2 vector with a start date and an end date.
 <code>POSIXt</code> objects are sent as is, for fine control over the date range.
 Numeric values are automatically converted to dates.</p></dd>
+
+
 <dt>dimensions</dt>
 <dd><p>A character vector of dimensions. There is currently a limit of 20 dimension
 breakdowns. Each dimension value that gets broken down by another dimension requires an additional API
 call, so the more dimensions that are included, the longer the function will take to return results.
 This is how the Adobe Analytics API works. Use <code><a href="aw_get_dimensions.html">aw_get_dimensions()</a></code> to get a list of available
 <code>dimensions</code> IDs.</p></dd>
+
+
 <dt>metrics</dt>
 <dd><p>A character vector of metrics. Use <code><a href="aw_get_metrics.html">aw_get_metrics()</a></code> and <code><a href="aw_get_calculatedmetrics.html">aw_get_calculatedmetrics()</a></code>
 to get a list of available <code>metrics</code> IDs.</p></dd>
+
+
 <dt>top</dt>
 <dd><p>The number of values to be pulled for each dimension. The default is 5 and the "top" is based on
 the first <code>metric</code> value (along with <code>metricSort</code>). If there are multiple dimensions, then this argument can
 either be a vector that includes the number of values to include at each level (each breakdown) or, if a single
 value is used, then that will be the maximum number of values to return at each level. See the <strong>Details</strong> for
 information on the unique handling of <code>daterange...</code> values.</p></dd>
+
+
 <dt>page</dt>
 <dd><p>Used in combination with <code>top</code> to return the next page of results. Uses 0-based numbering (e.g.,
 <code>top = 50000</code> and <code>page = 1</code> will return the top 50,000 items <em>starting at 50,001</em>).</p></dd>
+
+
 <dt>filterType</dt>
 <dd><p>This is a placeholder argument for use as additional functionality is added to the package.
 Currently, it defaults to <code>breakdown</code>, and that is the only supported value.</p></dd>
+
+
 <dt>segmentId</dt>
 <dd><p>A single segment ID or a vector of multiple segment IDs to apply to the overall report.
 If multiple <code>segmentId</code> values are included, the segments will be effectived ANDed together, just as if
 multiple segments were added to the header of an Analysis Workspace panel. Use <code><a href="aw_get_segments.html">aw_get_segments()</a></code>
 to get a list of available <code>segmentId</code> values.</p></dd>
+
+
 <dt>metricSort</dt>
 <dd><p>Pre-sorts the table by metrics. Values are either <code>asc</code> (ascending) or <code>desc</code> (descending).</p></dd>
+
+
 <dt>include_unspecified</dt>
 <dd><p>Whether or not to include <strong>Unspecified</strong> values in the results. This is the equivalent
 of the <strong>Include Unspecified (None)</strong> checkbox in freeform tables in Analysis Workspace. This defaults to <code>TRUE</code>,
 which includes <strong>Unspecified</strong> values in the results.</p></dd>
+
+
 <dt>search</dt>
 <dd><p>Criteria to filter the results by one or more dimensions. Searches are case-insenstive. Refer to
 the <strong>Details</strong> for more information on constructing values for this argument.</p></dd>
+
+
 <dt>prettynames</dt>
 <dd><p>A logical that determines whether the column names in the results use the API field name
 (e.g., "mobiledevicetype", "pageviews") or the "pretty name" for the field (e.g., "Mobile Device Type",
@@ -148,9 +175,13 @@ the <strong>Details</strong> for more information on constructing values for thi
 API field names. For custom eVars, props, and events, the non-pretty values are simply the variable number
 (e.g., "evar2", "prop3", "event15"). If <code>TRUE</code>, undoes any efficiency gains
 from setting <code>check_components</code> to <code>FALSE</code>.</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>Set to <code>TRUE</code> to publish the full JSON request(s) being sent to the API to the console when the
 function is called. The default is <code>FALSE</code>.</p></dd>
+
+
 <dt>check_components</dt>
 <dd><p>Specifies whether to check the validity of metrics and
 dimensions before running the query. This defaults to <code>TRUE</code>, which triggers
@@ -159,10 +190,13 @@ metrics from the API. This has a nominal performance impact and may not be
 ideal if you are running many queries. If you have many queries, consider
 implementing validity checking through other means (manually or within the
 code) and then set this value to <code>FALSE</code>.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame with the specified dimensions and metrics.</p>
+    
+
+<p>A data frame with the specified dimensions and metrics.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -176,8 +210,7 @@ frame (or table in the case of Analysis Workspace). The more dimensions are incl
 breakdowns of the data--the more queries are required. As a result, the <em>order</em> of the dimensions <em>can</em>
 have a dramatic impact on the total query time, even if the resulting data is essentially identical.</p>
 <p>One way to understand this is to consider how much dragging and dropping would be required to return the
-data in Analysis Workspace <em>if you were not able to &lt;Shift&gt;-&lt;click&gt; to highlight multiple values before
-dragging a new dimension to break down existing values</em>.</p>
+data in Analysis Workspace.</p>
 <p>Consider a scenario where you are pulling metrics for the last 30 days (<code>daterangeday</code>) for <strong>Mobile Device Type</strong>
 (<code>mobiledevicetype</code>), which has 7 unique values. Setting <code>dimensions = c("daterangeday", "mobiledevicetype")</code>
 would make one query to get the values of the 30 days included. The query would then run a separate query
@@ -248,7 +281,7 @@ including <code>AND</code>, <code>OR</code>, <code>NOT</code>, <code>MATCH</code
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

@@ -38,6 +38,7 @@ reference:
       - seg_then
       - seg_build
       - seg_val
+      - seg_update
       - seg_copy
       - seg_delete
 

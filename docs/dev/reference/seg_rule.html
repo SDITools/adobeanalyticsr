@@ -23,7 +23,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -32,13 +32,16 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -69,19 +72,19 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">seg_rule</span><span class="op">(</span>
-  dimension <span class="op">=</span> <span class="cn">NULL</span>,
-  metric <span class="op">=</span> <span class="cn">NULL</span>,
-  verb <span class="op">=</span> <span class="cn">NULL</span>,
-  object <span class="op">=</span> <span class="cn">NULL</span>,
-  description <span class="op">=</span> <span class="cn">NULL</span>,
-  is_distinct <span class="op">=</span> <span class="cn">FALSE</span>,
-  attribution <span class="op">=</span> <span class="st">"repeating"</span>,
-  attribution_context <span class="op">=</span> <span class="st">"visitors"</span>,
-  validate <span class="op">=</span> <span class="cn">FALSE</span>,
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">seg_rule</span><span class="op">(</span></span>
+<span>  dimension <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  metric <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  verb <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  object <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  description <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  is_distinct <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  attribution <span class="op">=</span> <span class="st">"repeating"</span>,</span>
+<span>  attribution_context <span class="op">=</span> <span class="st">"visitors"</span>,</span>
+<span>  validate <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -89,45 +92,68 @@
     <dl><dt>dimension</dt>
 <dd><p>This is the subject of the rule. The value should be the dimension
 id. Only the dimension or metric can be used at a time.</p></dd>
+
+
 <dt>metric</dt>
 <dd><p>This is the subject of the rule. The value should be the metric id.
 Only the dimension or metric can be used at a time.</p></dd>
+
+
 <dt>verb</dt>
 <dd><p>Choose from any of the 30 different verbs. Use the <code><a href="seg_verbs.html">seg_verbs</a></code>
 package data to see all available verbs along with the descriptions.</p></dd>
+
+
 <dt>object</dt>
 <dd><p>This is the object of the rule and answers the question <code>what</code> or <code>how many</code></p></dd>
+
+
 <dt>description</dt>
 <dd><p>The internal description for the rule. (optional) This will
 not show in the UI but could be very helpful when using the API.</p></dd>
+
+
 <dt>is_distinct</dt>
 <dd><p>This will segment on a distinct count of items within a dimension.
 Examples: “Visitors who viewed more than 5 distinct products,” or “Visits where
 more than 5 distinct pages were seen.”</p></dd>
+
+
 <dt>attribution</dt>
 <dd><p>Define the type of attribution. Either <code>repeating</code> (default),
 <code>instance</code>, or <code>nonrepeating</code>. See Details for more information.</p></dd>
+
+
 <dt>attribution_context</dt>
 <dd><p>When applying a non-repeating instance attribution
 model to a rule the context for the attribution must be <code>visitors</code> (default) or <code>visits</code></p></dd>
+
+
 <dt>validate</dt>
 <dd><p>Set to TRUE when metric or dimension validation is preferred.
 Default is FALSE. Validation will slow down the function response time but
 ensure a valid rule result.</p></dd>
+
+
 <dt>rsid</dt>
 <dd><p>Adobe report suite ID (RSID).  If an environment variable called
 <code>AW_REPORTSUITE_ID</code> exists in <code>.Renviron</code> or elsewhere and no <code>rsid</code> argument
 is provided, then the <code>AW_REPORTSUITE_ID</code> value will be used. Use <code><a href="aw_get_reportsuites.html">aw_get_reportsuites()</a></code>
 to get a list of available <code>rsid</code> values.</p></dd>
+
+
 <dt>company_id</dt>
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code>
 exists in <code>.Renviron</code> or elsewhere and no <code>company_id</code> argument is provided,
 then the <code>AW_COMPANY_ID</code> value will be used. Use <code><a href="get_me.html">get_me()</a></code> to get a list of
 available <code>company_id</code> values.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A structured list defining the rule for a segment</p>
+    
+
+<p>A structured list defining the rule for a segment</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -151,7 +177,7 @@ This is the model applied in Flow when repeat instances are excluded.</p></li>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

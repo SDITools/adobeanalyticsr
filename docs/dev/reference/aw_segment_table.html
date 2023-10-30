@@ -27,7 +27,7 @@ into their human-readable names."><meta property="og:image" content="/logo.png">
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -36,13 +36,16 @@ into their human-readable names."><meta property="og:image" content="/logo.png">
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -77,45 +80,60 @@ into their human-readable names.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_segment_table</span><span class="op">(</span>
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,
-  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,
-  segmentRsids <span class="op">=</span> <span class="cn">NULL</span>,
-  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,
-  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"visitors"</span><span class="op">)</span>,
-  globalSegment <span class="op">=</span> <span class="cn">NULL</span>,
-  segmentIds <span class="op">=</span> <span class="cn">NULL</span>,
-  debug <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_segment_table</span><span class="op">(</span></span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
+<span>  <span class="va">segmentRsids</span>,</span>
+<span>  date_range <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">30</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  metrics <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"visits"</span>, <span class="st">"visitors"</span><span class="op">)</span>,</span>
+<span>  globalSegment <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  segmentIds <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>company_id</dt>
 <dd><p>Company ID</p></dd>
+
+
 <dt>rsid</dt>
 <dd><p>Report suite ID for the data pull</p></dd>
+
+
 <dt>segmentRsids</dt>
-<dd><p>Vector of report suite IDs used to discover the
-human-readable segment names. Passed to <code>aw_get_segments</code>. If <code>NULL</code>, then
-takes the same value as <code>rsid</code>.</p></dd>
+<dd><p>Deprecated.</p></dd>
+
+
 <dt>date_range</dt>
 <dd><p>Date range</p></dd>
+
+
 <dt>metrics</dt>
 <dd><p>Metrics to request for each segment</p></dd>
+
+
 <dt>globalSegment</dt>
 <dd><p>One or more segments to apply globally over all other
 segments</p></dd>
+
+
 <dt>segmentIds</dt>
 <dd><p>One or more segments that will compose the rows of the
 table</p></dd>
+
+
 <dt>debug</dt>
 <dd><p>Logical, whether to make verbose requests to the API and view
 the whole exchange</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p><code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code> of segments and metrics. Rows are returned with
+    
+
+<p><code><a href="https://tibble.tidyverse.org/reference/tibble.html" class="external-link">tibble::tibble()</a></code> of segments and metrics. Rows are returned with
 segments in the order they were requested, not by metric sorting.</p>
     </div>
     <div id="details">
@@ -160,7 +178,7 @@ stack segments by applying a global segment to your query.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

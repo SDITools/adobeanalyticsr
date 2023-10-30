@@ -25,7 +25,7 @@ OAuth. It has been replaced by aw_auth().
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -34,13 +34,16 @@ OAuth. It has been replaced by aw_auth().
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -73,25 +76,32 @@ OAuth. It has been replaced by <code><a href="aw_auth.html">aw_auth()</a></code>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">aw_token</span><span class="op">(</span>
-  client_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_ID"</span><span class="op">)</span>,
-  client_secret <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_SECRET"</span><span class="op">)</span>,
-  use_oob <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">aw_token</span><span class="op">(</span></span>
+<span>  client_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_ID"</span><span class="op">)</span>,</span>
+<span>  client_secret <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_CLIENT_SECRET"</span><span class="op">)</span>,</span>
+<span>  use_oob <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>client_id</dt>
 <dd><p>defined by global variable or manually defined</p></dd>
+
+
 <dt>client_secret</dt>
 <dd><p>defined by global variable or manually defined</p></dd>
+
+
 <dt>use_oob</dt>
 <dd><p>for the purpose of testing. Default is set to TRUE</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>An authorization token is saved the file name aa.oauth. If the
+    
+
+<p>An authorization token is saved the file name aa.oauth. If the
 file aa.oauth does not exist then one will be created at the end of the
 authorization process.</p>
     </div>
@@ -112,7 +122,7 @@ authorization process.</p>
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>

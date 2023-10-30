@@ -25,7 +25,7 @@ data in the web interface) in order to use this function."><meta property="og:im
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.1.0002</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
       </span>
     </div>
 
@@ -34,13 +34,16 @@ data in the web interface) in order to use this function."><meta property="og:im
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
       <a href="../articles/getting-started.html">Getting Started</a>
+    </li>
+    <li>
+      <a href="../articles/working_with_calculated_metrics.html">Analysis Workflows And Calculated Metrics</a>
     </li>
   </ul></li>
 <li>
@@ -73,60 +76,86 @@ data in the web interface) in order to use this function.</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">get_usage_logs</span><span class="op">(</span>
-  startDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">91</span>,
-  endDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,
-  login <span class="op">=</span> <span class="cn">NULL</span>,
-  ip <span class="op">=</span> <span class="cn">NULL</span>,
-  rsid <span class="op">=</span> <span class="cn">NULL</span>,
-  eventType <span class="op">=</span> <span class="cn">NULL</span>,
-  event <span class="op">=</span> <span class="cn">NULL</span>,
-  limit <span class="op">=</span> <span class="fl">100</span>,
-  page <span class="op">=</span> <span class="fl">0</span>,
-  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_usage_logs</span><span class="op">(</span></span>
+<span>  startDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">91</span>,</span>
+<span>  endDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1</span>,</span>
+<span>  login <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ip <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  rsid <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  eventType <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  event <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  limit <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  page <span class="op">=</span> <span class="fl">0</span>,</span>
+<span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>startDate</dt>
 <dd><p>Start date for the maximum of a 3 month period.</p></dd>
+
+
 <dt>endDate</dt>
 <dd><p>End date for the maximum of a 3 month period.</p></dd>
+
+
 <dt>login</dt>
 <dd><p>The login value of the user you want to filter logs by.</p></dd>
+
+
 <dt>ip</dt>
 <dd><p>The IP address you want to filter logs by.</p></dd>
+
+
 <dt>rsid</dt>
 <dd><p>The report suite ID you want to filter logs by.</p></dd>
+
+
 <dt>eventType</dt>
 <dd><p>The numeric id for the event type you want to filter logs by. Leaving this blank returns
 all events. See the <a href="https://github.com/AdobeDocs/analytics-2.0-apis/blob/master/usage-logs.md" class="external-link">Usage Logs API Guide</a>
 for a complete list of event types.</p></dd>
+
+
 <dt>event</dt>
 <dd><p>The event description you want to filter logs by. No wildcards are permitted.</p></dd>
+
+
 <dt>limit</dt>
 <dd><p>The number of results to return per page. This argument works in conjunction with the
 <code>page</code> argument. The default is 10.</p></dd>
+
+
 <dt>page</dt>
 <dd><p>The "page" of results to display. This works in conjunction with the <code>limit</code> argument and is
 zero-based. For instance, if <code>limit = 20</code> and <code>page = 1</code>, the results returned would be 21 through 40.</p></dd>
+
+
+<dt>debug</dt>
+<dd><p>Include the output and input of the api call in the console for debugging. Default is FALSE</p></dd>
+
+
 <dt>company_id</dt>
 <dd><p>Company ID. If an environment variable called <code>AW_COMPANY_ID</code> exists in <code>.Renviron</code> or
 elsewhere and no <code>company_id</code> argument is provided, then the <code>AW_COMPANY_ID</code> value will be used.
 Use <code><a href="get_me.html">get_me</a></code> to get a list of available <code>company_id</code> values.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A data frame of logged events and the event meta data.</p>
+    
+
+<p>A data frame of logged events and the event meta data.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="fu">get_usage_logs</span><span class="op">(</span>startDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">91</span>, endDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">100</span>, page <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span></span>
-<span class="r-in"></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="fu">get_usage_logs</span><span class="op">(</span>startDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">91</span>, endDate <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span>, limit <span class="op">=</span> <span class="fl">100</span>, page <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -141,7 +170,7 @@ Use <code><a href="get_me.html">get_me</a></code> to get a list of available <co
 </div>
 
 <div class="pkgdown">
-  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
+  <p></p><p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
       </footer></div>
