@@ -1,8 +1,8 @@
-#' Delete A Calculated Metric Function
+#' Delete A Segment
 #'
-#' Use this function to delete a specific calculated metric.
+#' Use this function to delete a specific segment in Adobe Analytics
 #'
-#' @param id Calculated Metric ID to be deleted.
+#' @param id Segment ID to be deleted.
 #' @param warn Boolean of whether or not to include a warning message.
 #' @param locale language - default 'en_US'
 #' @param debug Default `FALSE`. Set this to TRUE to see the information about the api calls as they happen.
@@ -15,7 +15,7 @@
 #' then the `AW_COMPANY_ID` value will be used. Use [get_me()] to get a list of
 #' available `company_id` values.
 #'
-#' @return A string confirming the calculated metric is deleted
+#' @return A string confirming the segment has or has not been deleted
 #'
 #' @importFrom glue glue
 #' @importFrom purrr map
@@ -23,18 +23,18 @@
 #' @importFrom utils menu
 #' @export
 #'
-cm_delete <- function(id = NULL,
-                      warn = TRUE,
-                      locale = 'en_US',
-                      debug = FALSE,
-                      rsid = Sys.getenv("AW_REPORTSUITE_ID"),
-                      company_id = Sys.getenv("AW_COMPANY_ID")){
+seg_delete <- function(id = NULL,
+                       warn = TRUE,
+                       locale = 'en_US',
+                       debug = FALSE,
+                       rsid = Sys.getenv("AW_REPORTSUITE_ID"),
+                       company_id = Sys.getenv("AW_COMPANY_ID")){
 
   #assert that the 2 key arguments have values
   assertthat::assert_that(assertthat::not_empty(id), msg = 'Argument "id" cannot be empty')
   if(warn){
     if (utils::menu(c("Yes", "No"),
-             title= "Are you sure you want to delete this Calculated Metric") == "1") {
+             title= "Are you sure you want to delete this segment") == "1") {
 
       env_vars <- get_env_vars()
       token_config <- get_token_config(client_id = env_vars$client_id,
@@ -46,7 +46,7 @@ cm_delete <- function(id = NULL,
         debug_call <- NULL
       }
 
-      req_path <- glue::glue('calculatedmetrics/{id}?locale={locale}')
+      req_path <- glue::glue('segments/{id}?locale={locale}')
 
       request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                              company_id, req_path)
@@ -77,7 +77,7 @@ cm_delete <- function(id = NULL,
       debug_call <- NULL
     }
 
-    req_path <- glue::glue('calculatedmetrics/{id}?locale={locale}')
+    req_path <- glue::glue('segments/{id}?locale={locale}')
 
     request_url <- sprintf("https://analytics.adobe.io/api/%s/%s",
                            company_id, req_path)

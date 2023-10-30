@@ -2,10 +2,10 @@
 % Please edit documentation in R/cm_delete.R
 \name{cm_delete}
 \alias{cm_delete}
-\title{Create A Calculated Metric Function}
+\title{Delete A Calculated Metric Function}
 \usage{
 cm_delete(
-  cm_id = NULL,
+  id = NULL,
   warn = TRUE,
   locale = "en_US",
   debug = FALSE,
@@ -14,7 +14,7 @@ cm_delete(
 )
 }
 \arguments{
-\item{cm_id}{Calculated metric ID to be deleted.}
+\item{id}{Calculated Metric ID to be deleted.}
 
 \item{warn}{Boolean of whether or not to include a warning message.}
 
@@ -33,8 +33,8 @@ then the \code{AW_COMPANY_ID} value will be used. Use \code{\link[=get_me]{get_m
 available \code{company_id} values.}
 }
 \value{
-Returns a full list of calculated metric functions or a speicified function that the user can access.
+A string confirming the calculated metric is deleted
 }
 \description{
-Returns a JSON string defining a function to be used to build a calculated (derived) metric.
+Use this function to delete a specific calculated metric.
 }

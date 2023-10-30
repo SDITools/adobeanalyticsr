@@ -2,7 +2,7 @@
 % Please edit documentation in R/cm_validate.R
 \name{cm_val}
 \alias{cm_val}
-\title{Validate the difinition of a Calculated Metric in Adobe Analytics}
+\title{Validate the definition of a Calculated Metric in Adobe Analytics}
 \usage{
 cm_val(
   definition = NULL,
@@ -34,11 +34,7 @@ then the \code{AW_COMPANY_ID} value will be used. Use \code{\link[=get_me]{get_m
 available \code{company_id} values.}
 }
 \value{
-If the "create_cm" argument is set to FALSE a list object definition
-will be returned. If the "create_cm" argument is set to TRUE and the calculated metric
-is valid it will return a data frame of the newly created calculated metric id along
-with some other basic meta data. If it returns an error then the error
-response will be returned to help understand what needs to be corrected.
+A string confirming the calculated metric is valid or is not valid.
 }
 \description{
 This function checks if a calculated metric is valid
