@@ -62,6 +62,12 @@ reference:
       - proj_build
       - proj_update
 
+  - title: "Manage Tags"
+    desc: "Functions for creating and managing component tags"
+  - contents:
+      - aw_get_tags
+      - tags_add
+
 development:
   mode: auto
 
