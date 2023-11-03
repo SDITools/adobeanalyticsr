@@ -16,6 +16,7 @@ seg_build(
   sequence_context = "hits",
   exclude = FALSE,
   create_seg = FALSE,
+  tagNames = NULL,
   debug = FALSE,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID")
@@ -54,6 +55,9 @@ Only used when the rule arguments are used.}
 \item{create_seg}{Used to determine if the segment should be created in the
 report suite or if the definition should be returned to be used in a freeform
 table API call. Default is FALSE}
+
+\item{tagNames}{Apply tag names to the newly created calculated metric. Single
+string or a vector.}
 
 \item{debug}{This enables the api call information to show in the console for
 help with debugging issues. default is FALSE}

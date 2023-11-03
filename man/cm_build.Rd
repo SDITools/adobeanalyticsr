@@ -13,6 +13,7 @@ cm_build(
   precision = 0,
   type = "decimal",
   create_cm = FALSE,
+  tagNames = NULL,
   debug = FALSE,
   rsid = Sys.getenv("AW_REPORTSUITE_ID"),
   company_id = Sys.getenv("AW_COMPANY_ID")
@@ -40,6 +41,8 @@ Default is \code{0}. Must be a numeric.}
 \item{create_cm}{Used to determine if the segment should be created in the
 report suite or if the definition should be returned to be validated using cm_validate.
 Default is FALSE}
+
+\item{tagNames}{Apply tag names to the newly created calculated metric. Single string or a vector.}
 
 \item{debug}{This enables the api call information to show in the console for
 help with debugging issues. default is FALSE}

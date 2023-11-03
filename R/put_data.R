@@ -69,6 +69,6 @@ aw_put_data <- function(req_path,
     } else if(status_code(req) == 206) {
         stop(paste0('Please check the metrics your requested. A 206 error was returned.'))
     }
-
-    httr::content(req, as = "text",encoding = "UTF-8")
+   req
+    # httr::content(req, as = "text",encoding = "UTF-8")
 }

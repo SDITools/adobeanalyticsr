@@ -17,6 +17,7 @@
 #' @param create_cm Used to determine if the segment should be created in the
 #' report suite or if the definition should be returned to be validated using cm_validate.
 #' Default is FALSE
+#' @param tagNames Apply tag names to the newly created calculated metric. Single string or a vector.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called
 #' `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument
 #' is provided, then the `AW_REPORTSUITE_ID` value will be used. Use [aw_get_reportsuites()]
@@ -52,6 +53,7 @@ cm_build <- function(name = NULL,
                      precision = 0,
                      type = 'decimal',
                      create_cm = FALSE,
+                     tagNames = NULL,
                      debug = FALSE,
                      rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                      company_id = Sys.getenv("AW_COMPANY_ID")){
@@ -100,11 +102,19 @@ cm_build <- function(name = NULL,
 
   if (!create_cm) {
     req <- jsonlite::toJSON(body, auto_unbox = T)
+    req
   } else if (create_cm) {
     req <- aw_call_api(req_path = req_path,
                        body = body,
                        debug = debug,
                        company_id = company_id)
+    if(!is.null(tagNames)){
+      tags_add(company_id = company_id,
+               componentId = jsonlite::fromJSON(req)$id,
+               componentType = 'calculatedMetric',
+               tagNames = tagNames,
+               debug = debug)
+    }
+    req
   }
-  req
 }
