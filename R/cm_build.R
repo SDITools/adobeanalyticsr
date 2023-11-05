@@ -18,6 +18,9 @@
 #' report suite or if the definition should be returned to be validated using cm_validate.
 #' Default is FALSE
 #' @param tagNames Apply tag names to the newly created calculated metric. Single string or a vector.
+#' @param internal Determines if this segment is to be available in the UI.
+#' Default is FALSE, meaning the segment will not be available in the UI, nor will
+#' the ID be available in the `aw_get_segments` function call.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called
 #' `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument
 #' is provided, then the `AW_REPORTSUITE_ID` value will be used. Use [aw_get_reportsuites()]
@@ -54,6 +57,7 @@ cm_build <- function(name = NULL,
                      type = 'decimal',
                      create_cm = FALSE,
                      tagNames = NULL,
+                     internal = FALSE,
                      debug = FALSE,
                      rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                      company_id = Sys.getenv("AW_COMPANY_ID")){
@@ -74,6 +78,7 @@ cm_build <- function(name = NULL,
     list(rsid = rsid,
          name = name,
          description = description,
+         internal = internal,
          definition = list(
            formula = formula,
            version = list(1, 0, 0),
@@ -85,6 +90,7 @@ cm_build <- function(name = NULL,
     list(rsid = rsid,
          name = name,
          description = description,
+         internal = internal,
          definition = list(
            formula = formula,
            filters = list(filter),
@@ -115,6 +121,6 @@ cm_build <- function(name = NULL,
                tagNames = tagNames,
                debug = debug)
     }
-    req
+    jsonlite::fromJSON(req)
   }
 }
