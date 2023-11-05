@@ -29,6 +29,9 @@
 #' table API call. Default is FALSE
 #' @param tagNames Apply tag names to the newly created calculated metric. Single
 #' string or a vector.
+#' @param internal Determines if this segment is to be available in the UI.
+#' Default is FALSE, meaning the segment will not be available in the UI, nor will
+#' the ID be available in the `aw_get_segments` function call.
 #' @param rsid Adobe report suite ID (RSID).  If an environment variable called
 #' `AW_REPORTSUITE_ID` exists in `.Renviron` or elsewhere and no `rsid` argument
 #' is provided, then the `AW_REPORTSUITE_ID` value will be used. Use [aw_get_reportsuites()]
@@ -85,6 +88,7 @@ seg_build <- function(name = NULL,
                       exclude = FALSE,
                       create_seg = FALSE,
                       tagNames = NULL,
+                      internal = FALSE,
                       debug = FALSE,
                       rsid = Sys.getenv('AW_REPORTSUITE_ID'),
                       company_id = Sys.getenv("AW_COMPANY_ID")){
@@ -108,6 +112,7 @@ seg_build <- function(name = NULL,
         seg <- list(
           name = name,
           description = description,
+          internal = internal,
           definition = list(
             container = list(
               func = 'container',
@@ -123,6 +128,7 @@ seg_build <- function(name = NULL,
         seg <- list(
           name = name,
           description = description,
+          internal = internal,
           definition = list(
             container = list(
               func = 'container',
@@ -144,6 +150,7 @@ seg_build <- function(name = NULL,
         seg <-  list(
           name = name,
           description = description,
+          internal = internal,
           definition = list(
             container = list(
               func = 'container',
@@ -162,6 +169,7 @@ seg_build <- function(name = NULL,
         seg <-  list(
           name = name,
           description = description,
+          internal = internal,
           definition = list(
             container = list(
               func = 'container',
@@ -190,21 +198,23 @@ seg_build <- function(name = NULL,
      seg <- list(
        name = name,
        description = description,
-        definition = list(
+       internal = internal,
+       definition = list(
          container = list(
            func = 'container',
            context = context,
            pred = containers[[1]]
-           ),
+         ),
          func = 'segment',
          version = version
-         ),
+       ),
        rsid = rsid
-       )
+     )
       } else {
         seg <-  list(
           name = name,
           description = description,
+          internal = internal,
           definition = list(
             func = 'segment',
             version = version,
@@ -249,6 +259,7 @@ seg_build <- function(name = NULL,
       list(
         name = name,
         description = description,
+        internal = internal,
         definition = list(
           container = list(
             func = 'container',
@@ -267,6 +278,7 @@ seg_build <- function(name = NULL,
       list(
         name = name,
         description = description,
+        internal = internal,
         definition = list(
           container = list(
             func = 'container',
@@ -305,6 +317,6 @@ seg_build <- function(name = NULL,
                tagNames = tagNames,
                debug = debug)
     }
-    req
+    jsonlite::fromJSON(req)
   }
 }
