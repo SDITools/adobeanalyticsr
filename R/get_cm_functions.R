@@ -10,7 +10,7 @@
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
 #' Use [get_me()] to get a list of available `company_id` values.
 #'
-#' @return Returns a full list of calculated metric functions or a speicfied function that the user can access.
+#' @return Returns a full list of calculated metric functions or a specified function that the user can access.
 #'
 #' @import dplyr
 #' @import assertthat

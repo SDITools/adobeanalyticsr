@@ -1,6 +1,6 @@
-#' Validate the definition of a Calculated Metric in Adobe Analytics
+#' Validate the definition of a Calculated Metric
 #'
-#' This function checks if a calculated metric is valid
+#' This function checks if a calculated metric JSON string is valid
 #'
 #'
 #' @param definition json string definition of a calculated metric

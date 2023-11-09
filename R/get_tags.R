@@ -1,6 +1,6 @@
-#' Get list of tags
+#' Get a list of tags
 #'
-#' Retrieve all tag names
+#' Retrieve all tag names or search by component id or tag names
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.
@@ -9,7 +9,7 @@
 #' @param componentType The component type being requested. Options include segment, dashboard, bookmark,
 #' calculatedMetric, project, dateRange, metric, dimension, virtualReportSuite, scheduledJob, alert, classification.
 #' Default is NULL
-#' @param tagNames Comma separated vector of tag names.
+#' @param tagNames Comma separated vector of tag names. componentType
 #' @param limit The number of results to return per page. This argument works in conjunction with the
 #' `page` argument. The default is 10.
 #' @param page The "page" of results to display. This works in conjunction with the `limit` argument and is
@@ -17,7 +17,7 @@
 #' @param debug Include the output and input of the api call in the console for debugging. Default is FALSE
 #'
 #'
-#' @return A data frame of segments and their meta data.
+#' @return A data frame of tags and the associated meta data.
 #'
 #' @export
 #'
@@ -38,8 +38,14 @@ aw_get_tags <- function(company_id = Sys.getenv("AW_COMPANY_ID"),
     limit = limit)
 
   if(!is.null(componentId)) {
+    if(is.null(componentType)){
+      stop("`componentType` must be provided when using `componentId`")
+    }
     baseurl <- 'componentmetadata/tags/search'
   } else if(!is.null(tagNames)) {
+    if(is.null(componentType)){
+      stop("`componentType` must be provided when searching with `tagNames`")
+    }
     baseurl <- 'componentmetadata/tags/tagnames'
   } else {
     baseurl <- 'componentmetadata/tags'

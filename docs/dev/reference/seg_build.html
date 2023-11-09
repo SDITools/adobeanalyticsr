@@ -25,7 +25,7 @@ or return the json string for use in other api calls or for validation."><meta p
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">adobeanalyticsr</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.951</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.91</span>
       </span>
     </div>
 
@@ -88,6 +88,8 @@ or return the json string for use in other api calls or for validation.</p>
 <span>  sequence_context <span class="op">=</span> <span class="st">"hits"</span>,</span>
 <span>  exclude <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  create_seg <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  tagNames <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  internal <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  debug <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  rsid <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_REPORTSUITE_ID"</span><span class="op">)</span>,</span>
 <span>  company_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"AW_COMPANY_ID"</span><span class="op">)</span></span>
@@ -149,6 +151,17 @@ Only used when the rule arguments are used.</p></dd>
 <dd><p>Used to determine if the segment should be created in the
 report suite or if the definition should be returned to be used in a freeform
 table API call. Default is FALSE</p></dd>
+
+
+<dt>tagNames</dt>
+<dd><p>Apply tag names to the newly created calculated metric. Single
+string or a vector.</p></dd>
+
+
+<dt>internal</dt>
+<dd><p>Determines if this segment is to be available in the UI.
+Default is FALSE, meaning the segment will not be available in the UI, nor will
+the ID be available in the <code>aw_get_segments</code> function call.</p></dd>
 
 
 <dt>debug</dt>

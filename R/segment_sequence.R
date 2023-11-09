@@ -108,9 +108,14 @@ seg_seq <- function(context = 'visits',
       if (is.list(rules[[i]][[1]])){
         for(item in seq(length(rules[[i]]))) {
           pred_items <- append(pred_items, rules[[i]][item])
-        } }
-    } else {
-      pred_items <- append(pred_items, list(rules[[i]]))
+        }
+      } else {
+        pred_items <- append(pred_items, list(
+          list(context = 'hits',
+               func = 'container',
+               pred = rules[[i]])
+        ))
+      }
     }
   }
 

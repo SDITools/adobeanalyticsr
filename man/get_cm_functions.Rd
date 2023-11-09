@@ -22,7 +22,7 @@ elsewhere and no \code{company_id} argument is provided, then the \code{AW_COMPA
 Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id} values.}
 }
 \value{
-Returns a full list of calculated metric functions or a speicfied function that the user can access.
+Returns a full list of calculated metric functions or a specified function that the user can access.
 }
 \description{
 Returns a full list of calculated metric functions that the user can access.

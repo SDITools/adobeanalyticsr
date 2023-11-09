@@ -231,27 +231,38 @@ seg_build <- function(name = NULL,
         )
       }
   } else if(is.null(rules) && is.null(containers) && !is.null(sequences)) {
-    sequence_dir <- dplyr::case_when(sequence == 'in_order' ~ 'sequence',
-                                     sequence == 'after' ~ 'sequence-prefix',
-                                     sequence == 'before' ~ 'sequence-suffix')
+    # sequence_dir <- dplyr::case_when(sequence == 'in_order' ~ 'sequence',
+                                     # sequence == 'after' ~ 'sequence-prefix',
+                                     # sequence == 'before' ~ 'sequence-suffix')
 
+    #define the sequence direction
+    f.seq_dir <- function(sequence){
+      dplyr::case_when(sequence == 'in_order' ~ 'sequence',
+                       sequence == 'after' ~ 'sequence-prefix',
+                       sequence == 'before' ~ 'sequence-suffix',
+                       sequence == 'and' ~ 'sequence-and',
+                       sequence == 'or' ~ 'sequence-or')
+    }
+    sequence_dir <- f.seq_dir(sequence)
     ## Add in the necessary 'container' and 'hits' variables to each rule for the sequence to work
     seq_items <- list()
     for (i in seq_along(sequences)) {
-      if (!is.null(sequences[[i]]$stream)) {
-        seq_items[[i]] <- list(
-          context = sequence_context,
-          func = 'container',
-          pred = sequences[[i]]
-        )
-      } else if (!is.null(sequences[[i]]$val)) {
-        seq_items[[i]] <- list(
-          context = sequence_context,
-          func = 'container',
-          pred = sequences[[i]]
-        )
-      } else {
+      message('here we go')
+      if (!is.null(sequences[[i]]$pred$stream)) {
+        message('the stream option')
         seq_items[[i]] <- sequences[[i]]
+
+      } else if (!is.null(sequences[[i]]$val)) {
+        message('the val option')
+        seq_items[[i]] <- sequences[[i]]
+
+      } else {
+        message('the third option')
+        seq_items[[i]] <- list(
+          context = sequence_context,
+          func = 'container',
+          pred = sequences[[i]]
+        )
       }
     }
 

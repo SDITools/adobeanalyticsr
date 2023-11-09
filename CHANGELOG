@@ -17,8 +17,15 @@ feature/added project management functions
 feature/aw_call_api
   * now handles `Content-type` in the head of the api call
 
+feature/added support for internal components
+  * added `internal` argument to seg_build and cm_build so that the component
+  does not show in the UI but the ID is able to be referenced in API calls
+
 bug/aw_get_calculatedmetrics
   * function now recognizes filters due to an `includeType` argument bug fix
 
 bug/aw_get_reportsuites
   * fixed an issue where all requests would return an error
+
+bug/seg_build
+  * fixed issue #142 related to building sequential segments

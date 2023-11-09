@@ -2,7 +2,7 @@
 % Please edit documentation in R/segment_validate.R
 \name{seg_val}
 \alias{seg_val}
-\title{Validate a segment in adobe analytics}
+\title{Validate a segment}
 \usage{
 seg_val(
   segment_body = NULL,

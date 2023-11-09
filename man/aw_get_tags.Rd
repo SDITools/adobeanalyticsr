@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_tags.R
 \name{aw_get_tags}
 \alias{aw_get_tags}
-\title{Get list of tags}
+\title{Get a list of tags}
 \usage{
 aw_get_tags(
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -25,7 +25,7 @@ Use \code{\link{get_me}} to get a list of available \code{company_id} values.}
 calculatedMetric, project, dateRange, metric, dimension, virtualReportSuite, scheduledJob, alert, classification.
 Default is NULL}
 
-\item{tagNames}{Comma separated vector of tag names.}
+\item{tagNames}{Comma separated vector of tag names. componentType}
 
 \item{limit}{The number of results to return per page. This argument works in conjunction with the
 \code{page} argument. The default is 10.}
@@ -36,8 +36,8 @@ zero-based. For instance, if \code{limit = 20} and \code{page = 1}, the results 
 \item{debug}{Include the output and input of the api call in the console for debugging. Default is FALSE}
 }
 \value{
-A data frame of segments and their meta data.
+A data frame of tags and the associated meta data.
 }
 \description{
-Retrieve all tag names
+Retrieve all tag names or search by component id or tag names
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/cm_copy.R
 \name{cm_copy}
 \alias{cm_copy}
-\title{Copy a Calculated Metric in Adobe Analytics}
+\title{Copy a Calculated Metric}
 \usage{
 cm_copy(
   id,

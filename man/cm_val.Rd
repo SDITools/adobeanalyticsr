@@ -2,7 +2,7 @@
 % Please edit documentation in R/cm_validate.R
 \name{cm_val}
 \alias{cm_val}
-\title{Validate the definition of a Calculated Metric in Adobe Analytics}
+\title{Validate the definition of a Calculated Metric}
 \usage{
 cm_val(
   definition = NULL,
@@ -37,7 +37,7 @@ available \code{company_id} values.}
 A string confirming the calculated metric is valid or is not valid.
 }
 \description{
-This function checks if a calculated metric is valid
+This function checks if a calculated metric JSON string is valid
 }
 \details{
 See more information \href{https://experienceleague.adobe.com/docs/analytics/components/calculated-metrics/calcmetric-workflow/cm-build-metrics.html?lang=en}{here}

@@ -1,4 +1,4 @@
-#' Copy a Calculated Metric in Adobe Analytics
+#' Copy a Calculated Metric
 #'
 #' This function copies and existing function and creates a duplicate based on the definition.
 #'
@@ -105,8 +105,8 @@ cm_copy <- function(id,
   #defined parts of the post request
   req_path <- 'calculatedmetrics'
 
-  ## if create_cm is set to TRUE then hit the API endpoing, if FALSE then return
-  ## the calculated metric object which can be saved and validated
+  ## if create_cm is set to TRUE then hit the API endpoint, if FALSE then return
+  ## the calculated metric object which can be saved and/or validated
   if (!create_cm) {
     req <- jsonlite::toJSON(definition, auto_unbox = T)
   } else if (create_cm) {

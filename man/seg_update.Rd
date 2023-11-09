@@ -15,7 +15,7 @@ seg_update(
 \arguments{
 \item{id}{The id of the segment you are wanting to update}
 
-\item{updates}{List of changes or entire JSON definition object.}
+\item{updates}{List of changes or entire definition object as a list object.}
 
 \item{locale}{The URL query parameter locale. Supported values are en_US, fr_FR,
 ja_JP, de_DE, es_ES, ko_KR, pt_BR, zh_CN, and zh_TW. This argument specifies
@@ -32,5 +32,5 @@ Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id}
 json string of updated segment information
 }
 \description{
-Update a
+Update a specific segment
 }
