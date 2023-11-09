@@ -1,9 +1,9 @@
 #' Update A Segment
 #'
-#' Update a
+#' Update a specific segment
 #'
 #' @param id The id of the segment you are wanting to update
-#' @param updates List of changes or entire JSON definition object.
+#' @param updates List of changes or entire definition object as a list object.
 #' @param locale The URL query parameter locale. Supported values are en_US, fr_FR,
 #' ja_JP, de_DE, es_ES, ko_KR, pt_BR, zh_CN, and zh_TW. This argument specifies
 #' which language is to be used for localized sections of responses.

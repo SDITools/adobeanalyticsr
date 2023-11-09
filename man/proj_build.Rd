@@ -30,5 +30,5 @@ Use \code{\link[=get_me]{get_me()}} to get a list of available \code{company_id}
 A json string
 }
 \description{
-Creates a new project in Adobe
+Creates a new project in Adobe. Note: very early in development
 }

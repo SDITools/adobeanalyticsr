@@ -1,6 +1,6 @@
-#' Get list of segments
+#' Get a list of segments
 #'
-#' Retrieve all segments
+#' Retrieve all segments or a filtered list of segments
 #'
 #' @param company_id Company ID. If an environment variable called `AW_COMPANY_ID` exists in `.Renviron` or
 #' elsewhere and no `company_id` argument is provided, then the `AW_COMPANY_ID` value will be used.

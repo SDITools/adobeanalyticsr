@@ -33,7 +33,7 @@ then the \code{AW_COMPANY_ID} value will be used. Use \code{\link[=get_me]{get_m
 available \code{company_id} values.}
 }
 \value{
-Returns a full list of calculated metric functions or a speicified function that the user can access.
+Returns a full list of calculated metric functions or a specified function that the user can access.
 }
 \description{
 Returns a JSON string defining a function to be used to build a calculated (derived) metric.

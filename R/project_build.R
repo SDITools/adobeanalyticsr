@@ -1,6 +1,6 @@
 #' Create a project in Adobe
 #'
-#' Creates a new project in Adobe
+#' Creates a new project in Adobe. Note: very early in development
 #'
 #' @param body The project json string which include the configuration and definition
 #' @param expansion Comma-delimited list of additional project metadata fields to include on response. Available values : reportSuiteName, shares, tags, accessLevel, modified, externalReferences, definition

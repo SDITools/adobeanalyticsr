@@ -1,4 +1,4 @@
-#' Build a Calculated Metric in Adobe Analytics
+#' Build a Calculated Metric
 #'
 #' This function combines formulas to create calculated metrics in Adobe Analytics
 #'

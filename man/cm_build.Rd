@@ -2,7 +2,7 @@
 % Please edit documentation in R/cm_build.R
 \name{cm_build}
 \alias{cm_build}
-\title{Build a Calculated Metric in Adobe Analytics}
+\title{Build a Calculated Metric}
 \usage{
 cm_build(
   name = NULL,

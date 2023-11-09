@@ -1,6 +1,6 @@
 #' Edit a project in Adobe
 #'
-#' Edits an existing project in Adobe
+#' Edits an existing project in Adobe. Note: very early in development
 #'
 #' @param projectId The project id to be edited
 #' @param body The json string in list format which includes the edits to be made

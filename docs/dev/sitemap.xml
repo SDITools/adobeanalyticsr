@@ -64,6 +64,9 @@
     <loc>/reference/aw_get_segments.html</loc>
   </url>
   <url>
+    <loc>/reference/aw_get_tags.html</loc>
+  </url>
+  <url>
     <loc>/reference/aw_segment_table.html</loc>
   </url>
   <url>
@@ -152,6 +155,9 @@
   </url>
   <url>
     <loc>/reference/seg_verbs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tags_add.html</loc>
   </url>
   <url>
     <loc>/reference/token_path.html</loc>

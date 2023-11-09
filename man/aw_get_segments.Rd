@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_segments.R
 \name{aw_get_segments}
 \alias{aw_get_segments}
-\title{Get list of segments}
+\title{Get a list of segments}
 \usage{
 aw_get_segments(
   company_id = Sys.getenv("AW_COMPANY_ID"),
@@ -71,5 +71,5 @@ or a vector of values (e.g., \code{expansion = c("modified", "ownerFullName")}).
 A data frame of segments and their meta data.
 }
 \description{
-Retrieve all segments
+Retrieve all segments or a filtered list of segments
 }
