@@ -106,6 +106,9 @@
     <loc>/reference/aw_get_segments.html</loc>
   </url>
   <url>
+    <loc>/reference/aw_get_tags.html</loc>
+  </url>
+  <url>
     <loc>/reference/aw_refresh_token.html</loc>
   </url>
   <url>
@@ -175,6 +178,12 @@
     <loc>/reference/seg_con.html</loc>
   </url>
   <url>
+    <loc>/reference/seg_copy.html</loc>
+  </url>
+  <url>
+    <loc>/reference/seg_delete.html</loc>
+  </url>
+  <url>
     <loc>/reference/seg_rule.html</loc>
   </url>
   <url>
@@ -184,10 +193,16 @@
     <loc>/reference/seg_then.html</loc>
   </url>
   <url>
+    <loc>/reference/seg_update.html</loc>
+  </url>
+  <url>
     <loc>/reference/seg_val.html</loc>
   </url>
   <url>
     <loc>/reference/seg_verbs.html</loc>
+  </url>
+  <url>
+    <loc>/reference/tags_add.html</loc>
   </url>
   <url>
     <loc>/token_result.html</loc>

@@ -67,7 +67,7 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.4.0" id="adobeanalyticsr-040">adobeanalyticsr 0.4.0<a class="anchor" aria-label="anchor" href="#adobeanalyticsr-040"></a></h2>
+<h2 class="page-header" data-toc-text="0.4.0" id="adobeanalyticsr-040">adobeanalyticsr 0.4.0<small>2023-11-09</small><a class="anchor" aria-label="anchor" href="#adobeanalyticsr-040"></a></h2>
 <ul><li>added calculated metrics management functions
 <ul><li>get_cm_functions</li>
 <li>cm_function</li>
@@ -77,6 +77,11 @@
 <li>cm_update</li>
 <li>cm_val</li>
 <li>cm_copy</li>
+</ul></li>
+<li>added segment management functions
+<ul><li>seg_copy</li>
+<li>seg_delete</li>
+<li>seg_update</li>
 </ul></li>
 <li>added project management functions
 <ul><li>aw_get_project_config</li>
@@ -89,6 +94,11 @@
 </ul></li>
 <li>Bug fix
 <ul><li>aw_get_calculatedmetrics function now recognizes filters due to an <code>includeType</code> argument bug fix</li>
+<li>issue <a href="https://github.com/benrwoodard/adobeanalyticsr/issues/49" class="external-link">#49</a> regarding ownerId filter not being recognized was fixed</li>
+<li>fixed issue <a href="https://github.com/benrwoodard/adobeanalyticsr/issues/142" class="external-link">#142</a> related to building sequential segments</li>
+</ul></li>
+<li>Enhancement
+<ul><li>added ‘internal’ argument for calc metrics and segments that can be used to prevent segments and calc metrics from showing in the UI and causing confusion</li>
 </ul></li>
 </ul></div>
     <div class="section level2">
