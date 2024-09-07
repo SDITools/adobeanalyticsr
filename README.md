@@ -7,7 +7,7 @@
 
 ## R Client for Adobe Analytics API 2.0
 
-Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed, and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as [issues in this Github repository](https://github.com/benrwoodard/adobeanalyticsr/issues).
+Connect to the Adobe Analytics API v2.0, which powers Analysis Workspace. The package was developed with the analyst in mind and will continue to be developed with the guiding principles of iterative, repeatable, timely analysis. New features are actively being developed, and we value your feedback and contribution to the process. Please submit bugs, questions, and enhancement requests as [issues in this Github repository](https://github.com/sditools/adobeanalyticsr/issues).
 
 A special thanks to our company, [Further (formally Search Discovery)](https://www.gofurther.com/), for giving us the time, encouragement, and support to build out this package. There is no way this would have been possible without the opportunity to learn from and work with some of the most amazing people in the analytics industry.
 
@@ -41,7 +41,7 @@ library(adobeanalyticsr)
 install.packages("devtools")
 
 # Install adobeanayticsr from github
-devtools::install_github('benrwoodard/adobeanalyticsr') 
+devtools::install_github('sditools/adobeanalyticsr') 
 
 # Load the package
 library(adobeanalyticsr) 
