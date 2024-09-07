@@ -1,3 +1,7 @@
+# adobeanalyticsr 0.4.1
+
+* Change maintainer to Further Worldwide
+
 # adobeanalyticsr 0.4.0
 
 * added calculated metrics management functions

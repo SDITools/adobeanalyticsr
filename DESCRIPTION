@@ -1,6 +1,6 @@
 Package: adobeanalyticsr
 Type: Package
-Version: 0.4.0
+Version: 0.4.1
 Title: R Client for 'Adobe Analytics' API 2.0
 Description: Connect to the 'Adobe Analytics' API v2.0 <https://github.com/AdobeDocs/analytics-2.0-apis>
              which powers 'Analysis Workspace'. The package was developed
@@ -8,10 +8,11 @@ Description: Connect to the 'Adobe Analytics' API v2.0 <https://github.com/Adobe
              developed with the guiding principles of iterative,
              repeatable, timely analysis.
 Authors@R: c(
-    person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "cre")),
+    person("Ben", "Woodard", email = "benrwoodard@gmail.com", role = c("aut", "ctb")),
     person("Tim", "Wilson", email = "timwilson7@gmail.com", role = c("aut", "ctb")),
     person("Charles", "Gallagher", email = "charlesjgallagher15@gmail.com", role = c("ctb")),
-    person("Mark", "Edmondson", role = "ctb")
+    person("Mark", "Edmondson", role = c("ctb")),
+    person(given = "Further Worldwide", role = c("cph", "cre"), email = "support@gofurther.com")
     )
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -47,5 +48,5 @@ RoxygenNote: 7.2.3
 Roxygen: list(markdown = TRUE)
 RdMacros: lifecycle
 VignetteBuilder: knitr
-BugReports: https://github.com/benrwoodard/adobeanalyticsr/issues
-URL: https://github.com/benrwoodard/adobeanalyticsr
+BugReports: https://github.com/sditools/adobeanalyticsr/issues
+URL: https://github.com/sditools/adobeanalyticsr
